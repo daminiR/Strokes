@@ -1,0 +1,16 @@
+import mongoose, { Schema } from 'mongoose'
+
+const userSchema = new Schema ({
+    email: {
+        type: String,
+        required: true
+    },
+
+    password: {
+        type: String,
+        required: true,
+        //TODO: add more details
+        min: 9,
+        max: 32
+    }
+})
