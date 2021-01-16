@@ -1,0 +1,124 @@
+# sensatvie file data
+.env
+#prettierrc
+.prettierrc.js
+
+# lint ignores
+.eslintrc.js
+
+build/
+
+# google auth file
+android/app/google-services.json
+# OSX
+#
+.DS_Store
+
+# Xcode
+!**/*.xcodeproj
+!**/*.pbxproj
+!**/*.xcworkspacedata
+!**/*.xcsettings
+!**/*.xcscheme
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+
+# Android/IntelliJ
+.idea
+.gradle
+local.properties
+*.iml
+mobile/android/
+
+# Node
+node_modules
+*.log
+.nvm
+/bots/node_modules/
+package-lock.json
+yarn.lock
+
+
+# Watchman
+.watchmanconfig
+
+
+# BUCK
+buck-out/
+\.buckd/
+*.keystore
+!debug.keystore
+.buckconfig
+
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/
+
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
+
+# Bundle artifact
+*.jsbundle
+
+# CocoaPods
+/mobile/ios/Pods/
+/mobile/ios/Podfile.lock
+# not sure if podifle should be added or not
+/mobile/ios/Podfile
+
+# OS X
+.DS_Store
+
+# Root dir shouldn't have Xcode project
+/*.xcodeproj
+
+#tests
+/mobile/__tests__
+
+# Visual studio
+.vscode
+.vs
+
+# Android memory profiler files
+*.hprof
+
+#gradle
+!gradle-wrapper.jar
+.gradletasknamecache
+gradle-app.setting
+**/build/
+!src/**/build/
+
+
+#Gradle
+/build/
+/mobile/packages/react-native-codegen/android/build/
+/mobile/packages/react-native-codegen/android/gradlePlugin-build/gradlePlugin/build
+/mobile/android/app/.cxx/
+/mobile//android/app/build/
+/mobile/android/app/gradle/
+/mobile/android/app/gradlew
+/mobile/android/app/gradlew.bat
+/mobile/android/build/
+/mobile/android/gradle/
+/mobile/gradle/gradlew
+/mobile/android/gradlew.bat
+
