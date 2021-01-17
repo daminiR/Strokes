@@ -1,12 +1,13 @@
 //#TODO: Why does ES6 syntax provide perfomrance benefits?
+import 'dotenv/config'
 import  express from 'express';
 import { ApolloServer, gql }  from 'apollo-server-express';
 import  mongoose from 'mongoose';
 import { resolvers } from './resolvers/resolvers'
 import { typeDefs } from './typeDefs/typeDefs';
-import 'dotenv/config';
 
 const startServer = async () => {
+  const uri = process.env.ATLAS_URI;
   const app = express();
   const server = new ApolloServer({
     typeDefs,
@@ -14,10 +15,7 @@ const startServer = async () => {
   });
 
   server.applyMiddleware({ app });
-  //config();
-  // #TODO: fix for now, transfer to .env => security issue
-  const uri = process.env.ATLAS_URI;
-  await mongoose.connect(uri, {
+  await mongoose.connect(uri!, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
