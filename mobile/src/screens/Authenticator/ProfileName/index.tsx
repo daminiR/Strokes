@@ -5,24 +5,44 @@ import * as Yup from 'yup'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { AppContainer, Space, Button, Input, TextError } from '../../../components'
 import { onScreen, goBack } from '../../../constants'
-import { RootStackParamList } from '../../../AppNavigator'
 import {  RootStackSignInParamList } from '../../../navigation/SignInStack'
 import auth from '@react-native-firebase/auth'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
+import { gql, useMutation } from '@apollo/client'
+import { ADD_PROFILE } from '../../../graphql/mutations/profile'
 //import { UserContext } from '../../../UserContext'
 
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'PROFILE'>
-
 type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
-
 const Profile = ({ navigation }: ProfileT): ReactElement => {
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [error2, setError] = useState('')
+  const [createSquash, { data, error}] = useMutation(ADD_PROFILE, {onError(err){
+console.log(err)
+  }})
 
-  const _onPressProfile = () => {
-      onScreen('BIRTHDAY', navigation)()
+  const _onPressProfile =  (values: {first_name: string}) => {
+      //setLoading(true)
+      //setError('')
+      const { first_name } = values
+      createSquash({variables: {first_name: "is it working now"}})
+      //setLoading(false)
+        //.then(() => {
+          //setLoading(false)
+          //setError('')
+          //console.log('secussful mutation ');
+        //})
+        //.catch((err) => {
+          //setLoading(false)
+          //console.log(data)
+          //setError(err.code)
+          //console.log(err.code)
+          //console.log(error)
+          //console.log('didnt work')
+        //})
+      //onScreen('BIRTHDAY', navigation)()
   }
   const _onPressAddProfileData = async (values) : Promise<void> => {
       setLoading(true)
@@ -37,9 +57,8 @@ const Profile = ({ navigation }: ProfileT): ReactElement => {
       <Formik
         initialValues={{
           first_name: 'First Name',
-          birthday: 'Birthday',
         }}
-        onSubmit={(values): Promise<void> => _onPressAddProfileData(values)}>
+        onSubmit={(values): Promise<void> => _onPressProfile(values)}>
         {({
           values,
           handleChange,
@@ -59,12 +78,11 @@ const Profile = ({ navigation }: ProfileT): ReactElement => {
               errors={errors}
               autoCapitalize="none"
             />
-            <Button title="Continue" onPress={_onPressProfile} />
+            <Button title="Continue" onPress={handleSubmit} />
           </>
         )}
       </Formik>
     </AppContainer>
   );
 }
-
 export { Profile }
