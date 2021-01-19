@@ -50,7 +50,6 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
       }
     )
   }
-
   return (
     <>
       <AppContainer

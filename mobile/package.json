@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@apollo/client": "^3.3.7",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.9",
@@ -19,6 +20,7 @@
     "@react-navigation/stack": "^5.12.8",
     "@types/facebook-js-sdk": "^3.3.1",
     "formik": "^2.2.6",
+    "graphql": "^15.4.0",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-appearance": "^0.3.4",

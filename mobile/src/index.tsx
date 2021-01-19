@@ -2,9 +2,9 @@ import React, { useState, ReactElement } from 'react'
 import * as Keychain from 'react-native-keychain'
 import { useColorScheme } from 'react-native-appearance'
 import ThemeProvider from './ThemeProvider'
-import AppNavigator from './AppNavigator'
 import { NavigationContainer} from '@react-navigation/native'
 import {UserContext, AuthNavigator} from './UserContext'
+import { ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
 const MEMORY_KEY_PREFIX = '@MyStorage:'
 
 let dataMemory: any = {}
@@ -37,6 +37,12 @@ class MyStorage {
     return dataMemory
   }
 }
+const cache = new InMemoryCache()
+const client = new ApolloClient({
+    uri: 'http://localhost:4000/graphql',
+    cache,
+    defaultOptions: {watchQuery : {fetchPolicy: 'cache-and-network'}}
+})
 
 const App = (): ReactElement =>
 {
@@ -45,7 +51,9 @@ const App = (): ReactElement =>
    */
   const scheme = useColorScheme()
   return (
-    <AuthNavigator/>
+    <ApolloProvider client={client}>
+      <AuthNavigator />
+    </ApolloProvider>
   );
 }
 
