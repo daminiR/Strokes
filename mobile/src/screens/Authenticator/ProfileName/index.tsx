@@ -19,48 +19,29 @@ type ProfileT = {
 const Profile = ({ navigation }: ProfileT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error2, setError] = useState('');
-  const [createSquash, {data, loading: loading2, error:error}] = useMutation(
+  const [createSquash] = useMutation(
     ADD_PROFILE,
     {
-      onError: onErrorLink,
       errorPolicy: 'all',
     },
   );
-
-  const onErrorLink = () => {
-    console.log(error)
-  //{graphQLErrors, networkError} = error
-  //if (graphQLErrors)
-    //graphQLErrors.map(({ message, locations, path }) =>
-      //console.log(
-        //`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-      //),
-    //);
-
-  //if (networkError) {
-    //console.log(`[Network error]: ${networkError}`);
-  //}
-}
   const _onPressProfile = async (values: {first_name: string}) => {
       //setLoading(true)
       //setError('')
       const { first_name } = values
-      const result = await createSquash({variables: {first_name: "is it  now"}}).then(
-        () => {if (result.data?.createSquash){
-            console.log('sucess');
-          }}
-      )
-      //).catch((e) => {
-        //console.log(e)
-        //console.log(error.networkError)
-        //console.log("not working?")
-      //})
-      //onScreen('BIRTHDAY', navigation)()
-  }
-  const _onPressAddProfileData = async (values) : Promise<void> => {
-      setLoading(true)
-      setError('')
-      console.log("yayayayayay")
+      await createSquash({variables: {first_name: 'is it  now'}})
+        .then(
+          (data) => {
+            console.log(data)
+            //if (data?.createSquash) {
+              //console.log('sucess');
+            //}
+          },
+          //onScreen('BIRTHDAY', navigation)()
+        )
+        .catch((e) => {
+          console.log('All Apollo Errors handles globally for now');
+        });
   }
   return (
     <AppContainer
