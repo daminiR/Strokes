@@ -14,17 +14,20 @@ const startServer = async () => {
     resolvers,
   });
 
+  //app.use((req, res) => {
+    //res.status(200);
+    //res.send("Hello!");
+    //res.end();
+  //});
+   //capp.use('/graphql', bodyParser.json());
+  app.use(express.urlencoded())
   server.applyMiddleware({ app });
   await mongoose.connect(uri!, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
-  app.use((req, res) => {
-    res.status(200);
-    res.send("Hello!");
-    res.end();
-  });
 
+  console.log(server.graphqlPath)
   app.listen({ port: 4000 }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
   );

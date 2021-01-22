@@ -21,37 +21,37 @@ const imageArrayMinLimit = val => {
 var squashSchema = new Schema({
   first_name: {
     type: String,
-    //required: true,
+    required: true,
     minlength: 3,
     maxlength: 30,
   },
   age: {
     type: Number,
-    //required: true,
+    required: true,
     min: 18,
     max: 90,
-    //validate: {
-      //validator: Number.isInteger,
-      //message: "{VALUE} is not an integer value",
-    //},
+    validate: {
+      validator: Number.isInteger,
+      message: "{VALUE} is not an integer value",
+    },
   },
   gender: {
     type: String,
-    //required: true,
+    required: true,
     enum: GENDERS,
   },
   sports: {
     type: [{ sport: { type: String, enum: SPORTS }, isUserSport: {type: Boolean, default: false}}],
-    //required: true,
-    //validate: [
-      //{
-        //validator: imageArrayMinLimit,
-        //message: "Cannot have no sport, choose atleast one",
-      //},
-    //],
+    required: true,
+    validate: [
+      {
+        validator: imageArrayMinLimit,
+        message: "Cannot have no sport, choose atleast one",
+      },
+    ],
   },
   game_level: {
-    //required: true,
+    required: true,
     type: String,
     enum: LEVELS,
   },
@@ -65,17 +65,17 @@ var squashSchema = new Schema({
   },
   image_set: {
     type: [String],
-    //required: true,
-    //validate: [
-      //{
-        //validator: imageArrayMinLimit,
-        //message: "Cannot have no images",
-      //},
-      //{
-        //validator: imageArrayMaxLimit,
-        //message: "No more than 7 images",
-      //},
-    //],
+    required: true,
+    validate: [
+      {
+        validator: imageArrayMinLimit,
+        message: "Cannot have no images",
+      },
+      {
+        validator: imageArrayMaxLimit,
+        message: "No more than 7 images",
+      },
+    ],
   },
 });
 const Squash = model<SquashDocument>('Squash', squashSchema)

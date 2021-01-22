@@ -4,11 +4,26 @@ import { useColorScheme } from 'react-native-appearance'
 import ThemeProvider from './ThemeProvider'
 import { NavigationContainer} from '@react-navigation/native'
 import {UserContext, AuthNavigator} from './UserContext'
-import { ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
+import { from ,createHttpLink, ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
+import { ApolloLink } from 'apollo-link'
+import { HttpLink } from 'apollo-link-http'
+import { onError } from "apollo-link-error"
+
 const MEMORY_KEY_PREFIX = '@MyStorage:'
 
 let dataMemory: any = {}
 
+//////////////////////////////////////// temporary fixe for RN debugger ///////////////////////////////////////
+global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
+global.FormData = global.originalFormData || global.FormData;
+
+if (window.FETCH_SUPPORT) {
+  window.FETCH_SUPPORT.blob = false;
+} else {
+  global.Blob = global.originalBlob || global.Blob;
+  global.FileReader = global.originalFileReader || global.FileReader;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class MyStorage {
   // the promise returned from sync function
   static syncPromise = null
@@ -37,13 +52,31 @@ class MyStorage {
     return dataMemory
   }
 }
-const cache = new InMemoryCache()
-const client = new ApolloClient({
-    uri: 'http://localhost:4000/graphql',
-    cache,
-    defaultOptions: {watchQuery : {fetchPolicy: 'cache-and-network'}}
-})
 
+///////////////////////// Gloabl Appolo CLient error inspection //////////////
+//const onErrorLink = onError(({ graphQLErrors, networkError }) => {
+  //if (graphQLErrors)
+    //graphQLErrors.map(({ message, locations, path }) =>
+      //console.log(
+        //`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      //),
+    //);
+
+  //if (networkError) {
+    //console.log(`[Network error]: ${networkError}`)
+  //}
+//});
+///////////////////////////////////////////////////////////////////////////////////
+const cache = new InMemoryCache()
+const myHtttpLink  = new HttpLink({
+  uri: 'http://localhost:4000/graphql',
+});
+//const link = ApolloLink.from([onErrorLink, myHtttpLink])
+const link = ApolloLink.from([myHtttpLink])
+const client = new ApolloClient({
+  link: link,
+  cache: cache,
+});
 const App = (): ReactElement =>
 {
   /**
