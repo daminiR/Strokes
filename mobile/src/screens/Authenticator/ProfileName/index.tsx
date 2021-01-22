@@ -1,4 +1,4 @@
-import React, { useContext, useState, ReactElement } from 'react'
+import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import * as Keychain from 'react-native-keychain'
 import { Form, Formik, FormikConfig, FormikValues} from 'formik'
 import * as Yup from 'yup'
@@ -10,7 +10,7 @@ import auth from '@react-native-firebase/auth'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
 import { gql, useMutation } from '@apollo/client'
 import { ADD_PROFILE } from '../../../graphql/mutations/profile'
-//import { UserContext } from '../../../UserContext'
+import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
 
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'PROFILE'>
 type ProfileT = {
@@ -19,29 +19,46 @@ type ProfileT = {
 const Profile = ({ navigation }: ProfileT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error2, setError] = useState('');
+  const form = React.useRef()
+  const dispatch = useFormDispatch()
+  const {values: formValues, errors: formErrors } = useFormState("user")
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      if (form.current) {
+        const {values, errors} = form.current;
+        dispatch({
+          type: 'UPDATE_FORM',
+          payload: {
+            id: 'user',
+            data: {values, errors},
+          }
+       })
+      }
+    })
+    return unsubscribe
+  }, [navigation])
+
   const [createSquash] = useMutation(
     ADD_PROFILE,
     {
       errorPolicy: 'all',
     },
   );
+
   const _onPressProfile = async (values: {first_name: string}) => {
       //setLoading(true)
       //setError('')
-      const { first_name } = values
-      await createSquash({variables: {first_name: 'is it  now'}})
-        .then(
-          (data) => {
-            console.log(data)
-            //if (data?.createSquash) {
-              //console.log('sucess');
-            //}
-          },
-          //onScreen('BIRTHDAY', navigation)()
-        )
-        .catch((e) => {
-          console.log('All Apollo Errors handles globally for now');
-        });
+      //const { first_name } = values
+      //await createSquash({variables: {first_name: 'is it  now'}})
+        //.then(
+          //(data) => {
+            //console.log(data)
+          //},
+        //)
+        //.catch((e) => {
+          //console.log('All Apollo Errors handles globally for now');
+        //});
+        onScreen('BIRTHDAY', navigation)()
   }
   return (
     <AppContainer
@@ -49,10 +66,11 @@ const Profile = ({ navigation }: ProfileT): ReactElement => {
       title="Profile"
       loading={loading}>
       <Formik
-        initialValues={{
-          first_name: 'First Name',
-        }}
-        onSubmit={(values): Promise<void> => _onPressProfile(values)}>
+        innerRef={form}
+        initialValues={formValues}
+        initialErrors={formErrors}
+        //onSubmit={(values): Promise<void> => _onPressProfile(values)}>
+        enableReinitialize>
         {({
           values,
           handleChange,
@@ -72,7 +90,10 @@ const Profile = ({ navigation }: ProfileT): ReactElement => {
               errors={errors}
               autoCapitalize="none"
             />
-            <Button title="Continue" onPress={handleSubmit} />
+            <Button title="Continue" onPress={_onPressProfile} />
+            <View>
+              <Text>{JSON.stringify(values, null, 2)}</Text>
+            </View>
           </>
         )}
       </Formik>
