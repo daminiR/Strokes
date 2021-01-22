@@ -1,15 +1,16 @@
-import React, { useContext, useState, ReactElement } from 'react'
+import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import * as Keychain from 'react-native-keychain'
 import { Form, Formik, FormikConfig, FormikValues} from 'formik'
 import * as Yup from 'yup'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { AppContainer, Space, Button, Input, TextError } from '../../../components'
 import { onScreen, goBack } from '../../../constants'
-import { RootStackParamList } from '../../../AppNavigator'
+import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
+import { useMutation } from '@apollo/client'
 import {  RootStackSignInParamList } from '../../../navigation/SignInStack'
 import auth from '@react-native-firebase/auth'
+import { ADD_PROFILE } from '../../../graphql/mutations/profile'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
-//import { UserContext } from '../../../UserContext'
 
 type ProfileSportScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'SPORT'>
 
@@ -20,15 +21,45 @@ type ProfileSportT = {
 const ProfileSport = ({ navigation }: ProfileSportT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const form = React.useRef()
+  const dispatch = useFormDispatch()
+  const {values: formValues, errors: formErrors } = useFormState("user")
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      if (form.current) {
+        const {values, errors} = form.current;
+        dispatch({
+          type: 'UPDATE_FORM',
+          payload: {
+            id: 'user',
+            data: {values, errors},
+          }
+       })
+      }
+    })
+    return unsubscribe
+  }, [navigation])
 
-  const _onPressProfile = () => {
-      onScreen('CHOOSE_SPORTS', navigation)()
-  }
+  const [createSquash] = useMutation(
+    ADD_PROFILE,
+    {
+      errorPolicy: 'all',
+    },
+  );
 
-  const _onPressAddProfileData = async (values) : Promise<void> => {
-      setLoading(true)
-      setError('')
-      console.log("yayayayayay")
+  const _onPressProfile = async (values) => {
+    const {first_name, birthday, gender, sports} = values
+      await createSquash({variables: {first_name: 'is it  now'}})
+        .then(
+          (data) => {
+            console.log("succwsful submission of form")
+            console.log(data)
+            onScreen('USER', navigation)()
+          },
+        )
+        .catch((e) => {
+          console.log('All Apollo Errors handles globally for now');
+        });
   }
   return (
     <AppContainer
@@ -36,10 +67,8 @@ const ProfileSport = ({ navigation }: ProfileSportT): ReactElement => {
       title="Profile Gender"
       loading={loading}>
       <Formik
-        initialValues={{
-          Sport: 'Sport',
-        }}
-        onSubmit={(values): Promise<void> => _onPressAddProfileData(values)}>
+        initialValues={formValues}
+        initialErrors={formErrors}>
         {({
           values,
           handleChange,
@@ -51,7 +80,7 @@ const ProfileSport = ({ navigation }: ProfileSportT): ReactElement => {
           <>
             <Input
               name="Sport"
-              value={values.Sport}
+              value={values.sports}
               onChangeText={handleChange('Sport')}
               onBlur={(): void => setFieldTouched('Sport')}
               placeholder="Sport"
@@ -60,6 +89,9 @@ const ProfileSport = ({ navigation }: ProfileSportT): ReactElement => {
               autoCapitalize="none"
             />
             <Button title="Submit" onPress={_onPressProfile} />
+            <View>
+              <Text>{JSON.stringify(values, null, 2)}</Text>
+            </View>
           </>
         )}
       </Formik>
