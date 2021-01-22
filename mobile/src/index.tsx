@@ -53,26 +53,26 @@ class MyStorage {
   }
 }
 
-///////////////////////// Gloabl Appolo CLient error inspection //////////////
-//const onErrorLink = onError(({ graphQLErrors, networkError }) => {
-  //if (graphQLErrors)
-    //graphQLErrors.map(({ message, locations, path }) =>
-      //console.log(
-        //`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-      //),
-    //);
+/////////////////////// Gloabl Appolo CLient error inspection //////////////
+const onErrorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.map(({ message, locations, path }) =>
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      ),
+    );
 
-  //if (networkError) {
-    //console.log(`[Network error]: ${networkError}`)
-  //}
-//});
-///////////////////////////////////////////////////////////////////////////////////
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`)
+  }
+});
+/////////////////////////////////////////////////////////////////////////////////
 const cache = new InMemoryCache()
 const myHtttpLink  = new HttpLink({
   uri: 'http://localhost:4000/graphql',
 });
-//const link = ApolloLink.from([onErrorLink, myHtttpLink])
-const link = ApolloLink.from([myHtttpLink])
+const link = ApolloLink.from([onErrorLink, myHtttpLink])
+//const link = ApolloLink.from([myHtttpLink])
 const client = new ApolloClient({
   link: link,
   cache: cache,
