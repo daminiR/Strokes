@@ -8,6 +8,7 @@ import { from ,createHttpLink, ApolloClient, ApolloProvider, InMemoryCache} from
 import { ApolloLink } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { onError } from "apollo-link-error"
+import { FormProvider } from './Contexts/FormContext'
 
 const MEMORY_KEY_PREFIX = '@MyStorage:'
 
@@ -82,10 +83,13 @@ const App = (): ReactElement =>
   /**
    * Subscribe to color scheme changes with a hook
    */
+  //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   const scheme = useColorScheme()
   return (
     <ApolloProvider client={client}>
-      <AuthNavigator />
+      <FormProvider>
+        <AuthNavigator/>
+      </FormProvider>
     </ApolloProvider>
   );
 }
