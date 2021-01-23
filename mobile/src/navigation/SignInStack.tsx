@@ -1,6 +1,6 @@
 import React, { useContext, useState, ReactElement } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import {User, ProfileSport, ProfileGender, Profile, ProfileBirthday} from '../screens/Authenticator'
+import {ProfileImages, User, ProfileSport, ProfileGender, Profile, ProfileBirthday} from '../screens/Authenticator'
 import { UserContext } from '../UserContext'
 import { NavigationContainer } from '@react-navigation/native'
 
@@ -14,6 +14,7 @@ export type RootStackSignInParamList = {
   BIRTHDAY: undefined
   GENDER: undefined
   SPORT: undefined
+  IMAGE_SET: undefined
 }
 
 
@@ -26,6 +27,7 @@ export default function SignInStack() {
       <Stack.Screen name="BIRTHDAY" component={ProfileBirthday} />
       <Stack.Screen name="GENDER" component={ProfileGender} />
       <Stack.Screen name="SPORT" component={ProfileSport} />
+      <Stack.Screen name="IMAGE_SET" component={ProfileImages} />
       </Stack.Navigator>
     </NavigationContainer>
   )

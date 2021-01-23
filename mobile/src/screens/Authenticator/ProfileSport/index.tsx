@@ -48,23 +48,12 @@ const ProfileSport = ({ navigation }: ProfileSportT): ReactElement => {
   );
 
   const _onPressProfile = async (values) => {
-    const {first_name, birthday, gender, sports} = values
-      await createSquash({variables: {first_name: 'is it  now'}})
-        .then(
-          (data) => {
-            console.log("succwsful submission of form")
-            console.log(data)
-            onScreen('USER', navigation)()
-          },
-        )
-        .catch((e) => {
-          console.log('All Apollo Errors handles globally for now');
-        });
-  }
+    onScreen('IMAGE_SET', navigation)();
+  };
   return (
     <AppContainer
       onPress={goBack(navigation)}
-      title="Profile Gender"
+      title="Profile Sport"
       loading={loading}>
       <Formik
         initialValues={formValues}
@@ -84,6 +73,16 @@ const ProfileSport = ({ navigation }: ProfileSportT): ReactElement => {
               onChangeText={handleChange('Sport')}
               onBlur={(): void => setFieldTouched('Sport')}
               placeholder="Sport"
+              touched={touched}
+              errors={errors}
+              autoCapitalize="none"
+            />
+            <Input
+              name="Game Level"
+              value={values.game_level}
+              onChangeText={handleChange('Game Level')}
+              onBlur={(): void => setFieldTouched('Game Level')}
+              placeholder="Game Level"
               touched={touched}
               errors={errors}
               autoCapitalize="none"
