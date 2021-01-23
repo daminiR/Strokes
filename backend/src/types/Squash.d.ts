@@ -2,7 +2,7 @@ import { Document, Model} from 'mongoose'
 
 export interface SquashDocument extends Document {
   first_name: string
-  age : number
+  age : string
   gender: string
   sports: [{sport: string, isUserSport: string}]
   game_level: string

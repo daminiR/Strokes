@@ -1,4 +1,6 @@
 import {gql} from 'apollo-server-express';
+//TODO: change inout ype for age to be Int! but after you configure the birthdate resolver
+//TODO: need to add apollo server error handling
 export const typeDefs = gql`
   type Query {
     hello: String!
@@ -13,7 +15,7 @@ export const typeDefs = gql`
   type Mutation {
     createSquash(
       first_name: String!
-      age: Int!
+      age: String!
       gender: String!
       sports: [SquashNode!]!
       game_level: String!

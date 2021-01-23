@@ -4,13 +4,12 @@ import * as React from "react"
 interface Props {
     children: any
 }
+
 const FormStateContext = React.createContext()
 const FormDispatchContext  = React.createContext()
-
-
 const initialState = {
   user: {
-    values: {first_name: 'First Name', birthday: 'Birthday', gender: 'F', sports: "Squash"},
+    values: {first_name: 'First Name', birthday: "28", gender: 'F', sports: "squash", image_set: "image_02.png", game_level: "intermediate"},
     errors: {},
   },
 };

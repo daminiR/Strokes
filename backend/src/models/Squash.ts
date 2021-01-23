@@ -11,7 +11,6 @@ const imageArrayMaxLimit = val => {
   return (Array.isArray(val) && val.length <= 7)
 }
 
-
 const imageArrayMinLimit = val => {
   return (Array.isArray(val) && val.length >= 1)
 }
@@ -26,14 +25,15 @@ var squashSchema = new Schema({
     maxlength: 30,
   },
   age: {
-    type: Number,
+    type: String,
     required: true,
     min: 18,
     max: 90,
-    validate: {
-      validator: Number.isInteger,
-      message: "{VALUE} is not an integer value",
-    },
+    //TODO: fix the age and bithday category asap
+    //validate: {
+      //validator: Number.isInteger,
+      //message: "{VALUE} is not an integer value",
+    //},
   },
   gender: {
     type: String,
