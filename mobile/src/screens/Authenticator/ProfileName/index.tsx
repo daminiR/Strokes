@@ -8,7 +8,6 @@ import { onScreen, goBack } from '../../../constants'
 import {  RootStackSignInParamList } from '../../../navigation/SignInStack'
 import auth from '@react-native-firebase/auth'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
-import { gql, useMutation } from '@apollo/client'
 import { ADD_PROFILE } from '../../../graphql/mutations/profile'
 import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
 
@@ -38,26 +37,7 @@ const Profile = ({ navigation }: ProfileT): ReactElement => {
     return unsubscribe
   }, [navigation])
 
-  const [createSquash] = useMutation(
-    ADD_PROFILE,
-    {
-      errorPolicy: 'all',
-    },
-  );
-
-  const _onPressProfile = async (values: {first_name: string}) => {
-      //setLoading(true)
-      //setError('')
-      //const { first_name } = values
-      //await createSquash({variables: {first_name: 'is it  now'}})
-        //.then(
-          //(data) => {
-            //console.log(data)
-          //},
-        //)
-        //.catch((e) => {
-          //console.log('All Apollo Errors handles globally for now');
-        //});
+  const _onPressProfile = async () => {
         onScreen('BIRTHDAY', navigation)()
   }
   return (
@@ -69,7 +49,6 @@ const Profile = ({ navigation }: ProfileT): ReactElement => {
         innerRef={form}
         initialValues={formValues}
         initialErrors={formErrors}
-        //onSubmit={(values): Promise<void> => _onPressProfile(values)}>
         enableReinitialize>
         {({
           values,
@@ -90,7 +69,7 @@ const Profile = ({ navigation }: ProfileT): ReactElement => {
               errors={errors}
               autoCapitalize="none"
             />
-            <Button title="Continue" onPress={_onPressProfile} />
+            <Button title="Continue" onPress={_onPressProfile}/>
             <View>
               <Text>{JSON.stringify(values, null, 2)}</Text>
             </View>
