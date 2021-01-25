@@ -6,18 +6,20 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { AppContainer, Space, Button, Input, TextError } from '../../../components'
 import { onScreen, goBack } from '../../../constants'
 import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
-import { useMutation } from '@apollo/client'
+import { InMemoryCache, useQuery, useMutation , makeVar} from '@apollo/client'
 import {  RootStackSignInParamList } from '../../../navigation/SignInStack'
 import auth from '@react-native-firebase/auth'
 import { ADD_PROFILE } from '../../../graphql/mutations/profile'
+import { READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
+import { squashItemsVar} from '../../../index'
 
 type ProfileImageScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'IMAGE_SET'>
 type ProfileImageT = {
   navigation: ProfileImageScreenNavigationProp
 }
-
 const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
+  //const squashItemsVar = makeVar([])
   const [loading, setLoading] = useState(false);
   const [error2, setError] = useState('');
   const form = React.useRef();
@@ -42,23 +44,14 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
   const _onCreateUserRelationError = (error) => {
     console.log(error)
     const {graphQLErrors, networkError} = error;
-    //if (graphQLErrors)
-      //graphQLErrors.map(({message, locations, path}) =>
-        //console.log(
-          //`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        //),
-      //);
-
-    //if (networkError) {
-      //console.log(`[Network error]: ${networkError}`);
-    //}
-    //console.log('All Apollo Errors handles globally for now');
   };
-
-
-  const [createSquash] = useMutation(ADD_PROFILE, {
-    //onError: _onCreateUserRelationError,
-    errorPolicy: 'ignore',
+  const [createSquash, {client, data}] = useMutation(ADD_PROFILE, {
+    ignoreResults: false,
+    onCompleted: (data) => {
+    const squashItems = squashItemsVar()
+    squashItemsVar([...squashItems, data.createSquash._id])
+      console.log(squashItemsVar());
+    },
   });
 
   const _onPressProfile = async (values) => {
@@ -81,12 +74,14 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
       },
     })
       .then((result) => {
-        console.log(result)
-        console.log()
+        //console.log(result)
         if (result.data?.createSquash) {
           //TODO: best to create onSuccess and reset() for form
+          //const squashItems = squashItemsVar()
+          //squashItemsVar([...squashItems, result.data.createSquash._id])
           console.log('Successful submission of form');
-          onScreen('USER', navigation)();
+          console.log(result.data.createSquash._id)
+          onScreen('COMPLETE', navigation)();
         }
       }, error_check => {
        console.log(error_check)
