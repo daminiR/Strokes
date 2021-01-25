@@ -8,5 +8,6 @@ export * from './ProfileBirthday'
 export * from './ProfileGender'
 export * from './ProfileSport'
 export * from './ProfileImages'
+export * from './ProfileComplete'
 
 
