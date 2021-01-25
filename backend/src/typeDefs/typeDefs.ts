@@ -4,9 +4,12 @@ import {gql} from 'apollo-server-express';
 export const typeDefs = gql`
   type Query {
     hello: String!
+    squash(id : ID!): Squash!
+    squashes(limit: Int): [Squash!]
   }
   type Squash {
     first_name: String!
+    _id : ID!
   }
   input SquashNode {
     sport: String!
@@ -23,5 +26,6 @@ export const typeDefs = gql`
       description: String
       image_set: [String!]!
     ): Squash!
+    deleteSquash(_id: String): Squash!
   }
 `;

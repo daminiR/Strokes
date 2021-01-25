@@ -9,6 +9,7 @@ import { ApolloLink } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { onError } from "apollo-link-error"
 import { FormProvider } from './Contexts/FormContext'
+import { useQuery, useMutation , makeVar} from '@apollo/client'
 
 const MEMORY_KEY_PREFIX = '@MyStorage:'
 
@@ -68,7 +69,21 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 /////////////////////////////////////////////////////////////////////////////////
-const cache = new InMemoryCache()
+//const cache = new InMemoryCache()
+export  const squashItemsVar = makeVar([])
+  const cache = new InMemoryCache({
+     typePolicies: {
+    Query: {
+      fields: {
+        squashId: {
+          read() {
+            return squashItemsVar();
+          }
+        }
+      }
+    }
+  }
+  })
 const myHtttpLink  = new HttpLink({
   uri: 'http://localhost:4000/graphql',
 });
