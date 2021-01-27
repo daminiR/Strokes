@@ -26,4 +26,9 @@ const GET_SELECTED_SQUASH_1 = gql`
       squashId @client
     }
 `;
+const GET_PROFILE_STATUS = gql`
+    query  getProfileStatus {
+      isProfileComplete @client
+    }
+`;
 export {READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}

@@ -12,19 +12,21 @@ import auth from '@react-native-firebase/auth'
 import { ADD_PROFILE } from '../../../graphql/mutations/profile'
 import { READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
-import { squashItemsVar} from '../../../index'
+import { squashItemsVar, isProfileCompleteVar} from '../../../cache'
+import {UserContext} from '../../../UserContext'
 
 type ProfileImageScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'IMAGE_SET'>
 type ProfileImageT = {
   navigation: ProfileImageScreenNavigationProp
 }
 const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
-  //const squashItemsVar = makeVar([])
   const [loading, setLoading] = useState(false);
   const [error2, setError] = useState('');
+  const {currentUser} = useContext(UserContext)
   const form = React.useRef();
   const dispatch = useFormDispatch();
   const {values: formValues, errors: formErrors} = useFormState('user');
+  const isProfileComplete = isProfileCompleteVar()
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
       if (form.current) {
@@ -41,6 +43,10 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
     return unsubscribe;
   }, [navigation]);
 
+  useEffect (() => {
+
+  }, [isProfileComplete])
+
   const _onCreateUserRelationError = (error) => {
     console.log(error)
     const {graphQLErrors, networkError} = error;
@@ -48,9 +54,10 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
   const [createSquash, {client, data}] = useMutation(ADD_PROFILE, {
     ignoreResults: false,
     onCompleted: (data) => {
-    const squashItems = squashItemsVar()
-    squashItemsVar([...squashItems, data.createSquash._id])
-      console.log(squashItemsVar());
+    //const squashItems = squashItemsVar()
+      isProfileCompleteVar(true)
+    //squashItemsVar([...squashItems, data.createSquash._id])
+      //console.log(squashItemsVar());
     },
   });
 
@@ -63,11 +70,15 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
       game_level,
       image_set,
     } = values;
+    //IsAuthenticated function is better
+    console.log(isProfileComplete)
+   if (currentUser){
     await createSquash({
       variables: {
+        _id: currentUser.uid,
         first_name: first_name,
         gender: gender,
-        image_set: ['image_2020.png'],
+        image_set: ['image_2021.png'],
         game_level: game_level,
         sports: [{sport: sports, isUserSport: true}],
         birthday: birthday,
@@ -80,8 +91,8 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
           //const squashItems = squashItemsVar()
           //squashItemsVar([...squashItems, result.data.createSquash._id])
           console.log('Successful submission of form');
-          console.log(result.data.createSquash._id)
-          onScreen('COMPLETE', navigation)();
+          //console.log(result.data.createSquash._id)
+          //onScreen('COMPLETE', navigation)();
         }
       }, error_check => {
        console.log(error_check)
@@ -89,6 +100,7 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
       .catch((e) => {
         console.log(e);
       });
+   }
   };
   return (
     <AppContainer
@@ -121,6 +133,7 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
             <Button title="Submit" onPress={handleSubmit} />
             <View>
               <Text>{JSON.stringify(values, null, 2)}</Text>
+              <Text>{JSON.stringify(isProfileComplete, null, 2)}</Text>
             </View>
           </>
         )}

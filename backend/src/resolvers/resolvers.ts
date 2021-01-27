@@ -1,5 +1,6 @@
 import Squash from '../models/Squash';
 import { SquashDocument } from '../types/Squash.d'
+import {Types} from 'mongoose'
 export const resolvers = {
   Query: {
     squash: async (id) => {
