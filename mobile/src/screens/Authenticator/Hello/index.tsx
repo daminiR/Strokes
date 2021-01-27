@@ -3,12 +3,12 @@ import * as Keychain from 'react-native-keychain'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { AppContainer, Button, Space, Txt } from '../../../components'
 import { onScreen } from '../../../constants'
-import { RootStackParamList } from '../../../AppNavigator'
 import { RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
 import  auth  from '@react-native-firebase/auth'
 import { UserContext } from '../../../UserContext'
 import { Text } from 'react-native'
+
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'HELLO'>
 
 type HelloT = {

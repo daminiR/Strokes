@@ -1,4 +1,4 @@
-import { model, Schema} from 'mongoose';
+import { Types, model, Schema} from 'mongoose';
 import { SquashDocument } from '../types/Squash.d'
 //const mongoose = require('mongoose');
 //const Schema = mongoose.Schema;
@@ -14,10 +14,24 @@ const imageArrayMaxLimit = val => {
 const imageArrayMinLimit = val => {
   return (Array.isArray(val) && val.length >= 1)
 }
+
+const _idValidator = _id => {
+ return (_id === typeof(String))
+}
 // TODO: need to decide on what age requirement you need for your app -> 18 for now, also max requirement?
 // TODO: need to figure away to allow enum values only once!
 // TODO: need to check if age above 40s is really the persons age
 var squashSchema = new Schema({
+  _id: {
+    type: String!,
+    required: true,
+    //validate: [
+      //{
+        //validator: _idValidator,
+        //message: "_id provided is not an ObjectID",
+      //},
+    //],
+  },
   first_name: {
     type: String,
     required: true,
@@ -31,8 +45,8 @@ var squashSchema = new Schema({
     max: 90,
     //TODO: fix the age and bithday category asap
     //validate: {
-      //validator: Number.isInteger,
-      //message: "{VALUE} is not an integer value",
+    //validator: Number.isInteger,
+    //message: "{VALUE} is not an integer value",
     //},
   },
   gender: {
@@ -41,7 +55,12 @@ var squashSchema = new Schema({
     enum: GENDERS,
   },
   sports: {
-    type: [{ sport: { type: String, enum: SPORTS }, isUserSport: {type: Boolean, default: false}}],
+    type: [
+      {
+        sport: { type: String, enum: SPORTS },
+        isUserSport: { type: Boolean, default: false },
+      },
+    ],
     required: true,
     validate: [
       {
