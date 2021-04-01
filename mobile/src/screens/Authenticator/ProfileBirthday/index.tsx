@@ -14,7 +14,6 @@ type ProfileBirthdayScreenNavigationProp = StackNavigationProp<RootStackSignInPa
 type ProfileBirthdayT = {
   navigation: ProfileBirthdayScreenNavigationProp
 }
-
 const ProfileBirthday = ({ navigation }: ProfileBirthdayT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')

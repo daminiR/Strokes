@@ -19,10 +19,3 @@ export const cache = new InMemoryCache({
     },
   },
 });
-  //TODO: async funtion persist check later
-const persist = async () => {
-  await persistCache({
-    cache: cache,
-    storage: new AsyncStorageWrapper(AsyncStorage),
-  })
-}

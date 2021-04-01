@@ -34,28 +34,33 @@ const ConfirmSignUp = ({navigation }: ConfirmSignUpT): ReactElement => {
   }, [])
 
   const _onPress = async (values: { code: string }): Promise<void> => {
-    setLoading(true)
-    setError('')
-    const { code } = values
-    await confirmResult.confirm(code)
-    .then(() => {
-      console.log(confirmResult)
-      console.log(currentUser)
-      console.log("signup confirmed")
       setLoading(false);
-      onScreen('EMAIL', navigation)()
+      onScreen('PROFILE', navigation )()
+      //onScreen('EMAIL', navigation)()
     }
-    )
-    .catch((err) => {
-      setLoading(false);
-      //TODO: remeber to remove from screen once deployed
-      console.log(err.code)
-      console.log("What is happening")
-      console.log(confirmResult)
-      setError(err.message)
-    }
-           )
-    }
+
+  //const _onPress = async (values: { code: string }): Promise<void> => {
+    //setLoading(true)
+    //setError('')
+    //const { code } = values
+    //await confirmResult.confirm(code)
+    //.then((userCredential) => {
+      //console.log("what is happening")
+      //console.log(userCredential)
+      ////setConfirmResult(userCredential)
+      //console.log("signup confirmed")
+      //setLoading(false);
+      //onScreen('EMAIL', navigation)()
+    //}
+    //)
+    //.catch((err) => {
+      //setLoading(false);
+      ////TODO: remeber to remove from screen once deployed
+      //console.log(err.code)
+      //console.log("error in email")
+    //}
+           //)
+    //}
 
   return (
     <>

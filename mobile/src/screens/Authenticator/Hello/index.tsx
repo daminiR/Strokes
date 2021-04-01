@@ -7,6 +7,7 @@ import { RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import { LoginButton, AccessToken } from 'react-native-fbsdk';
 import  auth  from '@react-native-firebase/auth'
 import { UserContext } from '../../../UserContext'
+import {isProfileCompleteVar} from '../../../cache'
 import { Text } from 'react-native'
 
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'HELLO'>
@@ -20,6 +21,7 @@ const Hello = ({ navigation }: HelloT): ReactElement => {
   const [loggedIn, setLoggedIn] = useState(false)
   const {confirmResult, setConfirmResult} = useContext(UserContext)
   const {currentUser} = useContext(UserContext)
+  const isProfileComplete = isProfileCompleteVar()
 
   return (
     <AppContainer loading={loading}>
