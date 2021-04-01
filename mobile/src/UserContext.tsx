@@ -5,20 +5,22 @@ import SignOutStack from './navigation/SignOutStack'
 import SportAppStack from './navigation/SportsAppStack'
 import {isProfileCompleteVar} from './cache'
 import {useReactiveVar} from '@apollo/client'
+import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from './graphql/queries/profile'
+import { useQuery, useMutation } from '@apollo/client'
 
 export const UserContext = createContext();
 export const AuthNavigator = () => {
   const [confirmResult, setConfirmResult ] = useState(null)
   const [currentUser, setCurrentUser ] = useState(null)
   const [loading, setLoading ] = useState(true)
-  const  isProfileComplete  = useReactiveVar(isProfileCompleteVar)
+  const {data} = useQuery(GET_PROFILE_STATUS);
   const onAuthStateChanged = (user) => {
         setCurrentUser(user)
         setLoading(false)
-        console.log(currentUser)
   }
   useEffect(() => {
       const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged)
+      console.log(unsubscribe)
       return unsubscribe
   }, [])
   const value = {
@@ -28,11 +30,11 @@ export const AuthNavigator = () => {
   };
   const renderSignIn = () => {
     //#todo make note: changes here affect how it skips email after signup
-    if (!isProfileComplete && currentUser && currentUser.email !== null) {
-      return !loading && <SignInStack />;
-    } else if (isProfileComplete && currentUser && currentUser.email !== null) {
-      return !loading && <SportAppStack />;
-    } else {
+    if (currentUser && currentUser.email !== null) {
+      return !loading && <SignInStack />;}
+    else if (data.isProfileComplete && currentUser && currentUser.email !== null) {
+      return !loading && <SportAppStack />;}
+    else {
       return <SignOutStack />;
     }
   }

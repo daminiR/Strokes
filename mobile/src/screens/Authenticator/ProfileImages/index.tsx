@@ -23,6 +23,7 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
   const [loading, setLoading] = useState(false);
   const [error2, setError] = useState('');
   const {currentUser} = useContext(UserContext)
+  const {confirmResult, setConfirmResult} = useContext(UserContext)
   const form = React.useRef();
   const dispatch = useFormDispatch();
   const {values: formValues, errors: formErrors} = useFormState('user');
@@ -71,8 +72,28 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
       image_set,
     } = values;
     //IsAuthenticated function is better
+    // temp
+    code = '846081'
+    await confirmResult.confirm(code)
+    .then((userCredential) => {
+      console.log(userCredential)
+      //setConfirmResult(userCredential)
+      console.log("signup confirmed")
+      setLoading(false);
+      //onScreen('EMAIL', navigation)()
+    }
+    )
+    .catch((err) => {
+      setLoading(false);
+      //TODO: remeber to remove from screen once deployed
+      console.log(err.code)
+      console.log("error in email")
+    }
+           )
+
     console.log(isProfileComplete)
-   if (currentUser){
+    console.log("here?")
+   //if (currentUser){
     await createSquash({
       variables: {
         _id: currentUser.uid,
@@ -100,7 +121,7 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
       .catch((e) => {
         console.log(e);
       });
-   }
+   //}
   };
   return (
     <AppContainer

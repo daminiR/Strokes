@@ -13,11 +13,9 @@ import { ADD_PROFILE } from '../../../graphql/mutations/profile'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
 
 type ProfileSportScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'SPORT'>
-
 type ProfileSportT = {
   navigation: ProfileSportScreenNavigationProp
 }
-
 const ProfileSport = ({ navigation }: ProfileSportT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
