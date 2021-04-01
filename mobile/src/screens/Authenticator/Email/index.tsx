@@ -9,11 +9,12 @@ import { RootStackParamList } from '../../../AppNavigator'
 import {UserContext} from '../../../UserContext'
 import  auth  from '@react-native-firebase/auth'
 import {Text} from 'react-native'
-import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
-
+import {  RootStackSignInParamList, RootStackSignOutParamList } from '../../../navigation/SignOutStack'
+import {isProfileCompleteVar} from '../../../cache'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 // add error checking and validation checking soon??
-type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'EMAIL'>
-type ProfileScreenRouteProp = RouteProp<RootStackSignOutParamList, 'EMAIL'>
+//type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'EMAIL'>
+type ProfileScreenNavigationProp = StackNavigationPrep<RootStackSignInParamList, 'PROFILE'>
 
 type AddEmailT = {
   navigation: ProfileScreenNavigationProp
@@ -24,17 +25,31 @@ const Email = ({ navigation }: AddEmailT): ReactElement => {
   const {confirmResult, setConfirmResult} = useContext(UserContext)
   const {currentUser} = useContext(UserContext)
 
+  const update = value => {
+      isProfileCompleteVar(value)
+      AsyncStorage.setItem('isProfileComplete', JSON.stringify(value))
+  }
+
+  //const _onPress = async (values: { email: string }): Promise<void> => {
+      ////navigation.navigate('EMAIL', {screen: 'PROFILE'})
+      //onScreen('PROFILE', navigation )()
+  //}
   const _onPress = async (values: { email: string }): Promise<void> => {
     setLoading(true)
     setError('')
     const { email } = values
     await currentUser.updateEmail(email)
     .then(() => {
+      //update(confirmResult.additionalUserInfo.isNewUser)
       setLoading(false);
       //onScreen('USER', navigation)()
+
       console.log(currentUser)
       console.log(confirmResult)
       console.log("email Updated")
+
+      //navigation.navigate('EMAIL', {screen: 'PROFILE'})
+      onScreen('PROFILE', navigation )()
     }
     )
     .catch((err) => {

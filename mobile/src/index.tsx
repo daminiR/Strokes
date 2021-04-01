@@ -1,16 +1,17 @@
-import React, { useState, ReactElement } from 'react'
-import { cache} from './cache'
+import React, { useEffect, useState, ReactElement } from 'react'
+import { Text} from 'react-native'
+import { cache, persist} from './cache'
 import {AuthNavigator} from './UserContext'
 import { from ,createHttpLink, ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
 import { ApolloLink } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { onError } from "apollo-link-error"
 import { FormProvider } from './Contexts/FormContext'
-import {makeVar} from '@apollo/client'
-import {persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist'
+import {makeVar, NormalizedCacheObject} from '@apollo/client'
+import {CachePersistor, persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {onErrorLink} from './globalGraphqlErrors'
-
+import {isProfileCompleteVar} from './cache'
 
 
 //////////////////////////////////////// temporary fixe for RN debugger ///////////////////////////////////////
@@ -26,19 +27,46 @@ if (window.FETCH_SUPPORT) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
 //TODO: async funtion persist check later
-const myHtttpLink  = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
-});
-const link = ApolloLink.from([onErrorLink, myHtttpLink])
-const client = new ApolloClient({
-  link: link,
-  cache: cache,
-});
 const App = (): ReactElement =>
 {
+const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
+const [ready, setReady] = useState(false)
+const [persistor, setPersistor] = useState<CachePersistor<NormalizedCacheObject>>();
+ useEffect(() => {
+    async function init() {
+      console.log("getting fired up")
+      let newPersistor = new CachePersistor({
+        cache,
+        storage: new AsyncStorageWrapper(AsyncStorage),
+        trigger: 'write',
+      });
+
+      //const prevIsComplete = await AsyncStorage.getItem('isProfileComplete')
+      //isProfileCompleteVar(JSON.parse(prevIsComplete))
+      //setReady(true)
+      await newPersistor.restore();
+      setPersistor(newPersistor);
+      const myHtttpLink  = new HttpLink({
+      uri: 'http://localhost:4000/graphql',
+      });
+      const link = ApolloLink.from([onErrorLink, myHtttpLink]);
+      setClient(
+        new ApolloClient({
+          uri: 'http://localhost:4000/graphql',
+          //link: link,
+          cache: cache,
+        }),
+      );
+    }
+
+    init();
+  }, []);
+
+  if (!client) {
+    return <Text>Initializing app...</Text>;
+  }
+
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   return (
     <ApolloProvider client={client}>

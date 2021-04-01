@@ -7,7 +7,7 @@ import { RootStackParamList } from '../../../AppNavigator'
 import auth from '@react-native-firebase/auth'
 import {UserContext} from '../../../UserContext'
 import { useQuery, useMutation } from '@apollo/client'
-import { READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
+import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'USER'>
 
 type UserT = {
@@ -27,7 +27,9 @@ const User = ({ navigation }: UserT ): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const {confirmResult, setConfirmResult} = useContext(UserContext)
+  const {data} = useQuery(GET_PROFILE_STATUS);
   const {currentUser} = useContext(UserContext)
+  console.log(currentUser)
   const _onPressProfile = () => {
       onScreen('PROFILE', navigation)()
   }
@@ -56,6 +58,7 @@ const User = ({ navigation }: UserT ): ReactElement => {
         <Text>
           {'you are loged in!'}
         {JSON.stringify(currentUser)}
+        {JSON.stringify(currentUser.additionalInfor)}
           </Text>
         <Button title="Sign Out" onPress={_onPressSignOut}/>
         <Button title="Profile" onPress={_onPressProfile}/>
