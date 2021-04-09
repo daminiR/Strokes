@@ -28,7 +28,6 @@ export default function SignOutStack() {
       <Stack.Screen name="SIGN_IN" component={SignIn} />
       <Stack.Screen name="CONFIRM_SIGN_UP" component={ConfirmSignUp} />
       <Stack.Screen name="EMAIL" component={Email} />
-      <Stack.Screen name="USER" component={User} />
       <Stack.Screen name="PROFILE" component={Profile} />
       <Stack.Screen name="BIRTHDAY" component={ProfileBirthday} />
       <Stack.Screen name="GENDER" component={ProfileGender} />

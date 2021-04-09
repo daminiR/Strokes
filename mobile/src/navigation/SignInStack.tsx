@@ -20,13 +20,8 @@ export type RootStackSignInParamList = {
 export default function SignInStack() {
   return (
     <NavigationContainer>
-      <Stack.Navigator headerMode="none">
+      <Stack.Navigator initialRouteName= "USER" headerMode="none">
       <Stack.Screen name="USER" component={User} />
-      <Stack.Screen name="PROFILE" component={Profile} />
-      <Stack.Screen name="BIRTHDAY" component={ProfileBirthday} />
-      <Stack.Screen name="GENDER" component={ProfileGender} />
-      <Stack.Screen name="SPORT" component={ProfileSport} />
-      <Stack.Screen name="IMAGE_SET" component={ProfileImages} />
       </Stack.Navigator>
     </NavigationContainer>
   )
