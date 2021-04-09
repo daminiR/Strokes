@@ -29,13 +29,16 @@ export const AuthNavigator = () => {
     currentUser,
   };
   const renderSignIn = () => {
-    //#todo make note: changes here affect how it skips email after signup
-    if (currentUser && currentUser.email !== null) {
+    console.log(currentUser)
+    //TODO make note: changes here affect how it skips email after signup
+    //TODO: fix surrent User email verification at some point!!
+    //if (currentUser && currentUser.email !== null) {
+    if (currentUser !== null) {
       return !loading && <SignInStack />;}
-    else if (data.isProfileComplete && currentUser && currentUser.email !== null) {
-      return !loading && <SportAppStack />;}
+    //else if (data.isProfileComplete && currentUser && currentUser.email !== null) {
+      //return !loading && <SportAppStack />;}
     else {
-      return <SignOutStack />;
+      return !loading && <SignOutStack />;
     }
   }
   return (
