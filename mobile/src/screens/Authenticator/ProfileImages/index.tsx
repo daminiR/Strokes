@@ -113,7 +113,7 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
           //squashItemsVar([...squashItems, result.data.createSquash._id])
           console.log('Successful submission of form');
           //console.log(result.data.createSquash._id)
-          onScreen('USER', navigation)();
+          onScreen('MATCH', navigation)();
         }
       }, error_check => {
        console.log(error_check)
