@@ -2,7 +2,7 @@ import React, { useContext, useState, ReactElement } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { Email, Hello, SignIn, ConfirmSignUp} from '../screens/Authenticator'
 import { UserContext } from '../UserContext'
-import {ProfileImages, User, ProfileComplete, ProfileSport, ProfileGender, Profile, ProfileBirthday} from '../screens/Authenticator'
+import {ProfileImages, User, ProfileComplete, ProfileSport, ProfileGender, ProfileName, ProfileBirthday} from '../screens/Authenticator'
 import { NavigationContainer } from '@react-navigation/native'
 
 const Stack = createStackNavigator()
@@ -12,7 +12,7 @@ export type RootStackSignOutParamList = {
   SIGN_IN: undefined
   CONFIRM_SIGN_UP: undefined
   EMAIL : undefined
-  PROFILE: undefined
+  PROFILE_NAME: undefined
   USER: undefined
   BIRTHDAY: undefined
   GENDER: undefined
@@ -28,7 +28,7 @@ export default function SignOutStack() {
       <Stack.Screen name="SIGN_IN" component={SignIn} />
       <Stack.Screen name="CONFIRM_SIGN_UP" component={ConfirmSignUp} />
       <Stack.Screen name="EMAIL" component={Email} />
-      <Stack.Screen name="PROFILE" component={Profile} />
+      <Stack.Screen name="PROFILE_NAME" component={ProfileName} />
       <Stack.Screen name="BIRTHDAY" component={ProfileBirthday} />
       <Stack.Screen name="GENDER" component={ProfileGender} />
       <Stack.Screen name="SPORT" component={ProfileSport} />

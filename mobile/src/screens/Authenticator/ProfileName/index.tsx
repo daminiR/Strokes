@@ -11,11 +11,11 @@ import { View,  Text, ScrollView, TextInput } from 'react-native'
 import { ADD_PROFILE } from '../../../graphql/mutations/profile'
 import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
 
-type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'PROFILE'>
-type ProfileT = {
-  navigation: ProfileScreenNavigationProp
+type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'PROFILE_NAME'>
+type ProfileNameT = {
+  navigation: ProfileNameScreenNavigationProp
 }
-const Profile = ({ navigation }: ProfileT): ReactElement => {
+const ProfileName = ({ navigation }: ProfileNameT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error2, setError] = useState('');
   const form = React.useRef()
@@ -79,4 +79,4 @@ const Profile = ({ navigation }: ProfileT): ReactElement => {
     </AppContainer>
   );
 }
-export { Profile }
+export { ProfileName }
