@@ -17,19 +17,56 @@ type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
 
-const Profile  = ({ navigation }: ProfileT ): ReactElement => {
-  //<Button title="Profile" onPress={_onPressProfile}/>
+const Profile = ({ navigation }: ProfileT ): ReactElement => {
+  //const {
+    //data: {selectSquash},
+  //} = useQuery(GET_SELECTED_SQUASH)
+  //console.log(selectSquash)
+  //cosnt { loading, error, data } = useQuery(READ_SQUASH, {
+        //variables: squashid,
+        //skip: squashid === undefine
+  //})
+  console.log("user page data")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const {confirmResult, setConfirmResult} = useContext(UserContext)
+  const {data} = useQuery(GET_PROFILE_STATUS);
+  const {currentUser} = useContext(UserContext)
+  console.log(currentUser)
+  const _onPressProfile = () => {
+      onScreen('PROFILE', navigation)()
+  }
+  const _onPressSignOut = async () : Promise<void> => {
+    setLoading(true)
+    setError('')
+    await auth()
+      .signOut()
+      .then((res) => {
+        console.log('Succesful signout')
+        console.log(currentUser)
+        setConfirmResult(null)
+        setLoading(false)
+        setError('')
+        //onScreen('HELLO', navigation)()
+      })
+      .catch((err) => {
+        console.log(err.code);
+        setError(err.code)
+      });
+  }
 
   return (
     <>
       <AppContainer title="User" loading={loading}>
         <Text>
           {'you are loged in!'}
-          {JSON.stringify(currentUser)}
-          {JSON.stringify(currentUser.additionalInfor)}
-        </Text>
+        {JSON.stringify(currentUser)}
+        {JSON.stringify(currentUser.additionalInfor)}
+          </Text>
+        <Button title="Sign Out" onPress={_onPressSignOut}/>
+        <Button title="Profile" onPress={_onPressProfile}/>
       </AppContainer>
     </>
-  );
+  )
 }
 export { Profile }

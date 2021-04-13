@@ -1,48 +1,40 @@
 import React, { useContext, useState, ReactElement } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import {Profile, User, Match} from '../screens/Authenticator'
+import {Profile, Chat, Match} from '../screens/Authenticator'
 import { NavigationContainer } from '@react-navigation/native'
-
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const ProfileStack = createStackNavigator()
 const ChatStack = createStackNavigator()
-const MatchStack = createStackNavigator()
+const Tab  = createBottomTabNavigator()
 
 export type RootStackSignInParamList = {
   PROFILE: undefined
   CHAT: undefined
   MATCH: undefined
 }
-
 export function ProfileStackScreen() {
   return (
-    <NavigationContainer>
-      <ProfileStack.Navigator initialRouteName= "USER" headerMode="none">
-      <ProfileStack.Screen name="USER" component={User} />
-      <ProfileStack.Screen name="MATCH" component={Match} />
+      <ProfileStack.Navigator>
+      <ProfileStack.Screen name="PROFILE" component={Profile} />
       </ProfileStack.Navigator>
-    </NavigationContainer>
   )
 }
-
 export function ChatStackScreen() {
   return (
-    <NavigationContainer>
-      <ChatStack.Navigator initialRouteName= "USER" headerMode="none">
-      <ChatStack.Screen name="PROFILE" component={Profile} />
-      <ChatStack.Screen name="MATCH" component={Match} />
-      </ChatStack.Navigator>
-    </NavigationContainer>
-  )
+    <ChatStack.Navigator>
+      <ProfileStack.Screen name="CHAT" component={Chat} />
+    </ChatStack.Navigator>
+  );
 }
-
-export  function MatchStackScreen() {
+export default function MatchStackScreen() {
   return (
     <NavigationContainer>
-      <ChatStack.Navigator initialRouteName= "USER" headerMode="none">
-      <ChatStack.Screen name="USER" component={User} />
-      <ChatStack.Screen name="PROFILE" component={Profile} />
-      </ChatStack.Navigator>
+      <Tab.Navigator initialRouteName='MATCH'>
+        <Tab.Screen name="PROFILE" component={ProfileStackScreen} />
+        <Tab.Screen name="MATCH" component={Match} />
+        <Tab.Screen name="CHAT" component={ChatStackScreen} />
+      </Tab.Navigator>
     </NavigationContainer>
-  )
+  );
 }
