@@ -11,13 +11,14 @@ import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } f
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
+type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'CHAT'>
 
-type MatchT = {
+type ChatT = {
   navigation: MatchScreenNavigationProp
 }
 
-const Match  = ({ navigation }: MatchT ): ReactElement => {
+const Chat  = ({ navigation }: ChatT ): ReactElement => {
+  const [loading, setLoading] = useState(false)
   //<Button title="Profile" onPress={_onPressProfile}/>
 
   return (
@@ -30,4 +31,4 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
     </>
   );
 }
-export { Match }
+export { Chat }

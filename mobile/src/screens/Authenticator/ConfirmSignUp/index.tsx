@@ -35,7 +35,7 @@ const ConfirmSignUp = ({navigation }: ConfirmSignUpT): ReactElement => {
 
   const _onPress = async (values: { code: string }): Promise<void> => {
       setLoading(false);
-      onScreen('PROFILE', navigation )()
+      onScreen('PROFILE_NAME', navigation )()
       //onScreen('EMAIL', navigation)()
     }
 
