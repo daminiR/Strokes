@@ -15,7 +15,7 @@ import { View,  Text, ScrollView, TextInput } from 'react-native'
 import { squashItemsVar, isProfileCompleteVar} from '../../../cache'
 import {UserContext} from '../../../UserContext'
 
-type ProfileImageScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'IMAGE_SET'>
+type ProfileImageScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'MATCH'>
 type ProfileImageT = {
   navigation: ProfileImageScreenNavigationProp
 }
