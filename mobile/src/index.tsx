@@ -12,7 +12,7 @@ import {CachePersistor, persistCache, AsyncStorageWrapper} from 'apollo3-cache-p
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {onErrorLink} from './globalGraphqlErrors'
 import {isProfileCompleteVar} from './cache'
-
+import  { createUploadLink } from 'apollo-upload-client';
 
 //////////////////////////////////////// temporary fixe for RN debugger ///////////////////////////////////////
 global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
@@ -51,9 +51,11 @@ const [persistor, setPersistor] = useState<CachePersistor<NormalizedCacheObject>
       uri: 'http://localhost:4000/graphql',
       });
       const link = ApolloLink.from([onErrorLink, myHtttpLink]);
+      //const uri = 'http://localhost:4000/graphql'
       setClient(
         new ApolloClient({
           uri: 'http://localhost:4000/graphql',
+          //link:createUploadLink({ uri }),
           //link: link,
           cache: cache,
         }),
