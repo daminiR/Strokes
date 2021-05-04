@@ -6,6 +6,7 @@ export const typeDefs = gql`
     hello: String!
     squash(id: ID!): Squash!
     squashes(limit: Int): [Squash!]
+    files: [String]
   }
   type Squash {
     first_name: String!
@@ -16,6 +17,7 @@ export const typeDefs = gql`
     isUserSport: Boolean
   }
   type Mutation {
+    uploadFile(file: Upload!): Boolean
     createSquash(
       _id: String!
       first_name: String!
