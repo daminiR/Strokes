@@ -20,7 +20,6 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
   const [error, setError] = useState('')
   const {confirmResult, setConfirmResult} = useContext(UserContext)
   const {currentUser} = useContext(UserContext)
-
   const _onPressSignUp = async (values: {
     phone_number: string;
     email: string;
