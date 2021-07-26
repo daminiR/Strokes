@@ -11,12 +11,10 @@ import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } f
 import {isProfileCompleteVar} from '../../../cache'
 
 type ProfileCompleteScreenNavigationProp = StackNavigationProp<RootStackSportAppParamList, 'COMPLETE'>
-
 type CompleteT = {
   navigation: ProfileCompleteScreenNavigationProp
 }
-
-const ProfileComplete = ({ navigation }: CompleteT ): ReactElement => {
+  const ProfileComplete = ({ navigation }: CompleteT ): ReactElement => {
   const {data, loading, error} = useQuery(GET_PROFILE_STATUS);
   const isProfileComplete = isProfileCompleteVar()
   const [loading2, setLoading] = useState(false)
@@ -25,7 +23,6 @@ const ProfileComplete = ({ navigation }: CompleteT ): ReactElement => {
   const _onPressDelete = async () : Promise<void> => {
       console.log(isProfileComplete)
   }
-
   return (
     <>
       <AppContainer title="Complete" loading={loading}>

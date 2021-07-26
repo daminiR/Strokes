@@ -30,9 +30,9 @@ if (window.FETCH_SUPPORT) {
 //TODO: async funtion persist check later
 const App = (): ReactElement =>
 {
-const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
-const [ready, setReady] = useState(false)
-const [persistor, setPersistor] = useState<CachePersistor<NormalizedCacheObject>>();
+ const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
+ const [ready, setReady] = useState(false)
+ const [persistor, setPersistor] = useState<CachePersistor<NormalizedCacheObject>>();
  useEffect(() => {
     async function init() {
       console.log("getting fired up")
@@ -41,12 +41,10 @@ const [persistor, setPersistor] = useState<CachePersistor<NormalizedCacheObject>
         storage: new AsyncStorageWrapper(AsyncStorage),
         trigger: 'write',
       });
-
       //const prevIsComplete = await AsyncStorage.getItem('isProfileComplete')
       //isProfileCompleteVar(JSON.parse(prevIsComplete))
-      //setReady(true)
       await newPersistor.restore();
-      setPersistor(newPersistor);
+      //setPersistor(newPersistor);
       const myHtttpLink  = new HttpLink({
       uri: 'http://localhost:4000/graphql',
       });
@@ -61,15 +59,14 @@ const [persistor, setPersistor] = useState<CachePersistor<NormalizedCacheObject>
         }),
       );
     }
-
     init();
+    setReady(true)
   }, []);
-
   if (!client) {
     return <Text>Initializing app...</Text>;
   }
-
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
+  //{ready && <AuthNavigator/>}
   return (
     <ApolloProvider client={client}>
       <FormProvider>
@@ -78,5 +75,4 @@ const [persistor, setPersistor] = useState<CachePersistor<NormalizedCacheObject>
     </ApolloProvider>
   );
 }
-
 export default App

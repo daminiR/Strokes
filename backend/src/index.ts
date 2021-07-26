@@ -8,11 +8,11 @@ import { typeDefs } from './typeDefs/typeDefs';
 import { Storage } from '@google-cloud/storage'
 import * as path from 'path'
 
- export const googleCloud = new Storage({
+export const googleCloud = new Storage({
   keyFilename: "../backend/src/activitybook-a598b-782d9db5058e.json",
   projectId: "activitybook-a598b",
 });
-  //export const acsport1 = googleCloud.bucket('acsport1')
+  export const acsport1 = googleCloud.bucket('acsport1')
 
 const startServer = async () => {
   const uri = process.env.ATLAS_URI;
