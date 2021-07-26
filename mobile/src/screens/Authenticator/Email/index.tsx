@@ -23,7 +23,7 @@ const Email = ({ navigation }: AddEmailT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const {confirmResult, setConfirmResult} = useContext(UserContext)
-  const {currentUser} = useContext(UserContext)
+  const {currentUser, setCurrentUser} = useContext(UserContext)
 
   const update = value => {
       isProfileCompleteVar(value)
@@ -45,11 +45,12 @@ const Email = ({ navigation }: AddEmailT): ReactElement => {
       //onScreen('USER', navigation)()
 
       console.log(currentUser)
+      setCurrentUser(currentUser)
       console.log(confirmResult)
       console.log("email Updated")
 
       //navigation.navigate('EMAIL', {screen: 'PROFILE'})
-      onScreen('PROFILE', navigation )()
+      //onScreen('PROFILE', navigation )()
     }
     )
     .catch((err) => {

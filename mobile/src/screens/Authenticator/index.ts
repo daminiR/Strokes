@@ -8,7 +8,7 @@ export * from './ProfileGender'
 export * from './ProfileSport'
 export * from './ProfileImages'
 export * from './ProfileComplete'
-
+export * from './Likes'
 export * from './Chat'
 export * from './Profile'
 export * from './Match'

@@ -6,37 +6,56 @@ import SportAppStack from './navigation/SportsAppStack'
 import {isProfileCompleteVar} from './cache'
 import {useReactiveVar} from '@apollo/client'
 import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from './graphql/queries/profile'
-import { useQuery, useMutation } from '@apollo/client'
+import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 
 export const UserContext = createContext();
 export const AuthNavigator = () => {
   const [confirmResult, setConfirmResult ] = useState(null)
-  const [currentUser, setCurrentUser ] = useState(null)
+  const [currentUser, setCurrentUser ] = useState()
+  const [isProfileComplete, setProfileState ] = useState(false)
   const [loading, setLoading ] = useState(true)
-  const {data} = useQuery(GET_PROFILE_STATUS);
-  const onAuthStateChanged = (user) => {
-        setCurrentUser(user)
-        setLoading(false)
+  const [getSquashProfile, {data, error}] = useLazyQuery(READ_SQUASH, {onCompleted: data => { if (data){setProfileState(true)
+  if (loading) setLoading(false)}}})
+  const onAuthStateChanged = (currentUser) => {
+        setCurrentUser(currentUser)
+        console.log("what")
+        getSquashProfile({variables: { id: currentUser.uid}})
+        //if (data) { console.log("what")
+
+          //setProfileState(true)}
+        if (loading) setLoading(false)
+
   }
   useEffect(() => {
       const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged)
       console.log(unsubscribe)
       return unsubscribe
   }, [])
+
+  if (loading) return null
   const value = {
     confirmResult,
     setConfirmResult,
     currentUser,
+    setCurrentUser,
+    isProfileComplete,
+    setProfileState
   };
   const renderSignIn = () => {
-    console.log(currentUser)
     //TODO make note: changes here affect how it skips email after signup
     //TODO: fix surrent User email verification at some point!!
     //if (currentUser && currentUser.email !== null) {
-    if (currentUser !== null) {
-      return !loading && <SignInStack />;}
-    //else if (data.isProfileComplete && currentUser && currentUser.email !== null) {
-      //return !loading && <SportAppStack />;}
+    if (currentUser  !== null && loading === false) {
+      console.log(data)
+      //getSquashProfile({variables: {id: currentUser.uid}})
+      if (isProfileComplete === false) {
+        return !loading && <SportAppStack />;
+      } else if (isProfileComplete === true) {
+        return !loading && <SignInStack />;
+      }
+    }
+    //else if ( currentUser && currentUser.email !== null) {
+    //return !loading && <SportAppStack />;}
     else {
       return !loading && <SignOutStack />;
     }
