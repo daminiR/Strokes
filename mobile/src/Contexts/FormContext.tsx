@@ -54,11 +54,11 @@ const formReducer = (state, action) => {
     }
 }
 
-
+const trying = () => { console.log("trying")}
 
 const FormProvider: React.FC<Props>= ({ children }) => {
-  const [state , dispatch ] = React.useReducer( formReducer, initialState)
 
+  const [state , dispatch ] = React.useReducer( formReducer, initialState)
   return (
     <FormStateContext.Provider value={state}>
       <FormDispatchContext.Provider value={dispatch}>
@@ -82,7 +82,6 @@ const useFormState = id => {
 
 const useFormDispatch = () => {
   const dispatch = React.useContext(FormDispatchContext);
-
   if (dispatch === undefined) {
     throw new Error('useFormState must be used within a FormProvider"');
   }

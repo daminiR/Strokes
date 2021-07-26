@@ -4,9 +4,9 @@ import {gql} from 'apollo-server-express';
 export const typeDefs = gql`
   type Query {
     hello: String!
-    squash(id: ID!): Squash!
+    squash(_id: ID!): Squash!
     squashes(limit: Int): [Squash!]
-    files: [String]
+    display(filaname: String): String
   }
   type Squash {
     first_name: String!
@@ -17,7 +17,7 @@ export const typeDefs = gql`
     isUserSport: Boolean
   }
   type Mutation {
-    uploadFile(file: Upload!): Boolean
+    uploadFile(files: [Upload!]!, _id: String!): Boolean
     createSquash(
       _id: String!
       first_name: String!

@@ -1,8 +1,8 @@
 import { gql, useMutation } from '@apollo/client'
 
 const UPLOAD_FILE = gql`
-  mutation UploadFile($file: Upload!){
-        uploadFile(file: $file)
+  mutation UploadFile($files: [Upload!]!, $_id: String!){
+        uploadFile(files: $files, _id: $_id)
     }
 `
 const ADD_PROFILE = gql`
@@ -17,4 +17,10 @@ const DELETE_PROFILE = gql`
     deleteSquash(id: $id)
   }
 `
+const UPDATE_PROFILE_COMPLETE = gql`
+  mutation UpdateProfileComplete($id: ID, $isProfileComplete: Boolean!){
+      _id
+      isProfileComplete
+    }
+`;
 export { UPLOAD_FILE, ADD_PROFILE , DELETE_PROFILE}
