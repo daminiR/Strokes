@@ -18,12 +18,13 @@ const gcs_images = "/all_images"
 const files:string[] = []
 export const resolvers = {
   Query: {
-    squash: async (id) => {
-      const squash_val = await Squash.findById(id);
-      console.log("values")
+    squash: async (parents, args, context, info) => {
+      const squash_val = await Squash.findById(args.id);
+      console.log("is it working now")
+      console.log(squash_val)
       return squash_val;
     },
-    squashes: async (limit) => {
+    squashes: async (parents, args, context, info) => {
       const squashes = await Squash.find({});
       console.log(squashes)
       return squashes;
@@ -47,7 +48,6 @@ export const resolvers = {
          //dataStream.push(null)
          await new Promise((resolve, reject) => {
            //dataStream
-        console.log("what is going on")
            stream
              .pipe(
                gcFile.createWriteStream({

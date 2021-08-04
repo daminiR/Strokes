@@ -4,7 +4,7 @@ import {gql} from 'apollo-server-express';
 export const typeDefs = gql`
   type Query {
     hello: String!
-    squash(_id: ID!): Squash!
+    squash(id: String!): Squash!
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
   }

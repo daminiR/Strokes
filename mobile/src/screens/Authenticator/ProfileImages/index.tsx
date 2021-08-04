@@ -96,7 +96,6 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
   };
   const _onPressProfile = async (values) => {
     setLoading(true);
-    console.log("here")
     const {
       first_name,
       birthday,
@@ -125,8 +124,9 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
       //});
 
     console.log("user")
-    console.log(currentUser)
+    console.log(typeof currentUser.uid)
     if (currentUser){
+      console.log(currentUser.uid)
     await createSquash({
       variables: {
         _id: currentUser.uid,

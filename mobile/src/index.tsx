@@ -4,6 +4,7 @@ import { cache, persist} from './cache'
 import {AuthNavigator} from './UserContext'
 import { from ,createHttpLink, ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
 import { ApolloLink } from 'apollo-link'
+import firebase from '@react-native-firebase/storage'
 import { HttpLink } from 'apollo-link-http'
 import { onError } from "apollo-link-error"
 import { FormProvider } from './Contexts/FormContext'
@@ -45,6 +46,8 @@ const App = (): ReactElement =>
       //isProfileCompleteVar(JSON.parse(prevIsComplete))
       await newPersistor.restore();
       //setPersistor(newPersistor);
+      //newPersistor.pause()
+      //newPersistor.purge()
       const myHtttpLink  = new HttpLink({
       uri: 'http://localhost:4000/graphql',
       });
@@ -60,11 +63,14 @@ const App = (): ReactElement =>
       );
     }
     init();
+
     setReady(true)
   }, []);
   if (!client) {
     return <Text>Initializing app...</Text>;
   }
+  //client.resetStore()
+  //just to reset cache for debugging
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}
   return (
