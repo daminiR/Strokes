@@ -17,8 +17,8 @@ const READ_URL = gql`
   }
 `
 const READ_SQUASH = gql`
-  query squash ($id: id!){
-    squash(_id: $id){
+  query Squash ($id: String!){
+    squash(id: $id){
       _id
       first_name
     }
