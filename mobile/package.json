@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
   },
   "dependencies": {
     "@apollo/client": "^3.3.7",
@@ -54,14 +55,17 @@
     "yup": "^0.32.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/runtime": "^7.8.4",
+    "@babel/core": "7.15.0",
+    "@babel/runtime": "7.8.4",
     "@react-native-community/eslint-config": "^1.1.0",
-    "babel-jest": "^25.1.0",
+    "babel-jest": "25.1.0",
     "eslint": "^6.5.1",
     "jest": "^25.1.0",
-    "metro-react-native-babel-preset": "^0.59.0",
+    "metro-react-native-babel-preset": "0.59.0",
     "react-test-renderer": "16.13.1"
+  },
+  "resolutions": {
+    "@babel/plugin-transform-react-display-name": "7.14.5"
   },
   "jest": {
     "preset": "react-native"
