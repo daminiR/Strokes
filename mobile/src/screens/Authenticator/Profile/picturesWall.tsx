@@ -4,6 +4,7 @@ import React from 'react'
 import {View, StyleSheet } from 'react-native'
 
 const PictureWall = (props) => {
+    //<Button icon={cancelProps} type="clear"}/>
     const cancelProps = {
         name:"close-circle-outline",
             type:"material-community",
@@ -20,7 +21,6 @@ const PictureWall = (props) => {
   activeOpacity={0.7}
     containerStyle={{marginLeft: 0, marginTop: 0, top: 20, left: 20}}>
 </Avatar>
-                    <Button icon={cancelProps} type="clear"}/>
 
                  </View>
                 <View style={styles.middle} />
