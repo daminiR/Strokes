@@ -1,8 +1,9 @@
 import { gql, useMutation } from '@apollo/client'
 
+//mutation UploadFile($files: [Upload!]!, $_id: String!){
 const UPLOAD_FILE = gql`
-  mutation UploadFile($files: [Upload!]!, $_id: String!){
-        uploadFile(files: $files, _id: $_id)
+  mutation UploadFile($file: Upload!){
+        uploadFile(file: $file)
     }
 `
 const ADD_PROFILE = gql`
