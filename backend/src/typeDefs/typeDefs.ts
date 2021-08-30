@@ -2,6 +2,7 @@ import {gql} from 'apollo-server-express';
 //TODO: change inout ype for age to be Int! but after you configure the birthdate resolver
 //TODO: need to add apollo server error handling
 export const typeDefs = gql`
+scalar FileUpload
   type Query {
     hello: String!
     squash(id: String!): Squash!
@@ -17,7 +18,7 @@ export const typeDefs = gql`
     isUserSport: Boolean
   }
   type Mutation {
-    uploadFile(files: [Upload!]!, _id: String!): Boolean
+    uploadFile(file: FileUpload!): Boolean
     createSquash(
       _id: String!
       first_name: String!
