@@ -1,10 +1,12 @@
 import React, { useContext, useState, ReactElement } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import {Profile, Chat, Match, Likes} from '../screens/Authenticator'
+import {FirstName, Age, Gender, LastName} from '../screens/Authenticator/'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const ProfileStack = createStackNavigator()
+const IndividualStack = createStackNavigator()
 const ChatStack = createStackNavigator()
 const Tab  = createBottomTabNavigator()
 
@@ -12,14 +14,22 @@ export type RootStackSignInParamList = {
   PROFILE: undefined
   CHAT: undefined
   MATCH: undefined
+  FIRST_NAME: undefined
+  AGE: undefined
+  LAST_NAME: undefined
+  GENDER: undefined
   LIKES: undefined
 }
 export function ProfileStackScreen() {
   return (
-      <ProfileStack.Navigator>
+    <ProfileStack.Navigator initialRouteName="PROFILE">
       <ProfileStack.Screen name="PROFILE" component={Profile} />
-      </ProfileStack.Navigator>
-  )
+      <ProfileStack.Screen name="FIRST_NAME" component={FirstName} />
+      <ProfileStack.Screen name="AGE" component={Age} />
+      <ProfileStack.Screen name="LAST_NAME" component={LastName} />
+      <ProfileStack.Screen name="GENDER" component={Gender} />
+    </ProfileStack.Navigator>
+  );
 }
 export function ChatStackScreen() {
   return (

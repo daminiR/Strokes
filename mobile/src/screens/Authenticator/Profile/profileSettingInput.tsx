@@ -1,9 +1,16 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
 import React, { useContext, useState, ReactElement } from 'react'
-import {View, ScrollView, StyleSheet } from 'react-native'
+import {View, ScrollView, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import { onScreen, goBack } from '../../../constants'
+import {sportsList} from './../../../constants';
 import  DatePicker  from 'react-native-date-picker'
+import { RootStackParamList } from '../../../AppNavigator'
+import { ProfileScreenNavigationProp} from './index'
 
-
+type ProfileT = {
+  navigation: ProfileScreenNavigationProp
+}
 const SportChips = ({sport}) => {
   return (
     <>
@@ -23,30 +30,41 @@ const SportChips = ({sport}) => {
     </>
   );
 };
-
+const _first_name = (navigation) => {
+      onScreen('FIRST_NAME', navigation)()
+};
+const _age = (navigation) => {
+      onScreen('AGE', navigation)()
+};
+const _gender = (navigation) => {
+      onScreen('GENDER', navigation)()
+};
+const _last_name = (navigation) => {
+      onScreen('LAST_NAME', navigation)()
+};
 const list = [
-  {title: 'first name', icon: 'av-timer', subtitle: 'Damini'},
-  {title: 'last name', icon: 'flight-takeoff', subtitle: 'Rijhwani'},
-  {title: 'age', icon: 'flight-takeoff', subtitle: '27'},
-  {title: 'gender', icon: 'flight-takeoff', subtitle: 'Female'},
+  {title: 'first name', icon: 'av-timer', subtitle: 'Damini', buttonPress: _first_name},
+  {title: 'last name', icon: 'flight-takeoff', subtitle: 'Rijhwani', buttonPress: _last_name},
+  {title: 'age', icon: 'flight-takeoff', subtitle: '27',buttonPress: _age},
+  {title: 'gender', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _gender},
 ]
 
-const sportsList = ["squash", "tennis", "soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
 const ProfileSettingsInput = (props) => {
+  //<Icon name={item.icon} />
+  const navigation = useNavigation()
   return (
     <>
       <Card containerStyle={styles.CardStyle}>
         <Card.Title>CARD WITH DIVIDER</Card.Title>
         <Card.Divider />
         <View style={styles.sportChipSet}>
-          {sportsList.map((sport) => (
-          <SportChips sport={sport}/>
+          {sportsList.map((sport, i) => (
+          <SportChips key={i} sport={sport}/>
           ))}
         </View>
       </Card>
       {list.map((item, i) => (
-        <ListItem key={i} bottomDivider>
-          <Icon name={item.icon} />
+        <ListItem onPress={() => item.buttonPress(navigation)} key={i} bottomDivider>
           <ListItem.Content>
             <ListItem.Title>{item.title}</ListItem.Title>
             <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
@@ -73,6 +91,7 @@ const SettingsButton = (props) => {
     </>
   );
 }
+
 const SportsList = (props) => {
   return (
     <>
