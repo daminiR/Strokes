@@ -1,4 +1,4 @@
-import React, { useContext, useState, ReactElement } from 'react'
+import React, { useContext, useEffect, useState, ReactElement } from 'react'
 import storage from '@react-native-firebase/storage'
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -29,46 +29,50 @@ import ImagePicker from 'react-native-image-crop-picker'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { ReactNativeFile, File } from 'apollo-upload-client'
 import { storage as GCP_Storage } from '@react-native-firebase/storage';
-import { PictureWall } from './picturesWall'
 import * as mime from 'react-native-mime-types'
-export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
-type ProfileT = {
-  navigation: ProfileScreenNavigationProp
-}
-const Profile = ({ navigation }: ProfileT ): ReactElement => {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const {confirmResult, setConfirmResult} = useContext(UserContext)
-  const {data} = useQuery(GET_PROFILE_STATUS);
-  const {currentUser} = useContext(UserContext)
-  console.log(currentUser);
-  const [images, setImage] = useState(null);
-  const [uploadFile] = useMutation(UPLOAD_FILE);
-  const _onPressProfile = () => {
-      onScreen('PROFILE', navigation)()
-  }
-  const _onPressSignOut = async () : Promise<void> => {
-    uploadFile({variables: {file: "afd/"}});
-      console.log("try")
-  }
-  //<Button title="signout" onPress={_onPressSignOut} />
-  return (
-    <>
-            <ScrollView contentContainerStyle = {{flexGrow: 1, justifyContent: 'space-between'}} >
-            <Button title="check single" onPress={_onPressSignOut} />
-              <PictureWall/>
-          </ScrollView>
-    </>
-  );
+
+export  const generateRNFile =  (uri, name) => {
+    console.log(uri)
+    return uri
+      ? new ReactNativeFile({
+          uri,
+          type: mime.lookup(uri) || 'image',
+          name: name,
+        })
+      : null;
 }
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: 'pink',
-    marginHorizontal: 20,
-  },
-  text: {
-    fontSize: 42,
-  },
-});
-export { Profile }
+export  const _check_single = async (Image, uploadFile): Promise<void> => {
+     const RNFile = generateRNFile(
+       Image.assets[0].uri.replace('file://', ''),
+       'wkahd',
+     );
+    //if (Platform.OS == "ios"){
+     //const RNFile = generateRNFile(
+       //Image.assets[0].uri.replace('file://', ''),
+       //'wkahd',
+     //);}
+     //else if (Platform.OS == "android"){
+       //console.log(Image)
+     //}
+    console.log("filevalue,",RNFile)
+    uploadFile({variables: {file: RNFile}});
+ }
+
+  const _onPressSignOut = async () : Promise<void> => {
+    setLoading(true)
+    setError('')
+    await auth()
+      .signOut()
+      .then((res) => {
+        console.log('Succesful signout')
+        console.log(currentUser)
+        setConfirmResult(null)
+        setLoading(false)
+        setError('')
+      })
+      .catch((err) => {
+        console.log(err.code);
+        setError(err.code)
+      });
+  }

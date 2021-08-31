@@ -1,9 +1,11 @@
 import {Button,withBadge, Icon, Avatar, Badge } from 'react-native-elements'
-import React from 'react'
+import React, { useContext, useEffect, useState, ReactElement } from 'react'
+import {UPLOAD_FILE} from '../../../graphql/mutations/profile'
 import { ProfileSettingsInput } from "./profileSettingInput"
 import {View, ScrollView, StyleSheet } from 'react-native'
-
-
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { _check_single } from '../../../utils/Upload'
+import { useQuery, useMutation} from '@apollo/client'
 
 const PictureWall = (props) => {
   return (
@@ -13,18 +15,18 @@ const PictureWall = (props) => {
         <View style={styles.top}>
           <View style={styles.verticalImageplaceholder}>
             <View style={styles.horizontalImageplaceholder}>
-              <SingleImagePlaceholder />
-              <SingleImagePlaceholder />
-              <SingleImagePlaceholder />
+              <SingleImagePlaceholder/>
+              <SingleImagePlaceholder/>
+              <SingleImagePlaceholder/>
             </View>
             <View style={styles.horizontalImageplaceholder}>
-              <SingleImagePlaceholder />
-              <SingleImagePlaceholder />
-              <SingleImagePlaceholder />
+              <SingleImagePlaceholder/>
+              <SingleImagePlaceholder/>
+              <SingleImagePlaceholder/>
             </View>
           </View>
         </View>
-        <View style={styles.middle}>
+       <View style={styles.middle}>
           <ProfileSettingsInput/>
         </View>
       </View>
@@ -34,6 +36,30 @@ const PictureWall = (props) => {
 }
 
 const SingleImagePlaceholder = (props) => {
+  const [Image, setImage] = React.useState(null)
+  const [loading, setLoading] = React.useState(null)
+  const [uploadFile] = useMutation(UPLOAD_FILE);
+  useEffect(() => {
+    if (Image) {
+    }
+    return () => {
+      console.log("unmounted")
+    }
+  }, [Image])
+  const _singleUpload = async (): Promise<void> => {
+    console.log("what")
+    const options = {
+      mediaType: 'photo',
+    };
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+      },
+      setImage,
+    )
+
+
+  };
     const cancelProps = {
         name:"close-circle-outline",
             type:"material-community",
@@ -50,7 +76,7 @@ const SingleImagePlaceholder = (props) => {
                 borderBottomLeftRadius: 20,
                 borderBottomRightRadius: 20,
               }}
-              onPress={() => console.log('Works!')}
+              onPress={() => _singleUpload()}
               activeOpacity={0.7}
               containerStyle={{
                 padding: 0,
@@ -92,6 +118,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
 
 export  { PictureWall }

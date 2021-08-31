@@ -51,8 +51,9 @@ const App = (): ReactElement =>
       const myHtttpLink  = new HttpLink({
       uri: 'http://localhost:4000/graphql',
       });
-      //const uploadLink = createUploadLink({ uri: 'http://localhost:4000/graphql', })
-        const uploadLink = createUploadLink({ uri: 'http://192.168.1.8:4000/graphql', })
+      const uploadLink = createUploadLink({ uri: 'http://localhost:4000/graphql', })
+        //const uploadLink = createUploadLink({ uri: 'http://192.168.1.8:4000/graphql', })
+        //const uploadLink = createUploadLink({ uri: 'http://192.168.1.12:4000/graphql' })
       //const link = ApolloLink.from([onErrorLink, myHtttpLink, uploadLink]);
       //const uri = 'http://localhost:4000/graphql'
       setClient(

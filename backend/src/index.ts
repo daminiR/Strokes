@@ -21,7 +21,7 @@ const startServer = async () => {
     resolvers,
   });
   await server.start()
-  const app = express()
+  const app = express() as any
 
   googleCloud.getBuckets().then((x) => {
     console.log(x)
