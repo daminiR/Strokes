@@ -57,14 +57,6 @@ const Profile = ({ navigation }: ProfileT ): ReactElement => {
         })
       : null;
 }
-const _singleUpload = async (): Promise<void> => {
-    const options = {
-        mediaType: 'photo'
-    }
-    launchImageLibrary({
-      mediaType: 'photo',
-    }, setResponse)
- }
  const _check_single = async (): Promise<void> => {
      //const sanitizedFilename = sanitizeFile(response.assets[0].fileName, "1234")
      //console.log(sanitizedFilename)

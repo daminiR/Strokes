@@ -12,5 +12,11 @@ export * from './Likes'
 export * from './Chat'
 export * from './Profile'
 export * from './Match'
+export * from './IndividualFirstName'
+export * from './IndividualGender'
+export * from './IndividualAge'
+export * from './IndividualLastName'
+
+
 
 
