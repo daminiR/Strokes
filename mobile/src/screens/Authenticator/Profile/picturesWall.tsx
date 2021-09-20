@@ -1,9 +1,11 @@
 import {Button,withBadge, Icon, Avatar, Badge } from 'react-native-elements'
 import React, { useContext, useEffect, useState, ReactElement } from 'react'
+import {UserContext} from '../../../UserContext'
 import {UPLOAD_FILE} from '../../../graphql/mutations/profile'
 import { ProfileSettingsInput } from "./profileSettingInput"
 import {View, ScrollView, StyleSheet } from 'react-native'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { generateRNFile } from '../../../utils/Upload'
 import { _check_single } from '../../../utils/Upload'
 import { useQuery, useMutation} from '@apollo/client'
 
@@ -15,14 +17,14 @@ const PictureWall = (props) => {
         <View style={styles.top}>
           <View style={styles.verticalImageplaceholder}>
             <View style={styles.horizontalImageplaceholder}>
-              <SingleImagePlaceholder/>
-              <SingleImagePlaceholder/>
-              <SingleImagePlaceholder/>
+              <SingleImagePlaceholder img_idx={1}/>
+              <SingleImagePlaceholder img_idx={2}/>
+              <SingleImagePlaceholder img_idx={3}/>
             </View>
             <View style={styles.horizontalImageplaceholder}>
-              <SingleImagePlaceholder/>
-              <SingleImagePlaceholder/>
-              <SingleImagePlaceholder/>
+              <SingleImagePlaceholder img_idx={4}/>
+              <SingleImagePlaceholder img_idx={5}/>
+              <SingleImagePlaceholder img_idx={6}/>
             </View>
           </View>
         </View>
@@ -35,19 +37,29 @@ const PictureWall = (props) => {
   );
 }
 
-const SingleImagePlaceholder = (props) => {
+const SingleImagePlaceholder = ({img_idx}) => {
   const [Image, setImage] = React.useState(null)
   const [loading, setLoading] = React.useState(null)
+  const {currentUser} = useContext(UserContext);
   const [uploadFile] = useMutation(UPLOAD_FILE);
+
   useEffect(() => {
     if (Image) {
+    if (currentUser){
+      console.log(Image)
+     const RNFile = generateRNFile(Image.assets[0].uri, currentUser.uid)
+     console.log(RNFile)
+     uploadFile({variables: {file: RNFile, img_idx: img_idx, _id: currentUser.uid}})
+     setLoading(false)
+     // add it to display on the icon
+      }
     }
     return () => {
       console.log("unmounted")
     }
   }, [Image])
   const _singleUpload = async (): Promise<void> => {
-    console.log("what")
+    setLoading(true)
     const options = {
       mediaType: 'photo',
     };
@@ -57,7 +69,6 @@ const SingleImagePlaceholder = (props) => {
       },
       setImage,
     )
-
 
   };
     const cancelProps = {
