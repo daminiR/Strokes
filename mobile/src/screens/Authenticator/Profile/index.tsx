@@ -27,6 +27,7 @@ import {UPLOAD_FILE} from '../../../graphql/mutations/profile'
 import { NavigationContainer } from '@react-navigation/native'
 import ImagePicker from 'react-native-image-crop-picker'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { generateRNFile } from "../../../utils/Upload"
 import { ReactNativeFile, File } from 'apollo-upload-client'
 import { storage as GCP_Storage } from '@react-native-firebase/storage';
 import { PictureWall } from './picturesWall'
@@ -38,24 +39,16 @@ type ProfileT = {
 const Profile = ({ navigation }: ProfileT ): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [res, setRes] = useState(null)
   const {confirmResult, setConfirmResult} = useContext(UserContext)
   const {data} = useQuery(GET_PROFILE_STATUS);
   const {currentUser} = useContext(UserContext)
   console.log(currentUser);
   const [images, setImage] = useState(null);
   const [uploadFile] = useMutation(UPLOAD_FILE);
-  const _onPressProfile = () => {
-      onScreen('PROFILE', navigation)()
-  }
-  const _onPressSignOut = async () : Promise<void> => {
-    uploadFile({variables: {file: "afd/"}});
-      console.log("try")
-  }
-  //<Button title="signout" onPress={_onPressSignOut} />
   return (
     <>
             <ScrollView contentContainerStyle = {{flexGrow: 1, justifyContent: 'space-between'}} >
-            <Button title="check single" onPress={_onPressSignOut} />
               <PictureWall/>
           </ScrollView>
     </>

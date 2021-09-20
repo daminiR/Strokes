@@ -8,7 +8,7 @@ const SPORTS = ["squash", "tennis"]
 const LEVELS = ["beginer", "intermediate", "expert"]
 
 const imageArrayMaxLimit = val => {
-  return (Array.isArray(val) && val.length <= 7)
+  return (Array.isArray(val) && val.length <= 6)
 }
 
 const imageArrayMinLimit = val => {
@@ -26,10 +26,10 @@ var squashSchema = new Schema({
     type: String!,
     required: true,
     //validate: [
-      //{
-        //validator: _idValidator,
-        //message: "_id provided is not an ObjectID",
-      //},
+    //{
+    //validator: _idValidator,
+    //message: "_id provided is not an ObjectID",
+    //},
     //],
   },
   first_name: {
@@ -83,7 +83,12 @@ var squashSchema = new Schema({
     maxlength: 500,
   },
   image_set: {
-    type: [String],
+    type: [
+      {
+        img_idx: { type: Number },
+        imageURL: { type: String },
+      },
+    ],
     required: true,
     validate: [
       {
@@ -92,7 +97,7 @@ var squashSchema = new Schema({
       },
       {
         validator: imageArrayMaxLimit,
-        message: "No more than 7 images",
+        message: "No more than 6 images",
       },
     ],
   },

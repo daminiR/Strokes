@@ -17,8 +17,12 @@ scalar FileUpload
     sport: String!
     isUserSport: Boolean
   }
+  input Data {
+    img_idx:  Int!
+    imageURL: String!
+  }
   type Mutation {
-    uploadFile(file: FileUpload!): Boolean
+    uploadFile(file: FileUpload!, _id: String, img_idx: Int): Squash
     createSquash(
       _id: String!
       first_name: String!
@@ -28,7 +32,7 @@ scalar FileUpload
       game_level: String!
       country: String
       description: String
-      image_set: [String!]!
+      image_set: [Data!]!
     ): Squash!
     deleteSquash(_id: String): Squash!
   }
