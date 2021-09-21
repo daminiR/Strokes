@@ -113,20 +113,20 @@ const styles = StyleSheet.create({
   user: {
     color: 'grey',
     fontSize: 20,
-    fontFamily: 'sans-serif',
+    fontFamily: 'OpenSans-Regular',
     alignSelf: 'stretch'
 
   },
   textSettingFont: {
     color: 'grey',
     fontSize: 20,
-    fontFamily: 'sans-serif',
+    fontFamily: 'OpenSans-Regular',
     alignSelf: 'stretch'
 
   },
   chipText: {
     color: '#242424',
-    fontFamily:'sans-serif',
+    fontFamily: 'OpenSans-Regular',
     fontSize: 16,
     fontWeight: "normal"
   },
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     color: 'grey',
     fontSize: 20,
-    fontFamily: 'sans-serif',
+    fontFamily: 'OpenSans-Regular',
     flexDirection: "row"
   },
   profileButtons: {

@@ -12,11 +12,15 @@ import axios from 'axios'
 
 
 interface Data {
-  img_idx: string;
+  img_idx: number;
   imageURL: string;
+  filePath: string;
 }
-
-const dest_gcs_images = "all_images/"
+interface DisplayData {
+  imageURL: string;
+  filePath: string;
+}
+const dest_gcs_images = "all_images"
 export const resolvers = {
   Query: {
     squash: async (parents, args, context, info) => {
@@ -31,23 +35,49 @@ export const resolvers = {
       return squashes;
     },
     display: async (parents, args, context, info) => {
-
     },
   },
   FileUpload: GraphQLUpload,
   Mutation: {
+     deleteImage: async (parents, {_id, img_idx} , context, info) => {
+       // TODO: add user id as a seprator
+       console.log(_id);
+       console.log(img_idx);
+       // get file uri from squash document
+       // acees in google cloud storage
+       // remove it
+       // update squash document
+       const squash_val = await Squash.findById(_id);
+       console.log(squash_val)
+       const file_to_del =  squash_val!.image_set.find(image_info => image_info.img_idx === img_idx)!.filePath
+       console.log("file to del")
+       console.log(file_to_del)
+       await acsport1.file(file_to_del).delete().then(
+        () => {
+            console.log(`file ${file_to_del} deleted`)
+        }
+       )
+       .catch(error => {
+            console.log(error)
+        })
+       return squash_val;
+     },
      uploadFile: async (parents, { file, _id, img_idx} , context, info) => {
        // TODO: add user id as a seprator
        const { filename, mimetype, encoding, createReadStream } = await file;
        console.log(file);
        console.log(_id);
        console.log(img_idx);
-       const sanitizedFilename = sanitizeFile(filename, "1234");
+       const sanitizedFilename = sanitizeFile(filename, _id);
        console.log(sanitizedFilename);
        const gcFile = acsport1.file(
          path.join(dest_gcs_images, sanitizedFilename)
        );
-       let data: Data;
+       let data: Data
+       let displayData: DisplayData ={
+           imageURL: "",
+           filePath: ""
+       }
        const squash_val = await Squash.findById(_id);
        console.log("isthis working");
        await new Promise<void>((resolve, reject) => {
@@ -57,9 +87,15 @@ export const resolvers = {
              .on("finish", () => {
                //get link representing data file
                // save it to mongo db
+                gcFile.makePublic()
                data = {
                  img_idx: img_idx,
-                 imageURL: `https://storage.googleapis.com/${acsport1}/${sanitizedFilename}`,
+                 imageURL: `https://storage.googleapis.com/acsport1/${dest_gcs_images}/${sanitizedFilename}`,
+                 filePath: `${dest_gcs_images}/${sanitizedFilename}`,
+               };
+               displayData = {
+                 imageURL: `https://storage.googleapis.com/acsport1/${dest_gcs_images}/${sanitizedFilename}`,
+                 filePath: `${dest_gcs_images}/${sanitizedFilename}`,
                };
                console.log("done");
                resolve();
@@ -75,8 +111,7 @@ export const resolvers = {
          squash_val!.save();
          console.log(squash_val);
        });
-
-       return squash_val;
+       return displayData
      },
     createSquash: async (root, args): Promise<SquashDocument> => {
       const squash = Squash.create(args);
