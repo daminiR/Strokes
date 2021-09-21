@@ -17,12 +17,18 @@ scalar FileUpload
     sport: String!
     isUserSport: Boolean
   }
+  type DisplayImage {
+    imageURL: String!
+    filePath: String!
+  }
   input Data {
     img_idx:  Int!
     imageURL: String!
+    filePath: String!
   }
   type Mutation {
-    uploadFile(file: FileUpload!, _id: String, img_idx: Int): Squash
+    deleteImage(_id: String, img_idx: Int): Squash
+    uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
     createSquash(
       _id: String!
       first_name: String!

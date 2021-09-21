@@ -87,6 +87,7 @@ var squashSchema = new Schema({
       {
         img_idx: { type: Number },
         imageURL: { type: String },
+        filePath: { type: String },
       },
     ],
     required: true,

@@ -1,7 +1,7 @@
 import {Button,withBadge, Icon, Avatar, Badge } from 'react-native-elements'
 import React, { useContext, useEffect, useState, ReactElement } from 'react'
 import {UserContext} from '../../../UserContext'
-import {UPLOAD_FILE} from '../../../graphql/mutations/profile'
+import {UPLOAD_FILE, DELETE_IMAGE} from '../../../graphql/mutations/profile'
 import { ProfileSettingsInput } from "./profileSettingInput"
 import {View, ScrollView, StyleSheet } from 'react-native'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -40,9 +40,16 @@ const PictureWall = (props) => {
 const SingleImagePlaceholder = ({img_idx}) => {
   const [Image, setImage] = React.useState(null)
   const [loading, setLoading] = React.useState(null)
+  const [displayImage, setDisplayImage] = React.useState(null)
   const {currentUser} = useContext(UserContext);
-  const [uploadFile] = useMutation(UPLOAD_FILE);
-
+  const [uploadFile, {data: imageURL}] = useMutation(UPLOAD_FILE, {
+      onCompleted: (data) => _displayImage(data)
+  });
+  const _displayImage = async (data): Promise<void> => {
+      console.log("what is url")
+      setDisplayImage(data.uploadFile.imageURL)
+  }
+  const [deleteImage] = useMutation(DELETE_IMAGE);
   useEffect(() => {
     if (Image) {
     if (currentUser){
@@ -58,6 +65,15 @@ const SingleImagePlaceholder = ({img_idx}) => {
       console.log("unmounted")
     }
   }, [Image])
+
+  const _removeImage = async (): Promise<void> => {
+      setLoading(true)
+    if (currentUser){
+       deleteImage({variables: {img_idx: img_idx, _id:currentUser.uid}})
+      }
+      setLoading(false)
+      console.log("remove")
+  }
   const _singleUpload = async (): Promise<void> => {
     setLoading(true)
     const options = {
@@ -69,9 +85,9 @@ const SingleImagePlaceholder = ({img_idx}) => {
       },
       setImage,
     )
-
   };
     const cancelProps = {
+        onPress: _removeImage,
         name:"close-circle-outline",
             type:"material-community",
             size: 30}
@@ -79,7 +95,14 @@ const SingleImagePlaceholder = ({img_idx}) => {
       <>
             <Avatar
               size={130}
-              icon={{name: 'camera-plus-outline', type: 'material-community'}}
+            renderPlaceholderContent={<Icon
+  reverse
+  name='ios-american-football'
+  type='ionicon'
+  color='#517fa4'
+/>}
+                //{name: 'camera-plus-outline', type: 'material-community'}
+              source={{uri : displayImage}}
               overlayContainerStyle={{
                 backgroundColor: '#D3D3D3',
                 borderTopLeftRadius: 20,
