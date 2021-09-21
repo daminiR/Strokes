@@ -8,7 +8,7 @@ export interface SquashDocument extends Document {
   game_level: string
   country: string
   description: [string]
-  image_set: [{img_idx: string, imageURL: string}]
+  image_set: [{img_idx: number, imageURL: string, filePath: string}]
 }
 
 
