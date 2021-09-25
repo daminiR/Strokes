@@ -17,13 +17,26 @@ const READ_URL = gql`
   }
 `
 const READ_SQUASH = gql`
-  query Squash ($id: String!){
-    squash(id: $id){
+  query Squash($id: String!) {
+    squash(id: $id) {
       _id
       first_name
+      age
+      gender
+      sports {
+        sport
+        isUserSport
+      }
+      game_level
+      country
+      description
+      image_set {
+        img_idx
+        imageURL
+      }
     }
   }
-`
+`;
 const GET_SELECTED_SQUASH = gql`
       query @client {
           _id

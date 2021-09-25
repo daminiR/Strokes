@@ -25,13 +25,11 @@ export const AuthNavigator = () => {
     },
   });
   const onAuthStateChanged = (currentUser) => {
-
       setCurrentUser(currentUser);
       if (currentUser) {
         getSquashProfile({variables: {id: currentUser.uid}});
       }
       if (loading) setLoading(false)
-
   }
   useEffect(() => {
       const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged)

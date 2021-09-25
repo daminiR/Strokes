@@ -4,7 +4,7 @@ export interface SquashDocument extends Document {
   first_name: string
   age : string
   gender: string
-  sports: [{sport: string, isUserSport: string}]
+  sports: [{sport: string, isUserSport: Boolean}]
   game_level: string
   country: string
   description: [string]
