@@ -4,7 +4,7 @@ import { gql, useMutation } from '@apollo/client'
 const DELETE_IMAGE = gql`
   mutation DeleteImage($_id: String, $img_idx: Int){
         deleteImage(_id: $_id, img_idx: $img_idx){
-          _id
+          img_idx
         }
     }
 `
@@ -16,7 +16,7 @@ const UPLOAD_FILE = gql`
     }
 `
 const ADD_PROFILE = gql`
-  mutation CreateSquash($_id: String!, $first_name: String!, $gender: String!, $game_level: String!, $image_set: [Data]!, $sports: [SquashNode!]! , $birthday:String!){
+  mutation CreateSquash($_id: String!, $first_name: String!, $gender: String!, $game_level: String!, $image_set: [DataInput]!, $sports: [SquashNodeInput!]! , $birthday:String!){
     createSquash(_id: $_id, first_name: $first_name, gender: $gender, age: $birthday, sports: $sports, image_set: $image_set, game_level: $game_level){
       _id
     }
