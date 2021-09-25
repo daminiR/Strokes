@@ -41,7 +41,7 @@ export function ChatStackScreen() {
 export default function MatchStackScreen() {
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName='MATCH'>
+      <Tab.Navigator initialRouteName='PROFILE'>
         <Tab.Screen name="PROFILE" component={ProfileStackScreen} />
         <Tab.Screen name="MATCH" component={Match} />
         <Tab.Screen name="CHAT" component={ChatStackScreen} />

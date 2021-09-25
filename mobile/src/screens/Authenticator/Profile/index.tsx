@@ -1,4 +1,4 @@
-import React, { useContext, useState, ReactElement } from 'react'
+import React, { createContext, useEffect, useContext, useState, ReactElement } from 'react'
 import storage from '@react-native-firebase/storage'
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -19,7 +19,7 @@ import { AppContainer } from '../../../components'
 import { RootStackParamList } from '../../../AppNavigator'
 import auth from '@react-native-firebase/auth'
 import {UserContext} from '../../../UserContext'
-import { useQuery, useMutation , HTTPFetchNetworkInterface} from '@apollo/client'
+import { useQuery, useMutation, useLazyQuery, HTTPFetchNetworkInterface} from '@apollo/client'
 import * as RNFS from 'react-native-fs'
 import  RNFetchBlob  from 'rn-fetch-blob'
 import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
@@ -32,6 +32,8 @@ import { ReactNativeFile, File } from 'apollo-upload-client'
 import { storage as GCP_Storage } from '@react-native-firebase/storage';
 import { PictureWall } from './picturesWall'
 import * as mime from 'react-native-mime-types'
+
+export const ProfileContext = createContext()
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
 type ProfileT = {
   navigation: ProfileScreenNavigationProp
@@ -46,15 +48,42 @@ const Profile = ({ navigation }: ProfileT ): ReactElement => {
   console.log(currentUser);
   const [images, setImage] = useState(null);
   const [uploadFile] = useMutation(UPLOAD_FILE);
+  const {data: squashData, error: ProfileError} = useQuery(READ_SQUASH, {
+    variables: {id: currentUser.uid},
+    fetchPolicy: "network-only",
+    onCompleted: (data) => {
+      console.log(data)
+      if (data) {
+        if (loading) setLoading(false);
+      }
+    },
+    onError: (profileError => {
+      console.log(profileError)
+    })
+  });
+  const value = {
+    squashData
+  }
+  //useEffect(() => {
+    //console.log("mutations")
+      ////if (currentUser) {
+        ////getSquashProfile({variables: {id: currentUser.uid}});
+      ////}
+      ////if (loading) setLoading(false)
+    //return () => {
+      //console.log("unmounted")
+    //}
+  //})
   return (
     <>
+      <ProfileContext.Provider value={value}>
             <ScrollView contentContainerStyle = {{flexGrow: 1, justifyContent: 'space-between'}} >
               <PictureWall/>
           </ScrollView>
+      </ProfileContext.Provider>
     </>
   );
 }
-
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: 'pink',

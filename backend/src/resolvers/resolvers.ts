@@ -9,7 +9,7 @@ import { Stream } from "stream"
 import * as path from 'path';
 import {format} from 'util'
 import axios from 'axios'
-
+import { ObjectId } from 'mongodb'
 
 interface Data {
   img_idx: number;
@@ -47,11 +47,12 @@ export const resolvers = {
        // acees in google cloud storage
        // remove it
        // update squash document
-       const squash_val = await Squash.findById(_id);
-       console.log(squash_val)
-       const file_to_del =  squash_val!.image_set.find(image_info => image_info.img_idx === img_idx)!.filePath
-       console.log("file to del")
-       console.log(file_to_del)
+       const filter = { '_id': _id}
+       const update = {$pull: {image_set : {img_idx: img_idx}}}
+       const squash_doc = await Squash.findOneAndUpdate(filter, update, {new: false}, (err, doc) => {console.log(err)})
+       let file_to_del  = squash_doc!.image_set.find(image_info => image_info.img_idx === img_idx)!.imageURL
+       //console.log("file to del")
+       //console.log(file_to_del)
        await acsport1.file(file_to_del).delete().then(
         () => {
             console.log(`file ${file_to_del} deleted`)
@@ -60,7 +61,8 @@ export const resolvers = {
        .catch(error => {
             console.log(error)
         })
-       return squash_val;
+        // delete from schema
+       return squash_doc!.image_set;
      },
      uploadFile: async (parents, { file, _id, img_idx} , context, info) => {
        // TODO: add user id as a seprator
@@ -80,6 +82,7 @@ export const resolvers = {
        }
        const squash_val = await Squash.findById(_id);
        console.log("isthis working");
+       console.log(squash_val)
        await new Promise<void>((resolve, reject) => {
          createReadStream().pipe(
            gcFile
@@ -107,9 +110,35 @@ export const resolvers = {
              })
          );
        }).then(async () => {
-         squash_val!.image_set = [data];
-         squash_val!.save();
-         console.log(squash_val);
+           //const doc = Squash.findOneAndUpdate(
+             //{ _id: new ObjectId() },
+             //{ $push: { image_set: data } },
+               //{new: true}
+         // if imgx idx is not in array add, else replace
+         //if (
+           //squash_val!.image_set = [data]
+         if (squash_val!.image_set.find(
+           (image_info) => image_info.img_idx === img_idx
+         ) === undefined) {
+           console.log("if doesnt exists in array");
+           const doc = await Squash.findOneAndUpdate(
+             { _id: _id},
+             { $push: {image_set: data}},
+             {new: true}
+           );
+           console.log(doc)
+         }
+           else {
+           console.log("are we here");
+           const filter = { _id: _id, image_set: {$elemMatch: { img_idx: img_idx}}}
+           const update = {$set: {"image_set.$" : data}}
+           const squash_new = await Squash.findOneAndUpdate(filter, update, {new: true})
+           console.log("squash life")
+           console.log(squash_new)
+         }
+         //console.log(squash_val!.image_set)
+         //squash_val!.save()
+         //squash_val!.markModified('image_set')
        });
        return displayData
      },
