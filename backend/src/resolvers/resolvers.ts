@@ -50,7 +50,7 @@ export const resolvers = {
   },
   FileUpload: GraphQLUpload,
   Mutation: {
-     editSports: async (parents, {sportsList, _id} , context, info) => {
+     addSports: async (parents, {sportsList, _id} , context, info) => {
        if (sportsList.length != 0){
            const doc = await Squash.findOneAndUpdate(
              {_id: _id },
