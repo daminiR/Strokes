@@ -15,7 +15,7 @@ export const AuthNavigator = () => {
   const [isProfileComplete, setProfileState ] = useState(false)
   const [loading, setLoading] = useState(true);
   const [getSquashProfile, {data, error}] = useLazyQuery(READ_SQUASH, {
-    //fetchPolicy: "network-only",
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
       console.log(data)
       if (data) {
