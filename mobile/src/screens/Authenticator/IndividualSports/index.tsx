@@ -16,12 +16,15 @@ type IndividualSportsT = {
 const IndividualSports = ({ navigation }: IndividualSportsT): ReactElement => {
   return (
     <>
-      <ChooseSportsChips/>
+      <ChooseSportsChips userSportsList={["Squash"]}/>
     </>
   )
 }
 
-const ChooseSportsChips = ({useSportsList}) => {
+const ChooseSportsChips = ({userSportsList}) => {
+
+    const _selected = () =>{
+    }
   return (
     <>
       <Card containerStyle={styles.CardStyle}>
@@ -29,7 +32,7 @@ const ChooseSportsChips = ({useSportsList}) => {
         <Card.Divider />
         <View style={styles.sportChipSet}>
           {sportsList.map((sport, i) => (
-              <SportChips key={i} sport={sport} isDisplay={false} isSelected={true}/>
+              <SportChips key={i} sport={sport} isDisplay={false} isSelected={userSportsList.includes(sport)}/>
             ))}
         </View>
       </Card>
