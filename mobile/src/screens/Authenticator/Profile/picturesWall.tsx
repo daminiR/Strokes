@@ -41,11 +41,14 @@ const PictureWall = (props) => {
           <View style={styles.top}>
             <View style={styles.verticalImageplaceholder}>
               <View style={styles.horizontalImageplaceholder}>
+                <SingleImagePlaceholder img_idx={0} />
                 <SingleImagePlaceholder img_idx={1} />
                 <SingleImagePlaceholder img_idx={2} />
-                <SingleImagePlaceholder img_idx={3} />
               </View>
               <View style={styles.horizontalImageplaceholder}>
+                <SingleImagePlaceholder img_idx={3} />
+                <SingleImagePlaceholder img_idx={4} />
+                <SingleImagePlaceholder img_idx={5} />
               </View>
             </View>
           </View>
@@ -74,12 +77,11 @@ const SingleImagePlaceholder = ({img_idx}) => {
   }
   const [deleteImage, {data: image_set}] = useMutation(DELETE_IMAGE);
   useEffect(() => {
-    if (squashData?.squash?.image_set[0] != undefined){
-      const imageURL = squashData.squash.image_set[0].imageURL
-      console.log(squashData.squash.image_set[0].imageURL)
+    if (squashData?.squash?.image_set != undefined || squashData?.squash?.image_set.find(image_info => image_info.img_idx === img_idx) != undefined){
+      const imageURL =squashData?.squash?.image_set.find(image_info => image_info.img_idx === img_idx)?.imageURL
       setDisplayImage(imageURL)
     }
-  }, [squashData])
+  }, [squashData?.squash?.image_set])
   useEffect(() => {
     if (Image) {
     if (currentUser){
@@ -97,6 +99,8 @@ const SingleImagePlaceholder = ({img_idx}) => {
       setLoading(true)
     if (currentUser){
        deleteImage({variables: {img_idx: img_idx, _id:currentUser.uid}})
+       //TODO: change to icon image
+       setDisplayImage(null)
       }
       setLoading(false)
       console.log("remove")
