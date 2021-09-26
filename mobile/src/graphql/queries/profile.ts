@@ -25,9 +25,8 @@ const READ_SQUASH = gql`
       gender
       sports {
         sport
-        isUserSport
+        game_level
       }
-      game_level
       country
       description
       image_set {

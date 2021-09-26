@@ -3,7 +3,7 @@ import {gql} from 'apollo-server-express';
 //TODO: need to add apollo server error handling
  const SquashNodeType = `
     sport: String!,
-    isUserSport: Boolean
+    game_level: Int!,
 `
   const DataType = `
     img_idx: Int!,
@@ -30,7 +30,6 @@ export const typeDefs = gql`
     age: String!
     gender: String!
     sports: [SquashNode!]!
-    game_level: String!
     country: String
     description: String
     image_set: [Data!]!
@@ -51,6 +50,7 @@ export const typeDefs = gql`
   }
   type Mutation {
     deleteImage(_id: String, img_idx: Int): [Data!]!
+    addSports(sportsList: [SquashNodeInput!]!, _id: String!)
     uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
     createSquash(
       _id: String!
@@ -58,7 +58,6 @@ export const typeDefs = gql`
       age: String!
       gender: String!
       sports: [SquashNodeInput!]!
-      game_level: String!
       country: String
       description: String
       image_set: [DataInput!]!

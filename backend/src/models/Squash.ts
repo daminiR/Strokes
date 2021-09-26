@@ -5,7 +5,8 @@ import { SquashDocument } from '../types/Squash.d'
 const GENDERS = ["M", "F"]
 const COUNTRY = ["US"]
 const SPORTS = ["squash", "tennis"]
-const LEVELS = ["beginer", "intermediate", "expert"]
+//const LEVELS = ["beginer", "intermediate", "expert"]
+const LEVELS = [0, 1, 3]
 
 const imageArrayMaxLimit = val => {
   return (Array.isArray(val) && val.length <= 6)
@@ -57,8 +58,8 @@ var squashSchema = new Schema({
   sports: {
     type: [
       {
+        game_level: {type: Number, enum: LEVELS},
         sport: { type: String, enum: SPORTS },
-        isUserSport: { type: Boolean, default: false },
       },
     ],
     required: true,
@@ -68,11 +69,6 @@ var squashSchema = new Schema({
         message: "Cannot have no sport, choose atleast one",
       },
     ],
-  },
-  game_level: {
-    required: true,
-    type: String,
-    enum: LEVELS,
   },
   country: {
     type: String,

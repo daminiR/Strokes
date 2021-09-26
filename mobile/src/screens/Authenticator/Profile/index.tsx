@@ -52,7 +52,6 @@ const Profile = ({ navigation }: ProfileT ): ReactElement => {
     variables: {id: currentUser.uid},
     fetchPolicy: "network-only",
     onCompleted: (data) => {
-      console.log(data)
       if (data) {
         if (loading) setLoading(false);
       }
