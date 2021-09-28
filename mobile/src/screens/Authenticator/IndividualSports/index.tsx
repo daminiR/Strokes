@@ -29,14 +29,12 @@ const IndividualSports = ({navigation}: IndividualSportsT): ReactElement => {
 };
 
 const ChooseSportsChips = ({userSportsList}) => {
-  const [newSportList, setNewSportList] = useState(userSportsList);
   const getData = (newSport, isSelected) => {
+  const allSports = sportsItemsVar()
     if(isSelected){
-      newSportList.push({sport: newSport})
-      sportsItemsVar([...sportsItemsVar(), {sport: newSport}])
+      sportsItemsVar([...sportsItemsVar(), {sport: newSport, game_level: 0}])
     }
     else{
-      const allSports = sportsItemsVar()
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
       console.log(filterSports, "filtering")
       sportsItemsVar(filterSports)
