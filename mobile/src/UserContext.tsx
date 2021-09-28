@@ -15,7 +15,7 @@ export const AuthNavigator = () => {
   const [isProfileComplete, setProfileState ] = useState(false)
   const [loading, setLoading] = useState(true);
   const [getSquashProfile, {data, error}] = useLazyQuery(READ_SQUASH, {
-    //fetchPolicy: "network-only",
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
       console.log(data)
       if (data) {
@@ -30,7 +30,6 @@ export const AuthNavigator = () => {
         getSquashProfile({variables: {id: currentUser.uid}});
       }
       if (loading) setLoading(false)
-
   }
   useEffect(() => {
       const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged)
@@ -52,9 +51,7 @@ export const AuthNavigator = () => {
     //TODO: fix surrent User email verification at some point!!
     //if (currentUser && currentUser.email !== null) {
     if (currentUser  !== null && loading === false) {
-      console.log(currentUser)
       //getSquashProfile({variables: {id: currentUser.uid}})
-      console.log(isProfileComplete)
       if (isProfileComplete === false) {
         return !loading && <SportAppStack />;
       } else if (isProfileComplete === true) {
