@@ -7,12 +7,30 @@ import {SportsList} from './localModels/UserSportsList'
 
 const sportInitialValue: SportsList = [];
 export const sportsItemsVar:ReactiveVar<SportsList> = makeVar<SportsList>(sportInitialValue)
+export const FirstNameVar:ReactiveVar<String> = makeVar<String>(null)
+export const LastNameVar:ReactiveVar<String> = makeVar<String>(null)
+export const GenderVar:ReactiveVar<String> = makeVar<String>(null)
 export  const isProfileCompleteVar = makeVar<Boolean>(false)
 export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
         sportItems: {
+          read() {
+            return sportsItemsVar();
+          },
+        },
+        firstName: {
+          read() {
+            return FirstNameVar();
+          },
+        },
+        lastName: {
+          read() {
+            return sportsItemsVar();
+          },
+          },
+        gender: {
           read() {
             return sportsItemsVar();
           },
