@@ -52,6 +52,7 @@ const GET_SPORTS_LIST = gql`
       sportItems @client
       {
           sport
+          game_level
       }
     }
 `;
