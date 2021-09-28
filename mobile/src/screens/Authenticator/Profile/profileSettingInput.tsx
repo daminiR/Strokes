@@ -1,6 +1,7 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import {View, ScrollView, StyleSheet} from 'react-native';
+import {sportsItemsVar} from '../../../cache'
 import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 import {ProfileContext} from './index'
@@ -81,6 +82,8 @@ const ProfileSettingsInput = (props) => {
   const [sportsList, setSportsList] = React.useState(null)
   const [loading, setLoading] = React.useState(true)
   const _editSports = (props) => {
+  //sportsItemsVar(squashData.squash.sport)
+  sportsItemsVar(squashData.squash.sports)
   onScreen('EDIT_SPORTS', navigation)()
 }
   useEffect(() => {
