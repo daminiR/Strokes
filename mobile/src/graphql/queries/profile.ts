@@ -17,13 +17,25 @@ const READ_URL = gql`
   }
 `
 const READ_SQUASH = gql`
-  query Squash ($id: String!){
-    squash(id: $id){
+  query Squash($id: String!) {
+    squash(id: $id) {
       _id
       first_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      country
+      description
+      image_set {
+        img_idx
+        imageURL
+      }
     }
   }
-`
+`;
 const GET_SELECTED_SQUASH = gql`
       query @client {
           _id
@@ -35,9 +47,33 @@ const GET_SELECTED_SQUASH_1 = gql`
     }
 `;
 
+const GET_SPORTS_LIST = gql`
+    query  GetSportsList {
+      sportItems @client
+      {
+          sport
+          game_level
+      }
+    }
+`;
+const GET_FIRST_NAME = gql`
+    query  GetFirstName {
+      firstName @client
+    }
+`;
+const GET_LAST_NAME = gql`
+    query  GetLastName {
+      lastName @client
+    }
+`;
+const GET_GENDER = gql`
+    query  GetGender {
+      gender @client
+    }
+`;
 const GET_PROFILE_STATUS = gql`
     query  getProfileStatus {
       isProfileComplete @client
     }
 `;
-export { READ_URL,GET_PROFILE_STATUS, READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}
+export { GET_GENDER, GET_LAST_NAME, GET_FIRST_NAME, GET_SPORTS_LIST, READ_URL,GET_PROFILE_STATUS, READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}
