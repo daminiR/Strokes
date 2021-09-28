@@ -89,20 +89,6 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
       didMountRef.current = true
     }
     }, [apolloSportsList]),
-  //useFocusEffect(
-    //React.useCallback(() => {
-      //console.log(apolloSportsList, " is this running last test")
-      //// update mutation for squashdata and everythign else will be updated in the card divider
-      //// // tempo add game+level as 0 for all sports = whole another world to ui
-      //const tempsp = []
-      //apolloSportsList.sportItems.map((sport_obj) => {
-        //tempsp.push({game_level: 0, sport: sport_obj.sport});
-      //});
-    //if (currentUser){
-      ////updateUserSports({variables: {_id: currentUser.uid, sportsList: tempsp}});
-    //}
-    //}, [apolloSportsList]),
-  //);
   useFocusEffect(
     React.useCallback(() => {
       getSquashData({variables: currentUser.uid})
