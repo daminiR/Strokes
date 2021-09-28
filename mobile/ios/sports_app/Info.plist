@@ -4,6 +4,30 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleGetInfoString</key>
+	<string/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) photo use</string>
+	<key>NSHumanReadableCopyright</key>
+	<string/>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) camera use</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string/>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string/>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string/>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string/>
+	<key>NSNetworkVolumesUsageDescription</key>
+	<string/>
+	<key>NSFileProviderPresenceUsageDescription</key>
+	<string/>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string/>
+	<key>LSApplicationCategoryType</key>
+	<string/>
 	<key>CFBundleDisplayName</key>
 	<string>sports_app</string>
 	<key>CFBundleExecutable</key>
@@ -20,6 +44,17 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.784805321837-pnmpdgrc31s8dn8rgv96ppigu36loof7</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -38,7 +73,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -53,5 +88,26 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Fontisto.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>KLMN-Flash-Pix.ttf</string>
+		<string>OpenSans-Regular.ttf</string>
+	</array>
 </dict>
 </plist>
