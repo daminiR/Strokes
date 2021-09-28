@@ -50,7 +50,7 @@ export const typeDefs = gql`
   }
   type Mutation {
     deleteImage(_id: String, img_idx: Int): [Data!]!
-    addSports(sportsList: [SquashNodeInput!]!, _id: String!): String
+    updateUserSports(_id: String!, sportsList: [SquashNodeInput!]!): String
     uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
     createSquash(
       _id: String!

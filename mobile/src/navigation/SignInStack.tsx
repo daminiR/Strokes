@@ -3,15 +3,19 @@ import { createStackNavigator } from '@react-navigation/stack'
 import {Profile, Chat, Match, Likes} from '../screens/Authenticator'
 import {IndividualSports, FirstName, Age, Gender, LastName} from '../screens/Authenticator/'
 import { NavigationContainer } from '@react-navigation/native'
+import { HeaderBackButton, StackHeaderLeftButtonProps } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { onScreen, goBack } from '../../../constants'
+import {navigationOptions, FirstNameT} from '../screens/Authenticator/IndividualFirstName/index'
 const ProfileStack = createStackNavigator()
 const IndividualStack = createStackNavigator()
 const ChatStack = createStackNavigator()
 const Tab  = createBottomTabNavigator()
 
+ const returnSportListOptions = ({navigation, route}) => ({
+ });
 export type RootStackSignInParamList = {
-  PROFILE: undefined
+  PROFILE: {data: number}
   EDIT_SPORTS: undefined
   CHAT: undefined
   MATCH: undefined
