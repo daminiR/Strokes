@@ -5,10 +5,11 @@ import { SquashDocument } from '../types/Squash.d'
 const GENDERS = ["M", "F"]
 const COUNTRY = ["US"]
 const SPORTS = ["squash", "tennis"]
-const LEVELS = ["beginer", "intermediate", "expert"]
+//const LEVELS = ["beginer", "intermediate", "expert"]
+const LEVELS = [0, 1, 3]
 
 const imageArrayMaxLimit = val => {
-  return (Array.isArray(val) && val.length <= 7)
+  return (Array.isArray(val) && val.length <= 6)
 }
 
 const imageArrayMinLimit = val => {
@@ -26,10 +27,10 @@ var squashSchema = new Schema({
     type: String!,
     required: true,
     //validate: [
-      //{
-        //validator: _idValidator,
-        //message: "_id provided is not an ObjectID",
-      //},
+    //{
+    //validator: _idValidator,
+    //message: "_id provided is not an ObjectID",
+    //},
     //],
   },
   first_name: {
@@ -57,8 +58,8 @@ var squashSchema = new Schema({
   sports: {
     type: [
       {
+        game_level: {type: Number, enum: LEVELS},
         sport: { type: String, enum: SPORTS },
-        isUserSport: { type: Boolean, default: false },
       },
     ],
     required: true,
@@ -69,11 +70,6 @@ var squashSchema = new Schema({
       },
     ],
   },
-  game_level: {
-    required: true,
-    type: String,
-    enum: LEVELS,
-  },
   country: {
     type: String,
     enum: COUNTRY,
@@ -83,7 +79,12 @@ var squashSchema = new Schema({
     maxlength: 500,
   },
   image_set: {
-    type: [String],
+    type:
+      {
+        img_idx: { type: Number },
+        imageURL: { type: String },
+        filePath: { type: String },
+      },
     required: true,
     validate: [
       {
@@ -92,7 +93,7 @@ var squashSchema = new Schema({
       },
       {
         validator: imageArrayMaxLimit,
-        message: "No more than 7 images",
+        message: "No more than 6 images",
       },
     ],
   },

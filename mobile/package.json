@@ -36,7 +36,7 @@
     "path": "^0.12.7",
     "querystring": "^0.2.1",
     "react": "16.13.1",
-    "react-devtools": "^4.10.1",
+    "react-devtools": "4.11.0",
     "react-native": "0.63.4",
     "react-native-appearance": "^0.3.4",
     "react-native-async-storage": "^0.0.1",
