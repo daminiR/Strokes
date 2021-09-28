@@ -20,6 +20,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		82F8039726BB448C000C8F5A /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82F8039626BB448C000C8F5A /* File.swift */; };
 		82F803F026BB4AC0000C8F5A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82F803EF26BB4AC0000C8F5A /* GoogleService-Info.plist */; };
+		83E6B70E3EA0411FA04CFB1E /* KLMN-Flash-Pix.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8D2BE619E3E54D998051EA17 /* KLMN-Flash-Pix.ttf */; };
+		ED0A75A620A048BD9570BF57 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7E8183FB3D1442169BF5CB8D /* OpenSans-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +81,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		FD6E9C99383C4D63B4FADA65 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		8D2BE619E3E54D998051EA17 /* KLMN-Flash-Pix.ttf */ = {isa = PBXFileReference; name = "KLMN-Flash-Pix.ttf"; path = "../assets/fonts/KLMN-Flash-Pix.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7E8183FB3D1442169BF5CB8D /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +180,8 @@
 				92CCE602BD2A499C99AD021D /* Octicons.ttf */,
 				CB10698A607E45099D31A5C6 /* SimpleLineIcons.ttf */,
 				CA26463C6C3D42C6A4FE63A7 /* Zocial.ttf */,
+				8D2BE619E3E54D998051EA17 /* KLMN-Flash-Pix.ttf */,
+				7E8183FB3D1442169BF5CB8D /* OpenSans-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -372,6 +378,8 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				82F803F026BB4AC0000C8F5A /* GoogleService-Info.plist in Resources */,
+				83E6B70E3EA0411FA04CFB1E /* KLMN-Flash-Pix.ttf in Resources */,
+				ED0A75A620A048BD9570BF57 /* OpenSans-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

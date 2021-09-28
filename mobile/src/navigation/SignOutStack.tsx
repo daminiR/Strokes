@@ -26,7 +26,6 @@ export default function SignOutStack() {
       <Stack.Navigator headerMode="none">
       <Stack.Screen name="HELLO" component={Hello} />
       <Stack.Screen name="SIGN_IN" component={SignIn} />
-
       <Stack.Screen name="CONFIRM_SIGN_UP" component={ConfirmSignUp} />
       <Stack.Screen name="EMAIL" component={Email} />
       </Stack.Navigator>

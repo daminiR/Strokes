@@ -1,10 +1,41 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
-import React, { useContext, useState, ReactElement } from 'react'
-import {View, ScrollView, StyleSheet } from 'react-native'
+import React, { useEffect, useContext, useState, ReactElement } from 'react'
+import {View, ScrollView, StyleSheet} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import { onScreen, goBack } from '../../../constants'
+import {ProfileContext} from './index'
+import { useQuery, useMutation, useLazyQuery, HTTPFetchNetworkInterface} from '@apollo/client'
+//import {sportsList} from './../../../constants';
 import  DatePicker  from 'react-native-date-picker'
+import { RootStackParamList } from '../../../AppNavigator'
+import { ProfileScreenNavigationProp} from './index'
+import { SportContext } from '../IndividualSports/index'
+import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
+type ProfileT = {
+  navigation: ProfileScreenNavigationProp
+}
+export const SportChips = ({sport, isSelected = false, isDisplay, getData}) => {
+  const [dynamicStyle, setDynamicStyle] = React.useState(styles.ChipButton)
+  const [selected, setSelected] = React.useState(isSelected)
+  useEffect(() => {
+    if (selected){
+      setDynamicStyle(styles.ChipButtonSelected)
+    }
+    else {
+      setDynamicStyle(styles.ChipButton);
+    }
+  }, [selected])
 
-
-const SportChips = ({sport}) => {
+  const _selected = (selected) => {
+    if (selected) {
+      selected = false;
+      setSelected(selected)
+    } else {
+      selected = true;
+      setSelected(selected)
+    }
+      getData(sport, selected)
+  }
   return (
     <>
       <Chip
@@ -16,37 +47,69 @@ const SportChips = ({sport}) => {
           size: 20,
           color: 'black',
         }}
-        buttonStyle={styles.ChipButton}
-        type="outline"
+        buttonStyle={dynamicStyle}
         containerStyle={styles.singleChip}
+        onPress={() => _selected(selected)}
+        disabled={isDisplay}
+        disabledTitleStyle={styles.chipText}
+        disabledStyle={styles.ChipButton}
       />
     </>
   );
 };
-
+const _first_name = (navigation) => {
+      onScreen('FIRST_NAME', navigation)()
+};
+const _age = (navigation) => {
+      onScreen('AGE', navigation)()
+};
+const _gender = (navigation) => {
+      onScreen('GENDER', navigation)()
+};
+const _last_name = (navigation) => {
+      onScreen('LAST_NAME', navigation)()
+};
 const list = [
-  {title: 'first name', icon: 'av-timer', subtitle: 'Damini'},
-  {title: 'last name', icon: 'flight-takeoff', subtitle: 'Rijhwani'},
-  {title: 'age', icon: 'flight-takeoff', subtitle: '27'},
-  {title: 'gender', icon: 'flight-takeoff', subtitle: 'Female'},
+  {title: 'first name', icon: 'av-timer', subtitle: 'Damini', buttonPress: _first_name},
+  {title: 'last name', icon: 'flight-takeoff', subtitle: 'Rijhwani', buttonPress: _last_name},
+  {title: 'age', icon: 'flight-takeoff', subtitle: '27',buttonPress: _age},
+  {title: 'gender', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _gender},
 ]
-
-const sportsList = ["squash", "tennis", "soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
 const ProfileSettingsInput = (props) => {
+  const {squashData, newSportList} = useContext(ProfileContext);
+  const navigation = useNavigation()
+  const [sportsList, setSportsList] = React.useState(null)
+  const [loading, setLoading] = React.useState(true)
+  const _editSports = (props) => {
+  onScreen('EDIT_SPORTS', navigation)()
+}
+  useEffect(() => {
+    setLoading(true)
+    if (squashData?.squash?.sports != undefined && squashData?.squash?.sports.length != 0){
+       const sportsArray = squashData!.squash!.sports
+       setSportsList(sportsArray)
+       setLoading(false)
+    }
+  }, [squashData])
+
   return (
     <>
       <Card containerStyle={styles.CardStyle}>
+        <Icon size={28} onPress={_editSports} name="pencil" type='material-community' style={style_edit_icon.container} />
         <Card.Title>CARD WITH DIVIDER</Card.Title>
         <Card.Divider />
         <View style={styles.sportChipSet}>
-          {sportsList.map((sport) => (
-          <SportChips sport={sport}/>
-          ))}
+          {!loading &&
+            sportsList.map((sport, i) => (
+              <SportChips key={i} sport={sport.sport} isDisplay={true}/>
+            ))}
         </View>
       </Card>
       {list.map((item, i) => (
-        <ListItem key={i} bottomDivider>
-          <Icon name={item.icon} />
+        <ListItem
+          onPress={() => item.buttonPress(navigation)}
+          key={i}
+          bottomDivider>
           <ListItem.Content>
             <ListItem.Title>{item.title}</ListItem.Title>
             <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
@@ -73,6 +136,7 @@ const SettingsButton = (props) => {
     </>
   );
 }
+
 const SportsList = (props) => {
   return (
     <>
@@ -94,25 +158,34 @@ const styles = StyleSheet.create({
   user: {
     color: 'grey',
     fontSize: 20,
-    fontFamily: 'sans-serif',
+    fontFamily: 'OpenSans-Regular',
     alignSelf: 'stretch'
 
   },
   textSettingFont: {
     color: 'grey',
     fontSize: 20,
-    fontFamily: 'sans-serif',
+    fontFamily: 'OpenSans-Regular',
     alignSelf: 'stretch'
 
   },
   chipText: {
     color: '#242424',
-    fontFamily:'sans-serif',
+    fontFamily: 'OpenSans-Regular',
     fontSize: 16,
     fontWeight: "normal"
   },
+  ChipButtonSelected: {
+    borderColor: 'grey',
+    backgroundColor: '#d3d3d3',
+    fontSize: 200,
+    borderWidth: 1,
+    padding: 4
+  },
   ChipButton: {
     borderColor: 'grey',
+    fontSize: 200,
+    backgroundColor: '#fff',
     borderWidth: 1,
     padding: 4
 
@@ -132,7 +205,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     color: 'grey',
     fontSize: 20,
-    fontFamily: 'sans-serif',
+    fontFamily: 'OpenSans-Regular',
     flexDirection: "row"
   },
   profileButtons: {
@@ -163,4 +236,12 @@ const styles = StyleSheet.create({
   },
 });
 
+const style_edit_icon = StyleSheet.create({
+  container: {
+    //...StyleSheet.absoluteFillObject,
+    alignSelf: 'flex-end',
+    margin: 4,
+
+  }
+});
 export { ProfileSettingsInput }
