@@ -51,9 +51,7 @@ export const AuthNavigator = () => {
     //TODO: fix surrent User email verification at some point!!
     //if (currentUser && currentUser.email !== null) {
     if (currentUser  !== null && loading === false) {
-      console.log(currentUser)
       //getSquashProfile({variables: {id: currentUser.uid}})
-      console.log(isProfileComplete)
       if (isProfileComplete === false) {
         return !loading && <SportAppStack />;
       } else if (isProfileComplete === true) {

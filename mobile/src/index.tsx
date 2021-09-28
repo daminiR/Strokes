@@ -46,8 +46,8 @@ const App = (): ReactElement =>
       //isProfileCompleteVar(JSON.parse(prevIsComplete))
       await newPersistor.restore();
       //setPersistor(newPersistor);
-      newPersistor.pause()
-      newPersistor.purge()
+      //newPersistor.pause()
+      //newPersistor.purge()
       const myHtttpLink  = new HttpLink({
       uri: 'http://192.168.1.12:4000/graphql',
         //uri : 'http://localhost:4000/graphql'
@@ -55,10 +55,8 @@ const App = (): ReactElement =>
       //const uploadLink = createUploadLink({ uri: 'http://10.0.2.2:3000/graphql', })
         //const uploadLink = createUploadLink({ uri: 'http://192.168.1.8:4000/graphql', })
         //const uploadLink = createUploadLink({ uri:'http://192.168.1.12:4000/graphql'})
-        const uploadLink = createUploadLink({uri: 'http://localhost:4000/graphql'})
-        //const uploadLink = createUploadLink({uri: 'http://10.0.2.2:4000/graphql'})
-
-
+        //const uploadLink = createUploadLink({uri: 'http://localhost:4000/graphql'})
+        const uploadLink = createUploadLink({uri: 'http://10.0.2.2:4000/graphql'})
       //const link = ApolloLink.from([onErrorLink, uploadLink]);
       //const uri = 'http://localhost:4000/graphql'
       setClient(
@@ -78,7 +76,7 @@ const App = (): ReactElement =>
   if (!client) {
     return <Text>Initializing app...</Text>;
   }
-  client.resetStore()
+  //client.resetStore()
   //just to reset cache for debugging
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}

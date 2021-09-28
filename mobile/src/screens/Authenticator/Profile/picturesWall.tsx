@@ -22,18 +22,7 @@ import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 const PictureWall = (props) => {
   const [loading, setLoading] = React.useState(null)
   const {currentUser} = useContext(UserContext);
-  const {squashData} = useContext(ProfileContext);
-  const imgURLs = new Array(3).fill(null)
-  //const _TopRow = () => {
-
-    //return (
-    //<>
-      //{imgURLs.map((imageURL, index) => (
-      //<SingleImagePlaceholder key= {index} img_idx={index} />
-    //))}
-    //</>
-    //)
-  //}
+  const {squashData, newSportList} = useContext(ProfileContext);
   return (
     <>
       <ScrollView>
@@ -71,8 +60,6 @@ const SingleImagePlaceholder = ({img_idx}) => {
       onCompleted: (data) => _displayImage(data)
   });
   const _displayImage = async (data): Promise<void> => {
-     console.log("imah url")
-     console.log(data.uploadFile.imageURL)
       setDisplayImage(data.uploadFile.imageURL)
   }
   const [deleteImage, {data: image_set}] = useMutation(DELETE_IMAGE);
@@ -91,7 +78,6 @@ const SingleImagePlaceholder = ({img_idx}) => {
       }
     }
     return () => {
-      console.log("unmounted")
     }
   }, [Image])
 

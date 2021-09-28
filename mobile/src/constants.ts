@@ -15,8 +15,7 @@ export const Dolbak = Platform.OS === 'ios' ? 'The Dolbak' : 'TheDolbak-Brush'
 //export const Narrow = '3270Narrow'
 
 // sports type and level information
-
-export const sportsList = ["Squash", "Tennis", "Soccer", "Badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
+export const sportsList = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
 export const sportLevelList = ["beginners", "intermediate", "advanced"]
 export const profileSettingsLabels = ["first name", "last name", "age", "gender"]
 export const win = Dimensions.get('window')

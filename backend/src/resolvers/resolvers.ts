@@ -50,14 +50,16 @@ export const resolvers = {
   },
   FileUpload: GraphQLUpload,
   Mutation: {
-     addSports: async (parents, {sportsList, _id} , context, info) => {
+     updateUserSports: async (parents, {_id, sportsList} , context, info) => {
        if (sportsList.length != 0){
            const doc = await Squash.findOneAndUpdate(
              {_id: _id },
              {$set:{sports: sportsList}},
              {new: true }
            );
+           console.log("Updated user squash changes")
        }
+       return _id
      },
      deleteImage: async (parents, {_id, img_idx} , context, info) => {
        const filter = { '_id': _id}
