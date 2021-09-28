@@ -4,20 +4,21 @@ import {View, ScrollView, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 import {ProfileContext} from './index'
+import { useQuery, useMutation, useLazyQuery, HTTPFetchNetworkInterface} from '@apollo/client'
 //import {sportsList} from './../../../constants';
 import  DatePicker  from 'react-native-date-picker'
 import { RootStackParamList } from '../../../AppNavigator'
 import { ProfileScreenNavigationProp} from './index'
-
+import { SportContext } from '../IndividualSports/index'
+import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
 type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
-export const SportChips = ({sport, isSelected = false, isDisplay}) => {
+export const SportChips = ({sport, isSelected = false, isDisplay, getData}) => {
   const [dynamicStyle, setDynamicStyle] = React.useState(styles.ChipButton)
   const [selected, setSelected] = React.useState(isSelected)
   useEffect(() => {
     if (selected){
-      console.log("selected")
       setDynamicStyle(styles.ChipButtonSelected)
     }
     else {
@@ -26,8 +27,14 @@ export const SportChips = ({sport, isSelected = false, isDisplay}) => {
   }, [selected])
 
   const _selected = (selected) => {
-    console.log("toggle")
-    setSelected(!selected)
+    if (selected) {
+      selected = false;
+      setSelected(selected)
+    } else {
+      selected = true;
+      setSelected(selected)
+    }
+      getData(sport, selected)
   }
   return (
     <>
@@ -41,7 +48,6 @@ export const SportChips = ({sport, isSelected = false, isDisplay}) => {
           color: 'black',
         }}
         buttonStyle={dynamicStyle}
-        //type="outline"
         containerStyle={styles.singleChip}
         onPress={() => _selected(selected)}
         disabled={isDisplay}
@@ -69,23 +75,18 @@ const list = [
   {title: 'age', icon: 'flight-takeoff', subtitle: '27',buttonPress: _age},
   {title: 'gender', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _gender},
 ]
-
 const ProfileSettingsInput = (props) => {
-  const {squashData} = useContext(ProfileContext);
+  const {squashData, newSportList} = useContext(ProfileContext);
   const navigation = useNavigation()
   const [sportsList, setSportsList] = React.useState(null)
   const [loading, setLoading] = React.useState(true)
   const _editSports = (props) => {
   onScreen('EDIT_SPORTS', navigation)()
-  console.log("editing")
 }
   useEffect(() => {
     setLoading(true)
-    //if (squashData != undefined || squashData?.squash?.sports.length != 0){
     if (squashData?.squash?.sports != undefined && squashData?.squash?.sports.length != 0){
        const sportsArray = squashData!.squash!.sports
-       console.log("sprotsArray")
-       console.log(sportsArray)
        setSportsList(sportsArray)
        setLoading(false)
     }

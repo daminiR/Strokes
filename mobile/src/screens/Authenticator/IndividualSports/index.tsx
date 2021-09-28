@@ -1,5 +1,5 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
-import React, { useEffect, useContext, useState, ReactElement } from 'react'
+import React, { useLayoutEffect, createContext, useEffect, useContext, useState, ReactElement } from 'react'
 import {View, ScrollView, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
@@ -9,22 +9,40 @@ import  DatePicker  from 'react-native-date-picker'
 import { RootStackParamList } from '../../../AppNavigator'
 import { ProfileScreenNavigationProp} from './index'
 import {SportChips} from '../Profile/profileSettingInput'
-
+import { HeaderBackButton, StackHeaderLeftButtonProps } from '@react-navigation/stack';
+import { useQuery, useMutation, useLazyQuery, HTTPFetchNetworkInterface} from '@apollo/client'
+import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
+import {sportsItemsVar} from '../../../cache'
+import { useReactiveVar } from "@apollo/client"
+export const SportContext = createContext()
 type IndividualSportsT = {
   navigation: ProfileScreenNavigationProp
 }
-const IndividualSports = ({ navigation }: IndividualSportsT): ReactElement => {
+const IndividualSports = ({navigation}: IndividualSportsT): ReactElement => {
+  const [newSportList, setNewSportList] = useState(null);
+  const sportItems = useReactiveVar(sportsItemsVar)
   return (
     <>
-      <ChooseSportsChips userSportsList={["Squash"]}/>
+      <ChooseSportsChips userSportsList={sportItems}/>
     </>
-  )
-}
+  );
+};
 
 const ChooseSportsChips = ({userSportsList}) => {
-
-    const _selected = () =>{
+  const [newSportList, setNewSportList] = useState(userSportsList);
+  const getData = (newSport, isSelected) => {
+    if(isSelected){
+      newSportList.push({sport: newSport})
+      sportsItemsVar([...sportsItemsVar(), {sport: newSport}])
     }
+    else{
+      const allSports = sportsItemsVar()
+      const filterSports = allSports.filter((sport) => sport.sport !== newSport)
+      console.log(filterSports, "filtering")
+      sportsItemsVar(filterSports)
+    }
+  }
+  const _selected = () => {};
   return (
     <>
       <Card containerStyle={styles.CardStyle}>
@@ -32,13 +50,19 @@ const ChooseSportsChips = ({userSportsList}) => {
         <Card.Divider />
         <View style={styles.sportChipSet}>
           {sportsList.map((sport, i) => (
-              <SportChips key={i} sport={sport} isDisplay={false} isSelected={userSportsList.includes(sport)}/>
-            ))}
+            <SportChips
+              key={i}
+              sport={sport}
+              isDisplay={false}
+              isSelected={userSportsList.some((currSport) => currSport.sport === sport)}
+              getData={getData}
+            />
+          ))}
         </View>
       </Card>
     </>
   );
-}
+};
 
 const listProfileTitles = [" sports", "age", "gender", "first name", "last name"]
 const SettingsButton = (props) => {

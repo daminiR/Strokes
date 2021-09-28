@@ -22,6 +22,11 @@ const ADD_PROFILE = gql`
     }
   }
 `
+const UPDATE_USER_SPORTS = gql`
+  mutation UpdateUserSports($_id: String!, $sportsList: [SquashNodeInput!]!){
+    updateUserSports(_id: $_id, sportsList: $sportsList)
+  }
+`
 const DELETE_PROFILE = gql`
   mutation DeleteSquash($id: ID!) {
     deleteSquash(id: $id)
@@ -33,4 +38,4 @@ const UPDATE_PROFILE_COMPLETE = gql`
       isProfileComplete
     }
 `;
-export { DELETE_IMAGE, UPLOAD_FILE, ADD_PROFILE , DELETE_PROFILE}
+export {UPDATE_USER_SPORTS,  DELETE_IMAGE, UPLOAD_FILE, ADD_PROFILE , DELETE_PROFILE}
