@@ -3,12 +3,12 @@ import { from ,createHttpLink, ReactiveVar, ApolloClient, ApolloProvider, InMemo
 import { makeVar} from '@apollo/client'
 import {persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {SportsList} from './localModels/UserSportsList'
+import {SportsList, NameT} from './localModels/UserSportsList'
 
 const sportInitialValue: SportsList = [];
 export const sportsItemsVar:ReactiveVar<SportsList> = makeVar<SportsList>(sportInitialValue)
-export const FirstNameVar:ReactiveVar<String> = makeVar<String>(null)
-export const LastNameVar:ReactiveVar<String> = makeVar<String>(null)
+export const FirstNameVar:ReactiveVar<NameT> = makeVar<NameT>({FirstName: '', LastName:''})
+export const AgeVar:ReactiveVar<Number> = makeVar<Number>(0)
 export const GenderVar:ReactiveVar<String> = makeVar<String>(null)
 export  const isProfileCompleteVar = makeVar<Boolean>(false)
 export const cache = new InMemoryCache({
@@ -20,19 +20,19 @@ export const cache = new InMemoryCache({
             return sportsItemsVar();
           },
         },
-        firstName: {
+        fullName: {
           read() {
             return FirstNameVar();
           },
         },
-        lastName: {
+        age: {
           read() {
-            return sportsItemsVar();
+            return AgeVar();
           },
           },
         gender: {
           read() {
-            return sportsItemsVar();
+            return GenderVar();
           },
         },
       },

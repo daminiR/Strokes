@@ -10,23 +10,19 @@ import { useQuery, useMutation } from '@apollo/client'
 import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-
+import {Messages} from './Messages'
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'CHAT'>
 
 type ChatT = {
   navigation: MatchScreenNavigationProp
 }
-
 const Chat  = ({ navigation }: ChatT ): ReactElement => {
   const [loading, setLoading] = useState(false)
   //<Button title="Profile" onPress={_onPressProfile}/>
-
   return (
     <>
       <AppContainer title="User" loading={loading}>
-        <Text>
-          {'this is matching page'}
-        </Text>
+        <Messages/>
       </AppContainer>
     </>
   );

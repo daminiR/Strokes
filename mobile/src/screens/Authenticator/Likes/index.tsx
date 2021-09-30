@@ -10,21 +10,22 @@ import { useQuery, useMutation } from '@apollo/client'
 import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import {Matches} from './Matches'
 
 type LikesScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LIKES'>
 
 type LikesT = {
   navigation: LikesScreenNavigationProp
 }
-const Likes  = ({ navigation }: MatchT ): ReactElement => {
+const Likes  = ({ navigation }: LikesT ): ReactElement => {
   //<Button title="Profile" onPress={_onPressProfile}/>
   const [loading, setLoading] = useState(false)
   return (
     <>
       <AppContainer title="User" loading={loading}>
-        <Text>
-          {'Likes alg tbc'}
-        </Text>
+        <View>
+          <Matches />
+        </View>
       </AppContainer>
     </>
   );
