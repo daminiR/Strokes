@@ -34,13 +34,19 @@ var squashSchema = new Schema({
     //],
   },
   first_name: {
-    type: String,
+    type: String!,
+    required: true,
+    minlength: 3,
+    maxlength: 30,
+  },
+  last_name: {
+    type: String!,
     required: true,
     minlength: 3,
     maxlength: 30,
   },
   age: {
-    type: String,
+    type: Number,
     required: true,
     min: 18,
     max: 90,

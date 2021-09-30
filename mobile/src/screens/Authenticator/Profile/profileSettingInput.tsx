@@ -1,5 +1,5 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
-import React, { useEffect, useContext, useState, ReactElement } from 'react'
+import React, { useRef, useEffect, useContext, useState, ReactElement } from 'react'
 import {View, ScrollView, StyleSheet} from 'react-native';
 import {sportsItemsVar} from '../../../cache'
 import {useNavigation} from '@react-navigation/native';
@@ -12,10 +12,11 @@ import { RootStackParamList } from '../../../AppNavigator'
 import { ProfileScreenNavigationProp} from './index'
 import { SportContext } from '../IndividualSports/index'
 import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
+import {ProfileAttirbutes} from "./ProfileAttributes"
 type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
-export const SportChips = ({sport, isSelected = false, isDisplay, getData}) => {
+export const SportChips = ({sport, isSelected = false, isDisplay, getData=null}) => {
   const [dynamicStyle, setDynamicStyle] = React.useState(styles.ChipButton)
   const [selected, setSelected] = React.useState(isSelected)
   useEffect(() => {
@@ -58,42 +59,36 @@ export const SportChips = ({sport, isSelected = false, isDisplay, getData}) => {
     </>
   );
 };
-const _first_name = (navigation) => {
-      onScreen('FIRST_NAME', navigation)()
-};
-const _age = (navigation) => {
-      onScreen('AGE', navigation)()
-};
-const _gender = (navigation) => {
-      onScreen('GENDER', navigation)()
-};
-const _last_name = (navigation) => {
-      onScreen('LAST_NAME', navigation)()
-};
-const list = [
-  {title: 'first name', icon: 'av-timer', subtitle: 'Damini', buttonPress: _first_name},
-  {title: 'last name', icon: 'flight-takeoff', subtitle: 'Rijhwani', buttonPress: _last_name},
-  {title: 'age', icon: 'flight-takeoff', subtitle: '27',buttonPress: _age},
-  {title: 'gender', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _gender},
-]
+
 const ProfileSettingsInput = (props) => {
+  const didMountRef = useRef(false)
   const {squashData, newSportList} = useContext(ProfileContext);
   const navigation = useNavigation()
-  const [sportsList, setSportsList] = React.useState(null)
-  const [loading, setLoading] = React.useState(true)
+  const [sportsList, setSportsList] = React.useState([{sport:"Tennis", game_level: 0}])
+  const [loading, setLoading] = React.useState(false)
   const _editSports = (props) => {
-  //sportsItemsVar(squashData.squash.sport)
   sportsItemsVar(squashData.squash.sports)
   onScreen('EDIT_SPORTS', navigation)()
 }
   useEffect(() => {
-    setLoading(true)
-    if (squashData?.squash?.sports != undefined && squashData?.squash?.sports.length != 0){
-       const sportsArray = squashData!.squash!.sports
-       setSportsList(sportsArray)
-       setLoading(false)
+    if (didMountRef.current){
+  setLoading(true);
+  if (
+    squashData?.squash?.sports != undefined &&
+    squashData?.squash?.sports.length != 0
+  ) {
+    const sportsArray = squashData!.squash!.sports;
+    console.log(sportsArray);
+    setSportsList(sportsArray);
+    setLoading(false);
+  }
+  // for first name
+}
+    else {
+      didMountRef.current = true
     }
-  }, [squashData])
+
+  }, [squashData?.squash?.sports])
 
   return (
     <>
@@ -108,18 +103,7 @@ const ProfileSettingsInput = (props) => {
             ))}
         </View>
       </Card>
-      {list.map((item, i) => (
-        <ListItem
-          onPress={() => item.buttonPress(navigation)}
-          key={i}
-          bottomDivider>
-          <ListItem.Content>
-            <ListItem.Title>{item.title}</ListItem.Title>
-            <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
-          </ListItem.Content>
-          <ListItem.Chevron />
-        </ListItem>
-      ))}
+     <ProfileAttirbutes/>
     </>
   );
 }
@@ -132,8 +116,8 @@ const SettingsButton = (props) => {
       <Button
         title={titleName}
         type='outline'
-        containerStyle = {styles.profileButtons}
-        titleStyle={styles.textSettingFont}
+        containerStyle = {SportChipsstyles.profileButtons}
+        titleStyle={SportChipsstyles.textSettingFont}
         buttonStyle={{ justifyContent: 'flex-start' }}
       />
     </>
@@ -151,7 +135,7 @@ const SportsList = (props) => {
   );
 }
 
-const styles = StyleSheet.create({
+const SportChipsstyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',

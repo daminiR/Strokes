@@ -26,8 +26,9 @@ export const typeDefs = gql`
   }
   type Squash {
     first_name: String!
+    last_name: String!
     _id: ID!
-    age: String!
+    age: Int!
     gender: String!
     sports: [SquashNode!]!
     country: String
@@ -51,11 +52,15 @@ export const typeDefs = gql`
   type Mutation {
     deleteImage(_id: String, img_idx: Int): [Data!]!
     updateUserSports(_id: String!, sportsList: [SquashNodeInput!]!): String
+    updateName(_id: String!, first_name: String!, last_name: String): String
+    updateAge(_id: String!, age: Int): String
+    updateGender(_id: String!, gender: String): String
     uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
     createSquash(
       _id: String!
       first_name: String!
-      age: String!
+      last_name: String!
+      age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
       country: String
