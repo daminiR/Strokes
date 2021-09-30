@@ -17,12 +17,13 @@ export const AuthNavigator = () => {
   const [getSquashProfile, {data, error}] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
-      console.log(data)
+      console.log(data, "isithis data")
       if (data) {
         setProfileState(true);
         if (loading) setLoading(false);
       }
     },
+    onError: (readSquashErr =>  console.log(readSquashErr))
   });
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);

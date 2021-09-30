@@ -78,6 +78,7 @@ const SingleImagePlaceholder = ({img_idx}) => {
       }
     }
     return () => {
+      console.log("unmounted")
     }
   }, [Image])
 

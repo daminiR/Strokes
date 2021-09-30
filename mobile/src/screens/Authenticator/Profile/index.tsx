@@ -23,7 +23,7 @@ import {UserContext} from '../../../UserContext'
 import { useQuery, useMutation, useLazyQuery, HTTPFetchNetworkInterface} from '@apollo/client'
 import * as RNFS from 'react-native-fs'
 import  RNFetchBlob  from 'rn-fetch-blob'
-import {GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
+import {GET_FIRST_NAME, GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
 import {UPDATE_USER_SPORTS, UPLOAD_FILE} from '../../../graphql/mutations/profile'
 import { useFocusEffect, NavigationContainer } from '@react-navigation/native'
 import ImagePicker from 'react-native-image-crop-picker'
@@ -33,7 +33,9 @@ import { ReactNativeFile, File } from 'apollo-upload-client'
 import { storage as GCP_Storage } from '@react-native-firebase/storage';
 import { PictureWall } from './picturesWall'
 import * as mime from 'react-native-mime-types'
-import {sportsItemsVar} from '../../../cache'
+import { Tab,TabView, withBadge, Icon, Avatar, Badge } from 'react-native-elements'
+import {FirstNameVar, sportsItemsVar} from '../../../cache'
+import {ProfileView} from './ProfileView'
 export const ProfileContext = createContext()
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
 export type ProfileScreenRouteProp = RouteProp<RootStackSignInParamList, 'PR'>;
@@ -44,7 +46,8 @@ type ProfileT = {
 const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   // TODO: very hacky way to stop useEffect from firt render => need more elegant sol
   const didMountRef = useRef(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [index, setIndex] = useState(0)
   const {currentUser} = useContext(UserContext)
   const [error, setError] = useState('')
   const {confirmResult, setConfirmResult} = useContext(UserContext)
@@ -57,7 +60,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
       if (data) {
-        //sportsItemsVar(data.squash.sports)
+        FirstNameVar({FirstName: data.squash.first_name, LastName: data.squash.last_name})
         if (loading) setLoading(false);
       }
     },
@@ -70,6 +73,12 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
     error: apolloError,
     data: apolloSportsList,
   } = useQuery(GET_SPORTS_LIST, {});
+  let {
+    loading: firstNameLoading,
+    error: firstNameError,
+    data: firstName,
+  } = useQuery(GET_FIRST_NAME);
+
   useEffect(() => {
     if (didMountRef.current){
       const tempsp = []
@@ -89,6 +98,9 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
       didMountRef.current = true
     }
     }, [apolloSportsList]),
+  useEffect(() => {
+    console.log(firstName)
+    }, [firstName])
   useFocusEffect(
     React.useCallback(() => {
       getSquashData({variables: currentUser.uid})
@@ -97,13 +109,35 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   );
   const sports_values = {
     squashData,
+    loading
   }
   return (
     <>
+      <Tab value={index} onChange={setIndex}>
+        <Tab.Item title="recent" />
+        <Tab.Item title="favorite" />
+      </Tab>
       <ProfileContext.Provider value={sports_values}>
-            <ScrollView contentContainerStyle = {{flexGrow: 1, justifyContent: 'space-between'}} >
-              <PictureWall/>
-          </ScrollView>
+      <TabView value={index} onChange={setIndex}>
+        <TabView.Item>
+            <ScrollView
+              contentContainerStyle={{
+                flexGrow: 1,
+                justifyContent: 'space-between',
+              }}>
+              <PictureWall />
+            </ScrollView>
+        </TabView.Item>
+        <TabView.Item>
+            <ScrollView
+              contentContainerStyle={{
+                flexGrow: 1,
+                justifyContent: 'space-between',
+              }}>
+            <ProfileView/>
+            </ScrollView>
+        </TabView.Item>
+      </TabView>
       </ProfileContext.Provider>
     </>
   );
