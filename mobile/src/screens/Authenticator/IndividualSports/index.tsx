@@ -61,7 +61,6 @@ const ChooseSportsChips = ({userSportsList}) => {
     </>
   );
 };
-
 const listProfileTitles = [" sports", "age", "gender", "first name", "last name"]
 const SettingsButton = (props) => {
   const { titleName } = props

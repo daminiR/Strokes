@@ -21,6 +21,7 @@ const READ_SQUASH = gql`
     squash(id: $id) {
       _id
       first_name
+      last_name
       age
       gender
       sports {
@@ -58,12 +59,12 @@ const GET_SPORTS_LIST = gql`
 `;
 const GET_FIRST_NAME = gql`
     query  GetFirstName {
-      firstName @client
+      fullName @client
     }
 `;
-const GET_LAST_NAME = gql`
-    query  GetLastName {
-      lastName @client
+const GET_AGE = gql`
+    query  GetAge {
+      age @client
     }
 `;
 const GET_GENDER = gql`
@@ -76,4 +77,4 @@ const GET_PROFILE_STATUS = gql`
       isProfileComplete @client
     }
 `;
-export { GET_GENDER, GET_LAST_NAME, GET_FIRST_NAME, GET_SPORTS_LIST, READ_URL,GET_PROFILE_STATUS, READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}
+export { GET_AGE, GET_GENDER, GET_FIRST_NAME, GET_SPORTS_LIST, READ_URL,GET_PROFILE_STATUS, READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}
