@@ -10,7 +10,8 @@ import { useQuery, useMutation } from '@apollo/client'
 import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-
+import  {Matches}  from './Matches'
+import  {Home}  from './Home'
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
 
 type MatchT = {
@@ -22,9 +23,10 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
   return (
     <>
       <AppContainer title="User" loading={loading}>
-        <Text>
-          {'MAtching alg!!'}
-        </Text>
+        <View>
+          <Home/>
+        </View>
+
       </AppContainer>
     </>
   );
