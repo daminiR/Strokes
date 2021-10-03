@@ -12,9 +12,16 @@ import { _check_single } from '../../../utils/Upload'
 import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 
 const PictureWall = (props) => {
+  console.log(props)
   const [loading, setLoading] = React.useState(null)
   const {currentUser} = useContext(UserContext);
   const {squashData, newSportList} = useContext(ProfileContext);
+  //useEffect(() => {
+    //if (squashData?.squash?.image_set != undefined)
+
+    //}
+  //}, [squashData?.squash?.image_set])
+
   return (
     <>
       <ScrollView>

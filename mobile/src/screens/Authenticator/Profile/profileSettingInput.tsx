@@ -78,7 +78,6 @@ const ProfileSettingsInput = (props) => {
     squashData?.squash?.sports.length != 0
   ) {
     const sportsArray = squashData!.squash!.sports;
-    console.log(sportsArray);
     setSportsList(sportsArray);
     setLoading(false);
   }
