@@ -49,6 +49,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   const didMountRef = useRef(false)
   const [loading, setLoading] = useState(true)
   const [index, setIndex] = useState(0)
+  const [tabState, setTabState] = useState(0)
   const {currentUser} = useContext(UserContext)
   const [error, setError] = useState('')
   const {confirmResult, setConfirmResult} = useContext(UserContext)
@@ -79,6 +80,9 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
     error: firstNameError,
     data: firstName,
   } = useQuery(GET_FIRST_NAME);
+  useEffect(() => {
+
+    }, [apolloSportsList])
 
   useEffect(() => {
     if (didMountRef.current){
@@ -98,7 +102,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
       //getSquashData({variables: currentUser.uid})
       didMountRef.current = true
     }
-    }, [apolloSportsList]),
+    }, [apolloSportsList])
   useEffect(() => {
     console.log(firstName)
     }, [firstName])
@@ -106,7 +110,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
     React.useCallback(() => {
       getSquashData({variables: currentUser.uid})
       console.log("fire when on page")
-    }, [])
+    }, [tabState])
   );
   const sports_values = {
     squashData,
@@ -115,7 +119,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   return (
     <>
       <ProfileContext.Provider value={sports_values}>
-        <ScrollableTabView>
+        <ScrollableTabView onChangeTab={({ i, ref }) => setTabState(i) }>
           <PictureWall tabLabel='Edit Profile' />
           <ProfileView tabLabel='View Profile'/>
         </ScrollableTabView>
@@ -123,12 +127,6 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
     </>
   );
 }
-//<ScrollView
-    //contentContainerStyle={{
-        //flexGrow: 1,
-        //justifyContent: 'space-between',
-    //}}>
-//</ScrollView>
 const styles = StyleSheet.create({
   scrollview: {
     backgroundColor: 'pink',

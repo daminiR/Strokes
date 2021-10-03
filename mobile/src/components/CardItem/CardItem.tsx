@@ -23,12 +23,13 @@ const CardItem = ({
   //logic
   //
   const {squashData, newSportList} = useContext(ProfileContext);
+  console.log(" in profile view", squashData)
   const [loadingSportsData, setLoadingSportsData] = React.useState(false)
   const [Name, setName] = React.useState('')
   const [imageSet, setImageSet] = React.useState([])
   const [profileImage, setProfileImage] = React.useState(null)
   const [loadingImages, setLoadingImages] = React.useState(false)
-  const [ProfileTitle, setPRofileTitle] = useState('')
+  const [ProfileTitle, setProfileTitle] = useState('')
   const [Gender, setGender] = React.useState('')
   const [Age, setAge] = React.useState('')
   const [sportsList, setSportsList] = React.useState([{sport:"Tennis", game_level: 0}])
@@ -57,11 +58,12 @@ const CardItem = ({
     }
     if (userData?.first_name != undefined && userData?.last_name != undefined) {
       setName(userData.first_name);
+      const profileTitle = userData.first_name +', ' + userData.age
+      setProfileTitle(profileTitle)
     }
-    setPRofileTitle(Name + ' ,' + Age)
     setLoadingSportsData(false);
   }
-  }, [squashData?.squash?.image_set])
+  }, [squashData?.squash])
 //   Custom styling
   const fullWidth = Dimensions.get('window').width;
   const imageStyle = [

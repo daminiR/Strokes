@@ -69,6 +69,19 @@ const ProfileAttirbutes = () => {
 
   }, [squashData?.squash?.age])
 
+  useEffect(() => {
+  setLoading(true);
+  if (
+    squashData?.squash?.gender != undefined &&
+    squashData?.squash?.gender.length != 0
+  ) {
+    const ind_to_update = list.findIndex((listAttribute => listAttribute.title == 'gender'))
+    list[ind_to_update].subtitle = squashData!.squash.gender
+    setLoading(false);
+  }
+
+  }, [squashData?.squash?.gender])
+
   return (
     <>
       {list.map((item, i) => (
