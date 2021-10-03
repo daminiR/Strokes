@@ -62,6 +62,11 @@ const GET_FIRST_NAME = gql`
       fullName @client
     }
 `;
+const GET_DESCRIPTION = gql`
+    query  GetDescription {
+      description @client
+    }
+`;
 const GET_AGE = gql`
     query  GetAge {
       age @client
@@ -77,4 +82,4 @@ const GET_PROFILE_STATUS = gql`
       isProfileComplete @client
     }
 `;
-export { GET_AGE, GET_GENDER, GET_FIRST_NAME, GET_SPORTS_LIST, READ_URL,GET_PROFILE_STATUS, READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}
+export { GET_DESCRIPTION, GET_AGE, GET_GENDER, GET_FIRST_NAME, GET_SPORTS_LIST, READ_URL,GET_PROFILE_STATUS, READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}

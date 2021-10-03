@@ -82,7 +82,7 @@ var squashSchema = new Schema({
   },
   description: {
     type: String,
-    maxlength: 500,
+    maxlength: 300,
   },
   image_set: {
     type:

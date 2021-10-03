@@ -99,6 +99,19 @@ export const resolvers = {
       //}
       return _id;
     },
+    updateDescription: async (parents, { _id, description}, context, info) => {
+      //if (gender != 0) {
+        const doc = await Squash.findOneAndUpdate(
+          { _id: _id },
+          { $set: {description: description}},
+          { new: true }
+        );
+        console.log("Updated user description ", description);
+      //} else {
+        //console.log("Age cannot be no length");
+      //}
+      return _id;
+    },
     deleteImage: async (parents, { _id, img_idx }, context, info) => {
       const filter = { _id: _id };
       const update = { $pull: { image_set: { img_idx: img_idx } } };
