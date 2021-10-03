@@ -17,6 +17,7 @@ export * from './IndividualGender'
 export * from './IndividualAge'
 export * from './IndividualLastName'
 export * from './IndividualSports'
+export * from './IndividualDescription'
 
 
 

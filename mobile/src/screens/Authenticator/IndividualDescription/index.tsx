@@ -12,38 +12,36 @@ import  auth  from '@react-native-firebase/auth'
 import { HeaderBackButton, StackHeaderLeftButtonProps } from '@react-navigation/stack';
 import {RootIndividualProfileInputParamList } from '../../../navigation/individualProfileStack'
 import {FirstNameVar} from '../../../cache'
-import {GET_FIRST_NAME} from '../../../graphql/queries/profile'
-import {UPDATE_NAME} from '../../../graphql/mutations/profile'
+import {GET_DESCRIPTION} from '../../../graphql/queries/profile'
+import {UPDATE_DESCRIPTION} from '../../../graphql/mutations/profile'
 import {UserContext} from '../../../UserContext'
 import {ProfileContext} from '../Profile/index'
 
-export type FirstNameScreenNavigationProp = StackNavigationProp<RootIndividualProfileInputParamList, 'FIRST_NAME'>
-export type FirstNameScreenRouteProp = RouteProp<RootIndividualProfileInputParamList, 'FIRST_NAME'>;
-export type FirstNameT = {
-  navigation: FirstNameScreenNavigationProp
-  route: FirstNameScreenRouteProp
+export type DescriptionScreenNavigationProp = StackNavigationProp<RootIndividualProfileInputParamList, 'DESCRIPTION'>
+export type DescriptionScreenRouteProp = RouteProp<RootIndividualProfileInputParamList, 'DESCRIPTION'>;
+export type DescriptionT = {
+  navigation: DescriptionScreenNavigationProp
+  route: DescriptionScreenRouteProp
 }
-const FirstName = ({navigation, route}: FirstNameT): ReactElement => {
+const Description = ({navigation, route}: DescriptionT): ReactElement => {
 const [currentFirstName, setCurrentFirstName] = useState(null)
 const {currentUser} = useContext(UserContext)
 const [loading, setLoading] = useState(true)
-const [updateName] = useMutation(UPDATE_NAME);
-const [firstNameValue, onChangeFirstName] = React.useState('Useless Placeholder')
-const [lastNameValue, onChangeLastName] = React.useState('Useless Placeholder')
+const [updateDescription] = useMutation(UPDATE_DESCRIPTION);
+const [descriptionValue, onChangeDescription] = React.useState('Useless Placeholder')
 let {
   loading: apolloLoading,
   error: apolloError,
-  data: apolloName,
-} = useQuery(GET_FIRST_NAME);
+  data: apolloDescription,
+} = useQuery(GET_DESCRIPTION);
+
 useEffect(() => {
       setLoading(true)
-      console.log(apolloName)
-      onChangeFirstName(apolloName.fullName.FirstName);
-      onChangeLastName(apolloName.fullName.LastName);
+      onChangeDescription(apolloDescription.description);
       setLoading(false)
 }, []);
-  const _updateName = () => {
-    updateName({variables: {_id: currentUser.uid, first_name: firstNameValue, last_name: lastNameValue}})
+  const _updateDescription = () => {
+    updateDescription({variables: {_id: currentUser.uid, description: descriptionValue}})
     navigation.goBack()
   }
   const [data, setData] = useState("checking")
@@ -52,28 +50,21 @@ useEffect(() => {
       {!loading && (
         <View>
           <Input
-            placeholder="FirstName"
-            label="First Name"
+            placeholder="Description"
+            label="Description"
             leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-            onChangeText={onChangeFirstName}
-            value={firstNameValue}
-          />
-          <Input
-            placeholder="Last Name"
-            label="Last Name"
-            leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-            onChangeText={onChangeLastName}
-            value={lastNameValue}
+            onChangeText={onChangeDescription}
+            value={descriptionValue}
           />
         </View>
       )}
       <Button
         title="Update"
         onPress={() => {
-          _updateName();
+          _updateDescription();
         }}
       />
     </>
   );
 }
-export { FirstName }
+export { Description }
