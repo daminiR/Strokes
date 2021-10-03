@@ -17,6 +17,7 @@ import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
 import { onScreen, goBack } from '../../../constants'
 import {sanitizeFile } from './../../../utils/fileNaming'
 import { AppContainer } from '../../../components'
+import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { RootStackParamList } from '../../../AppNavigator'
 import auth from '@react-native-firebase/auth'
 import {UserContext} from '../../../UserContext'
@@ -113,35 +114,21 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   }
   return (
     <>
-      <Tab value={index} onChange={setIndex}>
-        <Tab.Item title="recent" />
-        <Tab.Item title="favorite" />
-      </Tab>
       <ProfileContext.Provider value={sports_values}>
-      <TabView value={index} onChange={setIndex}>
-        <TabView.Item>
-            <ScrollView
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: 'space-between',
-              }}>
-              <PictureWall />
-            </ScrollView>
-        </TabView.Item>
-        <TabView.Item>
-            <ScrollView
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: 'space-between',
-              }}>
-            <ProfileView/>
-            </ScrollView>
-        </TabView.Item>
-      </TabView>
+        <ScrollableTabView>
+          <PictureWall tabLabel='Edit Profile' />
+          <ProfileView tabLabel='View Profile'/>
+        </ScrollableTabView>
       </ProfileContext.Provider>
     </>
   );
 }
+//<ScrollView
+    //contentContainerStyle={{
+        //flexGrow: 1,
+        //justifyContent: 'space-between',
+    //}}>
+//</ScrollView>
 const styles = StyleSheet.create({
   scrollview: {
     backgroundColor: 'pink',

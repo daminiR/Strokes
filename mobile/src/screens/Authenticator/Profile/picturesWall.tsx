@@ -11,14 +11,6 @@ import { generateRNFile } from '../../../utils/Upload'
 import { _check_single } from '../../../utils/Upload'
 import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 
-//const _createArray = (imgURLs) =>{
-  //const {squashData} = useContext(ProfileContext);
-
-  //for (let step; step < 4, step++){
-
-  //}
-
-//}
 const PictureWall = (props) => {
   const [loading, setLoading] = React.useState(null)
   const {currentUser} = useContext(UserContext);

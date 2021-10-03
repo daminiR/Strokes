@@ -17,14 +17,14 @@ type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
 export const SportChips = ({sport, isSelected = false, isDisplay, getData=null}) => {
-  const [dynamicStyle, setDynamicStyle] = React.useState(styles.ChipButton)
+  const [dynamicStyle, setDynamicStyle] = React.useState(SportChipsstyles.ChipButton)
   const [selected, setSelected] = React.useState(isSelected)
   useEffect(() => {
     if (selected){
-      setDynamicStyle(styles.ChipButtonSelected)
+      setDynamicStyle(SportChipsstyles.ChipButtonSelected)
     }
     else {
-      setDynamicStyle(styles.ChipButton);
+      setDynamicStyle(SportChipsstyles.ChipButton);
     }
   }, [selected])
 
@@ -42,7 +42,7 @@ export const SportChips = ({sport, isSelected = false, isDisplay, getData=null})
     <>
       <Chip
         title= {sport}
-        titleStyle={styles.chipText}
+        titleStyle={SportChipsstyles.chipText}
         icon={{
           name: 'bluetooth',
           type: 'font-awesome',
@@ -50,11 +50,11 @@ export const SportChips = ({sport, isSelected = false, isDisplay, getData=null})
           color: 'black',
         }}
         buttonStyle={dynamicStyle}
-        containerStyle={styles.singleChip}
+        containerStyle={SportChipsstyles.singleChip}
         onPress={() => _selected(selected)}
         disabled={isDisplay}
-        disabledTitleStyle={styles.chipText}
-        disabledStyle={styles.ChipButton}
+        disabledTitleStyle={SportChipsstyles.chipText}
+        disabledStyle={SportChipsstyles.ChipButton}
       />
     </>
   );
@@ -92,11 +92,11 @@ const ProfileSettingsInput = (props) => {
 
   return (
     <>
-      <Card containerStyle={styles.CardStyle}>
+      <Card containerStyle={SportChipsstyles.CardStyle}>
         <Icon size={28} onPress={_editSports} name="pencil" type='material-community' style={style_edit_icon.container} />
         <Card.Title>CARD WITH DIVIDER</Card.Title>
         <Card.Divider />
-        <View style={styles.sportChipSet}>
+        <View style={SportChipsstyles.sportChipSet}>
           {!loading &&
             sportsList.map((sport, i) => (
               <SportChips key={i} sport={sport.sport} isDisplay={true}/>
@@ -134,8 +134,7 @@ const SportsList = (props) => {
     </>
   );
 }
-
-const SportChipsstyles = StyleSheet.create({
+ const SportChipsstyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -231,4 +230,4 @@ const style_edit_icon = StyleSheet.create({
 
   }
 });
-export { ProfileSettingsInput }
+export { SportChipsstyles, ProfileSettingsInput }
