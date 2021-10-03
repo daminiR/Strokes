@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import  {Matches}  from './Matches'
 import  {Home}  from './Home'
+import {Test} from './Test'
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
 
 type MatchT = {
@@ -22,12 +23,6 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
   const [loading, setLoading] = useState(false)
   return (
     <>
-      <AppContainer title="User" loading={loading}>
-        <View>
-          <Home/>
-        </View>
-
-      </AppContainer>
     </>
   );
 }

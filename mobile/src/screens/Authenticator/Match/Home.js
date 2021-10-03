@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ImageBackground } from 'react-native';
 import CardStack, { Card } from 'react-native-card-stack-swiper';
+import {ScrollView, StyleSheet } from 'react-native'
 import { City } from '../../../components/City/City';
 import { Filters } from '../../../components/Filters/Filters';
 import { CardItem } from '../../../components/CardItem/CardItem';
@@ -24,7 +25,8 @@ const Home = () => {
           renderNoMoreCards={() => null}
           ref={swiper => (this.swiper = swiper)}
         >
-          {Demo.map((item, index) => (
+          {Demo.map((item, index) => {
+          return    (
             <Card key={index}>
               <CardItem
                 image={item.image}
@@ -35,8 +37,9 @@ const Home = () => {
                 onPressLeft={() => this.swiper.swipeLeft()}
                 onPressRight={() => this.swiper.swipeRight()}
               />
-            </Card>
-          ))}
+                </Card>
+                    )
+          })}
         </CardStack>
       </View>
     </ImageBackground>
