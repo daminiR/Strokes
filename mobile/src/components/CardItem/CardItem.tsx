@@ -32,6 +32,7 @@ const CardItem = ({
   const [ProfileTitle, setProfileTitle] = useState('')
   const [Gender, setGender] = React.useState('')
   const [Age, setAge] = React.useState('')
+  const [descriptionValue, setDescriptionValue] = React.useState('')
   const [sportsList, setSportsList] = React.useState([{sport:"Tennis", game_level: 0}])
   useEffect(() => {
     setLoadingImages(true);
@@ -61,6 +62,9 @@ const CardItem = ({
       const profileTitle = userData.first_name +', ' + userData.age
       setProfileTitle(profileTitle)
     }
+    if (userData?.description != undefined) {
+      setDescriptionValue(userData.description);
+    }
     setLoadingSportsData(false);
   }
   }, [squashData?.squash])
@@ -83,14 +87,6 @@ const CardItem = ({
       fontSize: variant ? 15 : 30
     }
   ];
-
-    //[> LiST OF SPORTS <]
-        //<View style={styles.sportChipSet}>
-        //{!loading &&
-            //sportsList.map((sport, i) => (
-                //<SportChips key={i} sport={sport.sport} isDisplay={true}/>
-            //))}
-        //</View>
   return (
     <>
       <ScrollView>
@@ -112,6 +108,8 @@ const CardItem = ({
             {!loadingSportsData && <Text style={styles.firstImageText}>{ProfileTitle}</Text>}
           </View>
           </ImageBackground>
+          {/* NAME */}
+          <Text style={nameStyle}>{ProfileTitle}</Text>
           {/* SPORTS List */}
           <View style={{marginVertical: 10}}>
             <View style={SportChipsstyles.sportChipSet}>
@@ -125,12 +123,10 @@ const CardItem = ({
             <Image key={index} source={{uri: imgObj}} style={imageStyle}/>)
           )}
 
-          {/* NAME */}
-          <Text style={nameStyle}>{name}</Text>
 
           {/* DESCRIPTION */}
           {description && (
-            <Text style={styles.descriptionCardItem}>{description}</Text>
+            <Text style={styles.descriptionCardItem}>{descriptionValue}</Text>
           )}
 
           {/* ACTIONS */}

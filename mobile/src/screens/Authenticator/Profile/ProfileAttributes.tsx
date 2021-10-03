@@ -22,9 +22,6 @@ const _age = (navigation) => {
 const _gender = (navigation) => {
       onScreen('GENDER', navigation)()
 };
-const _last_name = (navigation) => {
-      onScreen('LAST_NAME', navigation)()
-};
 const list = [
   {title: 'Name', icon: 'av-timer', subtitle: 'Damini', buttonPress: _first_name},
   {title: 'Age', icon: 'flight-takeoff', subtitle: '27',buttonPress: _age},

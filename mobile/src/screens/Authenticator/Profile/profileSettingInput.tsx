@@ -1,7 +1,7 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
 import React, { useRef, useEffect, useContext, useState, ReactElement } from 'react'
 import {View, ScrollView, StyleSheet} from 'react-native';
-import {sportsItemsVar} from '../../../cache'
+import {sportsItemsVar, DescriptionVar} from '../../../cache'
 import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 import {ProfileContext} from './index'
@@ -65,29 +65,46 @@ const ProfileSettingsInput = (props) => {
   const {squashData, newSportList} = useContext(ProfileContext);
   const navigation = useNavigation()
   const [sportsList, setSportsList] = React.useState([{sport:"Tennis", game_level: 0}])
-  const [loading, setLoading] = React.useState(false)
+  const [description, setDescription] = React.useState('Description')
+  const [loadingSports, setLoadingSports] = React.useState(false)
+  const [loadingDescription, setLoadingDescription] = React.useState(false)
   const _editSports = (props) => {
   sportsItemsVar(squashData.squash.sports)
   onScreen('EDIT_SPORTS', navigation)()
 }
+  const _editDescription = (props) => {
+  DescriptionVar(squashData.squash.description)
+  onScreen('EDIT_DESCRIPTION', navigation)()
+}
   useEffect(() => {
     if (didMountRef.current){
-  setLoading(true);
+  setLoadingSports(true);
   if (
     squashData?.squash?.sports != undefined &&
     squashData?.squash?.sports.length != 0
   ) {
     const sportsArray = squashData!.squash!.sports;
     setSportsList(sportsArray);
-    setLoading(false);
+    setLoadingSports(false);
   }
-  // for first name
 }
     else {
       didMountRef.current = true
     }
 
   }, [squashData?.squash?.sports])
+
+  useEffect(() => {
+  setLoadingDescription(true);
+  if (
+    squashData?.squash?.description != undefined &&
+    squashData?.squash?.description.length != 0
+  ) {
+    const descriptionValue = squashData!.squash!.description
+    setDescription(descriptionValue);
+    setLoadingDescription(false);
+  }
+  }, [squashData?.squash?.description])
 
   return (
     <>
@@ -96,10 +113,16 @@ const ProfileSettingsInput = (props) => {
         <Card.Title>CARD WITH DIVIDER</Card.Title>
         <Card.Divider />
         <View style={SportChipsstyles.sportChipSet}>
-          {!loading &&
+          {!loadingSports &&
             sportsList.map((sport, i) => (
               <SportChips key={i} sport={sport.sport} isDisplay={true}/>
             ))}
+        </View>
+      </Card>
+      <Card containerStyle={SportChipsstyles.CardStyle}>
+        <Icon size={28} onPress={_editDescription} name="pencil" type='material-community' style={style_edit_icon.container} />
+        <View style={SportChipsstyles.sportChipSet}>
+          {!loadingDescription && <Text> {description} </Text>}
         </View>
       </Card>
      <ProfileAttirbutes/>

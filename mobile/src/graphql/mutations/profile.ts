@@ -53,4 +53,9 @@ const UPDATE_PROFILE_COMPLETE = gql`
       isProfileComplete
     }
 `;
-export {UPDATE_USER_SPORTS,  UPDATE_GENDER, UPDATE_AGE, UPDATE_NAME, DELETE_IMAGE, UPLOAD_FILE, ADD_PROFILE , DELETE_PROFILE}
+const UPDATE_DESCRIPTION = gql`
+  mutation UpdateDescription($_id: String!,$description: String! ){
+    updateDescription(_id: $_id, description: $description)
+  }
+`
+export {UPDATE_DESCRIPTION, UPDATE_USER_SPORTS,  UPDATE_GENDER, UPDATE_AGE, UPDATE_NAME, DELETE_IMAGE, UPLOAD_FILE, ADD_PROFILE , DELETE_PROFILE}
