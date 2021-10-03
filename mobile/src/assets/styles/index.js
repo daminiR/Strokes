@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
 
-const PRIMARY_COLOR = "#7444C0";
+export const PRIMARY_COLOR = "#7444C0";
 const SECONDARY_COLOR = "#5636B8";
 const WHITE = "#FFFFFF";
 const GRAY = "#757E90";
@@ -40,6 +40,14 @@ export default StyleSheet.create({
 		borderRadius: 20
 	},
 	matchesTextCardItem: {
+		fontFamily: ICON_FONT,
+		color: WHITE
+	},
+	firstImageText: {
+		fontWeight: "bold",
+		textShadowColor: "grey",
+		textShadowRadius: 8,
+		fontSize: 20,
 		fontFamily: ICON_FONT,
 		color: WHITE
 	},
@@ -89,8 +97,8 @@ export default StyleSheet.create({
 		shadowOffset: { height: 10, width: 0 }
 	},
 	miniButton: {
-		width: 40,
-		height: 40,
+		width: 50,
+		height: 50,
 		borderRadius: 30,
 		backgroundColor: WHITE,
 		marginHorizontal: 7,
@@ -153,6 +161,20 @@ export default StyleSheet.create({
 		color: DARK_GRAY,
 		fontSize: 13
 	},
+
+	//COMPONENT - REJECT
+
+	reject: {
+		backgroundColor: WHITE,
+		//padding: 10,
+		//borderRadius: 20,
+		//width: 70,
+		//shadowOpacity: 0.05,
+		//shadowRadius: 10,
+		//shadowColor: BLACK,
+		//shadowOffset: { height: 0, width: 0 }
+	},
+	//COMPONENT - CARD ITEM TEXT
 
 	// COMPONENT - MESSAGE
 	containerMessage: {
@@ -240,11 +262,19 @@ export default StyleSheet.create({
 		height: DIMENSION_HEIGHT
 	},
 	top: {
-		paddingTop: 50,
+		paddingTop: 15,
 		marginHorizontal: 10,
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center"
+	},
+	bottom: {
+		flex: 1,
+		marginHorizontal: 25,
+		marginVertical: 10,
+		flexDirection: 'row-reverse',
+		alignItems: "flex-end",
+		justifyContent: 'space-between'
 	},
 	title: { paddingBottom: 10, fontSize: 22, color: DARK_GRAY },
 	icon: {
