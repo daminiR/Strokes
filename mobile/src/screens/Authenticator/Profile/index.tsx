@@ -17,6 +17,7 @@ import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
 import { onScreen, goBack } from '../../../constants'
 import {sanitizeFile } from './../../../utils/fileNaming'
 import { AppContainer } from '../../../components'
+import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { RootStackParamList } from '../../../AppNavigator'
 import auth from '@react-native-firebase/auth'
 import {UserContext} from '../../../UserContext'
@@ -48,6 +49,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   const didMountRef = useRef(false)
   const [loading, setLoading] = useState(true)
   const [index, setIndex] = useState(0)
+  const [tabState, setTabState] = useState(0)
   const {currentUser} = useContext(UserContext)
   const [error, setError] = useState('')
   const {confirmResult, setConfirmResult} = useContext(UserContext)
@@ -78,6 +80,9 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
     error: firstNameError,
     data: firstName,
   } = useQuery(GET_FIRST_NAME);
+  useEffect(() => {
+
+    }, [apolloSportsList])
 
   useEffect(() => {
     if (didMountRef.current){
@@ -97,7 +102,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
       //getSquashData({variables: currentUser.uid})
       didMountRef.current = true
     }
-    }, [apolloSportsList]),
+    }, [apolloSportsList])
   useEffect(() => {
     console.log(firstName)
     }, [firstName])
@@ -113,31 +118,11 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   }
   return (
     <>
-      <Tab value={index} onChange={setIndex}>
-        <Tab.Item title="recent" />
-        <Tab.Item title="favorite" />
-      </Tab>
       <ProfileContext.Provider value={sports_values}>
-      <TabView value={index} onChange={setIndex}>
-        <TabView.Item>
-            <ScrollView
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: 'space-between',
-              }}>
-              <PictureWall />
-            </ScrollView>
-        </TabView.Item>
-        <TabView.Item>
-            <ScrollView
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: 'space-between',
-              }}>
-            <ProfileView/>
-            </ScrollView>
-        </TabView.Item>
-      </TabView>
+        <ScrollableTabView onChangeTab={({ i, ref }) => setTabState(i) }>
+          <PictureWall tabLabel='Edit Profile' />
+          <ProfileView tabLabel='View Profile'/>
+        </ScrollableTabView>
       </ProfileContext.Provider>
     </>
   );

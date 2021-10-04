@@ -2,9 +2,9 @@ import { Types, model, Schema} from 'mongoose';
 import { SquashDocument } from '../types/Squash.d'
 //const mongoose = require('mongoose');
 //const Schema = mongoose.Schema;
-const GENDERS = ["M", "F"]
+const GENDERS = ["Male", "Female"]
 const COUNTRY = ["US"]
-const SPORTS = ["squash", "tennis"]
+const SPORTS = ["squash", "Tennis"]
 //const LEVELS = ["beginer", "intermediate", "expert"]
 const LEVELS = [0, 1, 3]
 
@@ -82,7 +82,7 @@ var squashSchema = new Schema({
   },
   description: {
     type: String,
-    maxlength: 500,
+    maxlength: 300,
   },
   image_set: {
     type:

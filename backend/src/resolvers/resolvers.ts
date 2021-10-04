@@ -39,6 +39,11 @@ export const resolvers = {
       console.log(squash_val);
       return squash_val;
     },
+    queryProssibleMatches: async (parents, {_id}, context, info) => {
+        const users = await Squash.find({ _id: {$ne: _id }})
+        console.log("All users that are a potential match to current!");
+        return users
+      },
     squashes: async (parents, args, context, info) => {
       const squashes = await Squash.find({});
       console.log(squashes);
@@ -94,6 +99,19 @@ export const resolvers = {
           { new: true }
         );
         console.log("Updated user gender ", gender);
+      //} else {
+        //console.log("Age cannot be no length");
+      //}
+      return _id;
+    },
+    updateDescription: async (parents, { _id, description}, context, info) => {
+      //if (gender != 0) {
+        const doc = await Squash.findOneAndUpdate(
+          { _id: _id },
+          { $set: {description: description}},
+          { new: true }
+        );
+        console.log("Updated user description ", description);
       //} else {
         //console.log("Age cannot be no length");
       //}

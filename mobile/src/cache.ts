@@ -10,6 +10,7 @@ export const sportsItemsVar:ReactiveVar<SportsList> = makeVar<SportsList>(sportI
 export const FirstNameVar:ReactiveVar<NameT> = makeVar<NameT>({FirstName: '', LastName:''})
 export const AgeVar:ReactiveVar<Number> = makeVar<Number>(0)
 export const GenderVar:ReactiveVar<String> = makeVar<String>(null)
+export const DescriptionVar:ReactiveVar<String> = makeVar<String>('')
 export  const isProfileCompleteVar = makeVar<Boolean>(false)
 export const cache = new InMemoryCache({
   typePolicies: {
@@ -33,6 +34,11 @@ export const cache = new InMemoryCache({
         gender: {
           read() {
             return GenderVar();
+          },
+        },
+        description: {
+          read() {
+            return DescriptionVar();
           },
         },
       },
