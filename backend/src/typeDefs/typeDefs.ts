@@ -17,6 +17,7 @@ export const typeDefs = gql`
     squash(id: String!): Squash!
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
+    queryProssibleMatches(_id: String!): [Squash!]
   }
   input SquashNodeInput {
     ${SquashNodeType}
@@ -54,7 +55,8 @@ export const typeDefs = gql`
     updateUserSports(_id: String!, sportsList: [SquashNodeInput!]!): String
     updateName(_id: String!, first_name: String!, last_name: String): String
     updateAge(_id: String!, age: Int): String
-    updateGender(_id: String!, gender: String): String
+    updateGender(_id: String!, gender: Int): String
+    updateDescription(_id: String!, description: String!): String
     uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
     createSquash(
       _id: String!
@@ -64,7 +66,7 @@ export const typeDefs = gql`
       gender: String!
       sports: [SquashNodeInput!]!
       country: String
-      description: String
+      description: String!
       image_set: [DataInput!]!
     ): Squash!
     deleteSquash(_id: String): Squash!

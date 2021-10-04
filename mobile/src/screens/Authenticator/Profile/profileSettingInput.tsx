@@ -1,7 +1,7 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
 import React, { useRef, useEffect, useContext, useState, ReactElement } from 'react'
 import {View, ScrollView, StyleSheet} from 'react-native';
-import {sportsItemsVar} from '../../../cache'
+import {sportsItemsVar, DescriptionVar} from '../../../cache'
 import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 import {ProfileContext} from './index'
@@ -17,14 +17,14 @@ type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
 export const SportChips = ({sport, isSelected = false, isDisplay, getData=null}) => {
-  const [dynamicStyle, setDynamicStyle] = React.useState(styles.ChipButton)
+  const [dynamicStyle, setDynamicStyle] = React.useState(SportChipsstyles.ChipButton)
   const [selected, setSelected] = React.useState(isSelected)
   useEffect(() => {
     if (selected){
-      setDynamicStyle(styles.ChipButtonSelected)
+      setDynamicStyle(SportChipsstyles.ChipButtonSelected)
     }
     else {
-      setDynamicStyle(styles.ChipButton);
+      setDynamicStyle(SportChipsstyles.ChipButton);
     }
   }, [selected])
 
@@ -42,7 +42,7 @@ export const SportChips = ({sport, isSelected = false, isDisplay, getData=null})
     <>
       <Chip
         title= {sport}
-        titleStyle={styles.chipText}
+        titleStyle={SportChipsstyles.chipText}
         icon={{
           name: 'bluetooth',
           type: 'font-awesome',
@@ -50,11 +50,11 @@ export const SportChips = ({sport, isSelected = false, isDisplay, getData=null})
           color: 'black',
         }}
         buttonStyle={dynamicStyle}
-        containerStyle={styles.singleChip}
+        containerStyle={SportChipsstyles.singleChip}
         onPress={() => _selected(selected)}
         disabled={isDisplay}
-        disabledTitleStyle={styles.chipText}
-        disabledStyle={styles.ChipButton}
+        disabledTitleStyle={SportChipsstyles.chipText}
+        disabledStyle={SportChipsstyles.ChipButton}
       />
     </>
   );
@@ -65,24 +65,28 @@ const ProfileSettingsInput = (props) => {
   const {squashData, newSportList} = useContext(ProfileContext);
   const navigation = useNavigation()
   const [sportsList, setSportsList] = React.useState([{sport:"Tennis", game_level: 0}])
-  const [loading, setLoading] = React.useState(false)
+  const [description, setDescription] = React.useState('Description')
+  const [loadingSports, setLoadingSports] = React.useState(false)
+  const [loadingDescription, setLoadingDescription] = React.useState(false)
   const _editSports = (props) => {
   sportsItemsVar(squashData.squash.sports)
   onScreen('EDIT_SPORTS', navigation)()
 }
+  const _editDescription = (props) => {
+  DescriptionVar(squashData.squash.description)
+  onScreen('EDIT_DESCRIPTION', navigation)()
+}
   useEffect(() => {
     if (didMountRef.current){
-  setLoading(true);
+  setLoadingSports(true);
   if (
     squashData?.squash?.sports != undefined &&
     squashData?.squash?.sports.length != 0
   ) {
     const sportsArray = squashData!.squash!.sports;
-    console.log(sportsArray);
     setSportsList(sportsArray);
-    setLoading(false);
+    setLoadingSports(false);
   }
-  // for first name
 }
     else {
       didMountRef.current = true
@@ -90,17 +94,35 @@ const ProfileSettingsInput = (props) => {
 
   }, [squashData?.squash?.sports])
 
+  useEffect(() => {
+  setLoadingDescription(true);
+  if (
+    squashData?.squash?.description != undefined &&
+    squashData?.squash?.description.length != 0
+  ) {
+    const descriptionValue = squashData!.squash!.description
+    setDescription(descriptionValue);
+    setLoadingDescription(false);
+  }
+  }, [squashData?.squash?.description])
+
   return (
     <>
-      <Card containerStyle={styles.CardStyle}>
+      <Card containerStyle={SportChipsstyles.CardStyle}>
         <Icon size={28} onPress={_editSports} name="pencil" type='material-community' style={style_edit_icon.container} />
         <Card.Title>CARD WITH DIVIDER</Card.Title>
         <Card.Divider />
-        <View style={styles.sportChipSet}>
-          {!loading &&
+        <View style={SportChipsstyles.sportChipSet}>
+          {!loadingSports &&
             sportsList.map((sport, i) => (
               <SportChips key={i} sport={sport.sport} isDisplay={true}/>
             ))}
+        </View>
+      </Card>
+      <Card containerStyle={SportChipsstyles.CardStyle}>
+        <Icon size={28} onPress={_editDescription} name="pencil" type='material-community' style={style_edit_icon.container} />
+        <View style={SportChipsstyles.sportChipSet}>
+          {!loadingDescription && <Text> {description} </Text>}
         </View>
       </Card>
      <ProfileAttirbutes/>
@@ -134,8 +156,7 @@ const SportsList = (props) => {
     </>
   );
 }
-
-const SportChipsstyles = StyleSheet.create({
+ const SportChipsstyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -231,4 +252,4 @@ const style_edit_icon = StyleSheet.create({
 
   }
 });
-export { ProfileSettingsInput }
+export { SportChipsstyles, ProfileSettingsInput }

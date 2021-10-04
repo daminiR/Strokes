@@ -1,41 +1,24 @@
 import React from 'react';
 import styles from '../../assets/styles';
-import React, { useRef, useEffect, useContext, useState, ReactElement } from 'react'
-import {Text, View, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {ProfileContext} from '../../screens/Authenticator/Profile/index'
+import { useRef, useEffect, useContext, useState, ReactElement } from 'react'
+import {ImageBackground, ScrollView, Text, View, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {Card, FAB } from 'react-native-elements'
 import {Icon} from '../Icon/Icon';
+import {SportChips, SportChipsstyles} from '../../screens/Authenticator/Profile/profileSettingInput'
+
 
 const CardItem = ({
-  actions,
+  profileImage,
+  image_set,
+  profileTitle,
+  sportsList,
   description,
-  image,
-  matches,
-  name,
-  onPressLeft,
-  onPressRight,
-  status,
-  variant,
-  ImageContext
-}) => {
-  //logic
-  //
-  const {squashData, newSportList} = useContext(ImageContext);
-  const [loadingSportsList, setLoadingSportsList] = React.useState(false)
-  const [sportsList, setSportsList] = React.useState([{sport:"Tennis", game_level: 0}])
-  useEffect(() => {
-  setLoadingSportsList(true);
-  if (
-    squashData?.squash?.sports != undefined &&
-    squashData?.squash?.sports.length != 0
-  ) {
-    const sportsArray = squashData!.squash!.sports;
-    console.log(sportsArray);
-    setSportsList(sportsArray);
-    setLoadingSportsList(false);
-  }
-  // for first name
+  variant=null,
+  onPressLeft= null,
+  onPressRight=null,
 
-  }, [squashData?.squash?.sports])
-  // Custom styling
+}) => {
   const fullWidth = Dimensions.get('window').width;
   const imageStyle = [
     {
@@ -54,67 +37,47 @@ const CardItem = ({
       fontSize: variant ? 15 : 30
     }
   ];
-
   return (
-    <View style={styles.containerCardItem}>
-      {/* IMAGE */}
-      <Image source={image} style={imageStyle} />
-
-      {/* LiST OF SPORTS */}
-        <View style={styles.sportChipSet}>
-          {!loading &&
-            sportsList.map((sport, i) => (
-              <SportChips key={i} sport={sport.sport} isDisplay={true}/>
-            ))}
+    <>
+      <ScrollView>
+        <View style={styles.containerCardItem}>
+          {/* IMAGE */}
+          <ImageBackground source={{uri:profileImage.imageURL}} style={imageStyle}>
+          <View
+            style={{
+              position: 'absolute',
+              marginBottom: 10,
+              marginLeft:10,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              justifyContent: 'flex-end',
+              alignItems: 'flex-start',
+            }}>
+            <Text style={styles.firstImageText}>{profileTitle}</Text>
+          </View>
+          </ImageBackground>
+          {/* NAME */}
+          <Text style={nameStyle}>{profileTitle}</Text>
+          {/* SPORTS List */}
+          <View style={{marginVertical: 10}}>
+            <View style={SportChipsstyles.sportChipSet}>
+              {sportsList.map((sport, i) => (
+                  <SportChips key={i} sport={sport.sport} isDisplay={true} />
+                ))}
+            </View>
+          </View>
+          {image_set && image_set.map((imgObj, index) => (
+            <Image key={index} source={{uri: imgObj.imageURL}} style={imageStyle}/>)
+          )}
+          {/* DESCRIPTION */}
+          {description && (
+            <Text style={styles.descriptionCardItem}>{description}</Text>
+          )}
         </View>
-      {/* NAME */}
-      <Text style={nameStyle}>{name}</Text>
-
-      {/* DESCRIPTION */}
-      {description && (
-        <Text style={styles.descriptionCardItem}>{description}</Text>
-      )}
-
-      {/* STATUS */}
-      {status && (
-        <View style={styles.status}>
-          <View style={status === 'Online' ? styles.online : styles.offline} />
-          <Text style={styles.statusText}>{status}</Text>
-        </View>
-      )}
-
-      {/* ACTIONS */}
-      {actions && (
-        <View style={styles.actionsCardItem}>
-          <TouchableOpacity style={styles.miniButton}>
-            <Text style={styles.star}>
-              <Icon name="star"/>
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button} onPress={() => onPressLeft()}>
-            <Text style={styles.like}>
-              <Icon name="like" />
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => onPressRight()}
-          >
-            <Text style={styles.dislike}>
-              <Icon name="dislike" />
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.miniButton}>
-            <Text style={styles.flash}>
-              <Icon name="flash" />
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+      </ScrollView>
+    </>
   );
 };
 
