@@ -22,9 +22,6 @@ const _age = (navigation) => {
 const _gender = (navigation) => {
       onScreen('GENDER', navigation)()
 };
-const _last_name = (navigation) => {
-      onScreen('LAST_NAME', navigation)()
-};
 const list = [
   {title: 'Name', icon: 'av-timer', subtitle: 'Damini', buttonPress: _first_name},
   {title: 'Age', icon: 'flight-takeoff', subtitle: '27',buttonPress: _age},
@@ -68,6 +65,19 @@ const ProfileAttirbutes = () => {
   }
 
   }, [squashData?.squash?.age])
+
+  useEffect(() => {
+  setLoading(true);
+  if (
+    squashData?.squash?.gender != undefined &&
+    squashData?.squash?.gender.length != 0
+  ) {
+    const ind_to_update = list.findIndex((listAttribute => listAttribute.title == 'gender'))
+    list[ind_to_update].subtitle = squashData!.squash.gender
+    setLoading(false);
+  }
+
+  }, [squashData?.squash?.gender])
 
   return (
     <>
