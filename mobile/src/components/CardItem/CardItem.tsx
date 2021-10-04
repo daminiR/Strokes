@@ -9,66 +9,16 @@ import {SportChips, SportChipsstyles} from '../../screens/Authenticator/Profile/
 
 
 const CardItem = ({
-  actions,
+  profileImage,
+  image_set,
+  profileTitle,
+  sportsList,
   description,
-  image,
-  matches,
-  name,
+  variant=null,
   onPressLeft= null,
   onPressRight=null,
-  status=null,
-  variant=null,
-  ImageContext=null
+
 }) => {
-  //logic
-  //
-  const {squashData, newSportList} = useContext(ProfileContext);
-  console.log(" in profile view", squashData)
-  const [loadingSportsData, setLoadingSportsData] = React.useState(false)
-  const [Name, setName] = React.useState('')
-  const [imageSet, setImageSet] = React.useState([])
-  const [profileImage, setProfileImage] = React.useState(null)
-  const [loadingImages, setLoadingImages] = React.useState(false)
-  const [ProfileTitle, setProfileTitle] = useState('')
-  const [Gender, setGender] = React.useState('')
-  const [Age, setAge] = React.useState('')
-  const [descriptionValue, setDescriptionValue] = React.useState('')
-  const [sportsList, setSportsList] = React.useState([{sport:"Tennis", game_level: 0}])
-  useEffect(() => {
-    setLoadingImages(true);
-    setLoadingSportsData(true);
-  if (
-    squashData?.squash != undefined
-  ) {
-    const userData = squashData?.squash
-    if (userData?.sports.length != 0){
-        setSportsList(userData.sports);
-    }
-    if (userData?.age != 0) {
-      setAge(userData.age.toString());
-    }
-    if (userData?.gender != undefined) {
-      setGender(userData.gender);
-    }
-    if (userData?.image_set != undefined) {
-      const image_set= userData?.image_set.slice(1).map(imgObj => imgObj.imageURL)
-      setImageSet(image_set);
-      setProfileImage(userData.image_set[0].imageURL)
-      setLoadingImages(false)
-      console.log("are we here")
-    }
-    if (userData?.first_name != undefined && userData?.last_name != undefined) {
-      setName(userData.first_name);
-      const profileTitle = userData.first_name +', ' + userData.age
-      setProfileTitle(profileTitle)
-    }
-    if (userData?.description != undefined) {
-      setDescriptionValue(userData.description);
-    }
-    setLoadingSportsData(false);
-  }
-  }, [squashData?.squash])
-//   Custom styling
   const fullWidth = Dimensions.get('window').width;
   const imageStyle = [
     {
@@ -90,9 +40,9 @@ const CardItem = ({
   return (
     <>
       <ScrollView>
-        {!loadingSportsData && <View style={styles.containerCardItem}>
+        <View style={styles.containerCardItem}>
           {/* IMAGE */}
-          <ImageBackground source={{uri:profileImage}} style={imageStyle}>
+          <ImageBackground source={{uri:profileImage.imageURL}} style={imageStyle}>
           <View
             style={{
               position: 'absolute',
@@ -105,63 +55,27 @@ const CardItem = ({
               justifyContent: 'flex-end',
               alignItems: 'flex-start',
             }}>
-            {!loadingSportsData && <Text style={styles.firstImageText}>{ProfileTitle}</Text>}
+            <Text style={styles.firstImageText}>{profileTitle}</Text>
           </View>
           </ImageBackground>
           {/* NAME */}
-          <Text style={nameStyle}>{ProfileTitle}</Text>
+          <Text style={nameStyle}>{profileTitle}</Text>
           {/* SPORTS List */}
           <View style={{marginVertical: 10}}>
             <View style={SportChipsstyles.sportChipSet}>
-              {!loadingSportsData &&
-                sportsList.map((sport, i) => (
+              {sportsList.map((sport, i) => (
                   <SportChips key={i} sport={sport.sport} isDisplay={true} />
                 ))}
             </View>
           </View>
-          {!loadingImages && imageSet.map((imgObj, index) => (
-            <Image key={index} source={{uri: imgObj}} style={imageStyle}/>)
+          {image_set && image_set.map((imgObj, index) => (
+            <Image key={index} source={{uri: imgObj.imageURL}} style={imageStyle}/>)
           )}
-
-
           {/* DESCRIPTION */}
           {description && (
-            <Text style={styles.descriptionCardItem}>{descriptionValue}</Text>
+            <Text style={styles.descriptionCardItem}>{description}</Text>
           )}
-
-          {/* ACTIONS */}
-          {actions && (
-            <View style={styles.actionsCardItem}>
-              <TouchableOpacity style={styles.miniButton}>
-                <Text style={styles.star}>
-                  <Icon name="star" />
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => onPressLeft()}>
-                <Text style={styles.like}>
-                  <Icon name="like" />
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => onPressRight()}>
-                <Text style={styles.dislike}>
-                  <Icon name="dislike" />
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.miniButton}>
-                <Text style={styles.flash}>
-                  <Icon name="flash" />
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>}
+        </View>
       </ScrollView>
     </>
   );

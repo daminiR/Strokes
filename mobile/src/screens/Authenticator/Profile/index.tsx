@@ -110,7 +110,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
     React.useCallback(() => {
       getSquashData({variables: currentUser.uid})
       console.log("fire when on page")
-    }, [tabState])
+    }, [])
   );
   const sports_values = {
     squashData,

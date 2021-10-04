@@ -17,7 +17,7 @@ const FLASH_ACTIONS = "#5028D7";
 
 const ICON_FONT = "tinderclone";
 
-const DIMENSION_WIDTH = Dimensions.get("window").width;
+export const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 export default StyleSheet.create({
@@ -276,6 +276,14 @@ export default StyleSheet.create({
 		alignItems: "flex-end",
 		justifyContent: 'space-between'
 	},
+	center: {
+		flex: 1,
+		marginHorizontal: 25,
+		marginVertical: 10,
+		flexDirection: 'column',
+		alignItems: "center",
+		justifyContent: 'center'
+	},
 	title: { paddingBottom: 10, fontSize: 22, color: DARK_GRAY },
 	icon: {
 		fontFamily: ICON_FONT,
@@ -285,7 +293,8 @@ export default StyleSheet.create({
 	},
 
 	// CONTAINER - HOME
-	containerHome: { marginHorizontal: 10 },
+	containerHome: { flex:1,
+		marginHorizontal: 10 },
 
 	// CONTAINER - MATCHES
 	containerMatches: {
