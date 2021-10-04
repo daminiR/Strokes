@@ -39,6 +39,11 @@ export const resolvers = {
       console.log(squash_val);
       return squash_val;
     },
+    queryProssibleMatches: async (parents, {_id}, context, info) => {
+        const users = await Squash.find({ _id: {$ne: _id }})
+        console.log("All users that are a potential match to current!");
+        return users
+      },
     squashes: async (parents, args, context, info) => {
       const squashes = await Squash.find({});
       console.log(squashes);

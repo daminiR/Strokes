@@ -16,11 +16,6 @@ const PictureWall = (props) => {
   const [loading, setLoading] = React.useState(null)
   const {currentUser} = useContext(UserContext);
   const {squashData, newSportList} = useContext(ProfileContext);
-  //useEffect(() => {
-    //if (squashData?.squash?.image_set != undefined)
-
-    //}
-  //}, [squashData?.squash?.image_set])
 
   return (
     <>

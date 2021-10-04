@@ -17,6 +17,7 @@ export const typeDefs = gql`
     squash(id: String!): Squash!
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
+    queryProssibleMatches(_id: String!): [Squash!]
   }
   input SquashNodeInput {
     ${SquashNodeType}
