@@ -17,52 +17,52 @@ import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 import Demo from '../../../assets/data/demo.js';
 
 const ProfileView = (props) => {
-  const [loading, setLoading] = React.useState(null)
+  const [loading, setLoading] = React.useState(true)
+  const [newImageSet, setNewImageSet] = React.useState([])
+  const [profileTitle, setProfileTitle] = React.useState('')
   const {currentUser} = useContext(UserContext);
   const {squashData, newSportList} = useContext(ProfileContext);
-  const [displayImage, setDisplayImage] = React.useState([])
+  const [userProfile, setUserProfile] = React.useState(null)
+  const [profileImageValue, setProfileImageValue] = React.useState()
   useEffect(() => {
+    setLoading(true)
     // TODO: not important sort image by order
-    if (squashData?.squash?.image_set != undefined) {
-      const img_set = squashData?.squash?.image_set
-      const imageURL = img_set.map(imgObj => imgObj.imageURL)
-      setDisplayImage(imageURL)
+    if (squashData?.squash != undefined) {
+      const user = squashData.squash
+      setUserProfile(user);
+      const profileImage = user.image_set.find(imgObj => imgObj.img_idx == 0)
+      setProfileImageValue(profileImage)
+      const image_set_copy = user.image_set.filter(imgObj => imgObj.img_idx != 0)
+      setNewImageSet(image_set_copy)
+      const title = user.first_name +', ' + user.age
+      setProfileTitle(title)
+      setLoading(false);
     }
-  }, [squashData?.squash?.image_set])
+  }, [squashData?.squash])
   return (
-      //<View style={styles.container}>
-          //<View style={styles.profileViewImageDisplay}>
-              //{displayImage.map((image, index) => (
-                  //<Image
-                      //key={index}
-                      //source={{uri: image}}
-                      //style={{width: 200, height: 200}}
-                      //PlaceholderContent={<ActivityIndicator />}
-                  ///>
-              //))}
-      //</View>
-      //</View>
     <>
+
+  {!loading &&
     <ImageBackground
       source={require('../../../assets/images/bg.png')}
       style={styles.bg}
     >
       <View style={styles.containerHome}>
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
-            <Card >
+            <Card>
               <CardItem
-                image={Demo[2].image}
-                name={"dsalfj"}
-                description={"sadfkjalsdfj"}
-                matches={"33"}
-                actions
+                profileImage={profileImageValue}
+                image_set={newImageSet}
+                description={userProfile.description}
+                profileTitle={profileTitle}
+                sportsList={userProfile.sports}
                 onPressLeft={() => this.swiper.swipeLeft()}
                 onPressRight={() => this.swiper.swipeRight()}
               />
             </Card>
       </ScrollView>
       </View>
-    </ImageBackground>
+    </ImageBackground>}
     </>
   );
 }
