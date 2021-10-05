@@ -244,7 +244,7 @@ const SportsList = (props) => {
   },
 });
 
-const style_edit_icon = StyleSheet.create({
+ const style_edit_icon = StyleSheet.create({
   container: {
     //...StyleSheet.absoluteFillObject,
     alignSelf: 'flex-end',
@@ -252,4 +252,4 @@ const style_edit_icon = StyleSheet.create({
 
   }
 });
-export { SportChipsstyles, ProfileSettingsInput }
+export { style_edit_icon, SportChipsstyles, ProfileSettingsInput }
