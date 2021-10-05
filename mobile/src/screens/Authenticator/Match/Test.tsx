@@ -15,15 +15,6 @@ import {MatchesProfileContext} from './index'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-const renderSwipedAllMAtches = ()=> {
-return (
-  <View style={{backgroundColor:'blue'}}>
-    <Card>
-      <Text> sldfjaslf</Text>
-    </Card>
-  </View>
-);
-}
 const renderMatches =  (card, index) => {
       const profileImage = card.image_set.find(imgObj => imgObj.img_idx == 0)
       const image_set_copy = card.image_set

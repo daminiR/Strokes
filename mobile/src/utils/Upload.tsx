@@ -76,3 +76,4 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
         setError(err.code)
       });
   }
+export {_onPressSignOut}
