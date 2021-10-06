@@ -30,9 +30,9 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
   return (
     <>
       <MatchesProfileContext.Provider value={matchesProfileValue}>
-        <Test />
       </MatchesProfileContext.Provider>
     </>
+    //<Test />
   );
 }
 export { Match }

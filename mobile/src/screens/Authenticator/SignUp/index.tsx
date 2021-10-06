@@ -15,6 +15,7 @@ import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import {SportChipsstyles, SportChips} from '../Profile/profileSettingInput'
 import {sportsList} from './../../../constants';
+import {Pictures} from '../Profile/initation'
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
   navigation: SignUpScreenNavigationProp
@@ -27,48 +28,48 @@ const slides = [
     inputLabel: 'Phone Number',
     backgroundColor: '#59b2ab',
   },
-  //{
-    //key: '1',
-    //type: 'Email Input',
-    //title: 'Email',
-    //InputLabel: 'Email',
-    //backgroundColor: '#59b2ab',
-  //},
-  //{
-    //key: '2',
-    //type: 'Name Input',
-    //title: 'Name',
-    //InputLabel: 'Name',
-    //backgroundColor: '#22bcb5',
-  //},
-  //{
-    //key: '3',
-    //type: 'Birthday Input',
-    //title: 'Birthday',
-    //InputLabel: 'Birthday',
-    //backgroundColor: '#59b2ab',
-  //},
-  //{
-    //key: '4',
-    //type: 'Gender Input',
-    //title: 'Gender',
-    //InputLabel: 'Gender',
-    //backgroundColor: '#59b2ab',
-  //},
-  //{
-    //key: '5',
-    //type: 'Sports Input',
-    //title: 'Sports',
-    //InputLabel: 'Sports',
-    //backgroundColor: '#59b2ab',
-  //},
-  //{
-    //key: '6',
-    //type: 'Image Input',
-    //title: 'Email',
-    //InputLabel: 'Email',
-    //backgroundColor: '#59b2ab',
-  //},
+  {
+    key: '1',
+    type: 'Email Input',
+    title: 'Email',
+    InputLabel: 'Email',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '2',
+    type: 'Name Input',
+    title: 'Name',
+    InputLabel: 'Name',
+    backgroundColor: '#22bcb5',
+  },
+  {
+    key: '3',
+    type: 'Birthday Input',
+    title: 'Birthday',
+    InputLabel: 'Birthday',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '4',
+    type: 'Gender Input',
+    title: 'Gender',
+    InputLabel: 'Gender',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '5',
+    type: 'Sports Input',
+    title: 'Sports',
+    InputLabel: 'Sports',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '6',
+    type: 'Image Input',
+    title: 'Image',
+    InputLabel: 'Image',
+    backgroundColor: '#59b2ab',
+  },
 ];
 
 const SignUp = ({ navigation }: SignUpT): ReactElement => {
@@ -84,6 +85,7 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
   const imageInput = ({item}) => {
     return (
       <View style={{ backgroundColor: 'blue', flex: 1}}>
+          <Pictures/>
       <Text>
         {item.title}
       </Text>
@@ -192,24 +194,24 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
       case 'Phone Input':
           return <>{renderPhoneInput({item})}</>;
        break
-      //case 'Email Input':
-          //return <>{renderEmail({item})}</>;
-       //break
-      //case 'Name Input':
-          //return <>{renderName({item})}</>;
-       //break
-      //case 'Birthday Input':
-          //return <>{renderBirthday({item})}</>;
-       //break
-      //case 'Gender Input':
-          //return <>{genderInput({item})}</>;
-       //break
-      //case 'Sports Input':
-          //return <>{renderSports({item})}</>;
-       //break
-      //case 'Image Input':
-          //return <>{imageInput({item})}</>;
-       //break
+      case 'Email Input':
+          return <>{renderEmail({item})}</>;
+       break
+      case 'Name Input':
+          return <>{renderName({item})}</>;
+       break
+      case 'Birthday Input':
+          return <>{renderBirthday({item})}</>;
+       break
+      case 'Gender Input':
+          return <>{genderInput({item})}</>;
+       break
+      case 'Sports Input':
+          return <>{renderSports({item})}</>;
+       break
+      case 'Image Input':
+          return <>{imageInput({item})}</>;
+       break
       //case 'Sports Input':
           //return <>{renderSports({item})}</>;
        //break
