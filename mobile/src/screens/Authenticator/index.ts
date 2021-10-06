@@ -18,6 +18,8 @@ export * from './IndividualAge'
 export * from './IndividualLastName'
 export * from './IndividualSports'
 export * from './IndividualDescription'
+export * from './ApolloErrorScreen'
+
 
 
 

@@ -43,6 +43,7 @@ import { Tab,TabView, withBadge, Icon, Avatar, Badge, BottomSheet, ListItem} fro
 import {FirstNameVar, sportsItemsVar} from '../../../cache'
 import {ProfileView} from './ProfileView'
 import {ProfileSettings} from './profileSettings'
+import {_onPressSignOut} from '../../../utils/Upload'
 export const ProfileContext = createContext()
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
 export type ProfileScreenRouteProp = RouteProp<RootStackSignInParamList, 'PR'>;
@@ -121,20 +122,6 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   const sports_values = {
     squashData,
     loadingSportsData
-  }
-  const _onPressSignOut = async () : Promise<void> => {
-    setLoadingSignOut(true)
-    await auth()
-      .signOut()
-      .then((res) => {
-        console.log('Succesful signout');
-        console.log(currentUser);
-        //setConfirmResult(null)
-        setLoadingSignOut(false);
-      })
-      .catch((err) => {
-        console.log(err.code);
-      });
   }
   const _editDisplay = (display) => {
     console.log("ddd")
