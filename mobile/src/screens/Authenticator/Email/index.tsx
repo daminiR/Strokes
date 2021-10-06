@@ -14,10 +14,10 @@ import {isProfileCompleteVar} from '../../../cache'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 // add error checking and validation checking soon??
 //type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'EMAIL'>
-type ProfileScreenNavigationProp = StackNavigationPrep<RootStackSignInParamList, 'PROFILE'>
+type EmailScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'EMAIL'>
 
 type AddEmailT = {
-  navigation: ProfileScreenNavigationProp
+  navigation: EmailScreenNavigationProp
 }
 const Email = ({ navigation }: AddEmailT): ReactElement => {
   const [loading, setLoading] = useState(false)
@@ -38,25 +38,26 @@ const Email = ({ navigation }: AddEmailT): ReactElement => {
     setLoading(true)
     setError('')
     const { email } = values
-    await currentUser.updateEmail(email)
-    .then(() => {
-      //update(confirmResult.additionalUserInfo.isNewUser)
-      setLoading(false);
-      //onScreen('USER', navigation)()
+    //await currentUser.updateEmail(email)
+    //.then(() => {
+      ////update(confirmResult.additionalUserInfo.isNewUser)
+      //setLoading(false);
+      ////onScreen('USER', navigation)()
 
-      console.log(currentUser)
-      setCurrentUser(currentUser)
-      console.log(confirmResult)
-      console.log("email Updated")
+      //console.log(currentUser)
+      //setCurrentUser(currentUser)
+      //console.log(confirmResult)
+      //console.log("email Updated")
 
-      //navigation.navigate('EMAIL', {screen: 'PROFILE'})
-      //onScreen('PROFILE', navigation )()
-    }
-    )
-    .catch((err) => {
-      setLoading(false);
-      setError(err.message);
-      })
+      ////navigation.navigate('EMAIL', {screen: 'PROFILE'})
+      ////onScreen('PROFILE', navigation )()
+    //}
+    //)
+    //.catch((err) => {
+      //setLoading(false);
+      //setError(err.message);
+      //})
+      onScreen('PROFILE_NAME', navigation )()
     }
   return (
     <>
