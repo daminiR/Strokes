@@ -1,5 +1,6 @@
 import React, { useEffect, useState, ReactElement } from 'react'
 import { Text} from 'react-native'
+import { ApolloErrorScreen, Hello }  from './screens/Authenticator/'
 import { cache, persist} from './cache'
 import {AuthNavigator} from './UserContext'
 import { from ,createHttpLink, ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
@@ -31,12 +32,14 @@ if (window.FETCH_SUPPORT) {
 //TODO: async funtion persist check later
 const App = (): ReactElement =>
 {
- const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
- const [ready, setReady] = useState(false)
- const [persistor, setPersistor] = useState<CachePersistor<NormalizedCacheObject>>();
- useEffect(() => {
+  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
+  const [ready, setReady] = useState(false);
+  const [persistor, setPersistor] = useState<
+    CachePersistor<NormalizedCacheObject>
+  >();
+  useEffect(() => {
     async function init() {
-      console.log("getting fired up")
+      console.log('getting fired up');
       let newPersistor = new CachePersistor({
         cache,
         storage: new AsyncStorageWrapper(AsyncStorage),
@@ -48,44 +51,64 @@ const App = (): ReactElement =>
       //setPersistor(newPersistor);
       //newPersistor.pause()
       //newPersistor.purge()
-      const myHtttpLink  = new HttpLink({
-      uri: 'http://192.168.1.12:4000/graphql',
-        //uri : 'http://localhost:4000/graphql'
-      });
-      //const uploadLink = createUploadLink({ uri: 'http://10.0.2.2:3000/graphql', })
-        //const uploadLink = createUploadLink({ uri: 'http://192.168.1.8:4000/graphql', })
-        //const uploadLink = createUploadLink({ uri:'http://192.168.1.12:4000/graphql'})
-        //const uploadLink = createUploadLink({uri: 'http://localhost:4000/graphql'})
-        const uploadLink = createUploadLink({uri: 'http://10.0.2.2:4000/graphql'})
+      //const myHtttpLink = new HttpLink({
+      //uri: 'http://192.168.1.12:4000/graphql',
+      ////uri : 'http://localhost:4000/graphql'
+      //});
+      //const uploadLink = createUploadLink({
+        //uri: 'http://10.0.2.2:3000/graphql',
+      //});
+      //const uploadLink = createUploadLink({ uri: 'http://192.168.1.8:4000/graphql', })
+      //const uploadLink = createUploadLink({ uri:'http://192.168.1.12:4000/graphql'})
+      //const uploadLink = createUploadLink({
+      //uri: 'http://localhost:4000/graphql',
+      //});
+     const uploadLink = createUploadLink({uri: 'http://10.0.2.2:4000/graphql'})
       //const link = ApolloLink.from([onErrorLink, uploadLink]);
       //const uri = 'http://localhost:4000/graphql'
       setClient(
         new ApolloClient({
-          //uri: 'http:localhost:4000/graphql',
-          //link:createUploadLink({ uri }),
-          //link: myHtttpLink,
           link: uploadLink,
           cache: cache,
         }),
       );
     }
     init();
-
-    setReady(true)
+    setReady(true);
   }, []);
-  if (!client) {
+    if (!client) {
+    console.log(' still no clinet');
     return <Text>Initializing app...</Text>;
-  }
+    }
+
+  //const renderInitial = () => {
+    //if (ready) {
+      //if (client) {
+        //console.log(client)
+        //console.log('client loaded?');
+        //return (
+          //<ApolloProvider client={client}>
+            //<FormProvider>
+              //<AuthNavigator />
+            //</FormProvider>
+          //</ApolloProvider>
+        //);
+      //} else {
+        //return <ApolloErrorScreen isApolloConected={false} />;
+      //}
+    //}
+  //};
   //client.resetStore()
   //just to reset cache for debugging
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}
-  return (
-    <ApolloProvider client={client}>
-      <FormProvider>
-        <AuthNavigator/>
-      </FormProvider>
-    </ApolloProvider>
-  );
+  //return renderInitial();
+        return (
+          <ApolloProvider client={client}>
+            <FormProvider>
+              <AuthNavigator />
+            </FormProvider>
+          </ApolloProvider>
+        );
 }
 export default App

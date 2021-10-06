@@ -1,8 +1,12 @@
 import React, { useRef, createContext, useEffect, useContext, useState, ReactElement } from 'react'
 import storage from '@react-native-firebase/storage'
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack'
+import { City } from '../../../components/City/City';
+import { Filters } from '../../../components/Filters/Filters';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {
+  TouchableOpacity,
+  Modal,
   StyleSheet,
   Image,
   ScrollView,
@@ -14,6 +18,7 @@ import {
 } from 'react-native';
 import { Storage } from '@google-cloud/storage'
 import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
+import styles from '../../../assets/styles/'
 import { onScreen, goBack } from '../../../constants'
 import {sanitizeFile } from './../../../utils/fileNaming'
 import { AppContainer } from '../../../components'
@@ -34,9 +39,11 @@ import { ReactNativeFile, File } from 'apollo-upload-client'
 import { storage as GCP_Storage } from '@react-native-firebase/storage';
 import { PictureWall } from './picturesWall'
 import * as mime from 'react-native-mime-types'
-import { Tab,TabView, withBadge, Icon, Avatar, Badge } from 'react-native-elements'
+import { Tab,TabView, withBadge, Icon, Avatar, Badge, BottomSheet, ListItem} from 'react-native-elements'
 import {FirstNameVar, sportsItemsVar} from '../../../cache'
 import {ProfileView} from './ProfileView'
+import {ProfileSettings} from './profileSettings'
+import {_onPressSignOut} from '../../../utils/Upload'
 export const ProfileContext = createContext()
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
 export type ProfileScreenRouteProp = RouteProp<RootStackSignInParamList, 'PR'>;
@@ -47,11 +54,11 @@ type ProfileT = {
 const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   // TODO: very hacky way to stop useEffect from firt render => need more elegant sol
   const didMountRef = useRef(false)
-  const [loading, setLoading] = useState(true)
+  const [loadingSportsData, setLoadingSportsData] = useState(true)
   const [index, setIndex] = useState(0)
   const [tabState, setTabState] = useState(0)
   const {currentUser} = useContext(UserContext)
-  const [error, setError] = useState('')
+  const [loadingSignOut, setLoadingSignOut] = useState(true)
   const {confirmResult, setConfirmResult} = useContext(UserContext)
   const {data} = useQuery(GET_PROFILE_STATUS);
   const [updateUserSports] = useMutation(UPDATE_USER_SPORTS);
@@ -63,7 +70,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
     onCompleted: (data) => {
       if (data) {
         FirstNameVar({FirstName: data.squash.first_name, LastName: data.squash.last_name})
-        if (loading) setLoading(false);
+        if (loadingSportsData) setLoadingSportsData(false);
       }
     },
     onError: (profileerror => {
@@ -114,20 +121,73 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   );
   const sports_values = {
     squashData,
-    loading
+    loadingSportsData
   }
+  const _editDisplay = (display) => {
+    console.log("ddd")
+    setIsVisible(display)
+  }
+  const [isVisible, setIsVisible] = useState(false);
+const _onPressDone = () => {
+  // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
+  setIsVisible(false)
+}
+const _onPressCancel = () => {
+  //  clear everything from local states and dont push to data base!
+   setIsVisible(false)
+}
+const renderDone = () => {
+  return (
+    <TouchableOpacity onPress={()=> _onPressDone()} style={styles.city}>
+      <Text style={styles.cityText}>
+        Done
+      </Text>
+    </TouchableOpacity>
+  );
+};
+const renderCancel = () => {
+  return (
+    <TouchableOpacity onPress={()=> _onPressCancel()} style={styles.city}>
+      <Text style={styles.cityText}>
+       Cancel
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
   return (
     <>
       <ProfileContext.Provider value={sports_values}>
-        <ScrollableTabView onChangeTab={({ i, ref }) => setTabState(i) }>
-          <PictureWall tabLabel='Edit Profile' />
-          <ProfileView tabLabel='View Profile'/>
-        </ScrollableTabView>
+        <ProfileSettings _editUserInfo={_editDisplay} signOut={_onPressSignOut}/>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={isVisible}
+          onRequestClose={() => {
+            setIsVisible(!isVisible);
+          }}>
+          <View style = {{flex:1}}>
+            <View style={styles.top}>
+              {renderCancel()}
+              {renderDone()}
+            </View>
+            <ScrollableTabView
+              onChangeTab={({i, ref}) => setTabState(i)}
+             style={{flex: 1}}>
+              <PictureWall tabLabel="Edit Profile" />
+              <ProfileView tabLabel="View Profile" />
+            </ScrollableTabView>
+          </View>
+        </Modal>
       </ProfileContext.Provider>
     </>
   );
 }
-const styles = StyleSheet.create({
+//<ScrollableTabView onChangeTab={({i, ref}) => setTabState(i)} style={{flex:1}}>
+  //<PictureWall tabLabel="Edit Profile" />
+  //<ProfileView tabLabel="View Profile" />
+//</ScrollableTabView>
+const styles2 = StyleSheet.create({
   scrollview: {
     backgroundColor: 'pink',
     marginHorizontal: 20,

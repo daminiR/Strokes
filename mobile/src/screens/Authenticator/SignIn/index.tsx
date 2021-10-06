@@ -27,26 +27,27 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
     const {phone_number, email} = values
     setLoading(true)
     setError('')
-
-    await auth().signInWithPhoneNumber(phone_number).then((confirmation) => {
-      console.log("pending confirmation")
-      setConfirmResult(confirmation)
-      //TODO: huge problem with go back if before confirmation there is a go back button then this needs to be redone add logic to goback!!!
-      //await Keychain.setInternetCredentials('auth', email, phone_number);
-      // TODO: if user exists but has not been confirmed and closes the page, make sure he is back on the confirm code page with a back button to phone number.
-      console.log(confirmation)
-      console.log(currentUser)
-      confirmation && onScreen('CONFIRM_SIGN_UP', navigation )()
-      setLoading(false);
-      setError('')
-    })
-    .catch(
-      (err) => {
-      //TODO come back and add all possible errors
-      setLoading(false)
-      setError(err.code)
-      }
-    )
+    // no use id getting created yet!
+    //await auth().signInWithPhoneNumber(phone_number).then((confirmation) => {
+      //console.log("pending confirmation")
+      //setConfirmResult(confirmation)
+      ////TODO: huge problem with go back if before confirmation there is a go back button then this needs to be redone add logic to goback!!!
+      ////await Keychain.setInternetCredentials('auth', email, phone_number);
+      //// TODO: if user exists but has not been confirmed and closes the page, make sure he is back on the confirm code page with a back button to phone number.
+      //console.log(confirmation)
+      //console.log(currentUser)
+      //confirmation && onScreen('CONFIRM_SIGN_UP', navigation )()
+      //setLoading(false);
+      //setError('')
+    //})
+    //.catch(
+      //(err) => {
+      ////TODO come back and add all possible errors
+      //setLoading(false)
+      //setError(err.code)
+      //}
+    //)
+    onScreen('EMAIL', navigation )()
   }
   return (
     <>
