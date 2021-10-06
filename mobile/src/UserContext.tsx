@@ -77,24 +77,6 @@ export const AuthNavigator = () => {
       return !loadingUser &&  <SignOutStack />;
     }
   }
-  const renderSignIn = () => {
-    //TODO make note: changes here affect how it skips email after signup
-    //TODO: fix surrent User email verification at some point!!
-    //if (currentUser && currentUser.email !== null) {
-    if (currentUser  !== null && loadingSigning === false) {
-      if(isApolloConected){
-          return !loadingSigning && <SignInStack />;
-    }
-    else{
-      return <ApolloErrorScreen isApolloConected={isApolloConected} />;
-    }
-    }
-    //else if ( currentUser && currentUser.email !== null) {
-    //return !loading && <SportAppStack />;}
-    else {
-      return !loadingSigning && <SignOutStack />;
-    }
-  }
   return (
     <UserContext.Provider value={value}>
       {render2()}

@@ -1,4 +1,5 @@
 import { Dimensions, Platform } from 'react-native'
+import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
 
 export const primary = '#50E3C2'
 export const secondary = '#ff06f4'
@@ -37,6 +38,10 @@ export const Device = {
   }
 }
 
+export const genderRadioObject :  RadioButtonProps[] = [
+  { id: '0', label: 'Woman', value: 'Female' },
+  { id: '1', label: 'Man', value: 'Male' },
+];
 export const goBack = (navigation: any) => () => navigation.goBack()
 
 export const onScreen = (screen: string, navigation: any, obj?: unknown) => () => {
