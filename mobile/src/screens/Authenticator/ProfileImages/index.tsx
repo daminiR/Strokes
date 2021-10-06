@@ -19,7 +19,6 @@ import { squashItemsVar, isProfileCompleteVar} from '../../../cache'
 import {UserContext} from '../../../UserContext'
 import { ReactNativeFile } from 'apollo-upload-client'
 import * as mime from 'react-native-mime-types'
-import {createUser} from '../../../utils/User'
 
 type ProfileImageScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'MATCH'>
 type ProfileImageT = {
@@ -105,7 +104,8 @@ const ProfileImages = ({ navigation }: ProfileImageT): ReactElement => {
       game_level,
       image_set,
     } = values;
-    createUser(first_name, birthday, gender, sports, game_level, image_set, phone_number, email, createSquash)
+
+    //createUser(first_name, birthday, gender, sports, game_level, image_set, phone_number, email, createSquash)
     //IsAuthenticated function is better
     // temp
     const code = '846081';

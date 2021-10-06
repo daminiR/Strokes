@@ -39,7 +39,6 @@ const registerOnFirebase = async () => {
       });
   }
 
-
 const registerOnMongoDb = async () => {
     await createSquash({
       variables: {
@@ -67,6 +66,21 @@ const createUser  = async (
   email,
   createSquash
 )  => {
+    await auth()
+      .signInWithPhoneNumber(phone_number)
+      .then((confirmation) => {
+        console.log('pending confirmation');
+        //TODO: huge problem with go back if before confirmation there is a go back button then this needs to be redone add logic to goback!!!
+        //await Keychain.setInternetCredentials('auth', email, phone_number);
+        // TODO: if user exists but has not been confirmed and closes the page, make sure he is back on the confirm code page with a back button to phone number.
+        onScreen('CONFIRM_SIGN_UP', navigation)();
+        setLoading(false);
+      })
+      .catch((err) => {
+        //TODO come back and add all possible errors
+        setLoading(false);
+        setError(err.code);
+      });
 
 
 

@@ -16,7 +16,7 @@ import {ProfileAttirbutes} from "./ProfileAttributes"
 type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
-export const SportChips = ({sport, isSelected = false, isDisplay, getData=null}) => {
+ const SportChips = ({sport, isSelected = false, isDisplay, getData=null}) => {
   const [dynamicStyle, setDynamicStyle] = React.useState(SportChipsstyles.ChipButton)
   const [selected, setSelected] = React.useState(isSelected)
   useEffect(() => {
@@ -249,7 +249,6 @@ const SportsList = (props) => {
     //...StyleSheet.absoluteFillObject,
     alignSelf: 'flex-end',
     margin: 4,
-
   }
 });
-export { style_edit_icon, SportChipsstyles, ProfileSettingsInput }
+export { SportChips, style_edit_icon, SportChipsstyles, ProfileSettingsInput }
