@@ -174,14 +174,26 @@ export default StyleSheet.create({
 		//shadowColor: BLACK,
 		//shadowOffset: { height: 0, width: 0 }
 	},
+	// COMPONENT OVERLAYS
+	overlays: {
+		paddingHorizontal: 10,
+		width: DIMENSION_WIDTH * 0.8,
+		height: DIMENSION_HEIGHT * 0.8
+	},
 	//COMPONENT - CARD ITEM TEXT
 
+	// COMPONENT - ERROR MESSAGE
+	containerErrorMessage: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+		paddingHorizontal: 10,
+	},
 	// COMPONENT - MESSAGE
 	containerMessage: {
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "flex-start",
-		flexDirection: "row",
 		paddingHorizontal: 10,
 		width: DIMENSION_WIDTH - 100
 	},
