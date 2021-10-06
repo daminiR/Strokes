@@ -11,77 +11,20 @@ import { generateRNFile } from '../../../utils/Upload'
 import { _check_single } from '../../../utils/Upload'
 import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 
-const PictureWall = (props) => {
-  console.log(props)
-  const [loading, setLoading] = React.useState(null)
-  const {currentUser} = useContext(UserContext);
-  const {squashData, newSportList} = useContext(ProfileContext);
-  return (
-    <>
-      <ScrollView>
-        <View style={styles.container}>
-          <View style={styles.top}>
-            <View style={styles.verticalImageplaceholder}>
-              <View style={styles.horizontalImageplaceholder}>
-                <SingleImagePlaceholder img_idx={0} />
-                <SingleImagePlaceholder img_idx={1} />
-                <SingleImagePlaceholder img_idx={2} />
-              </View>
-              <View style={styles.horizontalImageplaceholder}>
-                <SingleImagePlaceholder img_idx={3} />
-                <SingleImagePlaceholder img_idx={4} />
-                <SingleImagePlaceholder img_idx={5} />
-              </View>
-            </View>
-          </View>
-          <View style={styles.middle}>
-            <ProfileSettingsInput />
-          </View>
-        </View>
-      </ScrollView>
-    </>
-  );
-}
-
-const SingleImagePlaceholder = ({img_idx}) => {
+const SingleImageInitiator = ({img_idx}) => {
   const [Image, setImage] = React.useState(null)
   const [loading, setLoading] = React.useState(null)
-  const {currentUser} = useContext(UserContext);
-  const {squashData} = useContext(ProfileContext);
   const [displayImage, setDisplayImage] = React.useState(null)
-  const [uploadFile, {data: imageURL}] = useMutation(UPLOAD_FILE, {
-      onCompleted: (data) => _displayImage(data)
-  });
   const _displayImage = async (data): Promise<void> => {
       setDisplayImage(data.uploadFile.imageURL)
   }
-  const [deleteImage, {data: image_set}] = useMutation(DELETE_IMAGE);
   useEffect(() => {
-    if (squashData?.squash?.image_set != undefined || squashData?.squash?.image_set.find(image_info => image_info.img_idx === img_idx) != undefined){
-      const imageURL =squashData?.squash?.image_set.find(image_info => image_info.img_idx === img_idx)?.imageURL
-      setDisplayImage(imageURL)
-    }
-  }, [squashData?.squash?.image_set])
-  useEffect(() => {
-    if (Image) {
-    if (currentUser){
-     const RNFile = generateRNFile(Image.assets[0].uri, currentUser.uid)
-     uploadFile({variables: {file: RNFile, img_idx: img_idx, _id: currentUser.uid}})
-     setLoading(false)
-      }
-    }
-    return () => {
-      console.log("unmounted")
-    }
-  }, [Image])
-
+      console.log("dads")
+      console.log(displayImage)
+  }, [displayImage])
   const _removeImage = async (): Promise<void> => {
       setLoading(true)
-    if (currentUser){
-       deleteImage({variables: {img_idx: img_idx, _id:currentUser.uid}})
-       //TODO: change to icon image
-       setDisplayImage(null)
-      }
+      setDisplayImage(null)
       setLoading(false)
       console.log("remove")
   }
@@ -94,7 +37,7 @@ const SingleImagePlaceholder = ({img_idx}) => {
       {
         mediaType: 'photo',
       },
-      setImage,
+      setDisplayImage,
     )
   };
     const cancelProps = {
@@ -115,7 +58,7 @@ const SingleImagePlaceholder = ({img_idx}) => {
             />
           }
           //{name: 'camera-plus-outline', type: 'material-community'}
-          source={{uri: displayImage}}
+          source={displayImage.assets.uri}
           overlayContainerStyle={{
             backgroundColor: '#D3D3D3',
             borderTopLeftRadius: 20,
@@ -134,6 +77,30 @@ const SingleImagePlaceholder = ({img_idx}) => {
         </Avatar>
       </>
     );
+}
+export const Pictures =(props) => {
+  return (
+    <>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.top}>
+            <View style={styles.verticalImageplaceholder}>
+              <View style={styles.horizontalImageplaceholder}>
+                <SingleImageInitiator img_idx={0} />
+                <SingleImageInitiator img_idx={1} />
+                <SingleImageInitiator img_idx={2} />
+              </View>
+              <View style={styles.horizontalImageplaceholder}>
+                <SingleImageInitiator img_idx={3} />
+                <SingleImageInitiator img_idx={4} />
+                <SingleImageInitiator img_idx={5} />
+              </View>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -166,4 +133,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export  { PictureWall }
