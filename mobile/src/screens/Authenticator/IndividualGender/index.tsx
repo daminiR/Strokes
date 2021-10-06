@@ -13,7 +13,7 @@ import {
 import { RouteProp } from '@react-navigation/native'
 import {UPDATE_GENDER} from '../../../graphql/mutations/profile'
 import * as Yup from 'yup'
-import { onScreen, goBack } from '../../../constants'
+import { onScreen, goBack, genderRadioObject} from '../../../constants'
 import {UserContext} from '../../../UserContext'
 import {CheckBox, Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
 import  auth  from '@react-native-firebase/auth'
@@ -27,13 +27,9 @@ type GenderScreenNavigationProp = StackNavigationProp<RootIndividualProfileInput
 type GenderT = {
   navigation: GenderScreenNavigationProp
 }
-const data :  RadioButtonProps[] = [
-  { id: '0', label: 'Woman', value: 'Female' },
-  { id: '1', label: 'Man', value: 'Male' },
-];
 const Gender = ({ navigation }: GenderT): ReactElement => {
    const [updateGender] = useMutation(UPDATE_GENDER);
-   const [radioButtons, setRadioButtons] = useState(data)
+   const [radioButtons, setRadioButtons] = useState(genderRadioObject)
    const {currentUser} = useContext(UserContext)
    const onPressRadioButton = (radioButtonsArray: RadioButtonProps[]) => {
         setRadioButtons(radioButtonsArray);

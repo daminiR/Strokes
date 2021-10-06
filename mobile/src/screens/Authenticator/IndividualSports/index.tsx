@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 import {ProfileContext} from './index'
 import {sportsList} from './../../../constants';
+import styles from '../../../assets/styles/'
 import  DatePicker  from 'react-native-date-picker'
 import { RootStackParamList } from '../../../AppNavigator'
 import { ProfileScreenNavigationProp} from './index'
@@ -88,84 +89,84 @@ const SportsList = (props) => {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 2,
-    margin: 0,
-  },
-  user: {
-    color: 'grey',
-    fontSize: 20,
-    fontFamily: 'OpenSans-Regular',
-    alignSelf: 'stretch'
+//const styles = StyleSheet.create({
+  //container: {
+    //flex: 1,
+    //backgroundColor: '#fff',
+    //padding: 2,
+    //margin: 0,
+  //},
+  //user: {
+    //color: 'grey',
+    //fontSize: 20,
+    //fontFamily: 'OpenSans-Regular',
+    //alignSelf: 'stretch'
 
-  },
-  textSettingFont: {
-    color: 'grey',
-    fontSize: 20,
-    fontFamily: 'OpenSans-Regular',
-    alignSelf: 'stretch'
+  //},
+  //textSettingFont: {
+    //color: 'grey',
+    //fontSize: 20,
+    //fontFamily: 'OpenSans-Regular',
+    //alignSelf: 'stretch'
 
-  },
-  chipText: {
-    color: '#242424',
-    fontFamily: 'OpenSans-Regular',
-    fontSize: 16,
-    fontWeight: "normal"
-  },
-  ChipButton: {
-    borderColor: 'grey',
-    borderWidth: 1,
-    padding: 4
+  //},
+  //chipText: {
+    //color: '#242424',
+    //fontFamily: 'OpenSans-Regular',
+    //fontSize: 16,
+    //fontWeight: "normal"
+  //},
+  //ChipButton: {
+    //borderColor: 'grey',
+    //borderWidth: 1,
+    //padding: 4
 
-  },
-  CardStyle: {
-    padding: 5,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-  },
-  singleChip: {
-    padding: 3,
-  },
-  sportChipSet: {
-    flexWrap: "wrap",
-    justifyContent: 'center',
-    color: 'grey',
-    fontSize: 20,
-    fontFamily: 'OpenSans-Regular',
-    flexDirection: "row"
-  },
-  profileButtons: {
-    flex: 1,
-    margin: 2,
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-  },
-  middle: {
-    flex: 1.1,
-    height: 0,
-    backgroundColor: 'white',
-    borderWidth: 5,
-  },
-  horizontalImageplaceholder: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  verticalImageplaceholder: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-});
+  //},
+  //CardStyle: {
+    //padding: 5,
+    //borderTopLeftRadius: 20,
+    //borderTopRightRadius: 20,
+    //borderBottomLeftRadius: 20,
+    //borderBottomRightRadius: 20,
+  //},
+  //singleChip: {
+    //padding: 3,
+  //},
+  //sportChipSet: {
+    //flexWrap: "wrap",
+    //justifyContent: 'center',
+    //color: 'grey',
+    //fontSize: 20,
+    //fontFamily: 'OpenSans-Regular',
+    //flexDirection: "row"
+  //},
+  //profileButtons: {
+    //flex: 1,
+    //margin: 2,
+    //backgroundColor: 'white',
+    //borderWidth: 1,
+    //borderTopLeftRadius: 20,
+    //borderTopRightRadius: 20,
+    //borderBottomLeftRadius: 20,
+    //borderBottomRightRadius: 20,
+  //},
+  //middle: {
+    //flex: 1.1,
+    //height: 0,
+    //backgroundColor: 'white',
+    //borderWidth: 5,
+  //},
+  //horizontalImageplaceholder: {
+    //flex: 1,
+    //flexDirection: 'row',
+    //justifyContent: 'space-between',
+  //},
+  //verticalImageplaceholder: {
+    //flex: 1,
+    //flexDirection: 'column',
+    //justifyContent: 'center',
+  //},
+//});
 
 const style_edit_icon = StyleSheet.create({
   container: {

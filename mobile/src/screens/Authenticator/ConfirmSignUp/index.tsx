@@ -24,21 +24,12 @@ const ConfirmSignUp = ({navigation }: ConfirmSignUpT): ReactElement => {
   const {currentUser} = useContext(UserContext)
   const [delayed, setDelayed] = useState(false)
   useEffect (() => {
-        console.log("mounted")
         const timeoutID = setTimeout(() => {setDelayed(true)}, 3000)
     return () => {
         clearTimeout(timeoutID)
         setDelayed(false)
-        console.log("unmounted")
     }
   }, [])
-
-  //const _onPress = async (values: { code: string }): Promise<void> => {
-
-      //setLoading(false);
-      //onScreen('PROFILE_NAME', navigation )()
-      //onScreen('EMAIL', navigation)()
-    //}
 
   const _onPress = async (values: { code: string }): Promise<void> => {
     setLoading(true)
@@ -46,12 +37,12 @@ const ConfirmSignUp = ({navigation }: ConfirmSignUpT): ReactElement => {
     const { code } = values
     await confirmResult.confirm(code)
     .then((userCredential) => {
-      console.log("what is happening")
       console.log(userCredential)
-      //setConfirmResult(userCredential)
-      console.log("signup confirmed")
+      console.log("signup confirmed on gc")
+      // add data to mongo db
+
+      registerOnMongoDb(first_name, birthday, gender, sports, game_level, image_set)
       setLoading(false);
-      //onScreen('EMAIL', navigation)()
     }
     )
     .catch((err) => {

@@ -60,19 +60,13 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
  }
 
   const _onPressSignOut = async () : Promise<void> => {
-    setLoading(true)
-    setError('')
     await auth()
       .signOut()
       .then((res) => {
-        console.log('Succesful signout')
-        console.log(currentUser)
-        setConfirmResult(null)
-        setLoading(false)
-        setError('')
+        console.log('Succesful signout');
       })
       .catch((err) => {
         console.log(err.code);
-        setError(err.code)
       });
   }
+export {_onPressSignOut}
