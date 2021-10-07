@@ -5,6 +5,7 @@ import { useFormikContext, Formik, Form, Field } from 'formik';
 import * as Yup from 'yup'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { onScreen, goBack, genderRadioObject, signUpSlides, intitialFormikSignUp} from '../../../constants'
+import { generateRNFile } from '../../../utils/Upload'
 import auth from '@react-native-firebase/auth'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
 import styles from '../../../assets/styles/'
@@ -14,27 +15,39 @@ import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import {SportChipsstyles, SportChips} from '../Profile/profileSettingInput'
 import {sportsList} from './../../../constants';
-import {Pictures} from '../Profile/initation'
+import {sportsItemsVar} from '../../../cache'
+import {Pictures} from '../../../components'
+import {ChooseSportsChips} from '../../../components'
+import {SportsList, Sport, NameT} from './localModels/UserSportsList'
 interface ProfileFields {
        email: string;
        phoneNumber: string;
        first_name: string,
        last_name: string,
-       age: string
+       age: string,
+       gender: string,
+       sports: string
+       images: [string]
 }
 const ImageInput = () => {
-    const { values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+    const { values, setValues, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+    const getImages = (images) =>{
+        setValues({... values, 'images': images})
+    }
     return (
       <View style={styles.imageContainer}>
-          <Pictures/>
+          <Pictures getImages={getImages}/>
          <Button onPress={() => handleSubmit()} title="Submit" />
     </View>
     )}
   const GenderInput = () => {
+  const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const [radioButtons, setRadioButtons] = useState(genderRadioObject)
    const onPressRadioButton = (radioButtonsArray: RadioButtonProps[]) => {
+        const gender = radioButtons.find((genderObj) => genderObj.selected == true).value
         setRadioButtons(radioButtonsArray)
-        console.log(radioButtonsArray)
+        setValues({... values, 'gender': gender})
+        console.log(gender)
     }
     return (
       <View style={styles.ageContainer}>
@@ -106,24 +119,14 @@ const ImageInput = () => {
     </View>
     )}
   const SportsInput = () => {
-  const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+  const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+  const getSportsData = (sportsList) => {
+    console.log("calues in parent")
+    setValues({... values, 'sports': sportsList})
+  }
     return (
       <View style={styles.sportsContainer}>
-        <Card containerStyle={styles.CardStyle}>
-          <Card.Title> List of Acitivities</Card.Title>
-          <Card.Divider />
-          <View style={styles.sportChipSet}>
-            {sportsList.map((sport, i) => (
-              <SportChips
-                key={i}
-                sport={sport}
-                isDisplay={false}
-                //isSelected={userSportsList.some((currSport) => currSport.sport === sport)}
-                //getData={getData}
-              />
-            ))}
-          </View>
-        </Card>
+        <ChooseSportsChips getSportsList={getSportsData}/>
       </View>
     );
   };
