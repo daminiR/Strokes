@@ -1,6 +1,5 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
 import React, { useRef, useContext, useEffect, useState, ReactElement } from 'react'
-import {useNavigation} from '@react-navigation/native';
 import {UserContext} from '../../../UserContext'
 import {ProfileContext} from './index'
 import {UPLOAD_FILE, DELETE_IMAGE} from '../../../graphql/mutations/profile'

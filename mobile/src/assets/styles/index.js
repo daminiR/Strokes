@@ -116,6 +116,46 @@ export default StyleSheet.create({
     fontFamily: 'OpenSans-Regular',
     flexDirection: 'row',
   },
+  chipText: {
+    color: '#242424',
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 16,
+    fontWeight: "normal"
+  },
+  ChipButtonSelected: {
+    borderColor: 'grey',
+    backgroundColor: '#d3d3d3',
+    fontSize: 200,
+    borderWidth: 1,
+    padding: 4
+  },
+  ChipButton: {
+    borderColor: 'grey',
+    fontSize: 200,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    padding: 4
+
+  },
+  CardStyle: {
+    padding: 5,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  singleChip: {
+    padding: 3,
+  },
+  sportChipSet: {
+    flexWrap: "wrap",
+    justifyContent: 'center',
+    color: 'grey',
+    fontSize: 20,
+    fontFamily: 'OpenSans-Regular',
+    flexDirection: "row"
+  },
+
   // COMPONENT - CARD ITEM
   CardStyle: {
     padding: 5,
