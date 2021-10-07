@@ -49,3 +49,69 @@ export const onScreen = (screen: string, navigation: any, obj?: unknown) => () =
 }
 
 export const goHome = (navigation: any) => () => navigation.popToTop()()
+
+// Sign Up Slide Labels
+
+// initialValuesFormik
+ export const intitialFormikSignUp = {
+   email: '',
+   phoneNumber: '',
+   first_name: '',
+   last_name: '',
+   age: '',
+   gender: '',
+   sports:[],
+   image_input:[]
+ }
+export const signUpSlides = [
+  {
+    key: '0',
+    type: 'Phone Input',
+    title: 'Phone Number',
+    inputLabel: 'Phone Number',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '1',
+    type: 'Email Input',
+    title: 'Email',
+    InputLabel: 'Email',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '2',
+    type: 'Name Input',
+    title: 'Name',
+    InputLabel: 'Name',
+    backgroundColor: '#22bcb5',
+  },
+  {
+    key: '3',
+    type: 'Birthday Input',
+    title: 'Birthday',
+    InputLabel: 'Birthday',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '4',
+    type: 'Gender Input',
+    title: 'Gender',
+    InputLabel: 'Gender',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '5',
+    type: 'Sports Input',
+    title: 'Sports',
+    InputLabel: 'Sports',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '6',
+    type: 'Image Input',
+    title: 'Image',
+    InputLabel: 'Image',
+    backgroundColor: '#59b2ab',
+  },
+];
+
