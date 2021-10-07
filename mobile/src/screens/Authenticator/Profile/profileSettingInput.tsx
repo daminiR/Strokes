@@ -13,53 +13,10 @@ import { ProfileScreenNavigationProp} from './index'
 import { SportContext } from '../IndividualSports/index'
 import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
 import {ProfileAttirbutes} from "./ProfileAttributes"
+import styles from '../../../assets/styles'
 type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
- const SportChips = ({sport, isSelected = false, isDisplay, getData=null}) => {
-  const [dynamicStyle, setDynamicStyle] = React.useState(SportChipsstyles.ChipButton)
-  const [selected, setSelected] = React.useState(isSelected)
-  useEffect(() => {
-    if (selected){
-      setDynamicStyle(SportChipsstyles.ChipButtonSelected)
-    }
-    else {
-      setDynamicStyle(SportChipsstyles.ChipButton);
-    }
-  }, [selected])
-
-  const _selected = (selected) => {
-    if (selected) {
-      selected = false;
-      setSelected(selected)
-    } else {
-      selected = true;
-      setSelected(selected)
-    }
-      getData(sport, selected)
-  }
-  return (
-    <>
-      <Chip
-        title= {sport}
-        titleStyle={SportChipsstyles.chipText}
-        icon={{
-          name: 'bluetooth',
-          type: 'font-awesome',
-          size: 20,
-          color: 'black',
-        }}
-        buttonStyle={dynamicStyle}
-        containerStyle={SportChipsstyles.singleChip}
-        onPress={() => _selected(selected)}
-        disabled={isDisplay}
-        disabledTitleStyle={SportChipsstyles.chipText}
-        disabledStyle={SportChipsstyles.ChipButton}
-      />
-    </>
-  );
-};
-
 const ProfileSettingsInput = (props) => {
   const didMountRef = useRef(false)
   const {squashData, newSportList} = useContext(ProfileContext);
@@ -108,20 +65,20 @@ const ProfileSettingsInput = (props) => {
 
   return (
     <>
-      <Card containerStyle={SportChipsstyles.CardStyle}>
+      <Card containerStyle={styles.CardStyle}>
         <Icon size={28} onPress={_editSports} name="pencil" type='material-community' style={style_edit_icon.container} />
         <Card.Title>CARD WITH DIVIDER</Card.Title>
         <Card.Divider />
-        <View style={SportChipsstyles.sportChipSet}>
+        <View style={styles.sportChipSet}>
           {!loadingSports &&
             sportsList.map((sport, i) => (
               <SportChips key={i} sport={sport.sport} isDisplay={true}/>
             ))}
         </View>
       </Card>
-      <Card containerStyle={SportChipsstyles.CardStyle}>
+      <Card containerStyle={styles.CardStyle}>
         <Icon size={28} onPress={_editDescription} name="pencil" type='material-community' style={style_edit_icon.container} />
-        <View style={SportChipsstyles.sportChipSet}>
+        <View style={styles.sportChipSet}>
           {!loadingDescription && <Text> {description} </Text>}
         </View>
       </Card>
@@ -177,45 +134,6 @@ const SportsList = (props) => {
     alignSelf: 'stretch'
 
   },
-  chipText: {
-    color: '#242424',
-    fontFamily: 'OpenSans-Regular',
-    fontSize: 16,
-    fontWeight: "normal"
-  },
-  ChipButtonSelected: {
-    borderColor: 'grey',
-    backgroundColor: '#d3d3d3',
-    fontSize: 200,
-    borderWidth: 1,
-    padding: 4
-  },
-  ChipButton: {
-    borderColor: 'grey',
-    fontSize: 200,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    padding: 4
-
-  },
-  CardStyle: {
-    padding: 5,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-  },
-  singleChip: {
-    padding: 3,
-  },
-  sportChipSet: {
-    flexWrap: "wrap",
-    justifyContent: 'center',
-    color: 'grey',
-    fontSize: 20,
-    fontFamily: 'OpenSans-Regular',
-    flexDirection: "row"
-  },
   profileButtons: {
     flex: 1,
     margin: 2,
@@ -251,4 +169,4 @@ const SportsList = (props) => {
     margin: 4,
   }
 });
-export { SportChips, style_edit_icon, SportChipsstyles, ProfileSettingsInput }
+export {style_edit_icon, SportChipsstyles, ProfileSettingsInput }
