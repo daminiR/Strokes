@@ -21,13 +21,80 @@ export const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 export default StyleSheet.create({
+  // IMAGE PLACEHOLDER COMPONENET
+  imagecontainer: {
+    padding: 4,
+    margin: 0,
+
+  },
+  horizontalImageplaceholder: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  verticalImageplaceholder: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  imageIndividualContainer: {
+    backgroundColor: '#D3D3D3',
+    margin: 2,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+
+  //SIGNUP SLIDES
+
+  phoneNumberContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  emailContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  nameContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  ageContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  genderContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  sportsContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  imageContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   // TEXT SETTING FONT
   textSettingFont: {
     color: 'grey',
     fontSize: 20,
     fontFamily: 'OpenSans-Regular',
-    alignSelf: 'stretch'
-
+    alignSelf: 'stretch',
   },
   // PROFILE BUTTON
   profileButtons: {
@@ -42,12 +109,12 @@ export default StyleSheet.create({
   },
   //SPROTS CHIPS
   sportChipSet: {
-    flexWrap: "wrap",
+    flexWrap: 'wrap',
     justifyContent: 'center',
     color: 'grey',
     fontSize: 20,
     fontFamily: 'OpenSans-Regular',
-    flexDirection: "row"
+    flexDirection: 'row',
   },
   // COMPONENT - CARD ITEM
   CardStyle: {
