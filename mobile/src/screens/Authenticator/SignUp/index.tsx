@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import {Theme, Input, Chip, Card,withBadge, ListItem, Icon, Avatar, Badge, Button} from 'react-native-elements'
 import * as Keychain from 'react-native-keychain'
+import { InMemoryCache, useQuery, useMutation , makeVar} from '@apollo/client'
 import { useFormikContext, Formik, Form, Field } from 'formik';
 import * as Yup from 'yup'
 import RadioGroup from 'react-native-radio-buttons-group'
@@ -10,10 +11,10 @@ import {  RootStackSignOutParamList } from '../../../navigation/'
 import auth from '@react-native-firebase/auth'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
 import styles from '../../../assets/styles/'
-import { ADD_PROFILE } from '../../../graphql/mutations/profile'
 import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import {SportChipsstyles, SportChips} from '../Profile/profileSettingInput'
+import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import {sportsList} from './../../../constants';
 import {Pictures} from '../Profile/initation'
 import { ProfileFields} from '../../../localModels/UserSportsList'
@@ -44,6 +45,11 @@ const Slider =  () => {
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const [index, setIndex] = useState(0)
   const [showNextButton, setShowNextButton] = useState(true)
+  const [createSquash2, {client, data}] = useMutation(ADD_PROFILE2, {
+    ignoreResults: false,
+    onCompleted: (data) => {
+    },
+  });
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
     if (index == 7){
@@ -55,7 +61,7 @@ const Slider =  () => {
     }
   }
   const _submit = ( value ) => {
-    registerOnMongoDb(values, '1234')
+    registerOnMongoDb(values, {uid:'1234'}, createSquash2)
     //registerOnFirebase(values.phoneNumber, values.email)
       //.then((confirmation: any) => {
         //this.slider.goToSlide(7);
@@ -119,8 +125,6 @@ const Slider =  () => {
         showNextButton={showNextButton}
         ref={(ref) => (this.slider = ref!)}
       />
-
   )
-
 }
 export { SignUp }
