@@ -16,6 +16,7 @@ export const AuthNavigator = () => {
   const [isProfileComplete, setProfileState ] = useState(false)
   const [isApolloConected, setIsApolloConected ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(false);
+  const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
   const [getSquashProfile, {data, loading: loadingApollo, error}] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
@@ -39,7 +40,7 @@ export const AuthNavigator = () => {
   });
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
-      if (currentUser) {
+      if (currentUser && isUserOnmongoDb) {
         getSquashProfile({variables: {id: currentUser.uid}});
         setLoadingUser(false)
       }
@@ -49,13 +50,15 @@ export const AuthNavigator = () => {
   }
   useEffect(() => {
       setLoadingUser(true)
+      console.log("loading mongo", isUserOnmongoDb)
       const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged)
       console.log(unsubscribe)
       return unsubscribe
-  }, [])
+  }, [isUserOnmongoDb])
 
   if (loadingSigning) return null
   const value = {
+    setIsUseOnMongoDb,
     confirmResult,
     setConfirmResult,
     currentUser,
@@ -64,7 +67,7 @@ export const AuthNavigator = () => {
     setProfileState
   };
   const render2 = () =>{
-    if (currentUser) {
+    if (currentUser && isUserOnmongoDb) {
       //if (isApolloConected){
           return !loadingSigning && <SignInStack />;
       }

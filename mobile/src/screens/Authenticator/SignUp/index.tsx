@@ -21,6 +21,7 @@ import { ProfileFields} from '../../../localModels/UserSportsList'
 import {PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, ImageInput, SportsInput} from './Inputs'
 import { ConfirmationCode } from './confirmationCode'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
+import { UserContext} from '../../../UserContext'
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
   navigation: SignUpScreenNavigationProp
@@ -40,6 +41,7 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
 }
 const Slider =  () => {
   const {values, handleChange} = useFormikContext<ProfileFields>();
+  const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmSlide, setConfirmSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -61,23 +63,23 @@ const Slider =  () => {
     }
   }
   const _submit = ( value ) => {
-    registerOnMongoDb(values, {uid:'1234'}, createSquash2)
-    //registerOnFirebase(values.phoneNumber, values.email)
-      //.then((confirmation: any) => {
-        //this.slider.goToSlide(7);
-        //setConfirmationFunc(confirmation)
-      //})
-      //.catch((err) => {
-        //console.log(err);
-      //});
+    registerOnFirebase(values.phoneNumber, values.email)
+      .then((confirmation: any) => {
+        this.slider.goToSlide(7);
+        setConfirmationFunc(confirmation)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   const _confirmSignInGC = () => {
     // promise in parralell
-
       confirmationFunc
         .confirm(values.confirmationCode)
         .then((userCredential) => {
+            //registerOnMongoDb(values, userCredential.uid, createSquash2)
+            setIsUseOnMongoDb(true)
           console.log('logged in');
         })
         .catch((err) => {

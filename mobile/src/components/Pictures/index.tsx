@@ -37,7 +37,6 @@ const Pictures =({getImages = null}) => {
   }, [image])
   return (
     <>
-      <ScrollView>
         <View style={styles.imagecontainer}>
           <View style={styles.verticalImageplaceholder}>
             <View style={styles.horizontalImageplaceholder}>
@@ -52,7 +51,6 @@ const Pictures =({getImages = null}) => {
             </View>
           </View>
         </View>
-      </ScrollView>
     </>
   );
 }
