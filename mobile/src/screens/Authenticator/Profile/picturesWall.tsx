@@ -55,7 +55,7 @@ const SingleImagePlaceholder = ({img_idx}) => {
   const [deleteImage, {data: image_set}] = useMutation(DELETE_IMAGE);
   useEffect(() => {
     if (squashData?.squash?.image_set != undefined || squashData?.squash?.image_set.find(image_info => image_info.img_idx === img_idx) != undefined){
-      const imageURL =squashData?.squash?.image_set.find(image_info => image_info.img_idx === img_idx)?.imageURL
+      const imageURL = squashData?.squash?.image_set.find(image_info => image_info.img_idx === img_idx)?.imageURL
       setDisplayImage(imageURL)
     }
   }, [squashData?.squash?.image_set])

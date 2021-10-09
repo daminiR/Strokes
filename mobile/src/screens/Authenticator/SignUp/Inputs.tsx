@@ -19,17 +19,8 @@ import {sportsItemsVar} from '../../../cache'
 import {Pictures} from '../../../components'
 import {ChooseSportsChips} from '../../../components'
 import {SportsList, Sport, NameT} from './localModels/UserSportsList'
-interface ProfileFields {
-       email: string;
-       phoneNumber: string;
-       first_name: string,
-       last_name: string,
-       age: string,
-       gender: string,
-       sports: string
-       images: [string]
-}
-const ImageInput = () => {
+import { ProfileFields} from '../../../localModels/UserSportsList'
+const ImageInput = ({_submit}) => {
     const { values, setValues, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
     const getImages = (images) =>{
         setValues({... values, 'images': images})
@@ -37,7 +28,7 @@ const ImageInput = () => {
     return (
       <View style={styles.imageContainer}>
           <Pictures getImages={getImages}/>
-         <Button onPress={() => handleSubmit()} title="Submit" />
+         <Button onPress={() => _submit()} title="Submit" />
     </View>
     )}
   const GenderInput = () => {

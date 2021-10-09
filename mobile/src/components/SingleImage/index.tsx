@@ -9,12 +9,14 @@ const SingleImage = ({img_idx, getSingleImage = null}) => {
   const [Image, setImage] = React.useState(null)
   const [loading, setLoading] = React.useState(null)
   const [displayImage, setDisplayImage] = React.useState(null)
+
   useEffect(() => {
       console.log(Image)
     if (Image){
       setDisplayImage(Image.assets[0].uri)
       if (getSingleImage){
         getSingleImage({image: Image.assets[0].uri, img_idx: img_idx});
+
       }
 
     }
