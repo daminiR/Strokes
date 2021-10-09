@@ -16,7 +16,10 @@ import AppIntroSlider from 'react-native-app-intro-slider'
 import {SportChipsstyles, SportChips} from '../Profile/profileSettingInput'
 import {sportsList} from './../../../constants';
 import {Pictures} from '../Profile/initation'
+import { ProfileFields} from '../../../localModels/UserSportsList'
 import {PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, ImageInput, SportsInput} from './Inputs'
+import { ConfirmationCode } from './confirmationCode'
+import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
   navigation: SignUpScreenNavigationProp
@@ -24,50 +27,100 @@ type SignUpT = {
 const SignUp = ({ navigation }: SignUpT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error2, setError] = useState('');
-  const form = React.useRef()
-  const dispatch = useFormDispatch()
+  const [confirmationCode, setConfirmationCode] = useState(0)
   const {values: formValues, errors: formErrors } = useFormState("user")
-  const _onPressProfile = async () => {
-    onScreen('BIRTHDAY', navigation)();
-  };
+  return (
+    <Formik
+      initialValues={intitialFormikSignUp}
+      onSubmit={(values) => console.log(values)}>
+      <Slider/>
+    </Formik>
+  );
+}
+const Slider =  () => {
+  const {values, handleChange} = useFormikContext<ProfileFields>();
+  const [lastSlide, setLastSlide] = useState(false)
+  const [confirmSlide, setConfirmSlide] = useState(false)
+  const [confirmationFunc, setConfirmationFunc] = useState(null)
+  const [index, setIndex] = useState(0)
+  const [showNextButton, setShowNextButton] = useState(true)
+  const _onSlideChange = (index, last_index) => {
+    setIndex(index)
+    if (index == 7){
+      setLastSlide(true)
+      setShowNextButton(false)
+    }
+    if (index == 6){
+      setShowNextButton(false)
+    }
+  }
+  const _submit = ( value ) => {
+    registerOnMongoDb(values, '1234')
+    //registerOnFirebase(values.phoneNumber, values.email)
+      //.then((confirmation: any) => {
+        //this.slider.goToSlide(7);
+        //setConfirmationFunc(confirmation)
+      //})
+      //.catch((err) => {
+        //console.log(err);
+      //});
+  }
 
+  const _confirmSignInGC = () => {
+    // promise in parralell
+
+      confirmationFunc
+        .confirm(values.confirmationCode)
+        .then((userCredential) => {
+          console.log('logged in');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+  }
   const renderInputForm = ({item}) => {
           switch (item.type) {
             case 'Phone Input':
-              return <PhoneInput/>;
+              return <PhoneInput />;
               break;
             case 'Email Input':
-              return <EmailInput/>;
+              return <EmailInput />;
               break;
             case 'Name Input':
-              return <NameInput/>;
+              return <NameInput />;
               break;
             case 'Birthday Input':
-              return <BirthdayInput/>;
+              return <BirthdayInput />;
               break;
             case 'Gender Input':
-              return <GenderInput/>;
+              return <GenderInput />;
               break;
             case 'Sports Input':
-              return <SportsInput/>;
+              return <SportsInput />;
               break;
             case 'Image Input':
-              return <ImageInput/>;
+              return <ImageInput _submit={_submit}/>;
+              break;
+            case 'Confirmation Code':
+              return <ConfirmationCode isLastSlide={lastSlide} _confirmSignInGC={_confirmSignInGC}/>;
               break;
           }
   };
 
   return (
-    <Formik
-      initialValues={intitialFormikSignUp}
-      onSubmit={(values) => console.log(values)}>
       <AppIntroSlider
         renderItem={renderInputForm}
         data={signUpSlides}
         scrollEnabled={false}
         showPrevButton={true}
+        onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
+        onDone={() => {_confirmSignInGC()}}
+        showNextButton={showNextButton}
+        ref={(ref) => (this.slider = ref!)}
       />
-    </Formik>
-  );
+
+  )
+
 }
 export { SignUp }

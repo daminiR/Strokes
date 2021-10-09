@@ -55,13 +55,14 @@ export const goHome = (navigation: any) => () => navigation.popToTop()()
 // initialValuesFormik
  export const intitialFormikSignUp = {
    email: '',
-   phoneNumber: '',
+   phoneNumber: '+12025550173',
    first_name: '',
    last_name: '',
    age: '',
    gender: '',
    sports:[],
-   image_input:[]
+   images:[],
+   confirmationCode: '000000'
  }
 export const signUpSlides = [
   {
@@ -111,6 +112,13 @@ export const signUpSlides = [
     type: 'Image Input',
     title: 'Image',
     InputLabel: 'Image',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '7',
+    type: 'Confirmation Code',
+    title: 'Confirmation Code',
+    inputLabel: 'Confirmation Code',
     backgroundColor: '#59b2ab',
   },
 ];

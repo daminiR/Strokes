@@ -3,7 +3,7 @@ import * as Keychain from 'react-native-keychain'
 import { Form, Formik, FormikConfig, FormikValues} from 'formik'
 import {UPLOAD_FILE} from '../../../graphql/mutations/profile'
 import * as Yup from 'yup'
-import {generateRNFile} from '../../../utils/googleCloud'
+import {generateRNFile} from '../utils/Upload'
 import { StackNavigationProp } from '@react-navigation/stack'
 import ImagePicker from 'react-native-image-crop-picker'
 import { AppContainer, Space, Button, Input, TextError } from '../../../components'
@@ -19,77 +19,73 @@ import { squashItemsVar, isProfileCompleteVar} from '../../../cache'
 import {UserContext} from '../../../UserContext'
 import { ReactNativeFile } from 'apollo-upload-client'
 import * as mime from 'react-native-mime-types'
-
-
-const registerOnFirebase = async () => {
+export const registerOnFirebase = async (phoneNumber, email) => {
+const authorize = new Promise(async (resolve, reject) => {
     await auth()
-      .signInWithPhoneNumber(phone_number)
-      .then((confirmation) => {
-        console.log('pending confirmation');
-        //TODO: huge problem with go back if before confirmation there is a go back button then this needs to be redone add logic to goback!!!
-        //await Keychain.setInternetCredentials('auth', email, phone_number);
-        // TODO: if user exists but has not been confirmed and closes the page, make sure he is back on the confirm code page with a back button to phone number.
-        onScreen('CONFIRM_SIGN_UP', navigation)();
-        setLoading(false);
+      .signInWithPhoneNumber(phoneNumber)
+      .then((confirmation: any) => {
+        resolve(confirmation);
       })
       .catch((err) => {
-        //TODO come back and add all possible errors
-        setLoading(false);
-        setError(err.code);
+        console.log(err)
+        reject(err)
       });
+})
+return authorize
   }
 
-const registerOnMongoDb = async () => {
+
+  const convertImagesToFormat = (images, currentUser) => {
+    console.log(images)
+    const RNFiles = images.map(imageObj => {
+       const RNFile = generateRNFile(imageObj.image, '123')
+       return {file: RNFile, _id: '123', img_idx: imageObj.img_idx}
+    })
+    return RNFiles
+  }
+export const registerOnMongoDb = async (values, currentUser) => {
+  //const [createSquash, {client, data}] = useMutation(ADD_PROFILE, {
+    //ignoreResults: false,
+    //onCompleted: (data) => {
+    //},
+  //});
+  const rnfiles = convertImagesToFormat(values.images, currentUser)
     await createSquash({
       variables: {
         _id: currentUser.uid,
-        first_name: first_name,
-        gender: gender,
-        image_set: ['yes.png'],
-        game_level: game_level,
-        sports: [{sport: sports, isUserSport: true}],
-        //<Button title="GC" onPress={_onGc} />
-        //<Button title="Select Image" onPress={_multiIMagePicker} />
-        birthday: birthday,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        age: values.age,
+        gender: values.gender,
+        sports: values.sports,
+        description: "Hello",
+        image_set:
       },
     });
   };
 
-const createUser  = async (
-  first_name,
-  birthday,
-  gender,
-  sports,
-  game_level,
-  image_set,
-  phone_number,
-  email,
-  createSquash
-)  => {
-    await auth()
-      .signInWithPhoneNumber(phone_number)
-      .then((confirmation) => {
-        console.log('pending confirmation');
-        //TODO: huge problem with go back if before confirmation there is a go back button then this needs to be redone add logic to goback!!!
-        //await Keychain.setInternetCredentials('auth', email, phone_number);
-        // TODO: if user exists but has not been confirmed and closes the page, make sure he is back on the confirm code page with a back button to phone number.
-        onScreen('CONFIRM_SIGN_UP', navigation)();
-        setLoading(false);
-      })
-      .catch((err) => {
-        //TODO come back and add all possible errors
-        setLoading(false);
-        setError(err.code);
-      });
+//const createUser  = async ({
+  //values,
+  //createSquash
+//})  => {
 
+  //const {phoneNumber, email, first_name, last_name, age, gender, sports, images, confirmationCode} = values
+  //registerOnFirebase(phoneNumber, email, confirmationCode)
 
+  ////const [createSquash, {client, data}] = useMutation(ADD_PROFILE, {
+    ////ignoreResults: false,
+    ////onCompleted: (data) => {
+      //////const squashItems = squashItemsVar()
+      //////isProfileCompleteVar(true);
+      //////squashItemsVar([...squashItems, data.createSquash._id])
+      //////console.log(squashItemsVar());
+    ////},
+  ////});
 
-
-};
+//};
 
 const deleteUser = () => {
 
 
 }
 
-export {createUser}
