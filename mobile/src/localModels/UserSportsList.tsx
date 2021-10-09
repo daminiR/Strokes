@@ -6,6 +6,17 @@ export interface Name {
   FirstName: string;
   LastName: string;
 }
+export interface ProfileFields {
+       email: string;
+       phoneNumber: string;
+       first_name: string,
+       last_name: string,
+       age: string,
+       gender: string,
+       sports: string,
+       images: [string],
+       confirmationCode: string
+}
 export type SportsList = Sport[]
 export type NameT = Name
 

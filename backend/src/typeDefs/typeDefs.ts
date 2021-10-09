@@ -70,5 +70,16 @@ export const typeDefs = gql`
       image_set: [DataInput!]!
     ): Squash!
     deleteSquash(_id: String): Squash!
+    createSquash2(
+      _id: String!
+      first_name: String!
+      last_name: String!
+      age: Int!
+      gender: String!
+      sports: [SquashNodeInput!]!
+      country: String
+      description: String!
+      image_set: [DataInput!]!
+    ): Squash!
   }
 `;

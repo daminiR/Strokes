@@ -48,9 +48,9 @@ const App = (): ReactElement =>
       //const prevIsComplete = await AsyncStorage.getItem('isProfileComplete')
       //isProfileCompleteVar(JSON.parse(prevIsComplete))
       await newPersistor.restore();
-      //setPersistor(newPersistor);
-      //newPersistor.pause()
-      //newPersistor.purge()
+      setPersistor(newPersistor);
+      newPersistor.pause()
+      newPersistor.purge()
       //const myHtttpLink = new HttpLink({
       //uri: 'http://192.168.1.12:4000/graphql',
       ////uri : 'http://localhost:4000/graphql'
@@ -98,7 +98,7 @@ const App = (): ReactElement =>
       //}
     //}
   //};
-  //client.resetStore()
+  client.resetStore()
   //just to reset cache for debugging
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}
