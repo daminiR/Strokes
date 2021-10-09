@@ -78,12 +78,16 @@ const Slider =  () => {
       confirmationFunc
         .confirm(values.confirmationCode)
         .then((userCredential) => {
-            //registerOnMongoDb(values, userCredential.uid, createSquash2)
+            console.log(userCredential)
+            registerOnMongoDb(values, userCredential.additionalUserInfo.uid, createSquash2).then(() => {
+            console.log('logged in');
             setIsUseOnMongoDb(true)
-          console.log('logged in');
         })
-        .catch((err) => {
+        .catch(async (err) => {
+            // else delete user as if not created
+            await auth().currentUser.delete()
           console.log(err);
+        });
         });
 
   }

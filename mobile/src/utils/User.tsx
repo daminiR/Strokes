@@ -32,19 +32,19 @@ const authorize = new Promise(async (resolve, reject) => {
 })
 return authorize
   }
-const convertImagesToFormat = (images, currentUser) => {
+const convertImagesToFormat = (images, _id) => {
     const RNFiles = images.map(imageObj =>{
-       const RNFile = generateRNFile(imageObj.image, currentUser.uid)
+       const RNFile = generateRNFile(imageObj.image, _id)
        return {file: RNFile, img_idx: imageObj.img_idx}
     }
     )
     return RNFiles
   }
-export const registerOnMongoDb = async (values, currentUser, createSquash2) => {
-  const rnfiles = convertImagesToFormat(values.images, currentUser)
+export const registerOnMongoDb = async (values, _id, createSquash2) => {
+  const rnfiles = convertImagesToFormat(values.images, _id)
     await createSquash2({
       variables: {
-        _id: currentUser.uid,
+        _id: _id,
         image_set: rnfiles
       },
     });
