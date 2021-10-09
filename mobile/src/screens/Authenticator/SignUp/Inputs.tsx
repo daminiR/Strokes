@@ -28,7 +28,7 @@ const ImageInput = ({_submit}) => {
     return (
       <View style={styles.imageContainer}>
           <Pictures getImages={getImages}/>
-         <Button onPress={() => _submit()} title="Submit" />
+          <Button style={{flexDirection:'row', alignSelf: 'center', justifyContent: 'flex-end'}} onPress={() => _submit()} title="Submit" />
     </View>
     )}
   const GenderInput = () => {

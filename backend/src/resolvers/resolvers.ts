@@ -255,12 +255,12 @@ export const resolvers = {
     createSquash2: async (root, {_id, image_set}) => {
       // uploading images to MongoDb
       //const squash_val = await Squash.findById(_id);
-      creatGCUpload(image_set, _id).then(async (data_set) => {
+      creatGCUpload(image_set, _id).then(async (data_set: any) => {
           console.log(data_set);
           console.log("done");
           const doc = await Squash.findOneAndUpdate(
-            { _id: "fsaldfjw3rtwerdsa" },
-            {$set: {image_set: data_set}},
+            { _id: _id },
+            { $set: {image_set: data_set}},
             { new: true }
           );
           console.log(doc)
