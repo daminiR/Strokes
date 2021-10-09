@@ -47,18 +47,9 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
        Image.assets[0].uri.replace('file://', ''),
        'wkahd',
      );
-    //if (Platform.OS == "ios"){
-     //const RNFile = generateRNFile(
-       //Image.assets[0].uri.replace('file://', ''),
-       //'wkahd',
-     //);}
-     //else if (Platform.OS == "android"){
-       //console.log(Image)
-     //}
     console.log("filevalue,",RNFile)
     uploadFile({variables: {file: RNFile}});
  }
-
   const _onPressSignOut = async () : Promise<void> => {
     await auth()
       .signOut()
