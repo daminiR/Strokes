@@ -20,20 +20,22 @@ const ICON_FONT = "tinderclone";
 export const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
+
 export default StyleSheet.create({
   // IMAGE PLACEHOLDER COMPONENET
   imagecontainer: {
-    padding: 4,
+    flex: 0,
+    padding: 0,
     margin: 0,
 
   },
   horizontalImageplaceholder: {
-    flex: 1,
+    flex: 0,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   verticalImageplaceholder: {
-    flex: 1,
+    //flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
   },
