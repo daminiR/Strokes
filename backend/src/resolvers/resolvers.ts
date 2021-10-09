@@ -21,6 +21,57 @@ interface DisplayData {
   filePath: string;
 }
 
+const creatGCUpload = (image_set, _id) => {
+      const promise = Promise.all(
+        image_set.map(async (image) => {
+          return new Promise(async (resolve, reject) => {
+            const {
+              filename,
+              mimetype,
+              encoding,
+              createReadStream,
+            } = await image.file;
+            console.log(filename);
+            console.log("where is the file");
+            console.log(image.file);
+            const sanitizedFilename = sanitizeFile(filename, _id);
+            const gcFile = acsport1.file(
+              path.join(dest_gcs_images, sanitizedFilename)
+            );
+            let data: Data;
+            let displayData: DisplayData = {
+              imageURL: "",
+              filePath: "",
+            };
+            createReadStream().pipe(
+              gcFile
+                .createWriteStream()
+                .on("finish", () => {
+                  gcFile.makePublic();
+                  data = {
+                    img_idx: image.img_idx,
+                    imageURL: `https://storage.googleapis.com/acsport1/${dest_gcs_images}/${sanitizedFilename}`,
+                    filePath: `${dest_gcs_images}/${sanitizedFilename}`,
+                  };
+                  displayData = {
+                    imageURL: `https://storage.googleapis.com/acsport1/${dest_gcs_images}/${sanitizedFilename}`,
+                    filePath: `${dest_gcs_images}/${sanitizedFilename}`,
+                  };
+                  console.log("done");
+                  resolve(data);
+
+                })
+                .on("error", (error) => {
+                  console.log("error");
+                  console.log(error);
+                  reject();
+                })
+            );
+          });
+        })
+      )
+      return promise
+}
 const deleteFromGC = async (file_to_del: string) => {
        await acsport1.file(file_to_del).delete().then(
         () => {
@@ -201,75 +252,20 @@ export const resolvers = {
       const squash = Squash.create(args);
       return squash;
     },
-    createSquash2: async (root, args): Promise<SquashDocument> => {
+    createSquash2: async (root, {_id, image_set}) => {
       // uploading images to MongoDb
-      const { filename, mimetype, encoding, createReadStream } = await file;
-      const sanitizedFilename = sanitizeFile(filename, _id);
-      const gcFile = acsport1.file(
-        path.join(dest_gcs_images, sanitizedFilename)
-      );
-      let data: Data;
-      let displayData: DisplayData = {
-        imageURL: "",
-        filePath: "",
-      };
-      const squash_val = await Squash.findById(_id);
-      await new Promise<void>((resolve, reject) => {
-        createReadStream().pipe(
-          gcFile
-            .createWriteStream()
-            .on("finish", () => {
-              gcFile.makePublic();
-              data = {
-                img_idx: img_idx,
-                imageURL: `https://storage.googleapis.com/acsport1/${dest_gcs_images}/${sanitizedFilename}`,
-                filePath: `${dest_gcs_images}/${sanitizedFilename}`,
-              };
-              displayData = {
-                imageURL: `https://storage.googleapis.com/acsport1/${dest_gcs_images}/${sanitizedFilename}`,
-                filePath: `${dest_gcs_images}/${sanitizedFilename}`,
-              };
-              console.log("done");
-              resolve();
-            })
-            .on("error", (error) => {
-              console.log("error");
-              console.log(error);
-              reject();
-            })
-        );
-      }).then(async () => {
-        if (
-          squash_val!.image_set.find(
-            (image_info) => image_info.img_idx === img_idx
-          ) === undefined
-        ) {
+      //const squash_val = await Squash.findById(_id);
+      creatGCUpload(image_set, _id).then(async (data_set) => {
+          console.log(data_set);
+          console.log("done");
           const doc = await Squash.findOneAndUpdate(
-            { _id: _id },
-            { $push: { image_set: data } },
+            { _id: "fsaldfjw3rtwerdsa" },
+            {$set: {image_set: data_set}},
             { new: true }
           );
-          console.log(doc);
-        }
-        else {
-          const file_to_del = squash_val!.image_set
-            .find((image_info) => image_info.img_idx === img_idx)!
-            .filePath.toString();
-          await deleteFromGC(file_to_del);
-          const filter = {
-            _id: _id,
-            image_set: { $elemMatch: { img_idx: img_idx } },
-          };
-          const update = { $set: { "image_set.$": data } };
-          const doc = await Squash.findOneAndUpdate(filter, update, {
-            new: true,
-          });
-          console.log(doc);
-        }
+          console.log(doc)
       });
-
-      const squash = Squash.create(args);
-      return squash;
+      return "done"
     },
     deleteSquash: async (root, args) => {
       const squash = await Squash.findById({ id: args });

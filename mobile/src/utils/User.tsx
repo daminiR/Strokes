@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import * as Keychain from 'react-native-keychain'
 import { Form, Formik, FormikConfig, FormikValues} from 'formik'
-import {UPLOAD_FILE} from '../../../graphql/mutations/profile'
 import * as Yup from 'yup'
 import {generateRNFile} from '../utils/Upload'
 import { StackNavigationProp } from '@react-navigation/stack'
@@ -12,7 +11,7 @@ import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
 import { InMemoryCache, useQuery, useMutation , makeVar} from '@apollo/client'
 import {  RootStackSignInParamList } from '../../../navigation/SignInStack'
 import auth from '@react-native-firebase/auth'
-import { ADD_PROFILE } from '../../../graphql/mutations/profile'
+import { ADD_PROFILE2 } from '../graphql/mutations/profile'
 import { READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
 import { View,  Text, ScrollView, TextInput } from 'react-native'
 import { squashItemsVar, isProfileCompleteVar} from '../../../cache'
@@ -33,33 +32,20 @@ const authorize = new Promise(async (resolve, reject) => {
 })
 return authorize
   }
-
-
-  const convertImagesToFormat = (images, currentUser) => {
-    console.log(images)
-    const RNFiles = images.map(imageObj => {
-       const RNFile = generateRNFile(imageObj.image, '123')
-       return {file: RNFile, _id: '123', img_idx: imageObj.img_idx}
-    })
+const convertImagesToFormat = (images, currentUser) => {
+    const RNFiles = images.map(imageObj =>{
+       const RNFile = generateRNFile(imageObj.image, currentUser.uid)
+       return {file: RNFile, img_idx: imageObj.img_idx}
+    }
+    )
     return RNFiles
   }
-export const registerOnMongoDb = async (values, currentUser) => {
-  //const [createSquash, {client, data}] = useMutation(ADD_PROFILE, {
-    //ignoreResults: false,
-    //onCompleted: (data) => {
-    //},
-  //});
+export const registerOnMongoDb = async (values, currentUser, createSquash2) => {
   const rnfiles = convertImagesToFormat(values.images, currentUser)
-    await createSquash({
+    await createSquash2({
       variables: {
         _id: currentUser.uid,
-        first_name: values.first_name,
-        last_name: values.last_name,
-        age: values.age,
-        gender: values.gender,
-        sports: values.sports,
-        description: "Hello",
-        image_set:
+        image_set: rnfiles
       },
     });
   };
@@ -85,7 +71,5 @@ export const registerOnMongoDb = async (values, currentUser) => {
 //};
 
 const deleteUser = () => {
-
-
 }
 
