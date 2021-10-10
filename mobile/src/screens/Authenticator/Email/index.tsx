@@ -29,7 +29,6 @@ const Email = ({ navigation }: AddEmailT): ReactElement => {
       isProfileCompleteVar(value)
       AsyncStorage.setItem('isProfileComplete', JSON.stringify(value))
   }
-
   //const _onPress = async (values: { email: string }): Promise<void> => {
       ////navigation.navigate('EMAIL', {screen: 'PROFILE'})
       //onScreen('PROFILE', navigation )()

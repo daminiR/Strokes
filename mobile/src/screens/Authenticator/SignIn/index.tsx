@@ -1,95 +1,106 @@
-import React, { useContext, useState, ReactElement } from 'react'
-import * as Keychain from 'react-native-keychain'
-import { Formik } from 'formik'
-import * as Yup from 'yup'
+import React, { useEffect, useContext, useState, ReactElement } from 'react'
+import {useMutation , makeVar} from '@apollo/client'
+import { useFormikContext, Formik} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
-import { AppContainer, Space, Button, Input, TextError } from '../../../components'
-import { onScreen, goBack } from '../../../constants'
-import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
-import auth from '@react-native-firebase/auth'
-import { Text, ScrollView, TextInput } from 'react-native'
+import {signInSlides, iniitialSignInForm} from '../../../constants'
+import {  RootStackSignOutParamList } from '../../../navigation/'
+import AppIntroSlider from 'react-native-app-intro-slider'
+import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
+import { ProfileFields} from '../../../localModels/UserSportsList'
+import {PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, ImageInput, SportsInput} from '../../../components'
+import { ConfirmationCode } from '../../../components'
+import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext } from '../../../UserContext'
-type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
-
+type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
 type SignInT = {
-  navigation: ProfileScreenNavigationProp
+  navigation: SignInScreenNavigationProp
 }
-
 const SignIn = ({ navigation }: SignInT): ReactElement => {
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const {confirmResult, setConfirmResult} = useContext(UserContext)
-  const {currentUser} = useContext(UserContext)
-  const _onPressSignUp = async (values: {
-    phone_number: string;
-    email: string;
-  }): Promise<void> => {
-    const {phone_number, email} = values
-    setLoading(true)
-    setError('')
-    // no use id getting created yet!
-    //await auth().signInWithPhoneNumber(phone_number).then((confirmation) => {
-      //console.log("pending confirmation")
-      //setConfirmResult(confirmation)
-      ////TODO: huge problem with go back if before confirmation there is a go back button then this needs to be redone add logic to goback!!!
-      ////await Keychain.setInternetCredentials('auth', email, phone_number);
-      //// TODO: if user exists but has not been confirmed and closes the page, make sure he is back on the confirm code page with a back button to phone number.
-      //console.log(confirmation)
-      //console.log(currentUser)
-      //confirmation && onScreen('CONFIRM_SIGN_UP', navigation )()
-      //setLoading(false);
-      //setError('')
-    //})
-    //.catch(
-      //(err) => {
-      ////TODO come back and add all possible errors
-      //setLoading(false)
-      //setError(err.code)
-      //}
-    //)
-    onScreen('EMAIL', navigation )()
-  }
+  const [error2, setError] = useState('');
   return (
-    <>
-      <AppContainer
-        onPress={goBack(navigation)}
-        title="Sign In"
-        loading={loading}>
-        <Formik
-          initialValues={{
-            phone_number: '+18008799999',
-            email: 'daminirijhwani@gmail.com',
-          }}
-          onSubmit={(values): Promise<void> => _onPressSignUp(values)}>
-          {({
-            values,
-            handleChange,
-            errors,
-            setFieldTouched,
-            touched,
-            handleSubmit,
-          }): ReactElement => (
-            <>
-              <Input
-                name="phone_number"
-                value={values.phone_number}
-                onChangeText={handleChange('phone_number')}
-                onBlur={(): void => setFieldTouched('phone_number')}
-                placeholder="Phone Number"
-                touched={touched}
-                errors={errors}
-                autoCapitalize="none"
-              />
-              <Space height={30} />
-              {error !== '' && (
-                <TextError title={error} textStyle={{alignSelf: 'center'}} />
-              )}
-              <Button title="Sign Up" onPress={handleSubmit} />
-            </>
-          )}
-        </Formik>
-      </AppContainer>
-    </>
+    <Formik
+      initialValues={iniitialSignInForm}
+      onSubmit={(values) => console.log(values)}>
+      <Slider/>
+    </Formik>
   );
+}
+const Slider =  () => {
+  const {values, handleChange} = useFormikContext<ProfileFields>();
+  const {setIsUseOnMongoDb} = useContext(UserContext)
+  const [lastSlide, setLastSlide] = useState(false)
+  const [confirmSlide, setConfirmSlide] = useState(false)
+  const [confirmationFunc, setConfirmationFunc] = useState(null)
+  const [index, setIndex] = useState(0)
+  const [showNextButton, setShowNextButton] = useState(true)
+  const [createSquash2, {client, data}] = useMutation(ADD_PROFILE2, {
+    ignoreResults: false,
+    onCompleted: (data) => {
+    },
+  });
+  const _onSlideChange = (index, last_index) => {
+    setIndex(index)
+    console.log(index)
+    if (index == 1){
+      setLastSlide(true)
+      setShowNextButton(false)
+    }
+    else if (index == 2){
+      setShowNextButton(false)
+    }
+    else {
+      setShowNextButton(true)
+    }
+  }
+  const _signIn = ( value ) => {
+    registerOnFirebase(values.phoneNumber, values.email)
+      .then((confirmation: any) => {
+        this.slider.goToSlide(2);
+        setConfirmationFunc(confirmation)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  const _confirmSignInGC = () => {
+    confirmationFunc
+      .confirm(values.confirmationCode)
+      .then((userCredential) => {
+        console.log('logged in');
+        setIsUseOnMongoDb(true);
+      })
+      .catch(async (err) => {
+        //await auth().currentUser.delete()
+        console.log(err);
+      });
+  };
+  const renderInputForm = ({item}) => {
+          switch (item.type) {
+            case 'Phone Input':
+              return <PhoneInput />;
+              break;
+            case 'Email Input':
+              return <EmailInput isSignUp={false} _signIn={_signIn}/>;
+              break;
+            case 'Confirmation Code':
+             return <ConfirmationCode isLastSlide={lastSlide} _confirmSignInGC={_confirmSignInGC}/>;
+              break;
+          }
+  };
+
+  return (
+      <AppIntroSlider
+        renderItem={renderInputForm}
+        data={signInSlides}
+        scrollEnabled={false}
+        showPrevButton={true}
+        onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
+        onDone={() => {_confirmSignInGC()}}
+        showNextButton={showNextButton}
+        ref={(ref) => (this.slider = ref!)}
+      />
+  )
 }
 export { SignIn }
