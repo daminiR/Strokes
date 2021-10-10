@@ -12,7 +12,6 @@ import Demo from '../../../assets/data/demo.js';
 import styles from '../../../assets/styles/'
 import {PRIMARY_COLOR} from '../../../assets/styles/'
 import {MatchesProfileContext} from './index'
-
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const renderMatches =  (card, index) => {

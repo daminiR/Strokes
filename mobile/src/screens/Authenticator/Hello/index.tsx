@@ -27,14 +27,14 @@ const Hello = ({ navigation }: HelloT): ReactElement => {
   const _onPressSignIn = () => {
     navigation.navigate('SIGN_IN');
   };
-  const _onPressSignOut = () => {
-    navigation.navigate('SIGN_IN');
+  const _onPressSignUp = () => {
+    navigation.navigate('SIGNUP');
   };
   return (
     <AppContainer loading={loading}>
       <Space height={80} />
       <Button title="Sign In" onPress={() => _onPressSignIn()} />
-      <Button title="Sign Up" onPress={() => _onPressSignOut()} />
+      <Button title="Sign Up" onPress={() => _onPressSignUp()} />
       <Text>{JSON.stringify(currentUser)}</Text>
       <Space height={10} />
     </AppContainer>

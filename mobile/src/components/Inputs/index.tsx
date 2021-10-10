@@ -1,27 +1,19 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
-import {Theme, Input, Chip, Card,withBadge, ListItem, Icon, Avatar, Badge, Button} from 'react-native-elements'
-import * as Keychain from 'react-native-keychain'
-import { useFormikContext, Formik, Form, Field } from 'formik';
-import * as Yup from 'yup'
+import {Input, Button} from 'react-native-elements'
+import { useFormikContext} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
-import { onScreen, goBack, genderRadioObject, signUpSlides, intitialFormikSignUp} from '../../../constants'
-import { generateRNFile } from '../../../utils/Upload'
+import { genderRadioObject } from '../../constants'
 import auth from '@react-native-firebase/auth'
-import { View,  Text, ScrollView, TextInput } from 'react-native'
-import styles from '../../../assets/styles/'
-import { ADD_PROFILE } from '../../../graphql/mutations/profile'
-import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
+import { View,  Text} from 'react-native'
+import styles from '../../assets/styles/'
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import {SportChipsstyles, SportChips} from '../Profile/profileSettingInput'
-import {sportsList} from './../../../constants';
-import {sportsItemsVar} from '../../../cache'
-import {Pictures} from '../../../components'
-import {ChooseSportsChips} from '../../../components'
-import {SportsList, Sport, NameT} from './localModels/UserSportsList'
-import { ProfileFields} from '../../../localModels/UserSportsList'
-const ImageInput = ({_submit}) => {
-    const { values, setValues, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+import {Pictures} from '../../components'
+import {ChooseSportsChips} from '../../components'
+import { ProfileFields, SignIn} from '../../localModels/UserSportsList'
+
+const ImageInput = ({_submit, isSignUp}) => {
+  const { values, setValues, handleChange, handleSubmit } = useFormikContext<SignType>();
     const getImages = (images) =>{
         setValues({... values, 'images': images})
     }
@@ -68,8 +60,8 @@ const ImageInput = ({_submit}) => {
         />
       </View>
     )}
-  const EmailInput = () => {
-    const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+  const EmailInput = ({isSignUp=true, _signIn=null}) => {
+    const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
     return (
       <View style={styles.emailContainer}>
         <Input
@@ -79,12 +71,13 @@ const ImageInput = ({_submit}) => {
           onChangeText={handleChange('email')}
           value={values.email}
         />
+        {!isSignUp && _signIn && <Button style={{flexDirection:'row', alignSelf: 'center', justifyContent: 'flex-end'}} onPress={() => _signIn()} title="Submit"/>}
     </View>
     )}
 
 
   const PhoneInput = () => {
-    const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+    const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
     return (
       <View style={styles.phoneNumberContainer}>
         <Input
