@@ -24,7 +24,7 @@ const renderMatches =  (card, index) => {
             return (
               <View style={stylesSwipe.card}>
                 <Card key={index}>
-                  <CardItem
+                <CardItem
                 profileImage={min_idx_obj}
                 image_set={image_set_copy2}
                 description={card.description}

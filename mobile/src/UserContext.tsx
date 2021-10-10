@@ -22,10 +22,17 @@ export const AuthNavigator = () => {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
+      console.log("data", data)
       if (data) {
         setProfileState(true);
-        setIsApolloConected(true)
+        setIsApolloConected(true);
+        setIsUseOnMongoDb(true);
         if (loadingSigning) setLoadingSiginig(false);
+      }
+      onError: ({graphQLErrors, networkError}) => {
+          if(networkError){
+            setIsUseOnMongoDb(false);
+          }
       }
     },
     onError: (({graphQLErrors, networkError}) => {
@@ -36,11 +43,14 @@ export const AuthNavigator = () => {
         // go to appoloeError page
         // logout user from firebase priority high! TODO: this needs to happen to every querry that takes place! actually dont need to do this -> this needs thinking
       }
+        console.log(graphQLErrors)
+
     })
   });
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
-      if (currentUser && isUserOnmongoDb) {
+      console.log("is this the user",currentUser)
+      if (currentUser) {
         getSquashProfile({variables: {id: currentUser.uid}});
         setLoadingUser(false)
       }

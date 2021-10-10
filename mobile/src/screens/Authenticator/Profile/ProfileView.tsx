@@ -41,28 +41,25 @@ const ProfileView = (props) => {
   }, [squashData?.squash])
   return (
     <>
-
-  {!loading &&
-    <ImageBackground
-      source={require('../../../assets/images/bg.png')}
-      style={styles.bg}
-    >
-      <View style={styles.containerHome}>
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-            <Card>
-              <CardItem
-                profileImage={profileImageValue}
-                image_set={newImageSet}
-                description={userProfile.description}
-                profileTitle={profileTitle}
-                sportsList={userProfile.sports}
-                onPressLeft={() => this.swiper.swipeLeft()}
-                onPressRight={() => this.swiper.swipeRight()}
-              />
-            </Card>
-      </ScrollView>
-      </View>
-    </ImageBackground>}
+        {!loading && (
+          <ImageBackground
+            source={require('../../../assets/images/bg.png')}
+            style={styles.bg}>
+            <View style={styles.containerHome}>
+                <Card>
+                  <CardItem
+                    profileImage={profileImageValue}
+                    image_set={newImageSet}
+                    description={userProfile.description}
+                    profileTitle={profileTitle}
+                    sportsList={userProfile.sports}
+                    onPressLeft={() => this.swiper.swipeLeft()}
+                    onPressRight={() => this.swiper.swipeRight()}
+                  />
+                </Card>
+            </View>
+          </ImageBackground>
+        )}
     </>
   );
 }
