@@ -1,25 +1,14 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
-import {Theme, Input, Chip, Card,withBadge, ListItem, Icon, Avatar, Badge, Button} from 'react-native-elements'
-import * as Keychain from 'react-native-keychain'
-import { InMemoryCache, useQuery, useMutation , makeVar} from '@apollo/client'
-import { useFormikContext, Formik, Form, Field } from 'formik';
-import * as Yup from 'yup'
-import RadioGroup from 'react-native-radio-buttons-group'
+import {useMutation , makeVar} from '@apollo/client'
+import { useFormikContext, Formik} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
-import { onScreen, goBack, genderRadioObject, signUpSlides, intitialFormikSignUp} from '../../../constants'
+import {signUpSlides, intitialFormikSignUp} from '../../../constants'
 import {  RootStackSignOutParamList } from '../../../navigation/'
-import auth from '@react-native-firebase/auth'
-import { View,  Text, ScrollView, TextInput } from 'react-native'
-import styles from '../../../assets/styles/'
-import {useFormState, useFormDispatch} from '../../../Contexts/FormContext'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import {SportChipsstyles, SportChips} from '../Profile/profileSettingInput'
 import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
-import {sportsList} from './../../../constants';
-import {Pictures} from '../Profile/initation'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, ImageInput, SportsInput} from './Inputs'
-import { ConfirmationCode } from './confirmationCode'
+import {PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, ImageInput, SportsInput} from '../../../components'
+import { ConfirmationCode } from '../../../components'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
@@ -30,7 +19,6 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error2, setError] = useState('');
   const [confirmationCode, setConfirmationCode] = useState(0)
-  const {values: formValues, errors: formErrors } = useFormState("user")
   return (
     <Formik
       initialValues={intitialFormikSignUp}
@@ -58,8 +46,11 @@ const Slider =  () => {
       setLastSlide(true)
       setShowNextButton(false)
     }
-    if (index == 6){
+    else if (index == 6){
       setShowNextButton(false)
+    }
+    else {
+      setShowNextButton(true)
     }
   }
   const _submit = ( value ) => {

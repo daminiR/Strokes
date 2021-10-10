@@ -51,6 +51,11 @@ export const onScreen = (screen: string, navigation: any, obj?: unknown) => () =
 export const goHome = (navigation: any) => () => navigation.popToTop()()
 
 // Sign Up Slide Labels
+ export const iniitialSignInForm = {
+   email: 'daminrrijhwani@gmail.com',
+   phoneNumber: '+12025550173',
+   confirmationCode: '000000'
+ }
 
 // initialValuesFormik
  export const intitialFormikSignUp = {
@@ -64,6 +69,30 @@ export const goHome = (navigation: any) => () => navigation.popToTop()()
    images:[],
    confirmationCode: '000000'
  }
+export const signInSlides = [
+  {
+    key: '0',
+    type: 'Phone Input',
+    title: 'Phone Number',
+    inputLabel: 'Phone Number',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '1',
+    type: 'Email Input',
+    title: 'Email',
+    InputLabel: 'Email',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '7',
+    type: 'Confirmation Code',
+    title: 'Confirmation Code',
+    inputLabel: 'Confirmation Code',
+    backgroundColor: '#59b2ab',
+  },
+];
+
 export const signUpSlides = [
   {
     key: '0',

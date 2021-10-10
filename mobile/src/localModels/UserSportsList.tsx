@@ -17,6 +17,11 @@ export interface ProfileFields {
        images: [string],
        confirmationCode: string
 }
+export interface SignIn {
+       email: string;
+       phoneNumber: string;
+       confirmationCode: string
+}
 export type SportsList = Sport[]
 export type NameT = Name
 
