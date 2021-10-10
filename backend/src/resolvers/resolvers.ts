@@ -252,16 +252,17 @@ export const resolvers = {
       const squash = Squash.create(args);
       return squash;
     },
-    createSquash2: async (root, {_id, image_set}) => {
+    createSquash2: async (root, {_id, image_set, first_name, last_name, gender, age, sports}) => {
       // uploading images to MongoDb
       //const squash_val = await Squash.findById(_id);
+      console.log("this is the first name", first_name)
       creatGCUpload(image_set, _id).then(async (data_set: any) => {
           console.log(data_set);
           console.log("done");
-          const doc = await Squash.findOneAndUpdate(
-            { _id: _id },
-            { $set: {image_set: data_set}},
-            { new: true }
+          const doc = await Squash.create(
+            { _id: _id, image_set: data_set, first_name: first_name, last_name: last_name, gender: gender, age: age, sports: sports},
+            //{ $set: {image_set: data_set}},
+            //{ new: true, upsert: true}
           );
           console.log(doc)
       });

@@ -45,7 +45,12 @@ export const registerOnMongoDb = async (values, _id, createSquash2) => {
     await createSquash2({
       variables: {
         _id: _id,
-        image_set: rnfiles
+        image_set: rnfiles,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        age: Number(values.age),
+        gender: values.gender,
+        sports: values.sports
       },
     });
   };

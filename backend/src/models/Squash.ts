@@ -4,7 +4,7 @@ import { SquashDocument } from '../types/Squash.d'
 //const Schema = mongoose.Schema;
 const GENDERS = ["Male", "Female"]
 const COUNTRY = ["US"]
-const SPORTS = ["squash", "Tennis"]
+const SPORTS = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
 //const LEVELS = ["beginer", "intermediate", "expert"]
 const LEVELS = [0, 1, 3]
 

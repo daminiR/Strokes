@@ -5,7 +5,7 @@ import { useRef, useEffect, useContext, useState, ReactElement } from 'react'
 import {ImageBackground, ScrollView, Text, View, Image, Dimensions, TouchableOpacity} from 'react-native';
 import {Card, FAB } from 'react-native-elements'
 import {Icon} from '../Icon/Icon';
-import {SportChips, SportChipsstyles} from '../../screens/Authenticator/Profile/profileSettingInput'
+import {SportChips} from '../SportsChips'
 
 
 const CardItem = ({
@@ -62,7 +62,7 @@ const CardItem = ({
           <Text style={nameStyle}>{profileTitle}</Text>
           {/* SPORTS List */}
           <View style={{marginVertical: 10}}>
-            <View style={SportChipsstyles.sportChipSet}>
+            <View style={styles.sportChipSet}>
               {sportsList.map((sport, i) => (
                   <SportChips key={i} sport={sport.sport} isDisplay={true} />
                 ))}

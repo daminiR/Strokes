@@ -78,6 +78,13 @@ export const typeDefs = gql`
     ): Squash!
     createSquash2(
       _id: String!
+      first_name: String!
+      last_name: String!
+      age: Int!
+      gender: String!
+      sports: [SquashNodeInput!]!
+      country: String
+      description: String
       image_set: [ImageData!]!
     ): String
     deleteSquash(_id: String): Squash!

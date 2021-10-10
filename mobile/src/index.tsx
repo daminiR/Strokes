@@ -60,10 +60,10 @@ const App = (): ReactElement =>
       //});
       //const uploadLink = createUploadLink({ uri: 'http://192.168.1.8:4000/graphql', })
       //const uploadLink = createUploadLink({ uri:'http://192.168.1.12:4000/graphql'})
-      const uploadLink = createUploadLink({
-      uri: 'http://localhost:4000/graphql',
-      });
-     //const uploadLink = createUploadLink({uri: 'http://10.0.2.2:4000/graphql'})
+      //const uploadLink = createUploadLink({
+      //uri: 'http://localhost:4000/graphql',
+      //});
+     const uploadLink = createUploadLink({uri: 'http://10.0.2.2:4000/graphql'})
       //const link = ApolloLink.from([onErrorLink, uploadLink]);
       //const uri = 'http://localhost:4000/graphql'
       setClient(
@@ -98,7 +98,7 @@ const App = (): ReactElement =>
       //}
     //}
   //};
-  client.resetStore()
+  //client.resetStore()
   //just to reset cache for debugging
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}

@@ -18,6 +18,7 @@ const PictureWall = (props) => {
   const {squashData, newSportList} = useContext(ProfileContext);
   return (
     <>
+      <ScrollView>
         <View style={styles.container}>
           <View style={styles.top}>
             <View style={styles.verticalImageplaceholder}>
@@ -37,6 +38,7 @@ const PictureWall = (props) => {
             <ProfileSettingsInput />
           </View>
         </View>
+      </ScrollView>
     </>
   );
 }

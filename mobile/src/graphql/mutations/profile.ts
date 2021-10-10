@@ -16,8 +16,8 @@ const UPLOAD_FILE = gql`
     }
 `
 const ADD_PROFILE2 = gql`
-  mutation CreateSquash2($_id: String!, $image_set: [ImageData!]!){
-    createSquash2(_id: $_id, image_set: $image_set)
+  mutation CreateSquash2($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $image_set: [ImageData!]!, $sports: [SquashNodeInput!]! , $age:Int!){
+    createSquash2(_id: $_id, first_name: $first_name, gender: $gender, age: $age, sports: $sports, last_name: $last_name, image_set: $image_set)
   }
 `
 const ADD_PROFILE = gql`

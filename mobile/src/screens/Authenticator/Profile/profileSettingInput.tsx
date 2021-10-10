@@ -1,17 +1,12 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
 import React, { useRef, useEffect, useContext, useState, ReactElement } from 'react'
-import {View, ScrollView, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {sportsItemsVar, DescriptionVar} from '../../../cache'
 import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 import {ProfileContext} from './index'
-import { useQuery, useMutation, useLazyQuery, HTTPFetchNetworkInterface} from '@apollo/client'
-//import {sportsList} from './../../../constants';
-import  DatePicker  from 'react-native-date-picker'
-import { RootStackParamList } from '../../../AppNavigator'
+import { SportChips} from '../../../components'
 import { ProfileScreenNavigationProp} from './index'
-import { SportContext } from '../IndividualSports/index'
-import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
 import {ProfileAttirbutes} from "./ProfileAttributes"
 import styles from '../../../assets/styles'
 type ProfileT = {

@@ -10,6 +10,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { generateRNFile } from '../../../utils/Upload'
 import { _check_single } from '../../../utils/Upload'
 import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
+import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 
 const _first_name = (navigation) => {
