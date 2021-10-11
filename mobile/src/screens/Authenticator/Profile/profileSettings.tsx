@@ -3,6 +3,7 @@ import { Button, Card, Icon, ListItem, BottomSheet, Tab, TabView} from 'react-na
 import {UserContext} from '../../../UserContext'
 import {ProfileContext} from './index'
 import {style_edit_icon} from './profileSettingInput'
+import { EditFields, SignIn} from '../../../localModels/UserSportsList'
 import {
   FlatList,
   Image,
@@ -14,6 +15,7 @@ import {
   Text,
   View,
 } from 'react-native'
+import { useFormikContext} from 'formik';
 
 
 const styles = StyleSheet.create({
@@ -109,6 +111,9 @@ const ProfileSettings = ({_editUserInfo, signOut}) => {
   const [displayImage, setDisplayImage] = React.useState(null)
   const [displayName, setDisplayName] = React.useState('')
   const {currentUser, userData, loadingUser} = useContext(UserContext)
+  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
+  console.log("in settings", formikValues)
+
   useEffect(() => {
     // TODO: add !loading if condtion everywhere to laoding state changes in useeffect
     if (!loadingUser){

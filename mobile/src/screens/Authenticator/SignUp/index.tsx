@@ -7,10 +7,11 @@ import {  RootStackSignOutParamList } from '../../../navigation/'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, ImageInput, SportsInput} from '../../../components'
+import {PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput} from '../../../components'
 import { ConfirmationCode } from '../../../components'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
+
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
   navigation: SignUpScreenNavigationProp
@@ -42,11 +43,11 @@ const Slider =  () => {
   });
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
-    if (index == 7){
+    if (index == 8){
       setLastSlide(true)
       setShowNextButton(false)
     }
-    else if (index == 6){
+    else if (index == 7){
       setShowNextButton(false)
     }
     else {
@@ -56,7 +57,7 @@ const Slider =  () => {
   const _submit = ( value ) => {
     registerOnFirebase(values.phoneNumber, values.email)
       .then((confirmation: any) => {
-        this.slider.goToSlide(7);
+        this.slider.goToSlide(8);
         setConfirmationFunc(confirmation)
       })
       .catch((err) => {
@@ -105,6 +106,9 @@ const Slider =  () => {
               break;
             case 'Image Input':
               return <ImageInput _submit={_submit}/>;
+              break;
+            case 'Description Input':
+              return <DescriptionInput/>;
               break;
             case 'Confirmation Code':
               return <ConfirmationCode isLastSlide={lastSlide} _confirmSignInGC={_confirmSignInGC}/>;

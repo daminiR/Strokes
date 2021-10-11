@@ -12,54 +12,51 @@ import { _check_single } from '../../../utils/Upload'
 import styles from '../../assets/styles/'
 import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 import { SingleImage} from '../../components'
+import { ProfileFields, EditFields, SignIn} from '../../../localModels/UserSportsList'
+import { useFormikContext} from 'formik';
 
-const Pictures =({getImages = null, }) => {
+const Pictures =() => {
   const didMountRef = useRef(false)
   const [image, setImage] = useState(null)
   const [images, setImages] = useState([])
   const [loadPictures, setLoadPictures] = useState(true)
   const [displayImages, setDisplayImages] = useState(null)
-  const {currentUser, userData, userLoading} = useContext(UserContext)
+  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
   useEffect(() => {
     setLoadPictures(true)
-    if (!userLoading) {
-      setDisplayImages(userData.squash.image_set)
-      console.log("displaying image", displayImages)
+    console.log("displaying formik",formikValues)
+    setDisplayImages(formikValues.image_set);
+    console.log("displaying image", displayImages)
     setLoadPictures(false)
-    }
-  }, [userLoading]);
+  }, [formikValues]);
   const getSingleImage = (imgObj) => {
     setImage(imgObj)
   }
   useEffect(() => {
     if (didMountRef.current){
-    console.log(image)
     images.push(image)
     setImages(images)
-    if (getImages) {
-      getImages(images)
-    }
-    console.log(images)
     }
     else {
       didMountRef.current = true
     }
 
   }, [image])
+
   return (
     <>
-      {!loadPictures && !userLoading &&
+      {!loadPictures &&
         <View style={styles.imagecontainer}>
           <View style={styles.verticalImageplaceholder}>
             <View style={styles.horizontalImageplaceholder}>
-              <SingleImage img_idx={0} getSingleImage={getSingleImage} image_uri={displayImages.find(imageObj => imageObj.img_idx == 0)?.imageURL}/>
-              <SingleImage img_idx={1} getSingleImage={getSingleImage} image_uri={displayImages.find(imageObj =>imageObj.img_idx == 1)?.imageURL}/>
-              <SingleImage img_idx={2} getSingleImage={getSingleImage} image_uri={displayImages.find(imageObj =>imageObj.img_idx == 2)?.imageURL}/>
+              <SingleImage img_idx={0} image_uri={displayImages? displayImages.find(imageObj => imageObj.img_idx == 0)?.imageURL: null}/>
+              <SingleImage img_idx={1} image_uri={displayImages? displayImages.find(imageObj =>imageObj.img_idx == 1)?.imageURL: null}/>
+              <SingleImage img_idx={2} image_uri={displayImages? displayImages.find(imageObj =>imageObj.img_idx == 2)?.imageURL: null}/>
             </View>
             <View style={styles.horizontalImageplaceholder}>
-              <SingleImage img_idx={3} getSingleImage={getSingleImage} image_uri={displayImages.find(imageObj =>imageObj.img_idx == 3)?.imageURL}/>
-              <SingleImage img_idx={4} getSingleImage={getSingleImage} image_uri={displayImages.find(imageObj =>imageObj.img_idx == 4)?.imageURL}/>
-              <SingleImage img_idx={5} getSingleImage={getSingleImage} image_uri={displayImages.find(imageObj =>imageObj.img_idx == 5)?.imageURL}/>
+              <SingleImage img_idx={3} image_uri={displayImages?displayImages.find(imageObj =>imageObj.img_idx == 3)?.imageURL: null}/>
+              <SingleImage img_idx={4} image_uri={displayImages?displayImages.find(imageObj =>imageObj.img_idx == 4)?.imageURL: null}/>
+              <SingleImage img_idx={5} image_uri={displayImages?displayImages.find(imageObj =>imageObj.img_idx == 5)?.imageURL: null}/>
             </View>
           </View>
         </View>}

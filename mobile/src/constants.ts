@@ -138,13 +138,20 @@ export const signUpSlides = [
   },
   {
     key: '6',
+    type: 'Description Input',
+    title: 'Description',
+    InputLabel: 'Description',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '7',
     type: 'Image Input',
     title: 'Image',
     InputLabel: 'Image',
     backgroundColor: '#59b2ab',
   },
   {
-    key: '7',
+    key: '8',
     type: 'Confirmation Code',
     title: 'Confirmation Code',
     inputLabel: 'Confirmation Code',

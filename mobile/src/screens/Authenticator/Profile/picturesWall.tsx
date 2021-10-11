@@ -7,29 +7,19 @@ import { Pictures } from '../../../components/';
 import {View, ScrollView, StyleSheet } from 'react-native'
 import {launchImageLibrary} from 'react-native-image-picker';
 import { _check_single } from '../../../utils/Upload'
-import { ProfileFields, SignIn} from '../../../localModels/UserSportsList'
+import { EditFields, SignIn} from '../../../localModels/UserSportsList'
 import { useFormikContext} from 'formik';
 
 const PictureWall = (props) => {
-  console.log(props)
-  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+ console.log(props)
+  const {setFieldValue, values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
+  console.log("in pictures well", formikValues)
   const [loading, setLoading] = React.useState(null)
-  const [values, setValues] = React.useState(null)
-  const {currentUser, userData, userLoading} = useContext(UserContext);
-  const getImages = (images) =>{
-        setValues({... values, 'images': images})
-    }
-  useEffect(() => {
-    if (!userLoading) {
-
-    }
-  }, [userLoading]);
-
   return (
     <>
       <ScrollView>
         <View style={styles.container}>
-          <Pictures getImages={getImages}/>
+          <Pictures/>
           <View style={styles.middle}>
             <ProfileSettingsInput/>
           </View>

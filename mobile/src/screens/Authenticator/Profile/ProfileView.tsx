@@ -15,6 +15,8 @@ import { generateRNFile } from '../../../utils/Upload'
 import { _check_single } from '../../../utils/Upload'
 import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 import Demo from '../../../assets/data/demo.js';
+import { useFormikContext} from 'formik';
+import { EditFields, SignIn} from '../../../localModels/UserSportsList'
 
 const ProfileView = (props) => {
   const [loading, setLoading] = React.useState(true)
@@ -22,12 +24,13 @@ const ProfileView = (props) => {
   const [profileTitle, setProfileTitle] = React.useState('')
   const {currentUser, userData, userLoading} = useContext(UserContext);
   const [userProfile, setUserProfile] = React.useState(null)
-  const [profileImageValue, setProfileImageValue] = React.useState()
+  const [profileImageValue, setProfileImageValue] = React.useState(null)
+  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
   useEffect(() => {
+    console.log("how ma times")
     setLoading(true)
-    if (!userLoading){
     // TODO: not important sort image by order
-      const user = userData.squash
+      const user = formikValues
       setUserProfile(user);
       const profileImage = user.image_set.find(imgObj => imgObj.img_idx == 0)
       setProfileImageValue(profileImage)
@@ -36,8 +39,7 @@ const ProfileView = (props) => {
       const title = user.first_name +', ' + user.age
       setProfileTitle(title)
       setLoading(false);
-    }
-  }, [userLoading])
+  }, [formikValues])
   return (
     <>
         {!loading && (

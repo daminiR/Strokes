@@ -13,9 +13,22 @@ export interface ProfileFields {
        last_name: string,
        age: string,
        gender: string,
-       sports: string,
-       images: [string],
-       confirmationCode: string
+       sports: [{sport: string, game_level:number}],
+       image_set: [{imageURL: string, img_idx: number, filePath:string}],
+       confirmationCode: string,
+       description: ''
+}
+export interface EditFields {
+       email: string;
+       phoneNumber: string;
+       first_name: string,
+       last_name: string,
+       age: string,
+       gender: string,
+       sports: [{sport: string, game_level:number}],
+       image_set: [{imageURL: string, img_idx: number, filePath:string}],
+       confirmationCode: string,
+       description: ''
 }
 export interface SignIn {
        email: string;

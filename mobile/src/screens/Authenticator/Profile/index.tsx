@@ -61,6 +61,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   const {data} = useQuery(GET_PROFILE_STATUS);
   const [updateUserSports] = useMutation(UPDATE_USER_SPORTS);
   const [images, setImage] = useState(null);
+  const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   const [inputType, setInputType] = useState();
   const [displayInput, setDisplayInput] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
@@ -78,6 +79,24 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   useEffect(() => {
     if (userData){
       setUserInfo(userData);
+      const formik_images = userData.squash.image_set.map((imageObj) => ({
+      img_idx: imageObj.img_idx,
+      imageURL: imageObj.imageURL,
+      filePath: imageObj.filePath,
+    }));
+      const formik_sports = userData.squash.sports.map((sportObj) => ({
+        sport: sportObj.sport,
+        game_level: sportObj.game_level,
+      }));
+      setInitialValuesFormik({
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        age: userData.age,
+        gender: userData.gender,
+        image_set: formik_images,
+        sports: formik_sports,
+        description: userData.description,
+      });
         const tempsp = [];
         userData.squash.sports.map((sport_obj) => {
           tempsp.push({game_level: 0, sport: sport_obj.sport});
@@ -98,9 +117,12 @@ const _onPressCancelProfile = () => {
 }
 const _onPressDoneInput = () => {
   // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
+  // so
+    EditInputVar({inputType: '', displayInput: false})
     setDisplayInput(false);
 }
 const _onPressCancelInput = () => {
+    EditInputVar({inputType: '', displayInput: false})
     setDisplayInput(false);
 }
 const renderProfileEdit = () => {
@@ -131,9 +153,9 @@ const renderProfileEdit = () => {
             animationType="slide"
             transparent={false}
             visible={displayInput}
-            //onRequestClose={() => {
-            //setIsVisible(!isVisible);
-            //}}
+            onRequestClose={() => {
+            setIsVisible(!displayInput);
+            }}
           >
             <View style={{flex: 1}}>
             <View style={styles.top}>
@@ -148,11 +170,6 @@ const renderProfileEdit = () => {
         </Modal>
       </>
     );
-
-//}
-    //else if (displayInput){
-        //return <EditInput inputType="Birthday Input" displayInput={displayInput}/>
-    //}
 }
 
 
