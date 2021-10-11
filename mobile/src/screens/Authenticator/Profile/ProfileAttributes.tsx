@@ -7,7 +7,7 @@ import {
 import styles from '../../../assets/styles'
 import {UserContext} from '../../../UserContext'
 import { useFormikContext} from 'formik';
-import { ProfileFields, SignIn} from '../../../localModels/UserSportsList'
+import { ProfileFields, SignIn, EditFields} from '../../../localModels/UserSportsList'
 import {READ_SQUASH} from '../../../graphql/queries/profile'
 import { ProfileSettingsInput } from "./profileSettingInput"
 import {View, ScrollView, StyleSheet } from 'react-native'
@@ -17,7 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 import { EditInputVar} from '../../../cache'
 const _first_name = (navigation) => {
-      EditInputVar({inputType: 'Name Input', displayInput: true})
+      EditInputVar({inputType: 'Sports Input', displayInput: true})
       console.log(EditInputVar())
       //onScreen('FIRST_NAME', navigation)()
 
@@ -41,7 +41,7 @@ const ProfileAttirbutes = () => {
   const [loading, setLoading] = React.useState(null)
   const didMountRef = useRef(false)
   const {currentUser, userData, userLoading} = useContext(UserContext)
-  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
   const navigation = useNavigation()
   // update first name on profile screen
   useEffect(() => {
@@ -66,7 +66,7 @@ const ProfileAttirbutes = () => {
       list[ind_to_update].subtitle = formikValues.gender;
       setLoading(false);
     }
-  }, [userLoading]);
+  }, [formikValues]);
 const _onPressDone = () => {
   console.log('done');
 };

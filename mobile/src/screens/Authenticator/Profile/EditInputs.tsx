@@ -22,7 +22,7 @@ import {ProfileView} from './ProfileView'
 import {PictureWall} from './picturesWall'
 import {ProfileSettings} from './profileSettings'
 import {_onPressSignOut} from '../../../utils/Upload'
-import { NameInput, BirthdayInput, GenderInput} from '../../../components'
+import { NameInput, SportsInput, DescriptionInput, BirthdayInput, GenderInput} from '../../../components'
 import {GET_INPUT_TYPE} from '../../../graphql/queries/profile'
 
 const EditInput = ({inputType= null}) => {
@@ -37,9 +37,14 @@ const EditInput = ({inputType= null}) => {
       case 'Gender Input':
         return <GenderInput />;
         break;
+      case 'Sports Input':
+        return <SportsInput />;
+        break;
+      case 'Description Input':
+        return <DescriptionInput />;
+        break;
     }
   }
-
   return (
     <>
         <View style={{flex:1}}>
@@ -48,4 +53,4 @@ const EditInput = ({inputType= null}) => {
     </>
   );
 };
-export { EditInput}
+export { EditInput }

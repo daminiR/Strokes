@@ -4,22 +4,22 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import { generateRNFile } from '../../utils/Upload'
 import { _check_single } from '../../utils/Upload'
 import styles from '../../assets/styles/'
+import { EditFields, SignIn} from '../../localModels/UserSportsList'
+import { useFormikContext} from 'formik';
 
-const SingleImage = ({img_idx, getSingleImage = null, image_uri = null}) => {
+const SingleImage = ({img_idx, image_uri = null}) => {
   console.log("single_image", image_uri)
   const [Image, setImage] = React.useState(null)
   const [loading, setLoading] = React.useState(null)
   const [displayImage, setDisplayImage] = React.useState(image_uri)
+  const {setFieldValue, values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
 
   useEffect(() => {
-      console.log(Image)
+     console.log(Image)
     if (Image){
       setDisplayImage(Image.assets[0].uri)
-      if (getSingleImage){
-        getSingleImage({image: Image.assets[0].uri, img_idx: img_idx});
-
-      }
-
+      const new_values = formikValues.image_set.concat([{imageURL: Image.assets[0].uri, img_idx: img_idx, filePath: Image.assets[0].uri}])
+      setFieldValue('image_set', new_values)
     }
   }, [Image])
   const _removeImage = async (): Promise<void> => {
@@ -46,6 +46,15 @@ const SingleImage = ({img_idx, getSingleImage = null, image_uri = null}) => {
       type: 'material-community',
       size: 30,
     };
+    let imageVal = {}
+    //var uri = {displayImage}
+    //var placeHolder = require('../../assets/camera-enhance.svg')
+    if (displayImage) {
+      imageVal = {uri: displayImage}
+    }
+    else {
+    imageVal = require('../../assets/camera-enhance.svg')
+    }
     return (
       <>
         <Avatar
@@ -58,7 +67,7 @@ const SingleImage = ({img_idx, getSingleImage = null, image_uri = null}) => {
               color="#517fa4"
             />
           }
-          source={displayImage? {uri: displayImage}: require("../../assets/camera-enhance.svg")}
+          source={{uri: displayImage}}
           overlayContainerStyle={styles.imageIndividualContainer}
           onPress={() => _singleUpload()}
           activeOpacity={0.7}
