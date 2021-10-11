@@ -2,40 +2,36 @@ import {Button,withBadge, Icon, Avatar, Badge } from 'react-native-elements'
 import React, { useContext, useEffect, useState, ReactElement } from 'react'
 import {UserContext} from '../../../UserContext'
 import {ProfileContext} from './index'
-import {UPLOAD_FILE, DELETE_IMAGE} from '../../../graphql/mutations/profile'
-import {READ_SQUASH} from '../../../graphql/queries/profile'
 import { ProfileSettingsInput } from "./profileSettingInput"
+import { Pictures } from '../../../components/';
 import {View, ScrollView, StyleSheet } from 'react-native'
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import { generateRNFile } from '../../../utils/Upload'
+import {launchImageLibrary} from 'react-native-image-picker';
 import { _check_single } from '../../../utils/Upload'
-import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
+import { ProfileFields, SignIn} from '../../../localModels/UserSportsList'
+import { useFormikContext} from 'formik';
 
 const PictureWall = (props) => {
   console.log(props)
+  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const [loading, setLoading] = React.useState(null)
-  const {currentUser} = useContext(UserContext);
-  const {squashData, newSportList} = useContext(ProfileContext);
+  const [values, setValues] = React.useState(null)
+  const {currentUser, userData, userLoading} = useContext(UserContext);
+  const getImages = (images) =>{
+        setValues({... values, 'images': images})
+    }
+  useEffect(() => {
+    if (!userLoading) {
+
+    }
+  }, [userLoading]);
+
   return (
     <>
       <ScrollView>
         <View style={styles.container}>
-          <View style={styles.top}>
-            <View style={styles.verticalImageplaceholder}>
-              <View style={styles.horizontalImageplaceholder}>
-                <SingleImagePlaceholder img_idx={0} />
-                <SingleImagePlaceholder img_idx={1} />
-                <SingleImagePlaceholder img_idx={2} />
-              </View>
-              <View style={styles.horizontalImageplaceholder}>
-                <SingleImagePlaceholder img_idx={3} />
-                <SingleImagePlaceholder img_idx={4} />
-                <SingleImagePlaceholder img_idx={5} />
-              </View>
-            </View>
-          </View>
+          <Pictures getImages={getImages}/>
           <View style={styles.middle}>
-            <ProfileSettingsInput />
+            <ProfileSettingsInput/>
           </View>
         </View>
       </ScrollView>
@@ -46,43 +42,29 @@ const SingleImagePlaceholder = ({img_idx}) => {
   const [Image, setImage] = React.useState(null)
   const [loading, setLoading] = React.useState(null)
   const {currentUser} = useContext(UserContext);
-  const {squashData} = useContext(ProfileContext);
+  const {squashData, loadingSportsData} = useContext(ProfileContext);
   const [displayImage, setDisplayImage] = React.useState(null)
-  const [uploadFile, {data: imageURL}] = useMutation(UPLOAD_FILE, {
-      onCompleted: (data) => _displayImage(data)
-  });
-  const _displayImage = async (data): Promise<void> => {
-      setDisplayImage(data.uploadFile.imageURL)
-  }
-  const [deleteImage, {data: image_set}] = useMutation(DELETE_IMAGE);
+  useEffect(() => {
+      console.log(Image)
+    if (Image){
+      setDisplayImage(Image.assets[0].uri)
+      if (getSingleImage){
+        getSingleImage({image: Image.assets[0].uri, img_idx: img_idx});
+      }
+
+    }
+  }, [Image])
   useEffect(() => {
     if (squashData?.squash?.image_set != undefined || squashData?.squash?.image_set.find(image_info => image_info.img_idx === img_idx) != undefined){
       const imageURL = squashData?.squash?.image_set.find(image_info => image_info.img_idx === img_idx)?.imageURL
       setDisplayImage(imageURL)
     }
-  }, [squashData?.squash?.image_set])
-  useEffect(() => {
-    if (Image) {
-    if (currentUser){
-     const RNFile = generateRNFile(Image.assets[0].uri, currentUser.uid)
-     uploadFile({variables: {file: RNFile, img_idx: img_idx, _id: currentUser.uid}})
-     setLoading(false)
-      }
-    }
-    return () => {
-      console.log("unmounted")
-    }
-  }, [Image])
+  }, [loadingSportsData])
 
   const _removeImage = async (): Promise<void> => {
       setLoading(true)
-    if (currentUser){
-       deleteImage({variables: {img_idx: img_idx, _id:currentUser.uid}})
-       //TODO: change to icon image
        setDisplayImage(null)
-      }
       setLoading(false)
-      console.log("remove")
   }
   const _singleUpload = async (): Promise<void> => {
     setLoading(true)

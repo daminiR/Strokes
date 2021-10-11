@@ -5,10 +5,11 @@ import { generateRNFile } from '../../utils/Upload'
 import { _check_single } from '../../utils/Upload'
 import styles from '../../assets/styles/'
 
-const SingleImage = ({img_idx, getSingleImage = null}) => {
+const SingleImage = ({img_idx, getSingleImage = null, image_uri = null}) => {
+  console.log("single_image", image_uri)
   const [Image, setImage] = React.useState(null)
   const [loading, setLoading] = React.useState(null)
-  const [displayImage, setDisplayImage] = React.useState(null)
+  const [displayImage, setDisplayImage] = React.useState(image_uri)
 
   useEffect(() => {
       console.log(Image)

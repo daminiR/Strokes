@@ -22,6 +22,11 @@ export interface SignIn {
        phoneNumber: string;
        confirmationCode: string
 }
+export interface InputType {
+       inputType: string;
+       displayInput: boolean;
+}
 export type SportsList = Sport[]
 export type NameT = Name
+export type InputT = InputType
 
