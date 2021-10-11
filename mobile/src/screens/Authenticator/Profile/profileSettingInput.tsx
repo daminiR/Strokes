@@ -12,6 +12,7 @@ import {ProfileAttirbutes} from "./ProfileAttributes"
 import styles from '../../../assets/styles'
 import { useFormikContext} from 'formik';
 import { ProfileFields, SignIn} from '../../../localModels/UserSportsList'
+import { EditInputVar} from '../../../cache'
 type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
@@ -25,31 +26,27 @@ const ProfileSettingsInput = (props) => {
   const [loadingSports, setLoadingSports] = React.useState(false)
   const [loadingDescription, setLoadingDescription] = React.useState(false)
   const _editSports = (props) => {
-  sportsItemsVar(userData.squash.sports)
-  onScreen('EDIT_SPORTS', navigation)()
+      EditInputVar({inputType: 'Sports Input', displayInput: true})
+      console.log(EditInputVar())
 }
   const _editDescription = (props) => {
-  DescriptionVar(userData.squash.description)
-  onScreen('EDIT_DESCRIPTION', navigation)()
+      EditInputVar({inputType: 'Description Input', displayInput: true})
+      console.log(EditInputVar())
 }
   useEffect(() => {
-    if (!userLoading) {
-      const user = userData.squash;
+        const user = formikValues
         setLoadingSports(true);
         setLoadingDescription(true);
-        if (user.sports != undefined && user.sports.length != 0) {
           const sportsArray = userData!.squash!.sports;
           setSportsList(formikValues.sports);
           setLoadingSports(false);
-        }
-        if (user.description != undefined && user.description.length != 0) {
-          // TODO: add this to sigup
+           //TODO: add this to sigup
+         //TODO: description change here
           const descriptionValue = user.description;
           setDescription(descriptionValue);
           setLoadingDescription(false);
-        }
-    }
-  }, [userLoading]);
+        //}
+  }, [formikValues]);
   return (
     <>
       <Card containerStyle={styles.CardStyle}>
@@ -66,8 +63,13 @@ const ProfileSettingsInput = (props) => {
       <Card containerStyle={styles.CardStyle}>
         <Icon size={28} onPress={_editDescription} name="pencil" type='material-community' style={style_edit_icon.container} />
         <View style={styles.sportChipSet}>
-          {!loadingDescription && <Text> {description} </Text>}
+        <View style={styles.sportChipSet}>
+          {!loadingDescription && <Text style={styles.descriptionFontStyle}> {description} </Text>}
         </View>
+        </View>
+      </Card>
+      <Card containerStyle={styles.CardStyle}>
+        <Icon size={28} onPress={_editDescription} name="pencil" type='material-community' style={style_edit_icon.container} />
         <ProfileAttirbutes/>
       </Card>
     </>
@@ -151,7 +153,6 @@ const SportsList = (props) => {
 
  const style_edit_icon = StyleSheet.create({
   container: {
-    //...StyleSheet.absoluteFillObject,
     alignSelf: 'flex-end',
     margin: 4,
   }

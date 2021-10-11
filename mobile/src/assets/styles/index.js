@@ -159,6 +159,11 @@ export default StyleSheet.create({
   },
 
   // COMPONENT - CARD ITEM
+
+  edit_pencil: {
+    alignSelf: 'flex-end',
+    margin: 4,
+  },
   CardStyle: {
     padding: 5,
     borderTopLeftRadius: 20,
@@ -195,9 +200,16 @@ export default StyleSheet.create({
     fontFamily: ICON_FONT,
     color: WHITE,
   },
-  descriptionCardItem: {
-    color: GRAY,
+  descriptionFontStyle: {
+    fontSize: 15,
+    padding: 10,
     textAlign: 'center',
+  },
+  descriptionCardItem: {
+    color: DARK_GRAY,
+    textAlign: 'center',
+    fontSize: 17,
+    padding: 10
   },
   status: {
     paddingBottom: 10,

@@ -1,21 +1,27 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
-import {Input, Button} from 'react-native-elements'
 import { useFormikContext} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
 import { genderRadioObject } from '../../constants'
 import auth from '@react-native-firebase/auth'
-import { View,  Text} from 'react-native'
+import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
+import { View} from 'react-native'
 import styles from '../../assets/styles/'
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import {Pictures} from '../../components'
 import {ChooseSportsChips} from '../../components'
-import { ProfileFields, SignIn} from '../../localModels/UserSportsList'
+import { EditFields, ProfileFields, SignIn} from '../../localModels/UserSportsList'
 
 const ImageInput = ({_submit, isSignUp}) => {
   const { values, setValues, handleChange, handleSubmit } = useFormikContext<SignType>();
     const getImages = (images) =>{
+      if (isSignUp){
+
+      }
+      else{
+
         setValues({... values, 'images': images})
+      }
     }
     return (
       <View style={styles.imageContainer}>
@@ -104,15 +110,32 @@ const ImageInput = ({_submit, isSignUp}) => {
     )}
   const SportsInput = () => {
   const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
-  const getSportsData = (sportsList) => {
-    console.log("calues in parent")
-    setValues({... values, 'sports': sportsList})
-  }
     return (
       <View style={styles.sportsContainer}>
-        <ChooseSportsChips getSportsList={getSportsData}/>
+        <ChooseSportsChips/>
       </View>
     );
   };
+const DescriptionInput = () => {
+  const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+    return (
+      <Card containerStyle={styles.CardStyle}>
+        <Card.Title> Description </Card.Title>
+        <Card.Divider />
+        <View style={styles.sportChipSet}>
+          <Input
+            multiline={true}
+            inputContainerStyle={{borderBottomWidth: 0}}
+            placeholder="Descriptionn"
+            label="Description"
+            leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+            onChangeText={handleChange('description')}
+            maxLength={300}
+            value={values.description}
+          />
+        </View>
+      </Card>
+    );
+  };
 
-  export {EmailInput, ImageInput, SportsInput, GenderInput, PhoneInput, NameInput, BirthdayInput}
+  export {DescriptionInput, EmailInput, ImageInput, SportsInput, GenderInput, PhoneInput, NameInput, BirthdayInput}

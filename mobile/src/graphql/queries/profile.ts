@@ -55,6 +55,7 @@ const READ_SQUASH = gql`
       image_set {
         img_idx
         imageURL
+        filePath
       }
     }
   }

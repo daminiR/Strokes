@@ -60,6 +60,10 @@ const CardItem = ({
           </ImageBackground>
           {/* NAME */}
           <Text style={nameStyle}>{profileTitle}</Text>
+          {/* DESCRIPTION */}
+          {description && (
+            <Text style={styles.descriptionCardItem}>{description}</Text>
+          )}
           {/* SPORTS List */}
           <View style={{marginVertical: 10}}>
             <View style={styles.sportChipSet}>
@@ -70,10 +74,6 @@ const CardItem = ({
           </View>
           {image_set && image_set.map((imgObj, index) => (
             <Image key={index} source={{uri: imgObj.imageURL}} style={imageStyle}/>)
-          )}
-          {/* DESCRIPTION */}
-          {description && (
-            <Text style={styles.descriptionCardItem}>{description}</Text>
           )}
         </View>
       </ScrollView>
