@@ -40,7 +40,6 @@ const EditInput = ({inputType= null}) => {
     }
   }
 
-
   return (
     <>
         <View style={{flex:1}}>
