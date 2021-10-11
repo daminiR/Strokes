@@ -28,7 +28,7 @@ const ImageInput = ({_submit, isSignUp}) => {
   const [radioButtons, setRadioButtons] = useState(genderRadioObject)
    const onPressRadioButton = (radioButtonsArray: RadioButtonProps[]) => {
         const gender = radioButtons.find((genderObj) => genderObj.selected == true).value
-        setRadioButtons(radioButtonsArray)
+        setRadioButtons(radioButtNameray)
         setValues({... values, 'gender': gender})
         console.log(gender)
     }
