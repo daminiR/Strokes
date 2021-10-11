@@ -20,15 +20,14 @@ const ProfileView = (props) => {
   const [loading, setLoading] = React.useState(true)
   const [newImageSet, setNewImageSet] = React.useState([])
   const [profileTitle, setProfileTitle] = React.useState('')
-  const {currentUser} = useContext(UserContext);
-  const {squashData, newSportList} = useContext(ProfileContext);
+  const {currentUser, userData, userLoading} = useContext(UserContext);
   const [userProfile, setUserProfile] = React.useState(null)
   const [profileImageValue, setProfileImageValue] = React.useState()
   useEffect(() => {
     setLoading(true)
+    if (!userLoading){
     // TODO: not important sort image by order
-    if (squashData?.squash != undefined) {
-      const user = squashData.squash
+      const user = userData.squash
       setUserProfile(user);
       const profileImage = user.image_set.find(imgObj => imgObj.img_idx == 0)
       setProfileImageValue(profileImage)
@@ -38,7 +37,7 @@ const ProfileView = (props) => {
       setProfileTitle(title)
       setLoading(false);
     }
-  }, [squashData?.squash])
+  }, [userLoading])
   return (
     <>
         {!loading && (
@@ -63,24 +62,6 @@ const ProfileView = (props) => {
     </>
   );
 }
-//<View style={ProfileStyles.container}>
-    //<CardStack
-        //loop={true}
-        //verticalSwipe={false}
-        //renderNoMoreCards={() => null}
-    //>
-        //<CardItem
-            //image={Demo[0].image}
-            //name={"Sara"}
-            //description={"sdflkjsaldfj lasfjdlfjalsdf"}
-            //matches={"56"}
-            //actions
-            //onPressLeft={() => this.swiper.swipeLeft()}
-            //onPressRight={() => this.swiper.swipeRight()}
-        ///>
-    //</CardStack>
-//</View>
-
 const ProfileStyles = StyleSheet.create({
   container: {
     flex: 1,

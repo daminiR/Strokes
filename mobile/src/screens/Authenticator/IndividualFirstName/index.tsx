@@ -8,10 +8,10 @@ import {
 } from 'react-native';
 import * as Yup from 'yup'
 import { onScreen, goBack } from '../../../constants'
-import  auth  from '@react-native-firebase/auth'
-import { HeaderBackButton, StackHeaderLeftButtonProps } from '@react-navigation/stack';
 import {RootIndividualProfileInputParamList } from '../../../navigation/individualProfileStack'
 import {FirstNameVar} from '../../../cache'
+import { useFormikContext} from 'formik';
+import { ProfileFields, SignIn} from '../../../localModels/UserSportsList'
 import {GET_FIRST_NAME} from '../../../graphql/queries/profile'
 import {UPDATE_NAME} from '../../../graphql/mutations/profile'
 import {UserContext} from '../../../UserContext'
@@ -28,6 +28,7 @@ const [currentFirstName, setCurrentFirstName] = useState(null)
 const {currentUser} = useContext(UserContext)
 const [loading, setLoading] = useState(true)
 const [updateName] = useMutation(UPDATE_NAME);
+const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
 const [firstNameValue, onChangeFirstName] = React.useState('Useless Placeholder')
 const [lastNameValue, onChangeLastName] = React.useState('Useless Placeholder')
 let {
