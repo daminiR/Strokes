@@ -106,12 +106,13 @@ const ProfileSettings = ({_editUserInfo, signOut}) => {
       fontSize: 20,
     },
   ];
-  const {squashData, loadingSportsData} = useContext(ProfileContext);
   const [displayImage, setDisplayImage] = React.useState(null)
   const [displayName, setDisplayName] = React.useState('')
+  const {currentUser, userData, loadingUser} = useContext(UserContext)
   useEffect(() => {
-    if (!loadingSportsData){
-      const user = squashData.squash
+    // TODO: add !loading if condtion everywhere to laoding state changes in useeffect
+    if (!loadingUser){
+      const user = userData.squash
       const image_set_copy = user.image_set
       const min_idx_obj = image_set_copy.reduce((res, obj) => {
       return obj.img_idx < res.img_idx ? obj : res;
@@ -119,13 +120,13 @@ const ProfileSettings = ({_editUserInfo, signOut}) => {
       setDisplayImage(min_idx_obj.imageURL);
       setDisplayName(user.first_name + ' ' + user.last_name)
     }
-  }, [loadingSportsData])
+  }, [loadingUser])
 
   const renderHeader = () => {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerBackgroundImage}>
-        {!loadingSportsData && (
+        {!loadingUser && (
           <View style={styles.headerColumn}>
             <Image style={styles.userImage} source={{uri: displayImage}} />
             <Icon size={28}  onPress={() => _editUserInfo(true)} name="pencil" type='material-community' style={style_edit_icon.container} />

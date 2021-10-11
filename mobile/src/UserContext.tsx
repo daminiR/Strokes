@@ -18,7 +18,7 @@ export const AuthNavigator = () => {
   const [loadingSigning, setLoadingSiginig] = useState(false);
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
-  const [getSquashProfile, {data, loading: loadingApollo, error}] = useLazyQuery(READ_SQUASH, {
+  const [getSquashProfile, {data: userData, loading: userLoading, error}] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
@@ -68,6 +68,8 @@ export const AuthNavigator = () => {
 
   if (loadingSigning) return null
   const value = {
+    userData,
+    userLoading,
     setIsUseOnMongoDb,
     confirmResult,
     setConfirmResult,

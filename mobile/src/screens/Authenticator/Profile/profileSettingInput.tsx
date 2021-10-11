@@ -7,57 +7,49 @@ import { onScreen, goBack } from '../../../constants'
 import {ProfileContext} from './index'
 import { SportChips} from '../../../components'
 import { ProfileScreenNavigationProp} from './index'
+import {UserContext} from '../../../UserContext'
 import {ProfileAttirbutes} from "./ProfileAttributes"
 import styles from '../../../assets/styles'
+import { useFormikContext} from 'formik';
+import { ProfileFields, SignIn} from '../../../localModels/UserSportsList'
 type ProfileT = {
   navigation: ProfileScreenNavigationProp
 }
 const ProfileSettingsInput = (props) => {
   const didMountRef = useRef(false)
-  const {squashData, newSportList} = useContext(ProfileContext);
   const navigation = useNavigation()
   const [sportsList, setSportsList] = React.useState([{sport:"Tennis", game_level: 0}])
+  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const [description, setDescription] = React.useState('Description')
+  const {currentUser, userData, userLoading} = useContext(UserContext)
   const [loadingSports, setLoadingSports] = React.useState(false)
   const [loadingDescription, setLoadingDescription] = React.useState(false)
   const _editSports = (props) => {
-  sportsItemsVar(squashData.squash.sports)
+  sportsItemsVar(userData.squash.sports)
   onScreen('EDIT_SPORTS', navigation)()
 }
   const _editDescription = (props) => {
-  DescriptionVar(squashData.squash.description)
+  DescriptionVar(userData.squash.description)
   onScreen('EDIT_DESCRIPTION', navigation)()
 }
   useEffect(() => {
-    if (didMountRef.current){
-  setLoadingSports(true);
-  if (
-    squashData?.squash?.sports != undefined &&
-    squashData?.squash?.sports.length != 0
-  ) {
-    const sportsArray = squashData!.squash!.sports;
-    setSportsList(sportsArray);
-    setLoadingSports(false);
-  }
-}
-    else {
-      didMountRef.current = true
+    if (!userLoading) {
+      const user = userData.squash;
+        setLoadingSports(true);
+        setLoadingDescription(true);
+        if (user.sports != undefined && user.sports.length != 0) {
+          const sportsArray = userData!.squash!.sports;
+          setSportsList(formikValues.sports);
+          setLoadingSports(false);
+        }
+        if (user.description != undefined && user.description.length != 0) {
+          // TODO: add this to sigup
+          const descriptionValue = user.description;
+          setDescription(descriptionValue);
+          setLoadingDescription(false);
+        }
     }
-
-  }, [squashData?.squash?.sports])
-
-  useEffect(() => {
-  setLoadingDescription(true);
-  if (
-    squashData?.squash?.description != undefined &&
-    squashData?.squash?.description.length != 0
-  ) {
-    const descriptionValue = squashData!.squash!.description
-    setDescription(descriptionValue);
-    setLoadingDescription(false);
-  }
-  }, [squashData?.squash?.description])
-
+  }, [userLoading]);
   return (
     <>
       <Card containerStyle={styles.CardStyle}>
@@ -76,8 +68,8 @@ const ProfileSettingsInput = (props) => {
         <View style={styles.sportChipSet}>
           {!loadingDescription && <Text> {description} </Text>}
         </View>
+        <ProfileAttirbutes/>
       </Card>
-     <ProfileAttirbutes/>
     </>
   );
 }
