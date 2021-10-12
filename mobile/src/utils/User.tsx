@@ -41,8 +41,9 @@ const convertImagesToFormat = (images, _id) => {
     return RNFiles
   }
 export const registerOnMongoDb = async (values, _id, createSquash2) => {
-  console.log("values in mongo", values.images)
-  const rnfiles = convertImagesToFormat(values.images, _id)
+  console.log("values in mongo", values)
+  const rnfiles = convertImagesToFormat(values.image_set, _id)
+  console.log("rnfilel in mongo", rnfiles)
     await createSquash2({
       variables: {
         _id: _id,

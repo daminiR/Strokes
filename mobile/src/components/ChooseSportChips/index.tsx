@@ -13,8 +13,14 @@ const ChooseSportsChips = () => {
   const {setFieldValue, values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
   const getData = (newSport, isSelected) => {
     if(isSelected){
-      const new_values = formikValues.sports.concat([{sport: newSport, game_level: 0}])
-      setFieldValue('sports', new_values)
+      const sportObj = [{sport: newSport, game_level: 0}];
+      if (formikValues.sports != null){
+      const new_values = formikValues.sports.concat(sportObj)
+      setFieldValue('sports', new_values);
+      }
+      else{
+      setFieldValue('sports', sportObj)
+      }
 
     }
     else{

@@ -65,8 +65,8 @@ export const goHome = (navigation: any) => () => navigation.popToTop()()
    last_name: 'Rijhwani',
    age: '23',
    gender: 'Female',
-   sports:[],
-   images:[],
+   sports:null,
+   images:null,
    confirmationCode: '000000'
  }
 export const signInSlides = [

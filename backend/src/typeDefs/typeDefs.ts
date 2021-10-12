@@ -65,6 +65,17 @@ export const typeDefs = gql`
     updateGender(_id: String!, gender: Int): String
     updateDescription(_id: String!, description: String!): String
     uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
+    updateUserProfile(
+      _id: String!
+      first_name: String!
+      last_name: String!
+      age: Int!
+      gender: String!
+      sports: [SquashNodeInput!]!
+      country: String
+      description: String!
+      image_set: [DataInput!]!
+    ): Squash!
     createSquash(
       _id: String!
       first_name: String!
