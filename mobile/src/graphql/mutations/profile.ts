@@ -16,8 +16,13 @@ const UPLOAD_FILE = gql`
     }
 `
 const ADD_PROFILE2 = gql`
-  mutation CreateSquash2($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $image_set: [ImageData!]!, $sports: [SquashNodeInput!]! , $age:Int!){
-    createSquash2(_id: $_id, first_name: $first_name, gender: $gender, age: $age, sports: $sports, last_name: $last_name, image_set: $image_set)
+  mutation CreateSquash2($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $image_set: [ImageData!]!, $sports: [SquashNodeInput!]! , $age:Int!, $description: String){
+    createSquash2(_id: $_id, first_name: $first_name, gender: $gender, age: $age, sports: $sports, last_name: $last_name, image_set: $image_set, description: $description)
+  }
+`
+const UPDATE_USER_PROFILE = gql`
+  mutation UpdateUserProfile($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $image_set: [ImageData!]!, $sports: [SquashNodeInput!]! , $age:Int!, $description: String){
+    updateUserProfile(_id: $_id, first_name: $first_name, gender: $gender, age: $age, sports: $sports, last_name: $last_name, image_set: $image_set, description: $description)
   }
 `
 const ADD_PROFILE = gql`
@@ -63,4 +68,4 @@ const UPDATE_DESCRIPTION = gql`
     updateDescription(_id: $_id, description: $description)
   }
 `
-export {ADD_PROFILE2, UPDATE_DESCRIPTION, UPDATE_USER_SPORTS,  UPDATE_GENDER, UPDATE_AGE, UPDATE_NAME, DELETE_IMAGE, UPLOAD_FILE, ADD_PROFILE , DELETE_PROFILE}
+export {UPDATE_USER_PROFILE, ADD_PROFILE2, UPDATE_DESCRIPTION, UPDATE_USER_SPORTS,  UPDATE_GENDER, UPDATE_AGE, UPDATE_NAME, DELETE_IMAGE, UPLOAD_FILE, ADD_PROFILE , DELETE_PROFILE}
