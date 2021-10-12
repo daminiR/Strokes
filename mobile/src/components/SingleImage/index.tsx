@@ -18,8 +18,15 @@ const SingleImage = ({img_idx, image_uri = null}) => {
      console.log(Image)
     if (Image){
       setDisplayImage(Image.assets[0].uri)
-      const new_values = formikValues.image_set.concat([{imageURL: Image.assets[0].uri, img_idx: img_idx, filePath: Image.assets[0].uri}])
+      const imageObj = [{imageURL: Image.assets[0].uri, img_idx: img_idx, filePath: Image.assets[0].uri}]
+      const values = formikValues.image_set
+      if (formikValues.image_set != null){
+      const new_values = formikValues.image_set.concat(imageObj)
       setFieldValue('image_set', new_values)
+      }
+      else{
+      setFieldValue('image_set', imageObj)
+      }
     }
   }, [Image])
   const _removeImage = async (): Promise<void> => {
