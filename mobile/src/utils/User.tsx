@@ -18,7 +18,8 @@ import { squashItemsVar, isProfileCompleteVar} from '../../../cache'
 import {UserContext} from '../../../UserContext'
 import { ReactNativeFile } from 'apollo-upload-client'
 import * as mime from 'react-native-mime-types'
-export const registerOnFirebase = async (phoneNumber, email) => {
+
+const registerOnFirebase = async (phoneNumber, email) => {
 const authorize = new Promise(async (resolve, reject) => {
     await auth()
       .signInWithPhoneNumber(phoneNumber)
@@ -32,7 +33,7 @@ const authorize = new Promise(async (resolve, reject) => {
 })
 return authorize
   }
-const convertImagesToFormat = (images, _id) => {
+ const convertImagesToFormat = (images, _id) => {
     const RNFiles = images.map(imageObj =>{
        const RNFile = generateRNFile(imageObj.imageURL, _id)
        return {file: RNFile, img_idx: imageObj.img_idx}
@@ -40,7 +41,7 @@ const convertImagesToFormat = (images, _id) => {
     )
     return RNFiles
   }
-export const registerOnMongoDb = async (values, _id, createSquash2) => {
+ const registerOnMongoDb = async (values, _id, createSquash2) => {
   console.log("values in mongo", values)
   const rnfiles = convertImagesToFormat(values.image_set, _id)
   console.log("rnfilel in mongo", rnfiles)
@@ -52,11 +53,13 @@ export const registerOnMongoDb = async (values, _id, createSquash2) => {
         last_name: values.last_name,
         age: Number(values.age),
         gender: values.gender,
-        sports: values.sports
+        sports: values.sports,
+        description: values.description
       },
     });
   };
 
+export {registerOnFirebase, convertImagesToFormat, registerOnMongoDb}
 //const createUser  = async ({
   //values,
   //createSquash

@@ -16,7 +16,7 @@ export interface ProfileFields {
        sports: [{sport: string, game_level:number}],
        image_set: [{imageURL: string, img_idx: number, filePath:string}],
        confirmationCode: string,
-       description: ''
+       description: string
 }
 export interface EditFields {
        email: string;
@@ -27,8 +27,11 @@ export interface EditFields {
        gender: string,
        sports: [{sport: string, game_level:number}],
        image_set: [{imageURL: string, img_idx: number, filePath:string}],
+       remove_uploaded_images: [{imageURL: string, img_idx: number, filePath:string}],
+       add_local_images: [{imageURL: string, img_idx: number, filePath:string}],
+       original_uploaded_image_set: [{imageURL: string, img_idx: number, filePath:string}],
        confirmationCode: string,
-       description: ''
+       description: string
 }
 export interface SignIn {
        email: string;
