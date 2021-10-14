@@ -66,8 +66,9 @@ export const goHome = (navigation: any) => () => navigation.popToTop()()
    age: '23',
    gender: 'Female',
    sports:null,
-   images:null,
-   confirmationCode: '000000'
+   image_set:null,
+   confirmationCode: '000000',
+   description: 'hello'
  }
 export const signInSlides = [
   {
