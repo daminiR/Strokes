@@ -9,15 +9,16 @@ import {useReactiveVar} from '@apollo/client'
 import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from './graphql/queries/profile'
 import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 
-export const UserContext = createContext();
+export const UserContext = createContext(null);
 export const AuthNavigator = () => {
-  const [confirmResult, setConfirmResult ] = useState(null)
   const [currentUser, setCurrentUser ] = useState()
   const [isProfileComplete, setProfileState ] = useState(false)
   const [isApolloConected, setIsApolloConected ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(false);
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
+  const [aloading, setALoading] = useState(false);
+  const [data, setData] = useState(true);
   const [getSquashProfile, {data: userData, loading: userLoading, error}] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
@@ -27,17 +28,19 @@ export const AuthNavigator = () => {
         setProfileState(true);
         setIsApolloConected(true);
         setIsUseOnMongoDb(true);
+        setData(data)
         if (loadingSigning) setLoadingSiginig(false);
       }
-      onError: ({graphQLErrors, networkError}) => {
-          if(networkError){
-            setIsUseOnMongoDb(false);
-          }
-      }
+      //onError: ({graphQLErrors, networkError}) => {
+          //if(networkError){
+            //setIsUseOnMongoDb(false);
+          //}
+      //}
     },
     onError: (({graphQLErrors, networkError}) => {
       console.log("errors")
       if (networkError){
+        setIsUseOnMongoDb(false);
         setIsApolloConected(false)
         console.log(networkError)
         // go to appoloeError page
@@ -49,7 +52,6 @@ export const AuthNavigator = () => {
   });
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
-      console.log("is this the user",currentUser)
       if (currentUser) {
         getSquashProfile({variables: {id: currentUser.uid}});
         setLoadingUser(false)
@@ -60,23 +62,25 @@ export const AuthNavigator = () => {
   }
   useEffect(() => {
       setLoadingUser(true)
-      console.log("loading mongo", isUserOnmongoDb)
       const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged)
       console.log(unsubscribe)
       return unsubscribe
   }, [isUserOnmongoDb])
+  useEffect(() => {
+      setALoading(userLoading)
+  }, [userLoading])
 
   if (loadingSigning) return null
   const value = {
-    userData,
-    userLoading,
-    setIsUseOnMongoDb,
-    confirmResult,
-    setConfirmResult,
-    currentUser,
-    setCurrentUser,
-    isProfileComplete,
-    setProfileState
+    userData: data,
+    setData: setData,
+    data: data,
+    userLoading: userLoading,
+    setIsUseOnMongoDb: setIsUseOnMongoDb,
+    currentUser: currentUser,
+    isProfileComplete: isProfileComplete,
+    setProfileState: setProfileState,
+    setALoading: aloading
   };
   const render2 = () =>{
     if (currentUser && isUserOnmongoDb) {

@@ -112,7 +112,8 @@ const ProfileSettings = ({_editUserInfo, signOut}) => {
   const [displayName, setDisplayName] = React.useState('')
   const {currentUser, userData, loadingUser} = useContext(UserContext)
   const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
-  console.log("in settings", formikValues)
+  //TODO: this is run too many times with description everytime one char is removed -> thats why it is slow when typeing -> imperative set description after done
+  //console.log("in settings", formikValues)
 
   useEffect(() => {
     // TODO: add !loading if condtion everywhere to laoding state changes in useeffect

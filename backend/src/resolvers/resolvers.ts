@@ -72,6 +72,17 @@ const creatGCUpload = (image_set, _id) => {
       )
       return promise
 }
+const deleteFilesFromGC = async (files_to_del, original_uploaded_image_set) => {
+  // remove from gc AND mongdb
+  // remove from mongoDb
+  const  img_idx_del = files_to_del.map(imgObj => imgObj.img_idx)
+  const filtered_array = original_uploaded_image_set.filter(imgObj => !img_idx_del.includes(imgObj.img_idx))
+  console.log("check filtered again", filtered_array)
+  files_to_del.map(async (file_to_del) => {
+    await deleteFromGC(file_to_del.filePath);
+  });
+  return filtered_array
+};
 const deleteFromGC = async (file_to_del: string) => {
        await acsport1.file(file_to_del).delete().then(
         () => {
@@ -90,11 +101,11 @@ export const resolvers = {
       console.log(squash_val);
       return squash_val;
     },
-    queryProssibleMatches: async (parents, {_id}, context, info) => {
-        const users = await Squash.find({ _id: {$ne: _id }})
-        console.log("All users that are a potential match to current!");
-        return users
-      },
+    queryProssibleMatches: async (parents, { _id }, context, info) => {
+      const users = await Squash.find({ _id: { $ne: _id } });
+      console.log("All users that are a potential match to current!");
+      return users;
+    },
     squashes: async (parents, args, context, info) => {
       const squashes = await Squash.find({});
       console.log(squashes);
@@ -115,12 +126,17 @@ export const resolvers = {
       }
       return _id;
     },
-    updateName: async (parents, { _id, first_name, last_name}, context, info) => {
-      console.log("did we get here")
+    updateName: async (
+      parents,
+      { _id, first_name, last_name },
+      context,
+      info
+    ) => {
+      console.log("did we get here");
       if (first_name.length != 0) {
         const doc = await Squash.findOneAndUpdate(
           { _id: _id },
-          { $set: { first_name: first_name, last_name: last_name} },
+          { $set: { first_name: first_name, last_name: last_name } },
           { new: true }
         );
         console.log("Updated user first name ", first_name, last_name);
@@ -129,7 +145,7 @@ export const resolvers = {
       }
       return _id;
     },
-    updateAge: async (parents, { _id, age}, context, info) => {
+    updateAge: async (parents, { _id, age }, context, info) => {
       if (age != 0) {
         const doc = await Squash.findOneAndUpdate(
           { _id: _id },
@@ -142,29 +158,29 @@ export const resolvers = {
       }
       return _id;
     },
-    updateGender: async (parents, { _id, gender}, context, info) => {
+    updateGender: async (parents, { _id, gender }, context, info) => {
       //if (gender != 0) {
-        const doc = await Squash.findOneAndUpdate(
-          { _id: _id },
-          { $set: {gender: gender}},
-          { new: true }
-        );
-        console.log("Updated user gender ", gender);
+      const doc = await Squash.findOneAndUpdate(
+        { _id: _id },
+        { $set: { gender: gender } },
+        { new: true }
+      );
+      console.log("Updated user gender ", gender);
       //} else {
-        //console.log("Age cannot be no length");
+      //console.log("Age cannot be no length");
       //}
       return _id;
     },
-    updateDescription: async (parents, { _id, description}, context, info) => {
+    updateDescription: async (parents, { _id, description }, context, info) => {
       //if (gender != 0) {
-        const doc = await Squash.findOneAndUpdate(
-          { _id: _id },
-          { $set: {description: description}},
-          { new: true }
-        );
-        console.log("Updated user description ", description);
+      const doc = await Squash.findOneAndUpdate(
+        { _id: _id },
+        { $set: { description: description } },
+        { new: true }
+      );
+      console.log("Updated user description ", description);
       //} else {
-        //console.log("Age cannot be no length");
+      //console.log("Age cannot be no length");
       //}
       return _id;
     },
@@ -229,8 +245,7 @@ export const resolvers = {
             { new: true }
           );
           console.log(doc);
-        }
-        else {
+        } else {
           const file_to_del = squash_val!.image_set
             .find((image_info) => image_info.img_idx === img_idx)!
             .filePath.toString();
@@ -248,28 +263,64 @@ export const resolvers = {
       });
       return displayData;
     },
-    createSquash: async (root, args): Promise<SquashDocument> => {
-      const squash = Squash.create(args);
-      return squash;
-    },
-    createSquash2: async (root, {_id, image_set, first_name, last_name, gender, age, sports, description}) => {
+    createSquash2: async (
+      root,
+      {
+        _id,
+        image_set,
+        first_name,
+        last_name,
+        gender,
+        age,
+        sports,
+        description,
+      }
+    ) => {
       creatGCUpload(image_set, _id).then(async (data_set: any) => {
-          console.log(data_set);
-          console.log("done");
-          const doc = await Squash.create(
-            { _id: _id, image_set: data_set, first_name: first_name, last_name: last_name, gender: gender, age: age, sports: sports, description: description},
-          );
-          console.log(doc)
+        console.log(data_set);
+        console.log("done");
+        const doc = await Squash.create({
+          _id: _id,
+          image_set: data_set,
+          first_name: first_name,
+          last_name: last_name,
+          gender: gender,
+          age: age,
+          sports: sports,
+          description: description,
+        });
+        console.log(doc);
       });
-      return "done"
+      return "done";
     },
-    updateUserProfile: async (root, {_id, image_set, first_name, last_name, gender, age, sports, description}) => {
+    updateUserProfile: async (
+      root,
+      {
+        _id,
+        image_set,
+        first_name,
+        last_name,
+        gender,
+        age,
+        sports,
+        description,
+        remove_uploaded_images,
+        add_local_images,
+        original_uploaded_image_set,
+      }
+    ) => {
+      // remove from gc
+      const removed_image_set = await deleteFilesFromGC(remove_uploaded_images, original_uploaded_image_set);
+      creatGCUpload(add_local_images, _id).then(async (data_set: any) => {
+        console.log(data_set);
+        const final_image_set = removed_image_set.concat(data_set)
+        console.log("new array for total delete and add", final_image_set)
         const doc = await Squash.findOneAndUpdate(
           { _id: _id },
           {
             $set: {
               _id: _id,
-              image_set: image_set,
+              image_set: final_image_set,
               first_name: first_name,
               last_name: last_name,
               gender: gender,
@@ -281,7 +332,8 @@ export const resolvers = {
           { new: true }
         );
         console.log("Updated user profile new profile", doc);
-      return "done"
+      });
+      return "done";
     },
     deleteSquash: async (root, args) => {
       const squash = await Squash.findById({ id: args });

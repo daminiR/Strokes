@@ -11,7 +11,7 @@ import {UserContext} from '../../../UserContext'
 import {ProfileAttirbutes} from "./ProfileAttributes"
 import styles from '../../../assets/styles'
 import { useFormikContext} from 'formik';
-import { ProfileFields, SignIn} from '../../../localModels/UserSportsList'
+import { EditFields} from '../../../localModels/UserSportsList'
 import { EditInputVar} from '../../../cache'
 type ProfileT = {
   navigation: ProfileScreenNavigationProp
@@ -20,7 +20,7 @@ const ProfileSettingsInput = (props) => {
   const didMountRef = useRef(false)
   const navigation = useNavigation()
   const [sportsList, setSportsList] = React.useState([{sport:"Tennis", game_level: 0}])
-  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
   const [description, setDescription] = React.useState('Description')
   const {currentUser, userData, userLoading} = useContext(UserContext)
   const [loadingSports, setLoadingSports] = React.useState(false)
@@ -37,8 +37,7 @@ const ProfileSettingsInput = (props) => {
         const user = formikValues
         setLoadingSports(true);
         setLoadingDescription(true);
-          const sportsArray = userData!.squash!.sports;
-          setSportsList(formikValues.sports);
+        setSportsList(formikValues.sports);
           setLoadingSports(false);
            //TODO: add this to sigup
          //TODO: description change here

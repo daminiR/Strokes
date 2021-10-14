@@ -12,7 +12,7 @@ import {gql} from 'apollo-server-express';
 `
   const ImageData = `
     img_idx: Int!,
-    file: FileUpload!,
+    file: FileUpload!
 `
 export const typeDefs = gql`
   scalar FileUpload
@@ -74,19 +74,10 @@ export const typeDefs = gql`
       sports: [SquashNodeInput!]!
       country: String
       description: String!
-      image_set: [DataInput!]!
-    ): Squash!
-    createSquash(
-      _id: String!
-      first_name: String!
-      last_name: String!
-      age: Int!
-      gender: String!
-      sports: [SquashNodeInput!]!
-      country: String
-      description: String!
-      image_set: [DataInput!]!
-    ): Squash!
+      add_local_images: [ImageData],
+      remove_uploaded_images: [DataInput],
+      original_uploaded_image_set: [DataInput!]!,
+    ): String!
     createSquash2(
       _id: String!
       first_name: String!
@@ -95,7 +86,7 @@ export const typeDefs = gql`
       gender: String!
       sports: [SquashNodeInput!]!
       country: String
-      description: String
+      description: String!
       image_set: [ImageData!]!
     ): String
     deleteSquash(_id: String): Squash!

@@ -19,47 +19,27 @@ const Pictures =() => {
   const didMountRef = useRef(false)
   const [image, setImage] = useState(null)
   const [images, setImages] = useState([])
-  const [loadPictures, setLoadPictures] = useState(true)
+  const [loadPictures, setLoadPictures] = useState(false)
   const [displayImages, setDisplayImages] = useState(null)
   const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
-  useEffect(() => {
-    setLoadPictures(true)
-    console.log("displaying formik",formikValues)
-    setDisplayImages(formikValues.image_set);
-    console.log("displaying image", displayImages)
-    setLoadPictures(false)
-  }, [formikValues]);
-  const getSingleImage = (imgObj) => {
-    setImage(imgObj)
-  }
-  useEffect(() => {
-    if (didMountRef.current){
-    images.push(image)
-    setImages(images)
-    }
-    else {
-      didMountRef.current = true
-    }
-
-  }, [image])
-
   return (
     <>
-      {!loadPictures &&
+      {!loadPictures && (
         <View style={styles.imagecontainer}>
           <View style={styles.verticalImageplaceholder}>
             <View style={styles.horizontalImageplaceholder}>
-              <SingleImage img_idx={0} image_uri={displayImages? displayImages.find(imageObj => imageObj.img_idx == 0)?.imageURL: null}/>
-              <SingleImage img_idx={1} image_uri={displayImages? displayImages.find(imageObj =>imageObj.img_idx == 1)?.imageURL: null}/>
-              <SingleImage img_idx={2} image_uri={displayImages? displayImages.find(imageObj =>imageObj.img_idx == 2)?.imageURL: null}/>
+              <SingleImage img_idx={0} />
+              <SingleImage img_idx={1} />
+              <SingleImage img_idx={2} />
             </View>
             <View style={styles.horizontalImageplaceholder}>
-              <SingleImage img_idx={3} image_uri={displayImages?displayImages.find(imageObj =>imageObj.img_idx == 3)?.imageURL: null}/>
-              <SingleImage img_idx={4} image_uri={displayImages?displayImages.find(imageObj =>imageObj.img_idx == 4)?.imageURL: null}/>
-              <SingleImage img_idx={5} image_uri={displayImages?displayImages.find(imageObj =>imageObj.img_idx == 5)?.imageURL: null}/>
+              <SingleImage img_idx={3} />
+              <SingleImage img_idx={4} />
+              <SingleImage img_idx={5} />
             </View>
           </View>
-        </View>}
+        </View>
+      )}
     </>
   );
 }
