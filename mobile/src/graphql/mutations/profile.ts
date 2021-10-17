@@ -17,52 +17,86 @@ const UPLOAD_FILE = gql`
 `;
 const ADD_PROFILE2 = gql`
   mutation CreateSquash2(
-    $_id: String!,
-    $first_name: String!,
-    $last_name: String!,
-    $gender: String!,
-    $image_set: [ImageData!]!,
-    $sports: [SquashNodeInput!]!,
-    $age: Int!,
-    $description: String!,
+    $_id: String!
+    $first_name: String!
+    $last_name: String!
+    $gender: String!
+    $image_set: [ImageData!]!
+    $sports: [SquashNodeInput!]!
+    $age: Int!
+    $description: String!
   ) {
     createSquash2(
-      _id: $_id,
-      first_name: $first_name,
-      gender: $gender,
-      age: $age,
-      sports: $sports,
-      last_name: $last_name,
-      image_set: $image_set,
+      _id: $_id
+      first_name: $first_name
+      gender: $gender
+      age: $age
+      sports: $sports
+      last_name: $last_name
+      image_set: $image_set
       description: $description
-    )
+    ) {
+      _id
+      first_name
+      last_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      country
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+    }
   }
 `;
 const UPDATE_USER_PROFILE = gql`
   mutation UpdateUserProfile(
-    $_id: String!,
-    $first_name: String!,
-    $last_name: String!,
-    $gender: String!,
-    $add_local_images: [ImageData],
-    $remove_uploaded_images: [DataInput],
-    $original_uploaded_image_set: [DataInput!]!,
-    $sports: [SquashNodeInput!]!,
-    $age: Int!,
+    $_id: String!
+    $first_name: String!
+    $last_name: String!
+    $gender: String!
+    $add_local_images: [ImageData]
+    $remove_uploaded_images: [DataInput]
+    $original_uploaded_image_set: [DataInput!]!
+    $sports: [SquashNodeInput!]!
+    $age: Int!
     $description: String!
   ) {
     updateUserProfile(
-      _id: $_id,
-      first_name: $first_name,
-      gender: $gender,
-      age: $age,
-      sports: $sports,
-      last_name: $last_name,
-      add_local_images: $add_local_images,
-      remove_uploaded_images: $remove_uploaded_images,
-      original_uploaded_image_set: $original_uploaded_image_set,
+      _id: $_id
+      first_name: $first_name
+      gender: $gender
+      age: $age
+      sports: $sports
+      last_name: $last_name
+      add_local_images: $add_local_images
+      remove_uploaded_images: $remove_uploaded_images
+      original_uploaded_image_set: $original_uploaded_image_set
       description: $description
-    )
+    ) {
+      _id
+      first_name
+      last_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      country
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+    }
   }
 `;
 const UPDATE_USER_SPORTS = gql`

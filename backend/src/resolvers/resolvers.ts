@@ -10,6 +10,7 @@ import * as path from 'path';
 import {format} from 'util'
 import axios from 'axios'
 import { ObjectId } from 'mongodb'
+import { typeDefs }  from '../typeDefs/typeDefs'
 
 interface Data {
   img_idx: number;
@@ -290,8 +291,8 @@ export const resolvers = {
           description: description,
         });
         console.log(doc);
+        return doc;
       });
-      return "done";
     },
     updateUserProfile: async (
       root,
@@ -311,11 +312,10 @@ export const resolvers = {
     ) => {
       // remove from gc
       const removed_image_set = await deleteFilesFromGC(remove_uploaded_images, original_uploaded_image_set);
-      creatGCUpload(add_local_images, _id).then(async (data_set: any) => {
-        console.log(data_set);
-        const final_image_set = removed_image_set.concat(data_set)
-        console.log("new array for total delete and add", final_image_set)
-        const doc = await Squash.findOneAndUpdate(
+      const data_set = await creatGCUpload(add_local_images, _id)
+      const final_image_set = removed_image_set.concat(data_set)
+      console.log("new array for total delete and add", final_image_set)
+      const doc = await Squash.findOneAndUpdate(
           { _id: _id },
           {
             $set: {
@@ -331,9 +331,8 @@ export const resolvers = {
           },
           { new: true }
         );
-        console.log("Updated user profile new profile", doc);
-      });
-      return "done";
+    console.log("Updated user profile new profile", doc);
+    return doc
     },
     deleteSquash: async (root, args) => {
       const squash = await Squash.findById({ id: args });

@@ -15,24 +15,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {onErrorLink} from './globalGraphqlErrors'
 import {isProfileCompleteVar} from './cache'
 import  { createUploadLink } from 'apollo-upload-client';
+import { enableFlipperApolloDevtools} from 'react-native-flipper-apollo-devtools'
 
 //////////////////////////////////////// temporary fixe for RN debugger ///////////////////////////////////////
-global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
-global.FormData = global.originalFormData || global.FormData;
+//global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
+//global.FormData = global.originalFormData || global.FormData;
 
-if (window.FETCH_SUPPORT) {
-  window.FETCH_SUPPORT.blob = false;
-} else {
-  global.Blob = global.originalBlob || global.Blob;
-  global.FileReader = global.originalFileReader || global.FileReader;
-}
+//if (window.FETCH_SUPPORT) {
+  //window.FETCH_SUPPORT.blob = false;
+//} else {
+  //global.Blob = global.originalBlob || global.Blob;
+  //global.FileReader = global.originalFileReader || global.FileReader;
+//}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 //TODO: async funtion persist check later
 const App = (): ReactElement =>
 {
-  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
+  const [client, setClient] = useState<ApolloDevClient<NormalizedCacheObject>>();
   const [ready, setReady] = useState(false);
   const [persistor, setPersistor] = useState<
     CachePersistor<NormalizedCacheObject>
@@ -66,12 +67,13 @@ const App = (): ReactElement =>
      const uploadLink = createUploadLink({uri: 'http://10.0.2.2:4000/graphql'})
       //const link = ApolloLink.from([onErrorLink, uploadLink]);
       //const uri = 'http://localhost:4000/graphql'
-      setClient(
+     //
+     var  apolloClient =
         new ApolloClient({
           link: uploadLink,
           cache: cache,
-        }),
-      );
+        })
+      setClient(apolloClient);
     }
     init();
     setReady(true);
@@ -103,6 +105,7 @@ const App = (): ReactElement =>
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}
   //return renderInitial();
+  enableFlipperApolloDevtools(client)
   return (
           <ApolloProvider client={client}>
             <FormProvider>
