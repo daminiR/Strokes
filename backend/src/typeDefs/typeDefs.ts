@@ -77,7 +77,7 @@ export const typeDefs = gql`
       add_local_images: [ImageData],
       remove_uploaded_images: [DataInput],
       original_uploaded_image_set: [DataInput!]!,
-    ): String!
+    ): Squash
     createSquash2(
       _id: String!
       first_name: String!
@@ -88,7 +88,7 @@ export const typeDefs = gql`
       country: String
       description: String!
       image_set: [ImageData!]!
-    ): String
+    ): Squash!
     deleteSquash(_id: String): Squash!
   }
 `;

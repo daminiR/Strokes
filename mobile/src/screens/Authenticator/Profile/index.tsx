@@ -61,7 +61,11 @@ const EditProfile = ({}) => {
     updateUserProfile,
     {loading: loadingUserUpdate, error: errorUserUpdatel, data: dataUserUpdate},
   ] = useMutation(UPDATE_USER_PROFILE, {
+    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
+    awaitRefetchQueries: true,
     onCompleted: (data) => {
+
+        console.log("//////////// formik has data in mutation !!!!!1 //////////////", data)
       //TODO: if data doesnt exists input is incorrect => add checks
       getSquashProfile({variables: {id: currentUser.uid}});
     },
@@ -69,13 +73,16 @@ const EditProfile = ({}) => {
   const [tabState, setTabState] = useState(0)
   const [displayInput, setDisplayInput] = useState(false);
   const [formikChanged, setFormikChanged] = useState(false);
-  const [getSquashProfile, {data: newUserData, loading: newUserLaodingData}] = useLazyQuery(READ_SQUASH, {
+  const [ getSquashProfile, {data: newUserData, loading: newUserLaodingData}] = useLazyQuery(READ_SQUASH, {
+    variables: {id: currentUser.uid},
+    //fetchPolicy:"cache-and-network",
     fetchPolicy: "network-only",
     onCompleted: (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
       if (data) {
         setData(data)
-        console.log("//////////// formik has fdata!!!!!1 //////////////", data)
+        console.log("//////////// formik has fdata in query!!!!!1 //////////////", data)
+        //handleReset()
       }
     }
   })
@@ -123,7 +130,7 @@ const _onPressDoneProfile = () => {
     setFormikChanged(false)
 }
 const _onPressCancelProfile = () => {
-    console.log("//////////// formik has changed!!!!!1 //////////////", formikValues)
+    console.log("//////////// formik has values in Cancel/////////////!!!!!1 //////////////", formikValues)
     handleReset()
     setFormikChanged(false)
     setIsVisible(false);
@@ -221,6 +228,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
   const {aloading, currentUser, data, userData, userLoading} = useContext(UserContext)
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   useEffect(() => {
+    console.log("///////////////////////////////////////////// how many times does this run //////////////////////////////////////, data", data)
     setLoadingFormikValues(true)
     const initialValues = createInitialValuesFormik(data)
     setInitialValuesFormik(initialValues)
@@ -230,6 +238,7 @@ const Profile = ({ navigation, route }: ProfileT ): ReactElement => {
     <>
       {!userLoading && !loadingFormikValues && (
         <Formik
+          enableReinitialize={true}
           initialValues={initialValuesFormik}
           onSubmit={(values) => console.log(values)}>
           <View>
