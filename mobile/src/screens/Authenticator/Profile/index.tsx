@@ -113,7 +113,7 @@ const _onPressDoneProfile = () => {
       updateUserProfile({
         variables: {
           _id: currentUser.uid,
-          first_name: formikValues.last_name,
+          first_name: formikValues.first_name,
           last_name: formikValues.last_name,
           gender: formikValues.gender,
           age: Number(formikValues.age),
@@ -138,6 +138,7 @@ const _onPressCancelProfile = () => {
 const _onPressDoneInput = () => {
   // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
   //
+    console.log("///////// formik values o flist inputs", formikValues)
     EditInputVar({inputType: '', displayInput: false})
     setDisplayInput(false);
 }

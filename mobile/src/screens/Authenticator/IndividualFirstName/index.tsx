@@ -61,7 +61,7 @@ useEffect(() => {
           />
           <Input
             placeholder="Last Name"
-            label="Last Name"
+            label="Last Name23"
             leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
             onChangeText={onChangeLastName}
             value={lastNameValue}
