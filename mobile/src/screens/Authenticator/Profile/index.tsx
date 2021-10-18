@@ -116,7 +116,7 @@ const _onPressDoneProfile = () => {
           first_name: formikValues.last_name,
           last_name: formikValues.last_name,
           gender: formikValues.gender,
-          age: formikValues.age,
+          age: Number(formikValues.age),
           sports: formikValues.sports,
           original_uploaded_image_set: formikValues.original_uploaded_image_set,
           add_local_images: RNLocalFiles,
@@ -163,7 +163,7 @@ const _editDisplay2 = (display) => {
           onRequestClose={() => {
             setIsVisible(!isVisible);
           }}>
-          <View style={{flex: 1}}>
+            <View style={{flex: 1, paddingTop: 50}}>
             <View style={styles.top}>
               <Cancel _onPressCancel={_onPressCancelProfile} />
               <Done _onPressDone={_onPressDoneProfile} />
