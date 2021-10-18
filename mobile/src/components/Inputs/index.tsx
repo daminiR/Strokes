@@ -32,22 +32,32 @@ const ImageInput = ({_submit, isSignUp}) => {
   const GenderInput = () => {
   const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const [radioButtons, setRadioButtons] = useState(genderRadioObject)
+  const [loadRadioButtons, setLoadRadioButtons] = useState(true)
+  useEffect(() => {
+      setLoadRadioButtons(true)
+        const gender = values.gender
+        radioButtons.find((genderObj) => (genderObj.value == gender)).selected = true
+        console.log("old radio butons //////", radioButtons)
+        console.log("old radio butons //////", gender)
+        setRadioButtons(radioButtons)
+      setLoadRadioButtons(false)
+    }, [])
    const onPressRadioButton = (radioButtonsArray: RadioButtonProps[]) => {
         const gender = radioButtons.find((genderObj) => genderObj.selected == true).value
-        setRadioButtons(radioButtNameray)
+        setRadioButtons(radioButtonsArray)
         setValues({... values, 'gender': gender})
         console.log(gender)
     }
     return (
       <View style={styles.ageContainer}>
         <Text>Gender</Text>
-        <RadioGroup radioButtons={radioButtons}
+          { !loadRadioButtons && <RadioGroup radioButtons={radioButtons}
         onPress={onPressRadioButton}
-          />
+          />}
       </View>
     );}
   const NameInput = () => {
-    const { values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+    const { values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
     return (
       <View style={styles.nameContainer}>
         <Input

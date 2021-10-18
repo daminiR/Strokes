@@ -39,8 +39,8 @@ export const Device = {
 }
 
 export const genderRadioObject :  RadioButtonProps[] = [
-  { id: '0', label: 'Woman', value: 'Female' },
-  { id: '1', label: 'Man', value: 'Male' },
+  { id: '0', label: 'Woman', value: 'Female', selected: false},
+  { id: '1', label: 'Man', value: 'Male', selected: false},
 ];
 export const goBack = (navigation: any) => () => navigation.goBack()
 

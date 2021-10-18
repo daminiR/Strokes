@@ -71,7 +71,7 @@ const _onPressDone = () => {
   console.log('done');
 };
 const _onPressCancel = () => {
-  console.log('done');
+  console.log('cancel');
 };
 const renderDone = () => {
   return (
