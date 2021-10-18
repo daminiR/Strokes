@@ -95,9 +95,6 @@ const styles = StyleSheet.create({
 })
 
 
-const settingsList = [
-  {title: 'Account', icon: 'av-timer', subtitle: 'Damini', buttonPress: ()=> {console.log("account")}},
-]
 
 const ProfileSettings = ({_editUserInfo, signOut}) => {
   const nameStyle = [
@@ -112,22 +109,34 @@ const ProfileSettings = ({_editUserInfo, signOut}) => {
   const [displayName, setDisplayName] = React.useState('')
   const {currentUser, userData, loadingUser} = useContext(UserContext)
   const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
+    const settingsList = [
+  {title: 'Account', icon: 'av-timer', subtitle: displayName, buttonPress: ()=> {console.log("account")}},
+]
   //TODO: this is run too many times with description everytime one char is removed -> thats why it is slow when typeing -> imperative set description after done
   //console.log("in settings", formikValues)
 
+  //useEffect(() => {
+    //// TODO: add !loading if condtion everywhere to laoding state changes in useeffect
+    //if (!loadingUser){
+      //const user = userData.squash
+      //const image_set_copy = user.image_set
+      //const min_idx_obj = image_set_copy.reduce((res, obj) => {
+      //return obj.img_idx < res.img_idx ? obj : res;
+      //});
+      //setDisplayImage(min_idx_obj.imageURL);
+      //setDisplayName(user.first_name + ' ' + user.last_name)
+    //}
+  //}, [loadingUser])
+  // relaod when the things being displayed on setting are changes for instance profile image, first name, last name age
   useEffect(() => {
-    // TODO: add !loading if condtion everywhere to laoding state changes in useeffect
-    if (!loadingUser){
-      const user = userData.squash
+      const user = formikValues
       const image_set_copy = user.image_set
       const min_idx_obj = image_set_copy.reduce((res, obj) => {
       return obj.img_idx < res.img_idx ? obj : res;
       });
       setDisplayImage(min_idx_obj.imageURL);
       setDisplayName(user.first_name + ' ' + user.last_name)
-    }
-  }, [loadingUser])
-
+  }, [formikValues])
   const renderHeader = () => {
   return (
     <View style={styles.headerContainer}>
