@@ -32,12 +32,11 @@ const creatGCUpload = (image_set, _id) => {
               encoding,
               createReadStream,
             } = await image.file;
-            console.log(filename);
-            console.log("where is the file");
-            console.log(image.file);
             const sanitizedFilename = sanitizeFile(filename, _id);
+            const fileLocation =  path.join(dest_gcs_images, _id, sanitizedFilename)
+            console.log(fileLocation)
             const gcFile = acsport1.file(
-              path.join(dest_gcs_images, sanitizedFilename)
+                fileLocation
             );
             let data: Data;
             let displayData: DisplayData = {
@@ -51,12 +50,12 @@ const creatGCUpload = (image_set, _id) => {
                   gcFile.makePublic();
                   data = {
                     img_idx: image.img_idx,
-                    imageURL: `https://storage.googleapis.com/acsport1/${dest_gcs_images}/${sanitizedFilename}`,
-                    filePath: `${dest_gcs_images}/${sanitizedFilename}`,
+                    imageURL: `https://storage.googleapis.com/acsport1/${fileLocation}`,
+                    filePath: `${fileLocation}`,
                   };
                   displayData = {
-                    imageURL: `https://storage.googleapis.com/acsport1/${dest_gcs_images}/${sanitizedFilename}`,
-                    filePath: `${dest_gcs_images}/${sanitizedFilename}`,
+                    imageURL: `https://storage.googleapis.com/acsport1/${fileLocation}`,
+                    filePath: `${fileLocation}`,
                   };
                   console.log("done");
                   resolve(data);
@@ -277,10 +276,8 @@ export const resolvers = {
         description,
       }
     ) => {
-      creatGCUpload(image_set, _id).then(async (data_set: any) => {
-        console.log(data_set);
-        console.log("done");
-        const doc = await Squash.create({
+      const data_set = await creatGCUpload(image_set, _id)
+      const doc = await Squash.create({
           _id: _id,
           image_set: data_set,
           first_name: first_name,
@@ -292,7 +289,6 @@ export const resolvers = {
         });
         console.log(doc);
         return doc;
-      });
     },
     updateUserProfile: async (
       root,

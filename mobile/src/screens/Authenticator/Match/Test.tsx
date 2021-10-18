@@ -21,8 +21,8 @@ const renderMatches =  (card, index) => {
       const image_set_copy2 = card.image_set.filter(imgObj => imgObj.img_idx != min_idx_obj.img_idx)
       const title = card.first_name +', ' + card.age
             return (
-              <View style={stylesSwipe.card}>
-                <Card key={index}>
+
+    <Card key={index}>
                 <CardItem
                 profileImage={min_idx_obj}
                 image_set={image_set_copy2}
@@ -33,13 +33,17 @@ const renderMatches =  (card, index) => {
                 onPressRight={() => this.swiper.swipeRight()}
                   />
                 </Card>
-              </View>
             )
 }
 const Test = () => {
  const image = require('../../../assets/images/01.jpg');
- const {squashData} = useContext(MatchesProfileContext);
-  const [endingText, setEndingText] = useState('')
+ const {matches, loadingMatches} = useContext(MatchesProfileContext);
+  const [endingText, setEndingText] = useState(null)
+  useEffect(() => {
+      if (matches.length == 0){
+          setEndingText("No more matches left!")
+      }
+  }, [])
 
   const nameStyle = [
     {
@@ -49,12 +53,12 @@ const Test = () => {
       fontSize: 25
     }
   ];
-  console.log("number of matches", squashData.queryProssibleMatches.length)
   return (
     <>
-      <View style={stylesSwipe.container}>
-          <Swiper
-            cards={squashData.queryProssibleMatches}
+        <View style={stylesSwipe.container}>
+            { matches.length != 0 &&
+           <Swiper
+           cards={matches}
             ref={(swiper) => {
               this.swiper = swiper;
             }}
@@ -74,17 +78,21 @@ const Test = () => {
             horizontalThreshold={width / 2}
             cardIndex={0}
             stackAnimationFriction={500}
+            //backgroundColor={'#FFFFFF'}
+            useViewOverflow={true}
             backgroundColor={'#FFFFFF'}
             stackSize={3}>
             <View style={styles.top}>
               <City />
               <Filters />
             </View>
-          </Swiper>
-        <View style={styles.center}>
+          </Swiper> }
+            { endingText && <View style={styles.center}>
         <Text style={nameStyle}>{endingText}</Text>
+        </View>}
         </View>
-          <View style={styles.top}>
+          <View style={styles.bottom}>
+          <View style={styles.spaceLikeDislike}>
             <FAB
               icon={{
                 type: 'material-community',
@@ -94,6 +102,7 @@ const Test = () => {
                 containerStyle: {marginHorizontal: -15, marginVertical: -15},
               }}
               color="white"
+                disabled={matches.length == 0}
               onPress={() => this.swiper.swipeRight()}
             />
             <FAB
@@ -105,6 +114,7 @@ const Test = () => {
                 containerStyle: {marginHorizontal: -15, marginVertical: -15},
               }}
               color="white"
+             disabled={matches.length == 0}
               onPress={() => this.swiper.swipeLeft()}
             />
         </View>
@@ -116,15 +126,7 @@ const Test = () => {
 const stylesSwipe = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "red"
-  },
-  card: {
-    flex: 1,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: "#E8E8E8",
-    justifyContent: "center",
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   text: {
     textAlign: "center",

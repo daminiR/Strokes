@@ -68,7 +68,6 @@ const ProfileSettingsInput = (props) => {
         </View>
       </Card>
       <Card containerStyle={styles.CardStyle}>
-        <Icon size={28} onPress={_editDescription} name="pencil" type='material-community' style={style_edit_icon.container} />
         <ProfileAttirbutes/>
       </Card>
     </>

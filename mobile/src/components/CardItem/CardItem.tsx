@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../../assets/styles';
 import {ProfileContext} from '../../screens/Authenticator/Profile/index'
 import { useRef, useEffect, useContext, useState, ReactElement } from 'react'
-import {ImageBackground, ScrollView, Text, View, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {TouchableWithoutFeedback, FlatList, ImageBackground, ScrollView, Text, View, Image, Dimensions, TouchableOpacity} from 'react-native';
 import {Card, FAB } from 'react-native-elements'
 import {Icon} from '../Icon/Icon';
 import {SportChips} from '../SportsChips'
@@ -34,12 +34,14 @@ const CardItem = ({
       paddingTop: variant ? 10 : 15,
       paddingBottom: variant ? 5 : 7,
       color: '#363636',
-      fontSize: variant ? 15 : 30
+      fontSize: variant ? 15 : 30,
+      textAlign: 'center'
     }
   ];
   return (
     <>
       <ScrollView>
+          <TouchableWithoutFeedback>
         <View style={styles.containerCardItem}>
           {/* IMAGE */}
           <ImageBackground source={{uri:profileImage.imageURL}} style={imageStyle}>
@@ -55,7 +57,7 @@ const CardItem = ({
               justifyContent: 'flex-end',
               alignItems: 'flex-start',
             }}>
-            <Text style={styles.firstImageText}>{profileTitle}</Text>
+          <Text style={styles.firstImageText}>{profileTitle}</Text>
           </View>
           </ImageBackground>
           {/* NAME */}
@@ -76,6 +78,7 @@ const CardItem = ({
             <Image key={index} source={{uri: imgObj.imageURL}} style={imageStyle}/>)
           )}
         </View>
+        </TouchableWithoutFeedback>
       </ScrollView>
     </>
   );

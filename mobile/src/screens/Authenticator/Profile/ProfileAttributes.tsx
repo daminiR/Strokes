@@ -17,7 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 import { EditInputVar} from '../../../cache'
 const _first_name = (navigation) => {
-      EditInputVar({inputType: 'Sports Input', displayInput: true})
+      EditInputVar({inputType: 'Name Input', displayInput: true})
       console.log(EditInputVar())
       //onScreen('FIRST_NAME', navigation)()
 
