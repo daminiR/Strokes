@@ -60,14 +60,15 @@ export const goHome = (navigation: any) => () => navigation.popToTop()()
 // initialValuesFormik
  export const intitialFormikSignUp = {
    email: 'daminrrijhwani@gmail.com',
-   phoneNumber: '+12025550173',
+   //phoneNumber: '+12025550173',
+   phoneNumber: '+12025550148',
    first_name: 'daminiR',
    last_name: 'Rijhwani',
    age: '23',
    gender: 'Female',
    sports:null,
    image_set:null,
-   confirmationCode: '000000',
+   confirmationCode: '222333',
    description: 'hello'
  }
 export const signInSlides = [
