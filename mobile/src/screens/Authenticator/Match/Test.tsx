@@ -102,7 +102,7 @@ const Test = () => {
                 containerStyle: {marginHorizontal: -15, marginVertical: -15},
               }}
               color="white"
-                disabled={matches.length == 0}
+              disabled={matches.length == 0}
               onPress={() => this.swiper.swipeRight()}
             />
             <FAB
@@ -113,9 +113,9 @@ const Test = () => {
                 size: 50,
                 containerStyle: {marginHorizontal: -15, marginVertical: -15},
               }}
-              color="white"
+             color="white"
              disabled={matches.length == 0}
-              onPress={() => this.swiper.swipeLeft()}
+             onPress={() => this.swiper.swipeLeft()}
             />
         </View>
         </View>
