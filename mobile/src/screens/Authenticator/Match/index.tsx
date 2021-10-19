@@ -13,6 +13,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import  {Matches}  from './Matches'
 import  {Home}  from './Home'
 import {Test} from './Test'
+import {createPatronList} from '../../../utils/patron_list'
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
 
 type MatchT = {
@@ -21,23 +22,20 @@ type MatchT = {
 export const MatchesProfileContext = createContext(null)
 const Match  = ({ navigation }: MatchT ): ReactElement => {
   const [loadingMatches, setLoadingMatches] = useState(true)
-  const {currentUser} = useContext(UserContext);
   const [matches, setMatches] = useState(null)
+    // this line o fcode will change when sclaing with more data
+  const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
   const {data: squashData} = useQuery(GET_POTENTIAL_MATCHES, {
     variables: {_id: currentUser.uid},
     onCompleted: (data) => {
         console.log("/////////////// mactesh dat //////////////////////", data)
-          setMatches(data.queryProssibleMatches)
+        const all_users = data.queryProssibleMatches
+        setMatches(all_users)
         setLoadingMatches(false)
+        const patron_list = createPatronList(all_users, currentUserData.likes, currentUserData.dislikes, currentUserData.i_blocked, currentUser.blocked_me, currentUser.matched)
+        console.log("///////////////patron list/////////////", patron_list)
     }
   });
-//console.log("/////////////// lpading value //////////////////////", loadingMatches)
-  //useEffect(() => {
-      //if (!loadingMatches){
-        //console.log("/////////////// lpading value //////////////////////", loadingMatches)
-          //setMatches(squashData.queryProssibleMatches)
-      //}
-    //}, [loadingMatches])
   const matchesProfileValue = {matches, loadingMatches}
   return (
     <>

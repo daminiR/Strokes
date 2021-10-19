@@ -9,6 +9,11 @@ export interface SquashDocument extends Document {
   country: string
   description: [string]
   image_set: [{img_idx: number, imageURL: string, filePath: string}]
+  matched : [SquashDocument]!
+  blocked_me : [SquashDocument]!
+  i_blocked : [SquashDocument]!
+  likes : [SquashDocument]!
+  dislikes : [SquashDocument]!
 }
 
 
