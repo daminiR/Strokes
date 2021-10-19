@@ -14,6 +14,39 @@ import {gql} from 'apollo-server-express';
     img_idx: Int!,
     file: FileUpload!
 `
+const SquashType = `
+    first_name: String!
+    last_name: String!
+    _id: ID!
+    age: Int!
+    gender: String!
+    sports: [SquashNode!]!
+    country: String
+    description: String
+    image_set: [Data!]!
+  matched : [Squash]!
+  blocked_me : [Squash]!
+  i_blocked : [Squash]!
+  likes : [Squash]!
+  dislikes : [Squash]!
+  `
+const SquashInputType = `
+    first_name: String!
+    last_name: String!
+    _id: ID!
+    age: Int!
+    gender: String!
+    sports: [SquashNodeInput!]!
+    country: String
+    description: String
+    image_set: [DataInput!]!
+    matched : [SquashInput]!
+    blocked_me : [SquashInput]!
+    i_blocked : [SquashInput]!
+    likes : [SquashInput]!
+    dislikes : [SquashInput]!
+  `
+
 export const typeDefs = gql`
   scalar FileUpload
   type Query {
@@ -30,15 +63,10 @@ export const typeDefs = gql`
     ${SquashNodeType}
   }
   type Squash {
-    first_name: String!
-    last_name: String!
-    _id: ID!
-    age: Int!
-    gender: String!
-    sports: [SquashNode!]!
-    country: String
-    description: String
-    image_set: [Data!]!
+      ${SquashType}
+  }
+  input SquashInput {
+      ${SquashInputType}
   }
   type DisplayImage {
     imageURL: String!
@@ -88,6 +116,11 @@ export const typeDefs = gql`
       country: String
       description: String!
       image_set: [ImageData!]!
+    matched : [SquashInput]!
+  blocked_me : [SquashInput]!
+  i_blocked : [SquashInput]!
+  likes : [SquashInput]!
+  dislikes : [SquashInput]!
     ): Squash!
     deleteSquash(_id: String): Squash!
   }
