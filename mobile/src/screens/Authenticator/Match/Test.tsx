@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import {Dimensions, Image,Text, Button, View, ImageBackground } from 'react-native';
+import {UserContext} from '../../../UserContext'
 import CardStack, { Card } from 'react-native-card-stack-swiper';
 import {Icon, FAB} from 'react-native-elements'
 import Swiper from 'react-native-deck-swiper'
@@ -12,6 +13,10 @@ import Demo from '../../../assets/data/demo.js';
 import styles from '../../../assets/styles/'
 import {PRIMARY_COLOR} from '../../../assets/styles/'
 import {MatchesProfileContext} from './index'
+import {swipeRightLiked, swipeLeftDisliked} from '../../../utils/matching/swipeFuntions'
+import { useQuery, useMutation } from '@apollo/client'
+import {UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '../../../graphql/mutations/profile'
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const renderMatches =  (card, index) => {
@@ -21,8 +26,7 @@ const renderMatches =  (card, index) => {
       const image_set_copy2 = card.image_set.filter(imgObj => imgObj.img_idx != min_idx_obj.img_idx)
       const title = card.first_name +', ' + card.age
             return (
-
-    <Card key={index}>
+      <Card key={index}>
                 <CardItem
                 profileImage={min_idx_obj}
                 image_set={image_set_copy2}
@@ -36,9 +40,13 @@ const renderMatches =  (card, index) => {
             )
 }
 const Test = () => {
- const image = require('../../../assets/images/01.jpg');
- const {matches, loadingMatches} = useContext(MatchesProfileContext);
+  const image = require('../../../assets/images/01.jpg');
+  const {matches, loadingMatches} = useContext(MatchesProfileContext);
+  const [updateLikes] = useMutation(UPDATE_LIKES);
+  const [updateMatches] = useMutation(UPDATE_MATCHES);
+  const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
+  const {currentUser, data: currentUserData, userLoading} = useContext(UserContext)
   useEffect(() => {
       if (matches.length == 0){
           setEndingText("No more matches left!")
@@ -49,7 +57,7 @@ const Test = () => {
     {
       paddingTop: 15,
       paddingBottom: 7,
-      color: '#363636',
+     color: '#363636',
       fontSize: 25
     }
   ];
@@ -66,8 +74,11 @@ const Test = () => {
             onSwiped={(cardIndex) => {
               console.log(cardIndex);
             }}
-            onSwipedRight={() => {
-              console.log('onSwipedRight');
+            onSwipedLeft={(index) => {
+              swipeLeftDisliked(currentUser.uid, matches[index], updateDislikes)
+            }}
+            onSwipedRight={(index) => {
+              swipeRightLiked(currentUserData.squash, currentUser.uid , matches[index], updateLikes, updateMatches)
             }}
             //hacky solution to add note at the last deck
             onSwipedAll={() => setEndingText("No more matches left!")}
@@ -102,8 +113,13 @@ const Test = () => {
                 containerStyle: {marginHorizontal: -15, marginVertical: -15},
               }}
               color="white"
+<<<<<<< HEAD
               disabled={matches.length == 0}
               onPress={() => this.swiper.swipeRight()}
+=======
+                disabled={matches.length == 0}
+                onPress={() => this.swiper.swipeRight()}
+>>>>>>> dev_match_alg
             />
             <FAB
               icon={{
@@ -113,9 +129,15 @@ const Test = () => {
                 size: 50,
                 containerStyle: {marginHorizontal: -15, marginVertical: -15},
               }}
+<<<<<<< HEAD
              color="white"
              disabled={matches.length == 0}
              onPress={() => this.swiper.swipeLeft()}
+=======
+              color="white"
+              disabled={matches.length == 0}
+              onPress={() => this.swiper.swipeLeft()}
+>>>>>>> dev_match_alg
             />
         </View>
         </View>
