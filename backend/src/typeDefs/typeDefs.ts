@@ -14,6 +14,57 @@ import {gql} from 'apollo-server-express';
     img_idx: Int!,
     file: FileUpload!
 `
+const PotentialMatchUserType = `
+    _id: ID!
+    first_name: String!
+    age: Int!
+    gender: String!
+    sports: [SquashNode!]!
+    description: String
+    image_set: [Data!]!
+`
+const PotentialMatchUserInputType = `
+    _id: ID!
+    first_name: String!
+    age: Int!
+    gender: String!
+    sports: [SquashNodeInput!]!
+    description: String
+    image_set: [DataInput!]!
+`
+const SquashType = `
+    first_name: String!
+    last_name: String!
+    _id: ID!
+    age: Int!
+    gender: String!
+    sports: [SquashNode!]!
+    country: String
+    description: String
+    image_set: [Data!]!
+    matched : [PotentialMatch!]
+    blocked_me : [PotentialMatch!]
+    i_blocked : [PotentialMatch!]
+    likes : [PotentialMatch!]
+    dislikes : [PotentialMatch!]
+  `
+const SquashInputType = `
+    first_name: String!
+    last_name: String!
+    _id: ID!
+    age: Int!
+    gender: String!
+    sports: [SquashNodeInput!]!
+    country: String
+    description: String
+    image_set: [DataInput!]!
+    matched : [PotentialMatchInput!]
+    blocked_me : [PotentialMatchInput!]
+    i_blocked : [PotentialMatchInput!]
+    likes : [PotentialMatchInput!]
+    dislikes : [PotentialMatchInput!]
+  `
+
 export const typeDefs = gql`
   scalar FileUpload
   type Query {
@@ -30,16 +81,19 @@ export const typeDefs = gql`
     ${SquashNodeType}
   }
   type Squash {
-    first_name: String!
-    last_name: String!
-    _id: ID!
-    age: Int!
-    gender: String!
-    sports: [SquashNode!]!
-    country: String
-    description: String
-    image_set: [Data!]!
+      ${SquashType}
   }
+  input SquashInput {
+      ${SquashInputType}
+  }
+
+  type PotentialMatch {
+      ${PotentialMatchUserType}
+  }
+  input PotentialMatchInput {
+      ${PotentialMatchUserInputType}
+  }
+
   type DisplayImage {
     imageURL: String!
     filePath: String!
@@ -65,6 +119,10 @@ export const typeDefs = gql`
     updateGender(_id: String!, gender: Int): String
     updateDescription(_id: String!, description: String!): String
     uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
+
+    updateLikes(_id: String!, likes: [PotentialMatchInput!]): Squash
+    updateDislikes(_id: String!, dislikes: [PotentialMatchInput!]): Squash
+    updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): String
     updateUserProfile(
       _id: String!
       first_name: String!
@@ -88,7 +146,24 @@ export const typeDefs = gql`
       country: String
       description: String!
       image_set: [ImageData!]!
+      matched : [PotentialMatchInput!]
+      blocked_me : [PotentialMatchInput!]
+      i_blocked : [PotentialMatchInput!]
+      likes : [PotentialMatchInput!]
+      dislikes : [PotentialMatchInput!]
+    ): Squash!
+    createSquashTestSamples(
+      _id: String!
+      first_name: String!
+      last_name: String!
+      age: Int!
+      gender: String!
+      sports: [SquashNodeInput!]!
+      country: String
+      description: String!
+      image_set: [DataInput!]!
     ): Squash!
     deleteSquash(_id: String): Squash!
+    testMut(name: Int!):Int
   }
 `;

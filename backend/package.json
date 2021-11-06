@@ -17,6 +17,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "genData": "node src/admin/createData/createUsers.js",
     "dev": "nodemon build/index.js",
     "watch": "tsc -w",
     "tsc": "tsc",

@@ -52,7 +52,6 @@ const App = () =>
      const uploadLink = createUploadLink({uri: 'http://10.0.2.2:4000/graphql'})
       //const link = ApolloLink.from([onErrorLink, uploadLink]);
       //const uri = 'http://localhost:4000/graphql'
-     //
      var  apolloClient =
         new ApolloClient({
           link: uploadLink,
