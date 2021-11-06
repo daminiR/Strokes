@@ -13,7 +13,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import  {Matches}  from './Matches'
 import  {Home}  from './Home'
 import {Test} from './Test'
-import {createPatronList} from '../../../utils/patron_list'
+import {createPatronList} from '../../../utils/matching/patron_list'
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
 
 type MatchT = {
@@ -26,13 +26,16 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
     // this line o fcode will change when sclaing with more data
   const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
   const {data: squashData} = useQuery(GET_POTENTIAL_MATCHES, {
+    fetchPolicy: "network-only",
     variables: {_id: currentUser.uid},
     onCompleted: (data) => {
         console.log("/////////////// mactesh dat //////////////////////", data)
+        console.log("/////////////// current user //////////////////////", currentUserData)
         const all_users = data.queryProssibleMatches
-        setMatches(all_users)
         setLoadingMatches(false)
-        const patron_list = createPatronList(all_users, currentUserData.likes, currentUserData.dislikes, currentUserData.i_blocked, currentUser.blocked_me, currentUser.matched)
+        //const patron_list = createPatronList(all_users, currentUserData.squash.likes, currentUserData.squash.dislikes, currentUserData.squash.i_blocked, currentUser.squash.blocked_me, currentUser.squash.matches)
+        const patron_list = createPatronList(all_users, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches)
+        setMatches(patron_list)
         console.log("///////////////patron list/////////////", patron_list)
     }
   });

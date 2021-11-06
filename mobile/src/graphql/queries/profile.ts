@@ -28,6 +28,40 @@ const GET_POTENTIAL_MATCHES = gql`
         img_idx
         imageURL
       }
+      likes
+      {
+      _id
+      first_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+      }
+      dislikes
+      {
+      _id
+      first_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+      }
     }
   }
 `
@@ -56,6 +90,40 @@ const READ_SQUASH = gql`
         img_idx
         imageURL
         filePath
+      }
+      likes
+      {
+      _id
+      first_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+      }
+      dislikes
+      {
+      _id
+      first_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
       }
     }
   }

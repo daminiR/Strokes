@@ -145,6 +145,41 @@ export const resolvers = {
       }
       return _id;
     },
+    updateMatches: async (parents, { currentUserId, potentialMatchId, currentUser, potentialMatch}, context, info) => {
+        const doc = await Squash.findOneAndUpdate(
+          { _id: currentUserId },
+          { $push: { matches: potentialMatch } },
+          { new: true }
+        );
+        const doc2 = await Squash.findOneAndUpdate(
+          { _id: potentialMatchId },
+          { $push: { matches: currentUser} },
+          { new: true }
+        );
+        console.log("doc user", doc)
+        console.log("doc match", doc2)
+      return "done";
+    },
+    updateLikes: async (parents, { _id, likes }, context, info) => {
+        const doc = await Squash.findOneAndUpdate(
+          { _id: _id },
+          { $push: { likes: likes } },
+          { new: true }
+        );
+        console.log("Updated user likes ", likes);
+        console.log("doc", doc)
+      return doc;
+    },
+    updateDislikes: async (parents, { _id, dislikes }, context, info) => {
+        const doc = await Squash.findOneAndUpdate(
+          { _id: _id },
+          { $push: { dislikes: dislikes } },
+          { new: true }
+        );
+        console.log("Updated user dislikes ", dislikes);
+        console.log("doc", doc)
+      return doc;
+    },
     updateAge: async (parents, { _id, age }, context, info) => {
       if (age != 0) {
         const doc = await Squash.findOneAndUpdate(
@@ -262,6 +297,39 @@ export const resolvers = {
         }
       });
       return displayData;
+    },
+    createSquashTestSamples: async (
+      root,
+      {
+        _id,
+        image_set,
+        first_name,
+        last_name,
+        gender,
+        age,
+        sports,
+        description,
+      }
+    ) => {
+      const doc = await Squash.create({
+          _id: _id,
+          image_set: image_set,
+          first_name: first_name,
+          last_name: last_name,
+          gender: gender,
+          age: age,
+          sports: sports,
+          description: description,
+          i_blocked: [],
+          blocked_me: [],
+          likes: [],
+          dislikes: []
+        });
+        console.log(doc);
+        return doc;
+    },
+    testMut(root, args){
+      return args.name
     },
     createSquash2: async (
       root,

@@ -1,5 +1,5 @@
 import { Types, model, Schema} from 'mongoose';
-import { SquashDocument } from '../types/Squash.d'
+import { SquashDocument, PotentialMatchT} from '../types/Squash.d'
 //const mongoose = require('mongoose');
 //const Schema = mongoose.Schema;
 const GENDERS = ["Male", "Female"]
@@ -102,6 +102,26 @@ var squashSchema = new Schema({
         message: "No more than 6 images",
       },
     ],
+  },
+  likes: {
+    type:<PotentialMatchT>{},
+    required: false,
+  },
+  dislikes: {
+    type:<PotentialMatchT>{},
+    required: false,
+  },
+  i_blocked: {
+    type:<PotentialMatchT>{},
+    required: false,
+  },
+  blocked_me: {
+    type:<PotentialMatchT>{},
+    required: false,
+  },
+  matches: {
+    type:<PotentialMatchT>{},
+    required: false,
   },
 });
 const Squash = model<SquashDocument>('Squash', squashSchema)
