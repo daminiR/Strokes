@@ -163,7 +163,7 @@ export const resolvers = {
     updateLikes: async (parents, { _id, likes }, context, info) => {
         const doc = await Squash.findOneAndUpdate(
           { _id: _id },
-          { $push: { likes: likes } },
+          { $push: { likes: {$each: likes} } },
           { new: true }
         );
         console.log("Updated user likes ", likes);
@@ -173,7 +173,7 @@ export const resolvers = {
     updateDislikes: async (parents, { _id, dislikes }, context, info) => {
         const doc = await Squash.findOneAndUpdate(
           { _id: _id },
-          { $push: { dislikes: dislikes } },
+          { $push: { dislikes: {$each: dislikes} } },
           { new: true }
         );
         console.log("Updated user dislikes ", dislikes);

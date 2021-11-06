@@ -36,6 +36,16 @@ export interface PotentialMatchType {
     description: string
     image_set: ImageSetT[]
 }
+export interface PatronListType {
+    first_name: string
+    _id: string
+    age: number
+    gender: string
+    sports: Sport[],
+    description: string
+    likes: PotentialMatchType[]
+    image_set: ImageSetT[]
+}
 export interface ProfileFields {
   email: string;
   phoneNumber: string;

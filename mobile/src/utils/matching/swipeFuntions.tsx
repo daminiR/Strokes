@@ -36,15 +36,18 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     // if potential match likes current user upsert a match array
 
     // update mutation for both users
+    console.log("//card////",card)
     const matchUSerLikedIDs = _.find(card.matches, match => { return match._id})
-    console.log("////// card //////", card)
-    if (_.includes(card.matches, currentUser._id)){
+    console.log("////// card likes //////", card.likes)
+    if (_.find(card.likes, (likeObj) => {return likeObj._id == _id})){
         console.log("included")
-    //const userMatchingData = sanitizeCard(currentUser)
-    //const matchedUser = sanitizeCard(card)
-    //updateMatches(_id, card._id, userMatchingData, matchedUser)
+    const userMatchingData = sanitizeCard(currentUser)
+    const matchedUser = sanitizeCard(card)
+    updateMatches({variables: {currentUserId: _id,
+                  potentialMatchId: card._id,
+                  currentUser: userMatchingData,
+                  potentialMatch: matchedUser}})
     }
-
     console.log("////////log//////", _id)
     var array = likesVar()
     if (array.length  == MAX_LIKES){
