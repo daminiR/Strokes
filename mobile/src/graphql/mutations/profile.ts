@@ -104,6 +104,54 @@ const UPDATE_USER_SPORTS = gql`
     updateUserSports(_id: $_id, sportsList: $sportsList)
   }
 `;
+const UPDATE_DISLIKES = gql`
+  mutation UpdateDislikes($_id: String!, $dislikes: [PotentialMatchInput!]!) {
+    updateDislikes(_id: $_id, dislikes: $dislikes)
+    {
+      _id
+      first_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+    }
+  }
+`;
+
+const UPDATE_MATCHES = gql`
+  mutation UpdateMatches($currentUserId: String!, $potentialMatchId: String!, $currentUser: PotentialMatchInput, $potentialMatch: PotentialMatchInput) {
+    updateMatches(currentUserId: $currentUserId, potentialMatchId: $potentialMatchId, currentUser: currentUser, potentialMatch: $potentialMatch)
+  }
+`;
+
+const UPDATE_LIKES = gql`
+  mutation UpdateLikes($_id: String!, $likes: [PotentialMatchInput!]!) {
+    updateLikes(_id: $_id, likes: $likes){
+      _id
+      first_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+    }
+  }
+`;
 const UPDATE_NAME = gql`
   mutation UpdateName($_id: String!, $first_name: String!, $last_name: String!){
     updateName(_id: $_id, first_name: $first_name, last_name: $last_name)
@@ -146,4 +194,7 @@ export {
   DELETE_IMAGE,
   UPLOAD_FILE,
   DELETE_PROFILE,
+  UPDATE_DISLIKES,
+  UPDATE_LIKES,
+  UPDATE_MATCHES
 };
