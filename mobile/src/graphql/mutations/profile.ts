@@ -128,7 +128,7 @@ const UPDATE_DISLIKES = gql`
 
 const UPDATE_MATCHES = gql`
   mutation UpdateMatches($currentUserId: String!, $potentialMatchId: String!, $currentUser: PotentialMatchInput, $potentialMatch: PotentialMatchInput) {
-    updateMatches(currentUserId: $currentUserId, potentialMatchId: $potentialMatchId, currentUser: currentUser, potentialMatch: $potentialMatch)
+    updateMatches(currentUserId: $currentUserId, potentialMatchId: $potentialMatchId, currentUser: $currentUser, potentialMatch: $potentialMatch)
   }
 `;
 
