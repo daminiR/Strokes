@@ -1,11 +1,12 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
-import {Dimensions, Image,Text, Button, View, ImageBackground } from 'react-native';
+import {Dimensions, Modal, Image,Text, Button, View, ImageBackground } from 'react-native';
 import {UserContext} from '../../../UserContext'
 import CardStack, { Card } from 'react-native-card-stack-swiper';
-import {Icon, FAB} from 'react-native-elements'
+import {Icon, FAB, Overlay} from 'react-native-elements'
 import Swiper from 'react-native-deck-swiper'
 import {ScrollView, StyleSheet } from 'react-native'
 import { City } from '../../../components/City/City';
+import { MatchCard } from '../../../components/';
 import { Filters } from '../../../components/Filters/Filters';
 import { CardItem } from '../../../components/CardItem/CardItem';
 import { EndCard } from '../../../components/EndCard/EndCard';
@@ -47,6 +48,7 @@ const Test = () => {
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
   const {currentUser, data: currentUserData, userLoading} = useContext(UserContext)
+  const [matched, setMatched] = useState(false)
   useEffect(() => {
       if (matches.length == 0){
           setEndingText("No more matches left!")
@@ -61,12 +63,16 @@ const Test = () => {
       fontSize: 25
     }
   ];
+  const match = (matchVal) => {
+    setMatched(matchVal)
+  }
   return (
     <>
-        <View style={stylesSwipe.container}>
-            { matches.length != 0 &&
-           <Swiper
-           cards={matches}
+      <MatchCard matched={matched} setMatched={setMatched}/>
+      <View style={stylesSwipe.container}>
+        {matches.length != 0 && (
+          <Swiper
+            cards={matches}
             ref={(swiper) => {
               this.swiper = swiper;
             }}
@@ -75,13 +81,24 @@ const Test = () => {
               console.log(cardIndex);
             }}
             onSwipedLeft={(index) => {
-              swipeLeftDisliked(currentUser.uid, matches[index], updateDislikes)
+              swipeLeftDisliked(
+                currentUser.uid,
+                matches[index],
+                updateDislikes,
+              );
             }}
             onSwipedRight={(index) => {
-              swipeRightLiked(currentUserData.squash, currentUser.uid , matches[index], updateLikes, updateMatches)
+            swipeRightLiked(
+                currentUserData.squash,
+                currentUser.uid,
+                matches[index],
+                updateLikes,
+                updateMatches,
+                match
+              );
             }}
             //hacky solution to add note at the last deck
-            onSwipedAll={() => setEndingText("No more matches left!")}
+            onSwipedAll={() => setEndingText('No more matches left!')}
             disableBottomSwipe={true}
             disableTopSwipe={true}
             verticalSwipe={false}
@@ -97,50 +114,42 @@ const Test = () => {
               <City />
               <Filters />
             </View>
-          </Swiper> }
-            { endingText && <View style={styles.center}>
-        <Text style={nameStyle}>{endingText}</Text>
-        </View>}
+          </Swiper>
+        )}
+        {endingText && (
+          <View style={styles.center}>
+            <Text style={nameStyle}>{endingText}</Text>
+          </View>
+        )}
+      </View>
+      <View style={styles.bottom}>
+        <View style={styles.spaceLikeDislike}>
+          <FAB
+            icon={{
+              type: 'material-community',
+              name: 'heart',
+              color: 'grey',
+              size: 50,
+              containerStyle: {marginHorizontal: -15, marginVertical: -15},
+            }}
+            color="white"
+            disabled={matches.length == 0}
+            onPress={() => this.swiper.swipeRight()}
+          />
+          <FAB
+            icon={{
+              type: 'material-community',
+              name: 'close-circle-outline',
+              color: 'grey',
+              size: 50,
+              containerStyle: {marginHorizontal: -15, marginVertical: -15},
+            }}
+            color="white"
+            disabled={matches.length == 0}
+            onPress={() => this.swiper.swipeLeft()}
+          />
         </View>
-          <View style={styles.bottom}>
-          <View style={styles.spaceLikeDislike}>
-            <FAB
-              icon={{
-                type: 'material-community',
-                name: 'heart',
-                color: 'grey',
-                size: 50,
-                containerStyle: {marginHorizontal: -15, marginVertical: -15},
-              }}
-              color="white"
-<<<<<<< HEAD
-              disabled={matches.length == 0}
-              onPress={() => this.swiper.swipeRight()}
-=======
-                disabled={matches.length == 0}
-                onPress={() => this.swiper.swipeRight()}
->>>>>>> dev_match_alg
-            />
-            <FAB
-              icon={{
-                type: 'material-community',
-                name: 'close-circle-outline',
-                color: 'grey',
-                size: 50,
-                containerStyle: {marginHorizontal: -15, marginVertical: -15},
-              }}
-<<<<<<< HEAD
-             color="white"
-             disabled={matches.length == 0}
-             onPress={() => this.swiper.swipeLeft()}
-=======
-              color="white"
-              disabled={matches.length == 0}
-              onPress={() => this.swiper.swipeLeft()}
->>>>>>> dev_match_alg
-            />
-        </View>
-        </View>
+      </View>
     </>
   );
 };
@@ -149,6 +158,10 @@ const stylesSwipe = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+  },
+  matched: {
+      width:  80,
+      height:  350,
   },
   text: {
     textAlign: "center",

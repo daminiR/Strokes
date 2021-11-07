@@ -1,6 +1,7 @@
 import React, { useEffect, useContext,createContext, useState, ReactElement } from 'react'
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack'
 import { View, Text, Button } from 'react-native'
+import {Icon, FAB, Overlay} from 'react-native-elements'
 import { onScreen, goBack } from '../../../constants'
 import { AppContainer } from '../../../components'
 import { RootStackParamList } from '../../../AppNavigator'
@@ -42,8 +43,8 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
   const matchesProfileValue = {matches, loadingMatches}
   return (
     <>
-        {!loadingMatches && <MatchesProfileContext.Provider value={matchesProfileValue}>
-             <Test/>
+      {!loadingMatches && <MatchesProfileContext.Provider value={matchesProfileValue}>
+      <Test/>
       </MatchesProfileContext.Provider>}
     </>
   );
