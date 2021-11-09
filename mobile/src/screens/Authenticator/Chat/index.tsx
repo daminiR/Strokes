@@ -18,12 +18,9 @@ type ChatT = {
 }
 const Chat  = ({ navigation }: ChatT ): ReactElement => {
   const [loading, setLoading] = useState(false)
-  //<Button title="Profile" onPress={_onPressProfile}/>
   return (
     <>
-      <AppContainer title="User" loading={loading}>
         <Messages/>
-      </AppContainer>
     </>
   );
 }

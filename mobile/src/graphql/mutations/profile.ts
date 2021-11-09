@@ -127,14 +127,89 @@ const UPDATE_DISLIKES = gql`
 `;
 
 const UPDATE_MATCHES = gql`
-  mutation UpdateMatches($currentUserId: String!, $potentialMatchId: String!, $currentUser: PotentialMatchInput, $potentialMatch: PotentialMatchInput) {
-    updateMatches(currentUserId: $currentUserId, potentialMatchId: $potentialMatchId, currentUser: $currentUser, potentialMatch: $potentialMatch)
+  mutation UpdateMatches(
+    $currentUserId: String!
+    $potentialMatchId: String!
+    $currentUser: PotentialMatchInput
+    $potentialMatch: PotentialMatchInput
+  ) {
+    updateMatches(
+      currentUserId: $currentUserId
+      potentialMatchId: $potentialMatchId
+      currentUser: $currentUser
+      potentialMatch: $potentialMatch
+    ) {
+      _id
+      first_name
+      last_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      country
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+      likes {
+        _id
+        first_name
+        age
+        gender
+        sports {
+          sport
+          game_level
+        }
+        description
+        image_set {
+          img_idx
+          imageURL
+          filePath
+        }
+      }
+      dislikes {
+        _id
+        first_name
+        age
+        gender
+        sports {
+          sport
+          game_level
+        }
+        description
+        image_set {
+          img_idx
+          imageURL
+          filePath
+        }
+      }
+      matches {
+        _id
+        first_name
+        age
+        gender
+        sports {
+          sport
+          game_level
+        }
+        description
+        image_set {
+          img_idx
+          imageURL
+          filePath
+        }
+      }
+    }
   }
 `;
 
 const UPDATE_LIKES = gql`
-  mutation UpdateLikes($_id: String!, $likes: [PotentialMatchInput!]!) {
-    updateLikes(_id: $_id, likes: $likes){
+  mutation UpdateLikes($_id: String!, $likes: [PotentialMatchInput!]!, $currentUserData: PotentialMatchInput!) {
+    updateLikes(_id: $_id, likes: $likes, currentUserData: $currentUserData){
       _id
       first_name
       age

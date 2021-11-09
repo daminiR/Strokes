@@ -23,7 +23,7 @@ export const win = Dimensions.get('window')
 export const W = win.width
 export const H = win.height
 // SwIPE DATA CONSTANTS
-export const MAX_LIKES = 3
+export const MAX_LIKES = 1
 export const MAX_DISLIKES = 3
 export const Device = {
   // eslint-disable-next-line

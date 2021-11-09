@@ -42,11 +42,12 @@ const SquashType = `
     country: String
     description: String
     image_set: [Data!]!
-    matched : [PotentialMatch!]
+    matches : [PotentialMatch!]
     blocked_me : [PotentialMatch!]
     i_blocked : [PotentialMatch!]
     likes : [PotentialMatch!]
     dislikes : [PotentialMatch!]
+    likedByUSers: [PotentialMatch!]
   `
 const SquashInputType = `
     first_name: String!
@@ -58,11 +59,12 @@ const SquashInputType = `
     country: String
     description: String
     image_set: [DataInput!]!
-    matched : [PotentialMatchInput!]
+    matches : [PotentialMatchInput!]
     blocked_me : [PotentialMatchInput!]
     i_blocked : [PotentialMatchInput!]
     likes : [PotentialMatchInput!]
     dislikes : [PotentialMatchInput!]
+    likedByUSers: [PotentialMatchInput!]
   `
 
 export const typeDefs = gql`
@@ -120,9 +122,9 @@ export const typeDefs = gql`
     updateDescription(_id: String!, description: String!): String
     uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
 
-    updateLikes(_id: String!, likes: [PotentialMatchInput!]): Squash
+    updateLikes(_id: String!, likes: [PotentialMatchInput!], currentUserData: PotentialMatchInput!): Squash
     updateDislikes(_id: String!, dislikes: [PotentialMatchInput!]): Squash
-    updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): String
+    updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): Squash
     updateUserProfile(
       _id: String!
       first_name: String!
@@ -146,11 +148,12 @@ export const typeDefs = gql`
       country: String
       description: String!
       image_set: [ImageData!]!
-      matched : [PotentialMatchInput!]
+      matches : [PotentialMatchInput!]
       blocked_me : [PotentialMatchInput!]
       i_blocked : [PotentialMatchInput!]
       likes : [PotentialMatchInput!]
       dislikes : [PotentialMatchInput!]
+      likedByUSers: [PotentialMatchInput!]
     ): Squash!
     createSquashTestSamples(
       _id: String!

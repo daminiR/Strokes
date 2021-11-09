@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useContext,createContext, useState, ReactElement } from 'react'
 import styles from '../../../assets/styles';
+import _ from 'lodash'
 import {
+  StyleSheet,
   ScrollView,
   View,
   Text,
@@ -8,18 +10,42 @@ import {
   ImageBackground,
   FlatList
 } from 'react-native';
-import {CardItem} from '../../../components/CardItem/CardItem';
-import {Icon} from '../../../components/Icon/Icon';
-import Demo from '../../../assets/data/demo.js';
+import {CardItem} from '../../../components/CardItem/CardItem'
+import {Icon} from '../../../components/Icon/Icon'
+import {UserContext} from '../../../UserContext'
+import Demo from '../../../assets/data/demo.js'
+import {likesVar} from '../../../cache'
 
+const renderMatchCard = (card) => {
+      const profileImage = card.image_set.find(imgObj => imgObj.img_idx == 0)
+      const title = card.first_name +', ' + card.age
+      return (
+              <TouchableOpacity>
+                <CardItem
+                  profileImage={profileImage}
+                  profileTitle={title}
+                  variant
+                />
+              </TouchableOpacity>
+
+      )
+}
 const Matches = () => {
+  const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
+  const [totalLikes, setTotalLikes] = useState(null)
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    setLoading(true)
+    const user = currentUserData.squash
+    // set total likes to be local and database likes
+    const totalLikes = _.concat(user.likes)
+    console.log("///////// totalLikes", totalLikes)
+    setTotalLikes(totalLikes)
+    setLoading(false)
+  }, [userLoading])
   return (
-    <ImageBackground
-      source={require('../../../assets/images/bg.png')}
-      style={styles.bg}
-    >
-      <View style={styles.containerMatches}>
-        <ScrollView>
+    <ScrollView>
+        <View style={styles.containerMatches}>
           <View style={styles.top}>
             <Text style={styles.title}>Matches</Text>
             <TouchableOpacity>
@@ -28,25 +54,20 @@ const Matches = () => {
               </Text>
             </TouchableOpacity>
           </View>
-
-          <FlatList
-            numColumns={2}
-            data={Demo}
+          <View>
+            { !loading && <FlatList
+            numColumns={3}
+            data={totalLikes}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity>
-                <CardItem
-                  image={item.image}
-                  name={item.name}
-                  status={item.status}
-                  variant
-                />
-              </TouchableOpacity>
-            )}
-          />
-        </ScrollView>
-      </View>
-    </ImageBackground>
+            renderItem={({item}) => renderMatchCard(item)}
+          />}
+          </View>
+        </View>
+    </ScrollView>
   );
 };
+const stylesSwipe = StyleSheet.create({
+  tempStyle : {
+}
+})
 export {Matches}

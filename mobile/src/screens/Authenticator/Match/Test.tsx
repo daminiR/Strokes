@@ -13,9 +13,10 @@ import { EndCard } from '../../../components/EndCard/EndCard';
 import Demo from '../../../assets/data/demo.js';
 import styles from '../../../assets/styles/'
 import {PRIMARY_COLOR} from '../../../assets/styles/'
+import {GET_INPUT_TYPE, READ_SQUASH} from '../../../graphql/queries/profile'
 import {MatchesProfileContext} from './index'
 import {swipeRightLiked, swipeLeftDisliked} from '../../../utils/matching/swipeFuntions'
-import { useQuery, useMutation } from '@apollo/client'
+import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
 import {UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '../../../graphql/mutations/profile'
 
 const width = Dimensions.get('window').width;
@@ -44,22 +45,39 @@ const Test = () => {
   const image = require('../../../assets/images/01.jpg');
   const {matches, loadingMatches} = useContext(MatchesProfileContext);
   const [updateLikes] = useMutation(UPDATE_LIKES);
-  const [updateMatches] = useMutation(UPDATE_MATCHES);
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
-  const {currentUser, data: currentUserData, userLoading} = useContext(UserContext)
+  const {currentUser, data: new_data , userData, setData, userLoading} = useContext(UserContext)
   const [matched, setMatched] = useState(false)
+  const [updateMatches] = useMutation(UPDATE_MATCHES, {
+    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
+    awaitRefetchQueries: true,
+    onCompleted: (data) => {
+      getSquashProfile({variables: {id: currentUser.uid}});
+    },
+  })
   useEffect(() => {
       if (matches.length == 0){
           setEndingText("No more matches left!")
       }
   }, [])
+  const [ getSquashProfile, {data: newUserData, loading: newUserLaodingData}] = useLazyQuery(READ_SQUASH, {
+    variables: {id: currentUser.uid},
+    //fetchPolicy:"cache-and-network",
+    fetchPolicy: "network-only",
+    onCompleted: (data) => {
+      //TODO: if data doesnt exists input is incorrect => add checks
+      if (data) {
+        setData(data)
+      }
+    }
+  })
 
   const nameStyle = [
     {
       paddingTop: 15,
       paddingBottom: 7,
-     color: '#363636',
+      color: '#363636',
       fontSize: 25
     }
   ];
@@ -89,7 +107,7 @@ const Test = () => {
             }}
             onSwipedRight={(index) => {
             swipeRightLiked(
-                currentUserData.squash,
+                userData.squash,
                 currentUser.uid,
                 matches[index],
                 updateLikes,

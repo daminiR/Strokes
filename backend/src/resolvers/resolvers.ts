@@ -148,7 +148,7 @@ export const resolvers = {
     updateMatches: async (parents, { currentUserId, potentialMatchId, currentUser, potentialMatch}, context, info) => {
         const doc = await Squash.findOneAndUpdate(
           { _id: currentUserId },
-          { $push: { matches: potentialMatch } },
+          { $addToSet: { matches: potentialMatch } },
           { new: true }
         );
         const doc2 = await Squash.findOneAndUpdate(
@@ -158,16 +158,19 @@ export const resolvers = {
         );
         console.log("doc user", doc)
         console.log("doc match", doc2)
-      return "done";
+      return doc;
     },
-    updateLikes: async (parents, { _id, likes }, context, info) => {
-        const doc = await Squash.findOneAndUpdate(
+    updateLikes: async (parents, { _id, likes, currentUserData}, context, info) => {
+      const doc = await Squash.findOneAndUpdate(
           { _id: _id },
-          { $push: { likes: {$each: likes} } },
+          { $push: { likes: { $each: likes } } },
           { new: true }
         );
-        console.log("Updated user likes ", likes);
-        console.log("doc", doc)
+      const filter = likes.map(likeObj => { likeObj._id})
+      const update = { $push: { likedByUSers: currentUserData}}
+      await Squash.updateMany(filter, update)
+      console.log("Updated user likes ", likes);
+      console.log("doc", doc)
       return doc;
     },
     updateDislikes: async (parents, { _id, dislikes }, context, info) => {
@@ -184,6 +187,7 @@ export const resolvers = {
       if (age != 0) {
         const doc = await Squash.findOneAndUpdate(
           { _id: _id },
+
           { $set: { age: age } },
           { new: true }
         );

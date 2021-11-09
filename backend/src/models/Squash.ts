@@ -107,6 +107,10 @@ var squashSchema = new Schema({
     type:<PotentialMatchT>{},
     required: false,
   },
+  likedByUSers: {
+    type:<PotentialMatchT>{},
+    required: false,
+  },
   dislikes: {
     type:<PotentialMatchT>{},
     required: false,
