@@ -9,16 +9,16 @@ import {SportChips} from '../SportsChips'
 
 
 const CardItem = ({
-  profileImage,
-  image_set,
-  profileTitle,
-  sportsList,
-  description,
+  profileImage = null,
+  image_set = null,
+  profileTitle = null,
+  sportsList = null,
+  description= null,
   variant=null,
   onPressLeft= null,
   onPressRight=null,
-
 }) => {
+  console.log("is this title", profileTitle)
   const fullWidth = Dimensions.get('window').width;
   const imageStyle = [
     {
@@ -29,7 +29,7 @@ const CardItem = ({
     }
   ];
 
-  const nameStyle = [
+  const nameStyle =
     {
       paddingTop: variant ? 10 : 15,
       paddingBottom: variant ? 5 : 7,
@@ -37,14 +37,13 @@ const CardItem = ({
       fontSize: variant ? 15 : 30,
       textAlign: 'center'
     }
-  ];
   return (
     <>
       <ScrollView>
-          <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback>
         <View style={styles.containerCardItem}>
           {/* IMAGE */}
-          <ImageBackground source={{uri:profileImage.imageURL}} style={imageStyle}>
+          {profileImage && <ImageBackground source={{uri:profileImage.imageURL}} style={imageStyle}>
           <View
             style={{
               position: 'absolute',
@@ -56,24 +55,24 @@ const CardItem = ({
               bottom: 0,
               justifyContent: 'flex-end',
               alignItems: 'flex-start',
+              //<Text style={styles.firstImageText}>{profileTitle}</Text>
             }}>
-          <Text style={styles.firstImageText}>{profileTitle}</Text>
           </View>
-          </ImageBackground>
+          </ImageBackground>}
           {/* NAME */}
-          <Text style={nameStyle}>{profileTitle}</Text>
+          {profileTitle && (<Text style={nameStyle}>{profileTitle}</Text>)}
           {/* DESCRIPTION */}
           {description && (
             <Text style={styles.descriptionCardItem}>{description}</Text>
           )}
           {/* SPORTS List */}
-          <View style={{marginVertical: 10}}>
+          { sportsList && <View style={{marginVertical: 10}}>
             <View style={styles.sportChipSet}>
               {sportsList.map((sport, i) => (
                   <SportChips key={i} sport={sport.sport} isDisplay={true} />
                 ))}
             </View>
-          </View>
+          </View>}
           {image_set && image_set.map((imgObj, index) => (
             <Image key={index} source={{uri: imgObj.imageURL}} style={imageStyle}/>)
           )}
@@ -81,7 +80,7 @@ const CardItem = ({
         </TouchableWithoutFeedback>
       </ScrollView>
     </>
-  );
-};
+  )
+}
 
 export {CardItem};

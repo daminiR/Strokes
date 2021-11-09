@@ -125,6 +125,23 @@ const READ_SQUASH = gql`
         filePath
       }
       }
+      matches
+      {
+      _id
+      first_name
+      age
+      gender
+      sports {
+        sport
+        game_level
+      }
+      description
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+      }
     }
   }
 `;

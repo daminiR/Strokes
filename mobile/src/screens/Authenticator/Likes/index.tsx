@@ -22,11 +22,9 @@ const Likes  = ({ navigation }: LikesT ): ReactElement => {
   const [loading, setLoading] = useState(false)
   return (
     <>
-      <AppContainer title="User" loading={loading}>
         <View>
-          <Matches />
+          <Matches/>
         </View>
-      </AppContainer>
     </>
   );
 }

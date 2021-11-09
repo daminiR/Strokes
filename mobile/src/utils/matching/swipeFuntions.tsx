@@ -34,18 +34,16 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     // push all ids when likes or dislikes and bulk send mutation
     // if potential match likes current user upsert a match array
     // update mutation for both users
-    var matched = false
     const matchUSerLikedIDs = _.find(card.matches, match => { return match._id})
+    const userMatchingData = sanitizeCard(currentUser)
     if (_.find(card.likes, (likeObj) => {return likeObj._id == _id})){
     console.log("Matched")
-    const userMatchingData = sanitizeCard(currentUser)
     const matchedUser = sanitizeCard(card)
     setMatched(true)
-    //updateMatches({variables: {currentUserId: _id,
-                  //potentialMatchId: card._id,
-                  //currentUser: userMatchingData,
-                  //potentialMatch: matchedUser}})
-    matched = true
+    updateMatches({variables: {currentUserId: _id,
+                  potentialMatchId: card._id,
+                  currentUser: userMatchingData,
+                  potentialMatch: matchedUser}})
     }
     // matched UI
     var array = likesVar()
@@ -53,7 +51,8 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
         // update mutation for likes
         updateLikes({variables: {
             _id: _id,
-            likes: array
+            likes: array,
+            currentUserData: userMatchingData
         }})
         array = []
     }
@@ -61,8 +60,6 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     array.push(potentialMatch)
     likesVar(array)
     console.log(likesVar())
-    return matched
-
 }
 const swipeLeftDisliked = async (_id, card, updateDislikes) => {
     // push all ids when likes or dislikes and bulk send mutation

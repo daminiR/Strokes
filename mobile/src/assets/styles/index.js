@@ -173,8 +173,8 @@ export default StyleSheet.create({
     borderBottomRightRadius: 20,
   },
   containerCardItem: {
-    flex:1,
-    flexGrow: 1,
+    //flex:1,
+    //flexGrow: 1,
     backgroundColor: WHITE,
     borderRadius: 8,
     margin: 10,
@@ -347,12 +347,19 @@ export default StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 10,
   },
+  nameStyle: { paddingTop: 15,
+      paddingBottom: 7,
+      color: '#363636',
+      fontSize: 30,
+      textAlign: 'center'},
   // COMPONENT - MESSAGE
   containerMessage: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
     justifyContent: 'flex-start',
     paddingHorizontal: 10,
+    paddingTop: 10,
     width: DIMENSION_WIDTH - 100,
   },
   avatar: {
