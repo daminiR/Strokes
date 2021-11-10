@@ -12,13 +12,17 @@ import {
 import {Message} from '../../../components/Message/Message';
 import {Icon} from '../../../components/Icon/Icon';
 import Demo from '../../../assets/data/demo.js';
+import {useNavigation} from '@react-navigation/native';
 
-const renderMessage = (item) => {
+const renderMessage = (item, navigation) => {
       const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0)
-      const title = item.first_name
+      const title = item.first_name;
+  const _onPressActiveChat = () => {
+    navigation.navigate('ACTIVE_CHAT');
+  };
 
       return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>_onPressActiveChat()}>
                 <Message
                   image={profileImage}
                   name={title}
@@ -35,6 +39,7 @@ const Messages = () => {
   const [matches, setMatches] = useState(null)
   const [profileImage, setProfileImage] = useState(null)
   const [title, setTitle] = useState(null)
+  const navigation = useNavigation()
   useEffect(() => {
     setLoading(true)
     const user = currentUserData.squash
@@ -65,7 +70,7 @@ const Messages = () => {
         { !loading && <FlatList
             data={matches}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => renderMessage(item)}
+            renderItem={({ item }) => renderMessage(item, navigation)}
           />}
       </View>
     </ImageBackground>
