@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from "react";
+import React, {createContext, useRef, useEffect, useState} from "react";
 import auth from '@react-native-firebase/auth'
 import SignInStack from './navigation/SignInStack'
 import SignOutStack from './navigation/SignOutStack'
@@ -11,7 +11,7 @@ import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
 
 export const UserContext = createContext(null);
 export const AuthNavigator = () => {
-  const [currentUser, setCurrentUser ] = useState()
+  const [currentUser, setCurrentUser ] = useState(null)
   const [isProfileComplete, setProfileState ] = useState(false)
   const [isApolloConected, setIsApolloConected ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(false);
@@ -50,6 +50,7 @@ export const AuthNavigator = () => {
 
     })
   });
+
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
       if (currentUser) {

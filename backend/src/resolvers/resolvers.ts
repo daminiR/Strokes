@@ -166,11 +166,15 @@ export const resolvers = {
           { $push: { likes: { $each: likes } } },
           { new: true }
         );
-      const filter = likes.map(likeObj => { likeObj._id})
+      const filter = {_id: likes.map(likeObj => {return likeObj._id})}
+      console.log("filter object", filter)
+      console.log("likes object", likes)
       const update = { $push: { likedByUSers: currentUserData}}
-      await Squash.updateMany(filter, update)
+      const check_doc = await Squash.updateMany(filter, update)
       console.log("Updated user likes ", likes);
       console.log("doc", doc)
+      console.log()
+      console.log("check for liekdUPdate", check_doc)
       return doc;
     },
     updateDislikes: async (parents, { _id, dislikes }, context, info) => {
@@ -187,7 +191,6 @@ export const resolvers = {
       if (age != 0) {
         const doc = await Squash.findOneAndUpdate(
           { _id: _id },
-
           { $set: { age: age } },
           { new: true }
         );

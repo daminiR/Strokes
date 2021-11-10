@@ -49,6 +49,7 @@ const SquashType = `
     dislikes : [PotentialMatch!]
     likedByUSers: [PotentialMatch!]
   `
+
 const SquashInputType = `
     first_name: String!
     last_name: String!

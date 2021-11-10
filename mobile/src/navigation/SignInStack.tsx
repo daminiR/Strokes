@@ -1,6 +1,6 @@
 import React, { useContext, useState, ReactElement } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import {Profile, Chat, Match, Likes} from '../screens/Authenticator'
+import {ActiveChat, Profile, Chat, Match, Likes} from '../screens/Authenticator'
 import {IndividualSports, Description, FirstName, Age, Gender, LastName} from '../screens/Authenticator/'
 import { NavigationContainer } from '@react-navigation/native'
 import { HeaderBackButton, StackHeaderLeftButtonProps } from '@react-navigation/stack';
@@ -43,6 +43,7 @@ export function ChatStackScreen() {
   return (
     <ChatStack.Navigator>
       <ProfileStack.Screen name="CHAT" component={Chat} />
+      <ProfileStack.Screen name="ACTIVE_CHAT" component={ActiveChat} />
     </ChatStack.Navigator>
   );
 }
