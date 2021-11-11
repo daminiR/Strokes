@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import {Dimensions, Modal, Image,Text, Button, View, ImageBackground } from 'react-native';
 import {UserContext} from '../../../UserContext'
-import { Card } from 'react-native-card-stack-swiper';
+import CardStack, { Card } from 'react-native-card-stack-swiper';
 import {Icon, FAB, Overlay} from 'react-native-elements'
 import Swiper from 'react-native-deck-swiper'
 import {ScrollView, StyleSheet } from 'react-native'
@@ -61,23 +61,12 @@ const Test = () => {
           setEndingText("No more matches left!")
       }
   }, [])
-  const [ getSquashProfile, {data: newUserData, loading: newUserLaodingData}] = useLazyQuery(READ_SQUASH, {
-    variables: {id: currentUser.uid},
-    //fetchPolicy:"cache-and-network",
-    fetchPolicy: "network-only",
-    onCompleted: (data) => {
-      //TODO: if data doesnt exists input is incorrect => add checks
-      if (data) {
-        setData(data)
-      }
-    }
-  })
 
   const nameStyle = [
     {
       paddingTop: 15,
       paddingBottom: 7,
-      color: '#363636',
+     color: '#363636',
       fontSize: 25
     }
   ];
@@ -107,7 +96,7 @@ const Test = () => {
             }}
             onSwipedRight={(index) => {
             swipeRightLiked(
-                userData.squash,
+                currentUserData.squash,
                 currentUser.uid,
                 matches[index],
                 updateLikes,

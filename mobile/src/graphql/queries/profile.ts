@@ -10,6 +10,20 @@ const READ_SQUASHES = gql`
   }
 `
 
+const GET_MESSAGES = gql`
+  query  Messages{
+    messages {
+      _id,
+      text
+      user{
+        _id,
+        userName,
+        avatar
+      }
+    }
+  }
+`
+
 const GET_POTENTIAL_MATCHES = gql`
   query QueryProssibleMatches ($_id: String!){
     queryProssibleMatches (_id: $_id ){
@@ -212,4 +226,4 @@ const GET_PROFILE_STATUS = gql`
       isProfileComplete @client
     }
 `;
-export {GET_INPUT_TYPE, GET_POTENTIAL_MATCHES, GET_DESCRIPTION, GET_AGE, GET_GENDER, GET_FIRST_NAME, GET_SPORTS_LIST, READ_URL,GET_PROFILE_STATUS, READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}
+export { GET_MESSAGES, GET_INPUT_TYPE, GET_POTENTIAL_MATCHES, GET_DESCRIPTION, GET_AGE, GET_GENDER, GET_FIRST_NAME, GET_SPORTS_LIST, READ_URL,GET_PROFILE_STATUS, READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}

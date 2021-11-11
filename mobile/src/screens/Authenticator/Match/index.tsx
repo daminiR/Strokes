@@ -43,28 +43,28 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
   useEffect(() => {
     queryProssibleMatches({variables: {_id: currentUser.uid}})
     }, [])
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        console.log('App has come to the foreground!');
-        queryProssibleMatches({variables: {_id: currentUser.uid}})
-      }
-      appState.current = nextAppState;
-      console.log('AppState', appState.current);
-    });
+  //useEffect(() => {
+    //const subscription = AppState.addEventListener('change', (nextAppState) => {
+      //if (
+        //appState.current.match(/inactive|background/) &&
+        //nextAppState === 'active'
+      //) {
+        //console.log('App has come to the foreground!');
+        //queryProssibleMatches({variables: {_id: currentUser.uid}})
+      //}
+      //appState.current = nextAppState;
+      //console.log('AppState', appState.current);
+    //});
 
-    return () => {
-      //subscription.remove();
-    }
-    }, [])
+    //return () => {
+      ////subscription.remove();
+    //}
+    //}, [])
   const matchesProfileValue = {matches, loadingMatches}
   return (
     <>
       {!loadingMatches && <MatchesProfileContext.Provider value={matchesProfileValue}>
-      <Test/>
+        <Test/>
       </MatchesProfileContext.Provider>}
     </>
   );

@@ -1,6 +1,11 @@
 import {gql} from 'apollo-server-express';
 //TODO: change inout ype for age to be Int! but after you configure the birthdate resolver
 //TODO: need to add apollo server error handling
+ const MessageType = `
+ sender: String!,
+ receiver: String!,
+ text: String!
+`
  const SquashNodeType = `
     sport: String!,
     game_level: Int!,
@@ -69,8 +74,12 @@ const SquashInputType = `
   `
 
 export const typeDefs = gql`
+  type Message {
+    ${MessageType}
+  }
   scalar FileUpload
   type Query {
+    messages(currentUserID: String!, matchedUserID:String!): [Message!]
     hello: String!
     squash(id: String!): Squash!
     squashes(limit: Int): [Squash!]
@@ -89,7 +98,6 @@ export const typeDefs = gql`
   input SquashInput {
       ${SquashInputType}
   }
-
   type PotentialMatch {
       ${PotentialMatchUserType}
   }
@@ -114,6 +122,7 @@ export const typeDefs = gql`
   type Data{
     ${DataType}
   }
+
   type Mutation {
     deleteImage(_id: String, img_idx: Int): [Data!]!
     updateUserSports(_id: String!, sportsList: [SquashNodeInput!]!): String
@@ -126,6 +135,9 @@ export const typeDefs = gql`
     updateLikes(_id: String!, likes: [PotentialMatchInput!], currentUserData: PotentialMatchInput!): Squash
     updateDislikes(_id: String!, dislikes: [PotentialMatchInput!]): Squash
     updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): Squash
+
+    postMessage2(sender: String, receiver: String, text: String): ID!
+
     updateUserProfile(
       _id: String!
       first_name: String!

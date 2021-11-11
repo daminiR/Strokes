@@ -15,23 +15,21 @@ import Demo from '../../../assets/data/demo.js';
 import {useNavigation} from '@react-navigation/native';
 
 const renderMessage = (item, navigation) => {
-      const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0)
-      const title = item.first_name;
-  const _onPressActiveChat = () => {
+    const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0)
+    const title = item.first_name;
+    const _onPressActiveChat = () => {
     navigation.navigate('ACTIVE_CHAT');
   };
-
-      return (
+  return (
         <TouchableOpacity onPress={()=>_onPressActiveChat()}>
                 <Message
                   image={profileImage}
                   name={title}
                   lastMessage={"display last messgae here"}
                 />
-              </TouchableOpacity>
-      )
+        </TouchableOpacity>
+  )
 }
-
 
 const Messages = () => {
   const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
