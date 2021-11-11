@@ -67,6 +67,7 @@ export const AuthNavigator = () => {
       console.log(unsubscribe)
       return unsubscribe
   }, [isUserOnmongoDb])
+
   useEffect(() => {
       setALoading(userLoading)
   }, [userLoading])

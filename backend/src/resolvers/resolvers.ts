@@ -1,4 +1,5 @@
 import Squash from '../models/Squash';
+import Message from '../models/Messages';
 import { GraphQLUpload } from 'graphql-upload'
 import { SquashDocument } from '../types/Squash.d'
 import { sanitizeFile } from '../utils/fileNaming'
@@ -20,6 +21,11 @@ interface Data {
 interface DisplayData {
   imageURL: string;
   filePath: string;
+}
+interface MessageType {
+  sender: string
+  receiver: string
+  text: string;
 }
 
 const creatGCUpload = (image_set, _id) => {
@@ -96,6 +102,13 @@ const deleteFromGC = async (file_to_del: string) => {
 const dest_gcs_images = "all_images"
 export const resolvers = {
   Query: {
+    messages: async (parents, {currentUserID, matchedUserID}, context, info) => {
+      const messages = Message.find({
+        $or: [{sender: currentUserID, receiver: matchedUserID},{sender: matchedUserID, receiver: currentUserID}]
+      })
+      console.log(messages)
+      return messages
+    },
     squash: async (parents, args, context, info) => {
       const squash_val = await Squash.findById(args.id);
       console.log(squash_val);
@@ -115,6 +128,14 @@ export const resolvers = {
   },
   FileUpload: GraphQLUpload,
   Mutation: {
+    postMessage2: async (parents, {sender, receiver, text}, context, info) => {
+      const id = text.length
+      console.log(sender)
+      const doc = await Message.create(
+          { sender: sender, receiver: receiver, text: text}
+        );
+       return id
+    },
     updateUserSports: async (parents, { _id, sportsList }, context, info) => {
       if (sportsList.length != 0) {
         const doc = await Squash.findOneAndUpdate(
