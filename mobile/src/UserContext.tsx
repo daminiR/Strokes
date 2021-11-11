@@ -54,7 +54,7 @@ export const AuthNavigator = () => {
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
       if (currentUser) {
-        getSquashProfile({variables: {id: currentUser.uid}});
+        //getSquashProfile({variables: {id: currentUser.uid}});
         setLoadingUser(false)
       }
       else{

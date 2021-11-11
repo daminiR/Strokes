@@ -2,6 +2,7 @@ import {gql} from 'apollo-server-express';
 //TODO: change inout ype for age to be Int! but after you configure the birthdate resolver
 //TODO: need to add apollo server error handling
  const MessageType = `
+ _id: ID!,
  sender: String!,
  receiver: String!,
  text: String!
