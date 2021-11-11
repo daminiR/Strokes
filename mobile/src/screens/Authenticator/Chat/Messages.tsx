@@ -14,11 +14,11 @@ import {Icon} from '../../../components/Icon/Icon';
 import Demo from '../../../assets/data/demo.js';
 import {useNavigation} from '@react-navigation/native';
 
-const renderMessage = (item, navigation) => {
+const renderMessage = (item, navigation, currentUserID) => {
     const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0)
     const title = item.first_name;
     const _onPressActiveChat = () => {
-    navigation.navigate('ACTIVE_CHAT');
+      navigation.navigate('ACTIVE_CHAT', {currentUserID: currentUserID, matchID: item._id});
   };
   return (
         <TouchableOpacity onPress={()=>_onPressActiveChat()}>
@@ -68,7 +68,7 @@ const Messages = () => {
         { !loading && <FlatList
             data={matches}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => renderMessage(item, navigation)}
+            renderItem={({ item }) => renderMessage(item, navigation, currentUser.uid)}
           />}
       </View>
     </ImageBackground>

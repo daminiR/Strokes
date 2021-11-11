@@ -2,8 +2,8 @@ import { gql, useMutation } from '@apollo/client'
 
 //mutation UploadFile($files: [Upload!]!, $_id: String!){
 const POST_MESSAGE = gql`
-  mutation PostMessage($content: String!, $user: String!){
-        postMessage(content: $content, user: $user)
+  mutation PostMessage($text: String!, $sender: String!, $receiver: String!){
+        postMessage2(sender: $sender, text: $text, receiver: $receiver)
     }
 `
 const DELETE_IMAGE = gql`
@@ -276,5 +276,6 @@ export {
   DELETE_PROFILE,
   UPDATE_DISLIKES,
   UPDATE_LIKES,
-  UPDATE_MATCHES
+  UPDATE_MATCHES,
+  POST_MESSAGE,
 };

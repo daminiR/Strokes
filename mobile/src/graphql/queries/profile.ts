@@ -11,15 +11,12 @@ const READ_SQUASHES = gql`
 `
 
 const GET_MESSAGES = gql`
-  query  Messages{
-    messages {
+  query  Messages($currentUserID: String!, $matchedUserID: String!){
+    messages (currentUserID: $currentUserID, matchedUserID: $matchedUserID){
       _id,
+      sender,
+      receiver,
       text
-      user{
-        _id,
-        userName,
-        avatar
-      }
     }
   }
 `
