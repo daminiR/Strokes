@@ -50,7 +50,7 @@ const Matches = () => {
   })
   //const appState = useRef(AppState.currentState)
   useEffect(() => {
-      getSquashProfile({variables: {id: currentUser.uid}});
+      //getSquashProfile({variables: {id: currentUser.uid}});
   }, [])
   //useEffect(() => {
     //const subscription = AppState.addEventListener('change', (nextAppState) => {

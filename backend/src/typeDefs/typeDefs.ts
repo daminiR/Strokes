@@ -123,6 +123,15 @@ export const typeDefs = gql`
   type Data{
     ${DataType}
   }
+  type Result {
+    _id: String!
+    }
+  type Message2 {
+    sender: String!
+    }
+  type Subscription {
+    messagePosted: Message
+  }
 
   type Mutation {
     deleteImage(_id: String, img_idx: Int): [Data!]!

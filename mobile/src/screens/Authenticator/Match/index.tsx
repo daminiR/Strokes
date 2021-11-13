@@ -24,11 +24,11 @@ export const MatchesProfileContext = createContext(null)
 const Match  = ({ navigation }: MatchT ): ReactElement => {
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [matches, setMatches] = useState(null)
-  const appState = useRef(AppState.currentState)
-    // this line o fcode will change when sclaing with more data
+  console.log("loads")
   const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
-  const [ queryProssibleMatches, { data: squashData }] = useLazyQuery(GET_POTENTIAL_MATCHES, {
-    fetchPolicy: "network-only",
+    //fetchPolicy: "network-only",
+  const { data: squashData } = useQuery(GET_POTENTIAL_MATCHES, {
+    variables: {_id: currentUser.uid},
     onCompleted: (data) => {
         console.log("/////////////// mactesh dat //////////////////////", data)
         console.log("/////////////// current user //////////////////////", currentUserData)
@@ -40,9 +40,9 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
         console.log("///////////////patron list/////////////", patron_list)
     }
   });
-  useEffect(() => {
-    queryProssibleMatches({variables: {_id: currentUser.uid}})
-    }, [])
+  //useEffect(() => {
+    //queryProssibleMatches({variables: {_id: currentUser.uid}})
+    //}, [])
   //useEffect(() => {
     //const subscription = AppState.addEventListener('change', (nextAppState) => {
       //if (

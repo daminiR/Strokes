@@ -12,6 +12,8 @@ import {
 import {Message} from '../../../components/Message/Message';
 import {Icon} from '../../../components/Icon/Icon';
 import Demo from '../../../assets/data/demo.js';
+import { useLazyQuery, useQuery, useMutation, useSubscription} from '@apollo/client'
+import {MESSAGE_POSTED} from '../../../graphql/queries/profile'
 import {useNavigation} from '@react-navigation/native';
 
 const renderMessage = (item, navigation, currentUserID) => {
@@ -38,12 +40,16 @@ const Messages = () => {
   const [profileImage, setProfileImage] = useState(null)
   const [title, setTitle] = useState(null)
   const navigation = useNavigation()
+  const { error: subError, data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
+  console.log("///////////////////// Posted messages/////////////", postedMessages)
+  console.log("///////////////////// Posted error/////////////", subError)
+  useEffect(() => {
+  console.log("///////////////////// Posted messages/////////////", postedMessages)
+  }, [postedMessages])
   useEffect(() => {
     setLoading(true)
     const user = currentUserData.squash
     const profileImage = user.image_set.find(imgObj => imgObj.img_idx == 0)
-    const title = user.first_name
-    console.log("in messgae", user)
     setTitle(title)
     setProfileImage(profileImage)
     // set total likes to be local and database likes
