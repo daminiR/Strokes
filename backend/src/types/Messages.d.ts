@@ -6,9 +6,10 @@ export interface ConversationDocument extends Document {
 }
 
 export interface MessageDocument extends Document {
+  _id: objectId,
   sender: string
   text: string
-  conversationID: ObjectId
+  receiver: string
 }
 
 

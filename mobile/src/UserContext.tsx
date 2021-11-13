@@ -7,7 +7,8 @@ import { ApolloErrorScreen, Hello }  from './screens/Authenticator/'
 import {isProfileCompleteVar} from './cache'
 import {useReactiveVar} from '@apollo/client'
 import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from './graphql/queries/profile'
-import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
+import { useQuery, useSubscription, useMutation, useLazyQuery} from '@apollo/client'
+import {MESSAGE_POSTED} from './graphql/queries/profile'
 
 export const UserContext = createContext(null);
 export const AuthNavigator = () => {
@@ -19,6 +20,8 @@ export const AuthNavigator = () => {
   const [loadingUser, setLoadingUser] = useState(true);
   const [aloading, setALoading] = useState(false);
   const [data, setData] = useState(true);
+  const { data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
+  console.log(postedMessages)
   const [getSquashProfile, {data: userData, loading: userLoading, error}] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
@@ -54,7 +57,7 @@ export const AuthNavigator = () => {
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
       if (currentUser) {
-        //getSquashProfile({variables: {id: currentUser.uid}});
+        getSquashProfile({variables: {id: currentUser.uid}});
         setLoadingUser(false)
       }
       else{

@@ -12,6 +12,9 @@ import {format} from 'util'
 import axios from 'axios'
 import { ObjectId } from 'mongodb'
 import { typeDefs }  from '../typeDefs/typeDefs'
+//import { PubSub } from 'graphql-subscriptions';
+import { pubsub } from '../pubsub'
+//const pubsub = new PubSub()
 
 interface Data {
   img_idx: number;
@@ -100,6 +103,8 @@ const deleteFromGC = async (file_to_del: string) => {
         })
 }
 const dest_gcs_images = "all_images"
+const POST_CHANNEL = 'MESSAGE_CHANNEL'
+const messages = []
 export const resolvers = {
   Query: {
     messages: async (parents, {currentUserID, matchedUserID}, context, info) => {
@@ -126,14 +131,25 @@ export const resolvers = {
     },
     display: async (parents, args, context, info) => {},
   },
+
   FileUpload: GraphQLUpload,
+  Subscription: {
+    messagePosted: {
+      //subscribe: (parents, args, {pubsub}, info) => pubsub.asyncIterator(POST_CHANNEL)
+      subscribe: () => pubsub.asyncIterator([POST_CHANNEL])
+    },
+  },
+
   Mutation: {
     postMessage2: async (parents, {sender, receiver, text}, context, info) => {
       const id = text.length
-      console.log(sender)
+      const messageID = new ObjectId()
+      pubsub.publish(POST_CHANNEL, {
+        messagePosted: { _id: messageID, sender: sender, receiver: receiver, text: text}
+      })
       const doc = await Message.create(
-          { sender: sender, receiver: receiver, text: text}
-        );
+          { _id: messageID, sender: sender, receiver: receiver, text: text}
+      )
        return id
     },
     updateUserSports: async (parents, { _id, sportsList }, context, info) => {

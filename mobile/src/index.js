@@ -9,13 +9,15 @@ import firebase from '@react-native-firebase/storage'
 import { HttpLink } from 'apollo-link-http'
 import { onError } from "apollo-link-error"
 import { FormProvider } from './Contexts/FormContext'
-import {makeVar, NormalizedCacheObject} from '@apollo/client'
+import {makeVar, NormalizedCacheObject, split} from '@apollo/client'
+import { getMainDefinition } from '@apollo/client/utilities';
 import {CachePersistor, persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {onErrorLink} from './globalGraphqlErrors'
 import {isProfileCompleteVar} from './cache'
 import  { createUploadLink } from 'apollo-upload-client';
 import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
+import { WebSocketLink } from '@apollo/client/link/ws'
 
 //TODO: async funtion persist check later
 const App = () =>
@@ -42,21 +44,44 @@ const App = () =>
       ////uri : 'http://localhost:4000/graphql'
       //});
       //const uploadLink = createUploadLink({
-        //uri: 'http://10.0.2.2:3000/graphql',
+      //uri: 'http://10.0.2.2:3000/graphql',
       //});
       //const uploadLink = createUploadLink({ uri: 'http://192.168.1.8:4000/graphql', })
       //const uploadLink = createUploadLink({ uri:'http://192.168.1.12:4000/graphql'})
       //const uploadLink = createUploadLink({
       //uri: 'http://localhost:4000/graphql',
       //});
-     const uploadLink = createUploadLink({uri: 'http://10.0.2.2:4000/graphql'})
+      const uploadLink = createUploadLink({
+        uri: 'http://10.0.2.2:4000/graphql',
+      });
+      const wsLink = new WebSocketLink({
+        uri: 'ws://10.0.2.2:4000/graphql',
+        options: {
+          reconnect: true,
+        },
+      });
+      // The split function takes three parameters:
+      //
+      // * A function that's called for each operation to execute
+      // * The Link to use for an operation if the function returns a "truthy" value
+      // * The Link to use for an operation if the function returns a "falsy" value
+      const splitLink = split(
+        ({query}) => {
+          const definition = getMainDefinition(query);
+          return (
+            definition.kind === 'OperationDefinition' &&
+            definition.operation === 'subscription'
+          );
+        },
+        wsLink,
+        uploadLink,
+      );
       //const link = ApolloLink.from([onErrorLink, uploadLink]);
       //const uri = 'http://localhost:4000/graphql'
-     var  apolloClient =
-        new ApolloClient({
-          link: uploadLink,
-          cache: cache,
-        })
+      var apolloClient = new ApolloClient({
+        link: splitLink,
+        cache: cache,
+      });
       setClient(apolloClient);
     }
     init();
