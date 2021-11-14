@@ -60,6 +60,12 @@ const App = () =>
           reconnect: true,
         },
       });
+      //const wsLink = new WebSocketLink({
+        //uri: 'ws://192.168.1.8:4000/graphql',
+        //options: {
+          //reconnect: true,
+        //},
+      //});
       // The split function takes three parameters:
       //
       // * A function that's called for each operation to execute
