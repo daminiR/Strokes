@@ -41,11 +41,11 @@ const Messages = () => {
   const [title, setTitle] = useState(null)
   const navigation = useNavigation()
   const { error: subError, data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
-  console.log("///////////////////// Posted messages/////////////", postedMessages)
-  console.log("///////////////////// Posted error/////////////", subError)
-  useEffect(() => {
-  console.log("///////////////////// Posted messages/////////////", postedMessages)
-  }, [postedMessages])
+  //console.log("///////////////////// Posted messages/////////////", postedMessages)
+  //console.log("///////////////////// Posted error/////////////", subError)
+  //useEffect(() => {
+  //console.log("///////////////////// Posted messages/////////////", postedMessages)
+  //}, [postedMessages])
   useEffect(() => {
     setLoading(true)
     const user = currentUserData.squash
