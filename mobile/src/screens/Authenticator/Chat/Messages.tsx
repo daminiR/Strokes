@@ -20,7 +20,7 @@ const renderMessage = (item, navigation, currentUserID) => {
     const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0)
     const title = item.first_name;
     const _onPressActiveChat = () => {
-      navigation.navigate('ACTIVE_CHAT', {currentUserID: currentUserID, matchID: item._id});
+      navigation.navigate('ACTIVE_CHAT', {currentUserID: currentUserID, matchID: item._id, matchedUserProfileImage: profileImage, matchedUserName: item.first_name});
   };
   return (
         <TouchableOpacity onPress={()=>_onPressActiveChat()}>
@@ -40,12 +40,6 @@ const Messages = () => {
   const [profileImage, setProfileImage] = useState(null)
   const [title, setTitle] = useState(null)
   const navigation = useNavigation()
-  const { error: subError, data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
-  //console.log("///////////////////// Posted messages/////////////", postedMessages)
-  //console.log("///////////////////// Posted error/////////////", subError)
-  //useEffect(() => {
-  //console.log("///////////////////// Posted messages/////////////", postedMessages)
-  //}, [postedMessages])
   useEffect(() => {
     setLoading(true)
     const user = currentUserData.squash

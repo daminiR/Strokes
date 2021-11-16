@@ -32,10 +32,16 @@ const _gender = (navigation) => {
   console.log(EditInputVar());
   //onScreen('GENDER', navigation)()
 };
+const _neighborhood = (navigation) => {
+  EditInputVar({inputType: 'Neighborhood Input', displayInput: true});
+  console.log(EditInputVar());
+  //onScreen('GENDER', navigation)()
+};
 const list = [
   {title: 'Name', icon: 'av-timer', subtitle: 'Damini', buttonPress: _first_name},
   {title: 'Age', icon: 'flight-takeoff', subtitle: '27',buttonPress: _age},
   {title: 'gender', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _gender},
+  {title: 'Neighborhood', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _neighborhood},
 ]
 const ProfileAttirbutes = () => {
   const [loading, setLoading] = React.useState(null)

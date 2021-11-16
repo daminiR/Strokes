@@ -48,27 +48,27 @@ const Matches = () => {
     setLoading(false)
     }
   })
-  //const appState = useRef(AppState.currentState)
+  const appState = useRef(AppState.currentState)
   useEffect(() => {
-      //getSquashProfile({variables: {id: currentUser.uid}});
+      getSquashProfile({variables: {id: currentUser.uid}});
   }, [])
-  //useEffect(() => {
-    //const subscription = AppState.addEventListener('change', (nextAppState) => {
-      //if (
-        //appState.current.match(/inactive|background/) &&
-        //nextAppState === 'active'
-      //) {
-        //console.log('App has come to the foreground!');
-      //}
-      //appState.current = nextAppState;
-      //getSquashProfile({variables: {id: currentUser.uid}});
-      //console.log('AppState', appState.current);
-    //});
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        console.log('App has come to the foreground!');
+      }
+      appState.current = nextAppState;
+      getSquashProfile({variables: {id: currentUser.uid}});
+      console.log('AppState', appState.current);
+    });
 
-    //return () => {
-      ////subscription.remove();
-    //}
-    //}, [])
+    return () => {
+      //subscription.remove();
+    }
+    }, [])
   return (
     <View style={styles.containerMatches}>
       <View style={styles.top}>

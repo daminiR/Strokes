@@ -20,6 +20,7 @@ export default function IndividualInputParamList() {
     <NavigationContainer>
       <Stack.Navigator headerMode="none">
       <Stack.Screen name="FIRST_NAME" component={FirstName} />
+      <Stack.Screen name="NEIGHBORHOOD" component={SetNeighborHood} />
       <Stack.Screen name="AGE" component={Age} />
       <Stack.Screen name="GENDER" component={Gender} />
       <Stack.Screen name="DESCRIPTION" component={Description} />
