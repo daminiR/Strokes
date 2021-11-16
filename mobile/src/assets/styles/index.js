@@ -23,6 +23,14 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 
 export default StyleSheet.create({
+  // FILTER OVERLAY STYLES
+  filterOverlay: {
+    paddingHorizontal: 10,
+    width: DIMENSION_WIDTH * 0.8,
+    height: DIMENSION_HEIGHT * 0.8,
+  },
+
+
   // IMAGE PLACEHOLDER COMPONENET
   imagecontainer: {
     flex: 1,

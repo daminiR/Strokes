@@ -1,7 +1,7 @@
 import React, { useContext, useState, ReactElement } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import {ActiveChat, Profile, Chat, Match, Likes} from '../screens/Authenticator'
-import {IndividualSports, Description, FirstName, Age, Gender, LastName} from '../screens/Authenticator/'
+import {SetNeighborHood, IndividualSports, Description, FirstName, Age, Gender, LastName} from '../screens/Authenticator/'
 import { NavigationContainer } from '@react-navigation/native'
 import { HeaderBackButton, StackHeaderLeftButtonProps } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -34,6 +34,7 @@ export function ProfileStackScreen() {
       <ProfileStack.Screen name="AGE" component={Age} />
       <ProfileStack.Screen name="LAST_NAME" component={LastName} />
       <ProfileStack.Screen name="GENDER" component={Gender} />
+      <ProfileStack.Screen name="NEIGHBORHOOD" component={SetNeighborHood} />
       <ProfileStack.Screen name="EDIT_SPORTS" component={IndividualSports} />
       <ProfileStack.Screen name="EDIT_DESCRIPTION" component={Description} />
     </ProfileStack.Navigator>

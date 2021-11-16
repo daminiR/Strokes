@@ -10,31 +10,23 @@ export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignO
 export type ActiveChatT = {
   navigation: ActiveChatTTScreenNavigationProp
 }
-export const createMessageObject= (messageObj, currentUserID) => {
-  console.log(
-    '///////////////////// Posted messages createMessages/////////////',
-    messageObj
-  );
-  const message = {
+ const createMessageObject = (messageObj, currentUserID, matchedUserProfileImage) => {
+  const messageInitiator = messageObj.sender == currentUserID ? 1 : 2
+  const sanitized = {
     _id: messageObj._id,
     text: messageObj.text,
     user: {
-      _id: messageObj.sender == currentUserID ? 1 : 2,
-      name: 'Damini',
-      avatar: 'https://placeimg.com/140/140/any',
-    },
-  };
-  return message;
+      _id: messageInitiator,
+      avatar: matchedUserProfileImage,
+    }
+  }
+  return sanitized;
 }
 const ActiveChat = ({ route, navigation}) => {
-  const {currentUserID, matchID} = route.params
+  const [postMessage2] = useMutation(POST_MESSAGE)
+  const [messages, setMessages] = useState([]);
+  const {currentUserID, matchID, matchedUserProfileImage, matchedUserName} = route.params
   const { error: subError, data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
-  if (postedMessages){
-  const m2 = postedMessages.messagePosted
-  console.log("///////////////////// Posted messages inside/////////////", m2)
-  const what = createMessageObject(m2, currentUserID)
-  setMessages(previousMessages => GiftedChat.append(what, what))
-  }
   const {data: messagesData, loading: loadingMessages} = useQuery(GET_MESSAGES,
   {
     fetchPolicy: "network-only",
@@ -44,18 +36,25 @@ const ActiveChat = ({ route, navigation}) => {
       },
     },
   );
-  //useEffect(() => {
-  //console.log("///////////////////// Posted messages/////////////", postedMessages)
-  //setMessages(previousMessages => GiftedChat.append(previousMessages, postedMessages))
-  //}, [postedMessages])
-  const [postMessage2] = useMutation(POST_MESSAGE)
-  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    navigation.setOptions({title: matchedUserName})
+  }, [])
+  useEffect(() => {
+  if (postedMessages){
+      console.log(loadingMessagePosted);
+    if (!loadingMessagePosted) {
+      const m2 = postedMessages.messagePosted;
+      const what = createMessageObject(m2, currentUserID, matchedUserProfileImage);
+      setMessages(previousMessages => GiftedChat.append(previousMessages, [what]))
+    }
+  }
+  }, [postedMessages])
   useEffect(() => {
     if(!loadingMessages){
       if (messagesData){
         const messages = messagesData.messages
         const displayUserMessages = _.map(messages, (messageObj) =>
-          createMessageObject(messageObj, currentUserID),
+          createMessageObject(messageObj, currentUserID, matchedUserProfileImage),
         );
         console.log(displayUserMessages)
     setMessages(displayUserMessages);
@@ -65,7 +64,6 @@ const ActiveChat = ({ route, navigation}) => {
 
   const onSend = (messages = []) => {
     //console.log("this is a messgae", messages)
-    //setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
     // TODO: hacky fix for now for messages
     postMessage2({variables: {sender: currentUserID, receiver:matchID, text: messages[0].text}})
 
