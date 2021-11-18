@@ -11,6 +11,8 @@ import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } f
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import {Matches} from './Matches'
+import {NeighborhoodSearch} from '../../../components'
+import styles from '../../../assets/styles';
 
 type LikesScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LIKES'>
 
@@ -22,7 +24,7 @@ const Likes  = ({ navigation }: LikesT ): ReactElement => {
   const [loading, setLoading] = useState(false)
   return (
     <>
-        <View>
+    <View >
           <Matches/>
         </View>
     </>

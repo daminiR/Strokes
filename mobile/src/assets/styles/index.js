@@ -482,6 +482,11 @@ export default StyleSheet.create({
   containerHome: {flex: 1, marginHorizontal: 10},
 
   // CONTAINER - MATCHES
+  tiralNeighbor: {
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingTop: 80,
+  },
   containerMatches: {
     justifyContent: 'space-between',
     paddingHorizontal: 10,
