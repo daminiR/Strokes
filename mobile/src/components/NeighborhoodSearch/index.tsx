@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import { useFormikContext} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
+import {ScrollView, StyleSheet } from 'react-native'
 import { genderRadioObject } from '../../constants'
 import auth from '@react-native-firebase/auth'
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
@@ -15,6 +16,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 const GooglePlacesInput = () => {
   return (
+      <ScrollView>
     <GooglePlacesAutocomplete
       placeholder='Search'
       onPress={(data, details = null) => {
@@ -22,17 +24,17 @@ const GooglePlacesInput = () => {
         console.log(data, details);
       }}
       query={{
-        key: 'AIzaSyCFkAYvse4tgph8CAL5sikseL8oEKVmknU',
+        key: 'AIzaSyCxdvZ1p2d-AP7n20cKHzR03tCxPmk1Dyw',
         language: 'en',
       }}
     />
+      </ScrollView>
   );
 };
 
 const NeighborhoodSearch = () => {
-  const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
   return (
-    <View>
+      <View>
       <GooglePlacesInput/>
     </View>
   );
