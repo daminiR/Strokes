@@ -72,6 +72,7 @@ export const goHome = (navigation: any) => () => navigation.popToTop()()
    image_set:null,
    confirmationCode: '222333',
    description: 'hello'
+   location: null
  }
 export const signInSlides = [
   {
