@@ -107,9 +107,7 @@ const _onPressDoneProfile = () => {
     if (formikChanged) {
       console.log("//////////// formik has changed!!!!!1 //////////////", formikValues)
       const RNLocalFiles = convertImagesToFormat(formikValues.add_local_images, currentUser.uid)
-      //const RNFiles = formikValues.image_set
-      //console.log("RNFIles///////////////////////////////////////////", RNFiles)
-      console.log("loaction///////////////////////////////////////////", location)
+      console.log("loaction///////////////////////////////////////////", formikValues.location)
       updateUserProfile({
         variables: {
           _id: currentUser.uid,
@@ -118,6 +116,7 @@ const _onPressDoneProfile = () => {
           gender: formikValues.gender,
           age: Number(formikValues.age),
           sports: formikValues.sports,
+          location: formikValues.location,
           original_uploaded_image_set: formikValues.original_uploaded_image_set,
           add_local_images: RNLocalFiles,
           remove_uploaded_images: formikValues.remove_uploaded_images,
@@ -207,6 +206,11 @@ const createInitialValuesFormik = (userData) => {
         sport: sportObj.sport,
         game_level: sportObj.game_level,
       }));
+      const formik_location =  {
+        city: userData.squash.location.city,
+        state: userData.squash.location.state,
+        country: userData.squash.location.country,
+      }
       return {
         first_name: userData.squash.first_name,
         last_name: userData.squash.last_name,
@@ -214,6 +218,7 @@ const createInitialValuesFormik = (userData) => {
         gender: userData.squash.gender,
         image_set: formik_images,
         sports: formik_sports,
+        location: formik_location,
         description: userData.squash.description,
         remove_uploaded_images: [],
         add_local_images: [],

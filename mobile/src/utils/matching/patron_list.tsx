@@ -22,15 +22,30 @@ export const patronCard = (card) => {
        "sports": sports,
        "description": card.description,
        "image_set": image_set,
-       "likes": card.likes
+       "likes": card.likes,
+       "location": card.location
    }
     return potentialMatch
 }
-const createPatronList = (allUsers, likes, dislikes, matches) => {
+
+const filterByFieldsByUser = () => {
+    // filter
+
+
+
+}
+const filterByCity = (currentUseLocation, patron_list) => {
+    // TODO: refine overtime
+    const newPatronList = _.filter(patron_list, _.iteratee({"location":{"city": currentUseLocation.city, "state": currentUseLocation.state}}))
+    return newPatronList
+}
+const createPatronList = (currentUseLocation, allUsers, likes, dislikes, matches) => {
     const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
     console.log("////// activeUsers", activeUsers)
     const exclude = _.concat(likes, dislikes, matches)
     const patron_list = _.differenceBy(activeUsers, exclude, '_id')
-    return patron_list
+    const newPatronList = filterByCity(currentUseLocation, patron_list)
+    console.log("trial", newPatronList)
+    return newPatronList
 }
 export {createPatronList}

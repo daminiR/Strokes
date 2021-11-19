@@ -37,8 +37,6 @@ const ImageInput = ({_submit, isSignUp}) => {
       setLoadRadioButtons(true)
         const gender = values.gender
         radioButtons.find((genderObj) => (genderObj.value == gender)).selected = true
-        console.log("old radio butons //////", radioButtons)
-        console.log("old radio butons //////", gender)
         setRadioButtons(radioButtons)
       setLoadRadioButtons(false)
     }, [])

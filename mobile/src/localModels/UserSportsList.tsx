@@ -3,6 +3,11 @@ export interface ImageSetT {
   img_idx: number;
   filePath: string;
 }
+export interface LocationT {
+  city: string;
+  state: string;
+  country: string;
+}
 export interface Sport {
   sport: string;
   game_level: number;
@@ -43,6 +48,7 @@ export interface PatronListType {
     gender: string
     sports: Sport[],
     description: string
+    location: LocationT
     likes: PotentialMatchType[]
     image_set: ImageSetT[]
 }
@@ -53,6 +59,7 @@ export interface ProfileFields {
   last_name: string;
   age: string;
   gender: string;
+  location: LocationT;
   sports: [{sport: string; game_level: number}];
   image_set: [{imageURL: string; img_idx: number; filePath: string}];
   confirmationCode: string;
@@ -65,6 +72,7 @@ export interface EditFields {
        last_name: string,
        age: string,
        gender: string,
+       location: LocationT,
        sports: [{sport: string, game_level:number}],
        image_set: [{imageURL: string, img_idx: number, filePath:string}],
        remove_uploaded_images: [{imageURL: string, img_idx: number, filePath:string}],
