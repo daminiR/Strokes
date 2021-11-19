@@ -71,7 +71,7 @@ export const goHome = (navigation: any) => () => navigation.popToTop()()
    sports:null,
    image_set:null,
    confirmationCode: '222333',
-   description: 'hello'
+   description: 'hello',
    location: null
  }
 export const signInSlides = [

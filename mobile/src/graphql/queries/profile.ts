@@ -33,6 +33,11 @@ const MESSAGE_POSTED = gql`
 const GET_POTENTIAL_MATCHES = gql`
   query QueryProssibleMatches ($_id: String!){
     queryProssibleMatches (_id: $_id ){
+      location {
+        city
+        state
+        country
+      }
       _id
       first_name
       last_name
@@ -42,7 +47,11 @@ const GET_POTENTIAL_MATCHES = gql`
         sport
         game_level
       }
-      country
+      location {
+        city
+        state
+        country
+      }
       description
       image_set {
         img_idx
@@ -104,7 +113,11 @@ const READ_SQUASH = gql`
         sport
         game_level
       }
-      country
+      location {
+        city
+        state
+        country
+      }
       description
       image_set {
         img_idx

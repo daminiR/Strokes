@@ -30,6 +30,7 @@ const ADD_PROFILE2 = gql`
     $sports: [SquashNodeInput!]!
     $age: Int!
     $description: String!
+    $location: LocationInput!
   ) {
     createSquash2(
       _id: $_id
@@ -37,6 +38,7 @@ const ADD_PROFILE2 = gql`
       gender: $gender
       age: $age
       sports: $sports
+      location: $location
       last_name: $last_name
       image_set: $image_set
       description: $description
@@ -50,7 +52,11 @@ const ADD_PROFILE2 = gql`
         sport
         game_level
       }
-      country
+      location {
+        city
+        state
+        country
+      }
       description
       image_set {
         img_idx
@@ -70,6 +76,7 @@ const UPDATE_USER_PROFILE = gql`
     $remove_uploaded_images: [DataInput]
     $original_uploaded_image_set: [DataInput!]!
     $sports: [SquashNodeInput!]!
+    $location: LocationInput!
     $age: Int!
     $description: String!
   ) {
@@ -79,6 +86,7 @@ const UPDATE_USER_PROFILE = gql`
       gender: $gender
       age: $age
       sports: $sports
+      location: $location
       last_name: $last_name
       add_local_images: $add_local_images
       remove_uploaded_images: $remove_uploaded_images
@@ -88,13 +96,17 @@ const UPDATE_USER_PROFILE = gql`
       _id
       first_name
       last_name
+      location {
+        city
+        state
+        country
+      }
       age
       gender
       sports {
         sport
         game_level
       }
-      country
       description
       image_set {
         img_idx

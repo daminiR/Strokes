@@ -1,6 +1,12 @@
 import {gql} from 'apollo-server-express';
 //TODO: change inout ype for age to be Int! but after you configure the birthdate resolver
 //TODO: need to add apollo server error handling
+//TODO: ADD enum check for states and countt maybe
+ const LocationType = `
+    city: String!,
+    state: String!,
+    country: String!
+`
  const MessageType = `
  _id: ID!,
  sender: String!,
@@ -45,7 +51,7 @@ const SquashType = `
     age: Int!
     gender: String!
     sports: [SquashNode!]!
-    country: String
+    location: Location!
     description: String
     image_set: [Data!]!
     matches : [PotentialMatch!]
@@ -63,7 +69,7 @@ const SquashInputType = `
     age: Int!
     gender: String!
     sports: [SquashNodeInput!]!
-    country: String
+    location: LocationInput!
     description: String
     image_set: [DataInput!]!
     matches : [PotentialMatchInput!]
@@ -77,6 +83,12 @@ const SquashInputType = `
 export const typeDefs = gql`
   type Message {
     ${MessageType}
+  }
+  type Location {
+    ${LocationType}
+  }
+  input LocationInput {
+    ${LocationType}
   }
   scalar FileUpload
   type Query {
@@ -142,6 +154,9 @@ export const typeDefs = gql`
     updateDescription(_id: String!, description: String!): String
     uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
 
+
+    updateLocation(check: String): String
+
     updateLikes(_id: String!, likes: [PotentialMatchInput!], currentUserData: PotentialMatchInput!): Squash
     updateDislikes(_id: String!, dislikes: [PotentialMatchInput!]): Squash
     updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): Squash
@@ -155,7 +170,7 @@ export const typeDefs = gql`
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
-      country: String
+      location:LocationInput!
       description: String!
       add_local_images: [ImageData],
       remove_uploaded_images: [DataInput],
@@ -168,7 +183,7 @@ export const typeDefs = gql`
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
-      country: String
+      location: LocationInput!
       description: String!
       image_set: [ImageData!]!
       matches : [PotentialMatchInput!]
@@ -185,7 +200,7 @@ export const typeDefs = gql`
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
-      country: String
+      location: LocationInput!
       description: String!
       image_set: [DataInput!]!
     ): Squash!

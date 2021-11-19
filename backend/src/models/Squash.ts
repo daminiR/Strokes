@@ -1,5 +1,5 @@
 import { Types, model, Schema} from 'mongoose';
-import { SquashDocument, PotentialMatchT} from '../types/Squash.d'
+import { SquashDocument, PotentialMatchT, LocationT} from '../types/Squash.d'
 //const mongoose = require('mongoose');
 //const Schema = mongoose.Schema;
 const GENDERS = ["Male", "Female"]
@@ -76,9 +76,9 @@ var squashSchema = new Schema({
       },
     ],
   },
-  country: {
-    type: String,
-    enum: COUNTRY,
+  location: {
+    type:<LocationT>{},
+    required: true,
   },
   description: {
     type: String,

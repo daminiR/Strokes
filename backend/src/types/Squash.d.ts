@@ -9,6 +9,11 @@ export interface Sport {
   sport: string;
   game_level: number;
 }
+export interface LocationT {
+  city: string;
+  state: string;
+  country: string;
+}
 
 export interface PotentialMatchType {
     first_name: string
@@ -28,7 +33,7 @@ export interface SquashDocument extends Document {
   age : number
   gender: string
   sports: SportsList
-  country: string
+  location: LocationT
   description: [string]
   image_set: ImageSetT[]
   matched : PotentialMatchT

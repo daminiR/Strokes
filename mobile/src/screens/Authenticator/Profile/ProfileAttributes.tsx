@@ -65,11 +65,17 @@ const ProfileAttirbutes = () => {
         (listAttribute) => listAttribute.title == 'Age',
       );
       list[age_ind_to_update].subtitle = formikValues.age;
-      // age
+      // gender
       const ind_to_update = list.findIndex(
         (listAttribute) => listAttribute.title == 'gender',
       );
       list[ind_to_update].subtitle = formikValues.gender;
+      // neighborhood details
+      const neighborhoodIdx = list.findIndex(
+        (listAttribute) => listAttribute.title == 'Neighborhood',
+      );
+      list[neighborhoodIdx].subtitle = formikValues.location.city;
+      //
       setLoading(false);
     }
   }, [formikValues]);

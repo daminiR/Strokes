@@ -141,6 +141,22 @@ export const resolvers = {
   },
 
   Mutation: {
+    //////////////////////////////////////// JMETER Testing MUtations ////////////////////////////////////////////////
+    updateLocation: async (parents, {check}, context, info) => {
+      const locationAll = {
+        city: "Cambridge",
+        state: "MA",
+        country: "US"
+      }
+        const docs = await Squash.updateMany(
+          {},
+          { $set: { location: locationAll } },
+          { new: true }
+        );
+        console.log("Updated user location changes", docs);
+        return "Done";
+    },
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     postMessage2: async (parents, {sender, receiver, text}, context, info) => {
       const id = text.length
       const messageID = new ObjectId()
@@ -352,6 +368,7 @@ export const resolvers = {
         gender,
         age,
         sports,
+        location,
         description,
       }
     ) => {
@@ -363,6 +380,7 @@ export const resolvers = {
           gender: gender,
           age: age,
           sports: sports,
+          location: location,
           description: description,
           i_blocked: [],
           blocked_me: [],
@@ -385,6 +403,7 @@ export const resolvers = {
         gender,
         age,
         sports,
+        lcoation,
         description,
       }
     ) => {
@@ -396,6 +415,7 @@ export const resolvers = {
           last_name: last_name,
           gender: gender,
           age: age,
+          location: location,
           sports: sports,
           description: description,
         });
@@ -412,6 +432,7 @@ export const resolvers = {
         gender,
         age,
         sports,
+        location,
         description,
         remove_uploaded_images,
         add_local_images,
@@ -432,6 +453,7 @@ export const resolvers = {
               first_name: first_name,
               last_name: last_name,
               gender: gender,
+              location: location,
               age: age,
               sports: sports,
               description: description,

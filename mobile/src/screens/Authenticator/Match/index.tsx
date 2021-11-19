@@ -28,38 +28,19 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
   const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
     //fetchPolicy: "network-only",
   const { data: squashData } = useQuery(GET_POTENTIAL_MATCHES, {
+    fetchPolicy: "network-only",
     variables: {_id: currentUser.uid},
     onCompleted: (data) => {
         console.log("/////////////// mactesh dat //////////////////////", data)
         console.log("/////////////// current user //////////////////////", currentUserData)
         const all_users = data.queryProssibleMatches
-        setLoadingMatches(false)
         //const patron_list = createPatronList(all_users, currentUserData.squash.likes, currentUserData.squash.dislikes, currentUserData.squash.i_blocked, currentUser.squash.blocked_me, currentUser.squash.matches)
-        const patron_list = createPatronList(all_users, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches)
+        const patron_list = createPatronList(currentUserData.squash?.location, all_users, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches)
         setMatches(patron_list)
         console.log("///////////////patron list/////////////", patron_list)
+        setLoadingMatches(false)
     }
   });
-  //useEffect(() => {
-    //queryProssibleMatches({variables: {_id: currentUser.uid}})
-    //}, [])
-  //useEffect(() => {
-    //const subscription = AppState.addEventListener('change', (nextAppState) => {
-      //if (
-        //appState.current.match(/inactive|background/) &&
-        //nextAppState === 'active'
-      //) {
-        //console.log('App has come to the foreground!');
-        //queryProssibleMatches({variables: {_id: currentUser.uid}})
-      //}
-      //appState.current = nextAppState;
-      //console.log('AppState', appState.current);
-    //});
-
-    //return () => {
-      ////subscription.remove();
-    //}
-    //}, [])
   const matchesProfileValue = {matches, loadingMatches}
   return (
     <>
