@@ -15,34 +15,34 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import {API_KEY} from './API_KEY'
 import {ScrollView } from 'react-native'
 
-const GooglePlacesInput = () => {
-    const ref = useRef();
-
+const GooglePlacesInput = ({currentLocation = 'Address'}) => {
+  const ref = useRef(null);
   useEffect(() => {
-    ref.current?.setAddressText('Some Text2');
+    const GooglePlacesProps = ref.current
+    GooglePlacesProps?.setAddressText(currentLocation);
   }, []);
   return (
-      <ScrollView>
     <GooglePlacesAutocomplete
-        ref={ref}
+      ref={ref}
       placeholder='Search'
       onPress={(data, details = null) => {
         // 'details' is provided when fetchDetails = true
+        ref.current?.setAddressText(currentLocation);
         console.log(data, details);
       }}
       query={{
         key: API_KEY,
         language: 'en',
         components: 'country:us',
+        types:'(cities)'
       }}
     />
-      </ScrollView>
   );
 };
 
 const NeighborhoodSearch = () => {
   return (
-      <View>
+    <View style={{flex:1}}>
       <GooglePlacesInput/>
     </View>
   );

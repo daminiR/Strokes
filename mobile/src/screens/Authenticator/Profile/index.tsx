@@ -64,7 +64,6 @@ const EditProfile = ({}) => {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     awaitRefetchQueries: true,
     onCompleted: (data) => {
-
         console.log("//////////// formik has data in mutation !!!!!1 //////////////", data)
       //TODO: if data doesnt exists input is incorrect => add checks
       getSquashProfile({variables: {id: currentUser.uid}});
@@ -110,6 +109,7 @@ const _onPressDoneProfile = () => {
       const RNLocalFiles = convertImagesToFormat(formikValues.add_local_images, currentUser.uid)
       //const RNFiles = formikValues.image_set
       //console.log("RNFIles///////////////////////////////////////////", RNFiles)
+      console.log("loaction///////////////////////////////////////////", location)
       updateUserProfile({
         variables: {
           _id: currentUser.uid,
@@ -136,10 +136,9 @@ const _onPressCancelProfile = () => {
     setIsVisible(false);
 }
 const _onPressDoneInput = () => {
-  // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
-  //
+  // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!/
     console.log("///////// formik values o flist inputs", formikValues)
-    EditInputVar({inputType: '', displayInput: false})
+    EditInputVar({inputType:'', displayInput: false})
     setDisplayInput(false);
 }
 const _onPressCancelInput = () => {
