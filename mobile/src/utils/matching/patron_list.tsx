@@ -28,11 +28,14 @@ export const patronCard = (card) => {
     return potentialMatch
 }
 
-const filterByFieldsByUser = () => {
+const filterByFieldsByUser = ({patron_list, filterBySport = null, filterByAge = null, filterByGameLeve = null}) => {
     // filter
-
-
-
+    const filterFunction = (matchObj) => {
+        return _.some(matchObj.sports, {"sport":"Hockey", "game_level":0})
+    }
+    const moreFilter = _.filter(patron_list, filterFunction)
+    console.log("all sport filter", moreFilter)
+    return moreFilter
 }
 const filterByCity = (currentUseLocation, patron_list) => {
     // TODO: refine overtime
@@ -45,7 +48,9 @@ const createPatronList = (currentUseLocation, allUsers, likes, dislikes, matches
     const exclude = _.concat(likes, dislikes, matches)
     const patron_list = _.differenceBy(activeUsers, exclude, '_id')
     const newPatronList = filterByCity(currentUseLocation, patron_list)
-    console.log("trial", newPatronList)
+    // test//
+    const trial = filterByFieldsByUser({patron_list : patron_list})
+    console.log("trial", trial)
     return newPatronList
 }
 export {createPatronList}
