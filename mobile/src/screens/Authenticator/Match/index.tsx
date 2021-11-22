@@ -28,7 +28,8 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
   const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
     //fetchPolicy: "network-only",
   const { data: squashData } = useQuery(GET_POTENTIAL_MATCHES, {
-    fetchPolicy: "network-only",
+    // fetch policty newtowrk only gives infinte loop! changes after v3 appolo client
+    //fetchPolicy: "network-only",
     variables: {_id: currentUser.uid},
     onCompleted: (data) => {
         console.log("/////////////// mactesh dat //////////////////////", data)
