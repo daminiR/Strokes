@@ -9,7 +9,7 @@ import { useReactiveVar } from "@apollo/client"
 import { EditFields} from '../../localModels/UserSportsList'
 import { useFormikContext} from 'formik';
 
-const ChooseSportsChips = () => {
+const ChooseSportsChips = ({isFilter = false}) => {
   const {setFieldValue, values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
   const getData = (newSport, isSelected) => {
     if(isSelected){
@@ -29,24 +29,37 @@ const ChooseSportsChips = () => {
       setFieldValue('sports', filterSports)
     }
   }
+
+  const renderFormikSports = () => {
+    return (
+      <>
+        <Card containerStyle={styles.CardStyle}>
+          <Card.Title> List of Acitivities</Card.Title>
+          <Card.Divider />
+          <View style={styles.sportChipSet}>
+            {sportsList.map((sport, i) => (
+              <SportChips
+                key={i}
+                sport={sport}
+                isDisplay={false}
+                isSelected={
+                  formikValues.sports
+                    ? formikValues.sports.some(
+                        (currSport) => currSport.sport === sport,
+                      )
+                    : false
+                }
+                getData={getData}
+              />
+            ))}
+          </View>
+        </Card>
+      </>
+    );
+  };
+
   return (
-    <>
-      <Card containerStyle={styles.CardStyle}>
-        <Card.Title> List of Acitivities</Card.Title>
-        <Card.Divider />
-        <View style={styles.sportChipSet}>
-          {sportsList.map((sport, i) => (
-            <SportChips
-              key={i}
-              sport={sport}
-              isDisplay={false}
-              isSelected={formikValues.sports ?  formikValues.sports.some((currSport) => currSport.sport === sport): false}
-              getData={getData}
-            />
-          ))}
-        </View>
-      </Card>
-    </>
-  );
+    renderFormikSports()
+  )
 };
 export {ChooseSportsChips}

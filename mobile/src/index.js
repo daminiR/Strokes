@@ -51,28 +51,28 @@ const App = () =>
       //const uploadLink = createUploadLink({
       //uri: 'http://localhost:4000/graphql',
       //});
-      //const uploadLink = createUploadLink({
-        //uri: 'http://10.0.2.2:4000/graphql',
-      //});
-      //const wsLink = new WebSocketLink({
-        //uri: 'ws://10.0.2.2:4000/graphql',
-        //options: {
-          //reconnect: true,
-        //},
-      //});
       const uploadLink = createUploadLink({
-      uri: 'http://192.168.1.12:4000/graphql',
+        uri: 'http://10.0.2.2:4000/graphql',
       });
-      //const uploadLink = createUploadLink({
-        //uri: 'http://10.0.2.2:4000/graphql',
-      //});
       const wsLink = new WebSocketLink({
-        //uri: 'ws://10.0.2.2:4000/graphql',
-        uri: 'ws://192.168.1.12:4000/graphql',
+        uri: 'ws://10.0.2.2:4000/graphql',
         options: {
           reconnect: true,
         },
       });
+      //const uploadLink = createUploadLink({
+      //uri: 'http://192.168.1.12:4000/graphql',
+      //});
+      ////const uploadLink = createUploadLink({
+        ////uri: 'http://10.0.2.2:4000/graphql',
+      ////});
+      //const wsLink = new WebSocketLink({
+        ////uri: 'ws://10.0.2.2:4000/graphql',
+        //uri: 'ws://192.168.1.12:4000/graphql',
+        //options: {
+          //reconnect: true,
+        //},
+      //});
       //const wsLink = new WebSocketLink({
         //uri: 'ws://192.168.1.8:4000/graphql',
         //options: {
