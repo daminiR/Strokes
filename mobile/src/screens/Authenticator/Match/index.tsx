@@ -15,16 +15,31 @@ import  {Matches}  from './Matches'
 import  {Home}  from './Home'
 import {Test} from './Test'
 import {createPatronList} from '../../../utils/matching/patron_list'
+import { useFormikContext, Formik} from 'formik'
+import {defaultAgeRange, defaultGameLevel} from '../../../constants'
+import _ from 'lodash'
+const createInitialFilterFormik = (sports) => {
+  const sportsFilter = _.map(sports, sportObj => {
+    return {sport: sportObj.sport, filterSelected: false}
+  })
+  return {
+    ageRange: defaultAgeRange,
+    sportFilters: sportsFilter,
+    levels: defaultGameLevel,
+  };
+};
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
 
 type MatchT = {
   navigation: MatchScreenNavigationProp
 }
 export const MatchesProfileContext = createContext(null)
+export const FilterContext = createContext(null)
 const Match  = ({ navigation }: MatchT ): ReactElement => {
   const [loadingMatches, setLoadingMatches] = useState(true)
+  const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   const [matches, setMatches] = useState(null)
-  console.log("loads")
+  ///// filter states /////
   const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
     //fetchPolicy: "network-only",
   const { data: squashData } = useQuery(GET_POTENTIAL_MATCHES, {
@@ -42,12 +57,26 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
         setLoadingMatches(false)
     }
   });
+  useEffect(() => {
+    setLoadingMatches(true);
+    const initialValues = createInitialFilterFormik(currentUserData.squash.sports);
+    console.log("initial filter vlaues", initialValues)
+    setInitialValuesFormik(initialValues);
+    setLoadingMatches(false);
+  }, [])
   const matchesProfileValue = {matches, loadingMatches}
   return (
     <>
-      {!loadingMatches && <MatchesProfileContext.Provider value={matchesProfileValue}>
-        <Test/>
-      </MatchesProfileContext.Provider>}
+      {!loadingMatches && (
+        <MatchesProfileContext.Provider value={matchesProfileValue}>
+          <Formik
+            enableReinitialize={true}
+            initialValues={initialValuesFormik}
+            onSubmit={(values) => console.log(values)}>
+            <Test />
+          </Formik>
+        </MatchesProfileContext.Provider>
+      )}
     </>
   );
 }
