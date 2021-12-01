@@ -12,6 +12,10 @@ export interface Sport {
   sport: string;
   game_level: number;
 }
+export interface SportFilters {
+  sport: string;
+  filterSelected: boolean;
+}
 export interface Name {
   FirstName: string;
   LastName: string;
@@ -51,6 +55,11 @@ export interface PatronListType {
     location: LocationT
     likes: PotentialMatchType[]
     image_set: ImageSetT[]
+}
+export interface FilterFields {
+  ageRange: {minAge: number; maxAge: number};
+  sportFilters: SportFilters[];
+  gameLevels: [number];
 }
 export interface ProfileFields {
   email: string;

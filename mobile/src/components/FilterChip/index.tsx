@@ -16,12 +16,15 @@ import {ProfileAttirbutes} from "./ProfileAttributes"
 import styles from '../../assets/styles'
 import {FilterSportContext} from '../FilterSportsChips'
 import _ from 'lodash'
+import { FilterFields } from '../../localModels/UserSportsList'
+import { useFormikContext} from 'formik';
 
-const FilterChip = ({sport, isSelected = false, isDisplay, getData=null}) => {
+const FilterChip = ({sport, isSelected = false, isDisplay}) => {
+  const {setValues, values: filterValues} = useFormikContext<FilterFields>();
   const {allUserSportsFilter, setAllUserSportsFilter} = useContext(FilterSportContext);
   const [dynamicStyle, setDynamicStyle] = React.useState(styles.ChipButton)
   useEffect(() => {
-    const filterSelected = _.find(allUserSportsFilter, (filterSportObj) => {
+    const filterSelected = _.find(filterValues.sportFilters, (filterSportObj) => {
       return filterSportObj.sport == sport;
     }).filterSelected
     if (filterSelected){
@@ -41,7 +44,8 @@ const FilterChip = ({sport, isSelected = false, isDisplay, getData=null}) => {
         }
       });
       setAllUserSportsFilter(trial);
-      //getData(sport, selected);
+      setValues({... filterValues, 'sportFilters': trial});
+      //getData(trial)
   };
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, ReactElement } from 'react'
+import React, { createContext, useEffect, useContext, useState, ReactElement } from 'react'
 import {Dimensions, Modal, Image,Text, Button, View, ImageBackground } from 'react-native';
 import {UserContext} from '../../../UserContext'
 import { Card } from 'react-native-card-stack-swiper';
@@ -41,6 +41,7 @@ const renderMatches =  (card, index) => {
                 </Card>
             )
 }
+export const FilterContext = createContext(null)
 const Test = () => {
   const image = require('../../../assets/images/01.jpg');
   const {matches, loadingMatches} = useContext(MatchesProfileContext);
