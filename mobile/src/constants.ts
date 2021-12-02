@@ -17,7 +17,7 @@ export const Dolbak = Platform.OS === 'ios' ? 'The Dolbak' : 'TheDolbak-Brush'
 
 // age range default
 export const defaultAgeRange = { minAge: 21, maxAge: 118 }
-export const defaultGameLevel = {gameLevel0: false, gameLevel1: false, gameLevel2: false}
+export const defaultGameLevel = {gameLevel0: true, gameLevel1: false, gameLevel2: false}
 // sports type and level information
 export const sportsList = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
 export const sportLevelList = ["beginners", "intermediate", "advanced"]

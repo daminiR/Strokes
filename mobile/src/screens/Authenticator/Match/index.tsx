@@ -30,6 +30,7 @@ const createInitialFilterFormik = (sports) => {
     ageRange: defaultAgeRange,
     sportFilters: sportsFilter,
     gameLevels: defaultGameLevel,
+    trial2: 14
   };
 };
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
