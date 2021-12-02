@@ -59,7 +59,7 @@ export interface PatronListType {
 export interface FilterFields {
   ageRange: {minAge: number; maxAge: number};
   sportFilters: SportFilters[];
-  gameLevels: [number];
+  gameLevels: {gameLevel0: boolean, gameLevel1: boolean, gameLevel2: boolean};
 }
 export interface ProfileFields {
   email: string;

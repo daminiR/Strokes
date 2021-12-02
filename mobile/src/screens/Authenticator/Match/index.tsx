@@ -19,13 +19,17 @@ import { useFormikContext, Formik} from 'formik'
 import {defaultAgeRange, defaultGameLevel} from '../../../constants'
 import _ from 'lodash'
 const createInitialFilterFormik = (sports) => {
-  const sportsFilter = _.map(sports, sportObj => {
-    return {sport: sportObj.sport, filterSelected: false}
+  const sportsFilter = _.map(sports, (sportObj, key) => {
+    if (key == '0') {
+      return {sport: sportObj.sport, filterSelected: true};
+    } else {
+      return {sport: sportObj.sport, filterSelected: false};
+    }
   })
   return {
     ageRange: defaultAgeRange,
     sportFilters: sportsFilter,
-    levels: defaultGameLevel,
+    gameLevels: defaultGameLevel,
   };
 };
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
@@ -35,6 +39,7 @@ type MatchT = {
 }
 export const MatchesProfileContext = createContext(null)
 export const FilterContext = createContext(null)
+
 const Match  = ({ navigation }: MatchT ): ReactElement => {
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
