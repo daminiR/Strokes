@@ -21,15 +21,16 @@ const {setValues, setFieldValue, values: filterValues} = useFormikContext<Filter
 const [gameLevel1, setGameLevel1] = useState(filterValues.gameLevels.gameLevel1);
 const [gameLevel2, setGameLevel2] = useState(filterValues.gameLevels.gameLevel2);
 const [gameLevel0, setGameLevel0] = useState(filterValues.gameLevels.gameLevel0);
+console.log("inside gamelevel", filterValues)
 const [filterSport, setFilterSport] = useState(null);
-useEffect(() => {
-  const filterSport = _.find(filterValues.sportFilters, (filterSportObj) => {
-    return filterSportObj.filterSelected == true;
-  })?.sport
-  if (filterSport){
-    setFilterSport(filterSport);
-  }
-}, [filterValues.sportFilters]);
+//useEffect(() => {
+  //const filterSport = _.find(filterValues.sportFilters, (filterSportObj) => {
+    //return filterSportObj.filterSelected == true;
+  //})?.sport
+  //if (filterSport){
+    //setFilterSport(filterSport);
+  //}
+//}, [filterValues.sportFilters]);
 
 const _onPressGameLevel = (gameLevel) => {
   switch (gameLevel){
@@ -46,14 +47,15 @@ const _onPressGameLevel = (gameLevel) => {
 }
 
 const _onDoneGameLevel = () => {
+  setFieldValue('trial2', 23);
   console.log("onDone")
-  setValues({... filterValues, 'gameLevels' :{
+  const gameLevel = {
     gameLevel0: true,
     gameLevel1: gameLevel1,
     gameLevel2: gameLevel2,
-  }});
-  console.log( "game", filterValues)
-  console.log("0, 1, 2 here", gameLevel0, gameLevel1, gameLevel2)
+  }
+  //setValues({... filterValues, 'gameLevels':gameLevel});
+  setFieldValue('gameLevels', gameLevel);
 
   //setValues({
     //...filterValues,

@@ -34,19 +34,25 @@ const FilterOverlay = ({filter, setFilter}) => {
     }
   }, [userLoading]);
 
-  const _onDone = () => {
+  const _onDoneGame = () => {
     if (gameLevelRef.current){
       gameLevelRef.current._onPressDoneGame();
     }
+  }
+  const _onDoneAge = () => {
     if (ageSliderRef.current){
       ageSliderRef.current._onPressDoneAgeSlide();
     }
-    console.log( "why is this printing after", filterValues)
+  }
+  const _onDone = () => {
+      _onDoneAge()
+      _onDoneGame()
+      setFilter(false)
   };
   const renderFilter = () => {
   return (
     // TODO:set the sports car filters, age, and game level thats all for now
-    <Overlay isVisible={filter} onBackdropPress={() => setFilter(!filter)}>
+    <Overlay isVisible={filter}>
       <View style={styles.top}>
         <Cancel/>
         <Done _onPressDone={_onDone}/>
