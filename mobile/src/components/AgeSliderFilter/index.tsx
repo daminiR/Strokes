@@ -35,6 +35,9 @@ useImperativeHandle(ref, () => ({
   //useEffect(() => {
     //_retriveData()
   //}, []);
+  useEffect(() => {
+    setMultiSliderValue(filterValues.ageRange)
+  }, []);
 const _onDoneAgeSlide = () => {
     setValues({... filterValues, 'ageRange': multiSliderValue});
 }
@@ -42,10 +45,10 @@ const _onDoneAgeSlide = () => {
     // TODO:set the sports car filters, age, and game level thats all for now
     <>
       <Text>
-        Age between {filterValues.ageRange.minAge} and {filterValues.ageRange.maxAge}
+        Age between {multiSliderValue.minAge} and {multiSliderValue.maxAge}
       </Text>
       <MultiSlider
-        values={[filterValues.ageRange.minAge, filterValues.ageRange.maxAge]}
+        values={[multiSliderValue.minAge, multiSliderValue.maxAge]}
         onValuesChange={(values) => setMultiSliderValue({minAge: values[0], maxAge: values[1]})}
         min={defaultAgeRange.minAge}
         max={defaultAgeRange.maxAge}
