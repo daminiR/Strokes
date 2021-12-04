@@ -8,6 +8,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFormikContext, Formik} from 'formik';
 import {FilterFields} from '../../localModels/UserSportsList'
 import { useImperativeHandle, forwardRef } from 'react'
+import {_retriveAgeRangeFilter} from '../../utils/AsyncStorage/retriveData'
+import {_storeAgeRangeFilter} from '../../utils/AsyncStorage/storeData'
+
+
 
 const AgeSliderFilter = (props, ref) => {
 useImperativeHandle(ref, () => ({
@@ -15,31 +19,12 @@ useImperativeHandle(ref, () => ({
 }))
   const {setValues, values: filterValues } = useFormikContext<FilterFields>();
   const [multiSliderValue, setMultiSliderValue] = useState(defaultAgeRange);
-  //const _storeData = async (ageRange) => {
-    //try {
-      //await AsyncStorage.setItem('AGE_FILTER_RANGE', ageRange);
-    //} catch (error) {
-      //console.log(error);
-    //}
-  //};
-  //const _retriveData = async () => {
-    //try {
-      //const ageRange = await AsyncStorage.getItem('AGE_FILTER_RANGE');
-      //if (ageRange !== null) {
-        //console.log("age", ageRange);
-      //}
-    //} catch (error) {
-      //console.log(error);
-    //}
-  //};
-  //useEffect(() => {
-    //_retriveData()
-  //}, []);
   useEffect(() => {
-    setMultiSliderValue(filterValues.ageRange)
+    _retriveAgeRangeFilter(setMultiSliderValue)
   }, []);
 const _onDoneAgeSlide = () => {
     setValues({... filterValues, 'ageRange': multiSliderValue});
+    _storeAgeRangeFilter(multiSliderValue)
 }
   return (
     // TODO:set the sports car filters, age, and game level thats all for now
