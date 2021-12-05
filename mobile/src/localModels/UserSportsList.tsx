@@ -58,7 +58,6 @@ export interface PatronListType {
 }
 export interface FilterFields {
   ageRange: {minAge: number; maxAge: number};
-  trial2: number;
   sportFilters: SportFilters[];
   gameLevels: {gameLevel0: boolean, gameLevel1: boolean, gameLevel2: boolean};
 }

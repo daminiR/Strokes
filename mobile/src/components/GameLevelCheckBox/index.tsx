@@ -18,12 +18,17 @@ useImperativeHandle(ref, () => ({
   _onPressDoneGame: () => {_onDoneGameLevel()}
 }))
 const {setValues, setFieldValue, values: filterValues} = useFormikContext<FilterFields>();
-console.log("in game level", filterValues)
-const [gameLevel1, setGameLevel1] = useState(filterValues.gameLevels.gameLevel1);
-const [gameLevel2, setGameLevel2] = useState(filterValues.gameLevels.gameLevel2);
-const [gameLevel0, setGameLevel0] = useState(filterValues.gameLevels.gameLevel0);
-console.log("inside gamelevel", filterValues)
+const [gameLevel1, setGameLevel1] = useState(false);
+const [gameLevel2, setGameLevel2] = useState(false);
+const [gameLevel0, setGameLevel0] = useState(false);
 const [filterSport, setFilterSport] = useState(null);
+
+useEffect(() => {
+  console.log("game level valeus", filterValues.gameLevels)
+      setGameLevel0(filterValues.gameLevels.gameLevel0)
+      setGameLevel1(filterValues.gameLevels.gameLevel1)
+      setGameLevel2(filterValues.gameLevels.gameLevel2)
+  }, [filterValues]);
 
 const _onPressGameLevel = (gameLevel) => {
   switch (gameLevel){
@@ -40,15 +45,25 @@ const _onPressGameLevel = (gameLevel) => {
 }
 
 const _onDoneGameLevel = () => {
-  setFieldValue('trial2', 23);
   console.log("onDone")
   const gameLevel = {
     gameLevel0: gameLevel0,
     gameLevel1: gameLevel1,
     gameLevel2: gameLevel2,
   }
-  setFieldValue('gameLevels', gameLevel);
+  //setFieldValue('gameLevels', gameLevel);
+  const newValues = {
+    gameLevels: gameLevel,
+    ageRange: filterValues.ageRange,
+    sportFilters: filterValues.sportFilters
+  }
+    //setValues({... filterValues, 'ageRange': multiSliderValue});
+    setValues(prevValues => ({
+      ...prevValues,
+      ...newValues
+    }));
   _storeGameLevelFilter(gameLevel)
+  //validate(filterValues)
 }
 
 return (

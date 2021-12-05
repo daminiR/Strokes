@@ -10,14 +10,15 @@
    sportFilter: Yup.array(
      Yup.object({
        sport: Yup.string().required(),
-       filterSelected: Yup.number().required(),
+       filterSelected: Yup.boolean().required(),
      }).required(),
-   ).required(),
+   ),
    gameLevels: Yup.object().shape({
-     gamelevel0: Yup.boolean().required(),
-     gamelevel1: Yup.boolean().required(),
-     gamelevel2: Yup.boolean().required(),
-   }).test('at-least-one-required', 'you check atleast one', value => !!(value.gamelevel0 || value.gamelevel1 || value.gamelevel2)),
+     gameLevel0: Yup.boolean().required(),
+     gameLevel1: Yup.boolean().required(),
+     gameLevel2: Yup.boolean().required(),
+   })
+   .test('at-least-one-required', 'you check atleast one', value => !!(value.gameLevel0 || value.gameLevel1 || value.gameLevel2)),
  });
 
 
