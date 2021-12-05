@@ -19,6 +19,7 @@ import { useFormikContext, Formik} from 'formik'
 import {defaultAgeRange, defaultGameLevel} from '../../../constants'
 import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../../utils/AsyncStorage/retriveData'
+import {FilterSchema} from '../../../validationSchemas/FilterSchema'
 
 const createInitialFilterFormik = async (sports) => {
   const defailtSportFilter = _.map(sports, (sportObj, key) => {
@@ -92,6 +93,7 @@ const Match  =  ({ navigation }: MatchT )  => {
           <Formik
             enableReinitialize={true}
             initialValues={initialValuesFormik}
+            validationSchema={FilterSchema}
             onSubmit={(values) => console.log(values)}>
             <Test />
           </Formik>

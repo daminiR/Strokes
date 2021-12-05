@@ -13,7 +13,7 @@ import AgeSliderFilter from '../../components/AgeSliderFilter'
 
   //// TODO : this needs to update every time user changes list of activities
 const FilterOverlay = ({filter, setFilter}) => {
-  const {setValues, values: filterValues } = useFormikContext<FilterFields>();
+  const {submitForm, setValues, values: filterValues } = useFormikContext<FilterFields>();
   const gameLevelRef = useRef()
   const ageSliderRef = useRef()
   const sportFilterRef = useRef()
@@ -50,6 +50,7 @@ const FilterOverlay = ({filter, setFilter}) => {
       _onDoneAge()
       _onDoneGame()
       _onDoneSport()
+      submitForm()
       setFilter(false)
   };
   const renderFilter = () => {

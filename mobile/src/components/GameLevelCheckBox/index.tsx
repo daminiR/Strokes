@@ -1,8 +1,7 @@
 import styles from '../../assets/styles';
-import React, { useRef, useEffect, createContext,useContext, useState, ReactElement } from 'react'
+import React, { useEffect, createContext,useContext, useState, ReactElement } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native';
-import  { Icon } from '../Icon/Icon';
-import {CheckBox, Overlay} from 'react-native-elements'
+import {CheckBox} from 'react-native-elements'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import { defaultAgeRange } from '../../constants'
 import {UserContext} from '../../UserContext'
