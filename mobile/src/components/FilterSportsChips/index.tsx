@@ -2,18 +2,17 @@ import {Card} from 'react-native-elements'
 import React, { createContext, useState} from 'react'
 import {View} from 'react-native';
 import styles from '../../assets/styles'
-import {FilterChip} from '../FilterChip'
+import FilterChip from '../FilterChip'
 import { FilterFields } from '../../localModels/UserSportsList'
 import { useFormikContext} from 'formik';
 import _ from 'lodash'
+import {forwardRef } from 'react'
 
 export const FilterSportContext = createContext(null);
-const FilterSportsChips = ({sportsList = null}) => {
+const FilterSportsChips = (props, ref) => {
+  const sportsList = props.sportsList
   const {setValues, values: filterValues} = useFormikContext<FilterFields>();
-  const allUserSports = _.map(sportsList, (sport) => {
-    return {sport: sport, filterSelected: false};
-  });
-  const [allUserSportsFilter, setAllUserSportsFilter] = useState(allUserSports);
+  const [allUserSportsFilter, setAllUserSportsFilter] = useState(filterValues.sportFilters);
   const renderFormikSports = () => {
     return (
       <>
@@ -23,6 +22,7 @@ const FilterSportsChips = ({sportsList = null}) => {
           <View style={styles.sportChipSet}>
             {filterValues.sportFilters.map((sportObj, i) => (
               <FilterChip
+                ref={ref}
                 key={i}
                 sport={sportObj.sport}
               />
@@ -42,4 +42,4 @@ const FilterSportsChips = ({sportsList = null}) => {
     </FilterSportContext.Provider>
   )
 };
-export {FilterSportsChips}
+export default forwardRef(FilterSportsChips)

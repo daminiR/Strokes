@@ -18,18 +18,24 @@ import {createPatronList} from '../../../utils/matching/patron_list'
 import { useFormikContext, Formik} from 'formik'
 import {defaultAgeRange, defaultGameLevel} from '../../../constants'
 import _ from 'lodash'
-const createInitialFilterFormik = (sports) => {
-  const sportsFilter = _.map(sports, (sportObj, key) => {
+import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../../utils/AsyncStorage/retriveData'
+
+const createInitialFilterFormik = async (sports) => {
+  const defailtSportFilter = _.map(sports, (sportObj, key) => {
     if (key == '0') {
       return {sport: sportObj.sport, filterSelected: true};
     } else {
       return {sport: sportObj.sport, filterSelected: false};
     }
   })
+
+  const ageRange = await _retriveAgeRangeFilter()
+  const sportFilter = await _retriveSportFilter()
+  const gameLevelFilter = await _retriveGameLevel()
   return {
-    ageRange: defaultAgeRange,
-    sportFilters: sportsFilter,
-    gameLevels: defaultGameLevel,
+    ageRange: ageRange ? ageRange : defaultAgeRange,
+    sportFilters: sportFilter ? sportFilter: defailtSportFilter,
+    gameLevels: gameLevelFilter ? gameLevelFilter :defaultGameLevel,
     trial2: 14
   };
 };
@@ -41,7 +47,7 @@ type MatchT = {
 export const MatchesProfileContext = createContext(null)
 export const FilterContext = createContext(null)
 
-const Match  = ({ navigation }: MatchT ): ReactElement => {
+const Match  =  ({ navigation }: MatchT )  => {
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   const [matches, setMatches] = useState(null)
@@ -49,6 +55,8 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
   const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
     //fetchPolicy: "network-only",
   const { data: squashData } = useQuery(GET_POTENTIAL_MATCHES, {
+
+
     // fetch policty newtowrk only gives infinte loop! changes after v3 appolo client
     //fetchPolicy: "network-only",
     variables: {_id: currentUser.uid},
@@ -65,10 +73,16 @@ const Match  = ({ navigation }: MatchT ): ReactElement => {
   });
   useEffect(() => {
     setLoadingMatches(true);
-    const initialValues = createInitialFilterFormik(currentUserData.squash.sports);
-    console.log("initial filter vlaues", initialValues)
-    setInitialValuesFormik(initialValues);
-    setLoadingMatches(false);
+    const initialValues = createInitialFilterFormik(
+      currentUserData.squash.sports,
+    ).then((initialValues) => {
+      console.log('initial filter vlaues', initialValues);
+      setInitialValuesFormik(initialValues);
+      setLoadingMatches(false);
+    })
+    .catch (error => {
+      console.log(error);
+    })
   }, [])
   const matchesProfileValue = {matches, loadingMatches}
   return (

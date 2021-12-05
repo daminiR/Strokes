@@ -59,13 +59,11 @@ const filterByCity = (currentUseLocation, patron_list) => {
 }
 const createPatronList = (currentUseLocation, allUsers, likes, dislikes, matches) => {
     const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
-    console.log("////// activeUsers", activeUsers)
     const exclude = _.concat(likes, dislikes, matches)
     const patron_list = _.differenceBy(activeUsers, exclude, '_id')
     const newPatronList = filterByCity(currentUseLocation, patron_list)
     // test//
-    const trial = filterByFieldsByUser({patron_list : patron_list})
-    console.log("trial", trial)
+    //const trial = filterByFieldsByUser({patron_list : patron_list})
     return newPatronList
 }
 export {createPatronList}
