@@ -12,25 +12,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFormikContext, Formik} from 'formik';
 import {FilterFields} from '../../localModels/UserSportsList'
 import { useImperativeHandle, forwardRef } from 'react'
+import {_storeGameLevelFilter} from '../../utils/AsyncStorage/storeData'
 
-const GameLevelCheckBox = (props, ref) => {
+const GameLevelCheckBox =  (props, ref) => {
 useImperativeHandle(ref, () => ({
   _onPressDoneGame: () => {_onDoneGameLevel()}
 }))
 const {setValues, setFieldValue, values: filterValues} = useFormikContext<FilterFields>();
+console.log("in game level", filterValues)
 const [gameLevel1, setGameLevel1] = useState(filterValues.gameLevels.gameLevel1);
 const [gameLevel2, setGameLevel2] = useState(filterValues.gameLevels.gameLevel2);
 const [gameLevel0, setGameLevel0] = useState(filterValues.gameLevels.gameLevel0);
 console.log("inside gamelevel", filterValues)
 const [filterSport, setFilterSport] = useState(null);
-//useEffect(() => {
-  //const filterSport = _.find(filterValues.sportFilters, (filterSportObj) => {
-    //return filterSportObj.filterSelected == true;
-  //})?.sport
-  //if (filterSport){
-    //setFilterSport(filterSport);
-  //}
-//}, [filterValues.sportFilters]);
 
 const _onPressGameLevel = (gameLevel) => {
   switch (gameLevel){
@@ -50,21 +44,15 @@ const _onDoneGameLevel = () => {
   setFieldValue('trial2', 23);
   console.log("onDone")
   const gameLevel = {
-    gameLevel0: true,
+    gameLevel0: gameLevel0,
     gameLevel1: gameLevel1,
     gameLevel2: gameLevel2,
   }
-  //setValues({... filterValues, 'gameLevels':gameLevel});
   setFieldValue('gameLevels', gameLevel);
-
-  //setValues({
-    //...filterValues,
-    //gameLevels: {gameLevel0: gameLevel0, gameLevel1: gameLevel1, gameLevel2: gameLevel2},
-  //});
+  _storeGameLevelFilter(gameLevel)
 }
 
 return (
-  // TODO:set the sports car filters, age, and game level thats all for now
   <>
     <View style={{marginTop: 20}}>
     <Text style={styles.filtersText}>

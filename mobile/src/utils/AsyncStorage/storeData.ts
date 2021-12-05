@@ -7,4 +7,18 @@ const _storeAgeRangeFilter = async (ageRange) => {
       console.log(error);
     }
   };
-export { _storeAgeRangeFilter}
+const _storeSportFilter = async (sportFilter) => {
+    try {
+      await AsyncStorage.setItem('SPORT_FILTER', JSON.stringify(sportFilter));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+const _storeGameLevelFilter = async (gameLevelFilter) => {
+    try {
+      await AsyncStorage.setItem('GAME_LEVEL_FILTER', JSON.stringify(gameLevelFilter));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+export { _storeGameLevelFilter, _storeAgeRangeFilter, _storeSportFilter}

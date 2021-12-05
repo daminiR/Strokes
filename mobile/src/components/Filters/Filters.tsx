@@ -14,68 +14,8 @@ import {FilterFields} from '../../localModels/UserSportsList'
 import { useImperativeHandle, forwardRef } from 'react'
 import GameLevelCheckBox from '../../components/GameLevelCheckBox'
 import AgeSliderFilter from '../../components/AgeSliderFilter'
+import {FilterOverlay} from '../../components/FilterOverLay'
 
-const FilterOverlay = ({filter, setFilter}) => {
-  // TODO : this needs to update every time user changes list of activities
-  const {setValues, values: filterValues } = useFormikContext<FilterFields>();
-  const gameLevelRef = useRef()
-  const ageSliderRef = useRef()
-  const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
-  const [loadingSports, setLoadingSports] = useState(true)
-  const [sportsList, setSportsList] = useState(null)
-  const [selectedSport, setSelectedSport] = useState(null)
-
-  useEffect(() => {
-    if(currentUserData){
-        setLoadingSports(true);
-        const sports = _.map(currentUserData.squash.sports, (sportObj) => {return sportObj.sport});
-        setSportsList(sports);
-        setLoadingSports(false);
-    }
-  }, [userLoading]);
-
-  const _onDoneGame = () => {
-    if (gameLevelRef.current){
-      gameLevelRef.current._onPressDoneGame();
-    }
-  }
-  const _onDoneAge = () => {
-    if (ageSliderRef.current){
-      ageSliderRef.current._onPressDoneAgeSlide();
-    }
-  }
-  const _onDone = () => {
-      _onDoneAge()
-      _onDoneGame()
-      setFilter(false)
-  };
-  const renderFilter = () => {
-  return (
-    // TODO:set the sports car filters, age, and game level thats all for now
-    <Overlay isVisible={filter}>
-      <View style={styles.top}>
-        <Cancel/>
-        <Done _onPressDone={_onDone}/>
-      </View>
-      <View style={styles.filterOverlay}>
-        <AgeSliderFilter ref={ageSliderRef}/>
-        <View style={styles.sportChipSet}>
-          {!loadingSports && (
-            <FilterSportsChips
-              sportsList={sportsList}
-            />
-          )}
-        </View>
-        <GameLevelCheckBox ref={gameLevelRef}/>
-      </View>
-    </Overlay>
-  );
-  }
-
-  return (
-      renderFilter()
-  );
-};
 
 const Filters = () => {
   const {values: filterValues } = useFormikContext();
