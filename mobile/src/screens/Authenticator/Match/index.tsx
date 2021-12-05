@@ -15,7 +15,7 @@ import  {Matches}  from './Matches'
 import  {Home}  from './Home'
 import {Test} from './Test'
 import {createPatronList} from '../../../utils/matching/patron_list'
-import { useFormikContext, Formik} from 'formik'
+import { useFormikContext, Formik, ErrorMessage} from 'formik'
 import {defaultAgeRange, defaultGameLevel} from '../../../constants'
 import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../../utils/AsyncStorage/retriveData'
@@ -37,7 +37,6 @@ const createInitialFilterFormik = async (sports) => {
     ageRange: ageRange ? ageRange : defaultAgeRange,
     sportFilters: sportFilter ? sportFilter: defailtSportFilter,
     gameLevels: gameLevelFilter ? gameLevelFilter :defaultGameLevel,
-    trial2: 14
   };
 };
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
@@ -91,10 +90,10 @@ const Match  =  ({ navigation }: MatchT )  => {
       {!loadingMatches && (
         <MatchesProfileContext.Provider value={matchesProfileValue}>
           <Formik
-            enableReinitialize={true}
+            //enableReinitialize={true}
             initialValues={initialValuesFormik}
-            validationSchema={FilterSchema}
-            onSubmit={(values) => console.log(values)}>
+            //validationSchema={FilterSchema}
+            onSubmit={(values) => console.log("are we submiting", values)}>
             <Test />
           </Formik>
         </MatchesProfileContext.Provider>

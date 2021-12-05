@@ -15,7 +15,7 @@ const AgeSliderFilter = (props, ref) => {
 useImperativeHandle(ref, () => ({
   _onPressDoneAgeSlide: () => {_onDoneAgeSlide()}
 }))
-  const {setValues, values: filterValues } = useFormikContext<FilterFields>();
+  const {setFieldValue, setValues, values: filterValues } = useFormikContext<FilterFields>();
   const [multiSliderValue, setMultiSliderValue] = useState(defaultAgeRange);
   const [loadingAgeRange, setLoadingAgeRange] = useState(true);
   useEffect(() => {
@@ -25,8 +25,32 @@ useImperativeHandle(ref, () => ({
     setLoadingAgeRange(false)
   }, []);
 const _onDoneAgeSlide = () => {
-    setValues({... filterValues, 'ageRange': multiSliderValue});
+  //console.log("age",multiSliderValue)
+  //const newValues = {
+    //gameLevels: filterValues.gameLevels,
+    //ageRange: multiSliderValue,
+    //sportFilters: filterValues.sportFilters
+  //}
+    //setValues({... filterValues, 'ageRange': multiSliderValue});
+    //setValues(prevValues => ({
+      //...prevValues,
+    //}));
+    //setFieldValue('ageRange', multiSliderValue);
     _storeAgeRangeFilter(multiSliderValue)
+}
+const _onAgeChanged = () => {
+  console.log("age finsihed changing",multiSliderValue)
+  //const newValues = {
+    //gameLevels: filterValues.gameLevels,
+    //ageRange: multiSliderValue,
+    //sportFilters: filterValues.sportFilters
+  //}
+    setValues({... filterValues, 'ageRange': multiSliderValue});
+    //setValues(prevValues => ({
+      //...prevValues,
+    //}));
+    //setFieldValue('ageRange', multiSliderValue);
+    //_storeAgeRangeFilter(multiSliderValue)
 }
   return (
     <>
@@ -40,6 +64,7 @@ const _onDoneAgeSlide = () => {
             onValuesChange={(values) =>
               setMultiSliderValue({minAge: values[0], maxAge: values[1]})
             }
+            onValuesChangeFinish={() => _onAgeChanged()}
             min={defaultAgeRange.minAge}
             max={defaultAgeRange.maxAge}
             step={1}

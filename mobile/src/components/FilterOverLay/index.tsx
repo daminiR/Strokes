@@ -13,7 +13,7 @@ import AgeSliderFilter from '../../components/AgeSliderFilter'
 
   //// TODO : this needs to update every time user changes list of activities
 const FilterOverlay = ({filter, setFilter}) => {
-  const {submitForm, setValues, values: filterValues } = useFormikContext<FilterFields>();
+  const {handleReset, setValues, values: filterValues } = useFormikContext<FilterFields>();
   const gameLevelRef = useRef()
   const ageSliderRef = useRef()
   const sportFilterRef = useRef()
@@ -33,24 +33,31 @@ const FilterOverlay = ({filter, setFilter}) => {
 
   const _onDoneGame = () => {
     if (gameLevelRef.current){
+      console.log("game level exixsts")
       gameLevelRef.current._onPressDoneGame();
     }
   }
   const _onDoneAge = () => {
     if (ageSliderRef.current){
+      console.log("age level exixsts")
       ageSliderRef.current._onPressDoneAgeSlide();
     }
   }
   const _onDoneSport = () => {
     if ( sportFilterRef.current){
+      console.log("sport level exixsts")
       sportFilterRef.current._onPressDoneSportFilter();
     }
   }
+  const _onCancel = () => {
+    handleReset()
+    setFilter(false)
+
+  };
   const _onDone = () => {
       _onDoneAge()
-      _onDoneGame()
-      _onDoneSport()
-      submitForm()
+      //_onDoneGame()
+      //_onDoneSport()
       setFilter(false)
   };
   const renderFilter = () => {
@@ -58,7 +65,7 @@ const FilterOverlay = ({filter, setFilter}) => {
     // TODO:set the sports car filters, age, and game level thats all for now
     <Overlay isVisible={filter}>
       <View style={styles.top}>
-        <Cancel/>
+        <Cancel _onPressCancel={_onCancel}/>
         <Done _onPressDone={_onDone}/>
       </View>
       <View style={styles.filterOverlay}>
