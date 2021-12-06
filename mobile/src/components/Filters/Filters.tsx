@@ -15,16 +15,22 @@ import { useImperativeHandle, forwardRef } from 'react'
 import GameLevelCheckBox from '../../components/GameLevelCheckBox'
 import AgeSliderFilter from '../../components/AgeSliderFilter'
 import {FilterOverlay} from '../../components/FilterOverLay'
+import {FilterOverlaySingle} from '../../components/FilterOverlaySingle'
 
 
-const Filters = () => {
+const Filters = ({getFilterValue}) => {
   const [filter, setFilter] = useState(false);
   const _onFilter = () => {
     setFilter(true);
   };
+
+  useEffect(() => {
+    getFilterValue(filter)
+  }, [filter]);
+
   return (
     <>
-      <FilterOverlay filter={filter} setFilter={setFilter} />
+      <FilterOverlaySingle filter={filter} setFilter={setFilter} />
       <TouchableOpacity onPress={() => _onFilter()}style={styles.filters}>
         <Text style={styles.filtersText}>
           <Icon name="filter" /> Filters

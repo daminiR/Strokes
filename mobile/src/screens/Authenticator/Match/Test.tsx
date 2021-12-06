@@ -42,7 +42,7 @@ const renderMatches =  (card, index) => {
             )
 }
 export const FilterContext = createContext(null)
-const Test = () => {
+const Test = ({getFilterMain}) => {
   const image = require('../../../assets/images/01.jpg');
   const {matches, loadingMatches} = useContext(MatchesProfileContext);
   const [updateLikes] = useMutation(UPDATE_LIKES);
@@ -84,6 +84,9 @@ const Test = () => {
   ];
   const match = (matchVal) => {
     setMatched(matchVal)
+  }
+  const getFilterValue = (filter) => {
+    getFilterMain(filter)
   }
   return (
     <>
@@ -131,7 +134,7 @@ const Test = () => {
             stackSize={3}>
             <View style={styles.top}>
               <City />
-              <Filters />
+              <Filters getFilterValue={getFilterValue}/>
             </View>
           </Swiper>
         )}
