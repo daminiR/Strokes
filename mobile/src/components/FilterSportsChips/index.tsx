@@ -11,7 +11,7 @@ import {forwardRef } from 'react'
 export const FilterSportContext = createContext(null);
 const FilterSportsChips = (props, ref) => {
   const sportsList = props.sportsList
-  const {setValues, values: filterValues} = useFormikContext<FilterFields>();
+  const {values: filterValues} = useFormikContext<FilterFields>();
   const [allUserSportsFilter, setAllUserSportsFilter] = useState(filterValues.sportFilters);
   const renderFormikSports = () => {
     return (

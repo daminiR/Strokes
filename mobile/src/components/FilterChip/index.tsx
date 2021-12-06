@@ -36,7 +36,6 @@ const FilterChip = (props, ref) => {
   useEffect(() => {}, [filterValues]);
 
   const _onDoneSportFilter = () => {
-    setValues({...filterValues, sportFilters: allUserSportsFilter});
     _storeSportFilter(allUserSportsFilter)
   };
   const _selected = () => {
@@ -48,6 +47,7 @@ const FilterChip = (props, ref) => {
       }
     });
     setAllUserSportsFilter(trial);
+    setValues({...filterValues, sportFilters: trial});
   };
   return (
     <>

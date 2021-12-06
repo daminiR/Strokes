@@ -18,7 +18,6 @@ import {FilterOverlay} from '../../components/FilterOverLay'
 
 
 const Filters = () => {
-  const {values: filterValues } = useFormikContext();
   const [filter, setFilter] = useState(false);
   const _onFilter = () => {
     setFilter(true);

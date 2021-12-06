@@ -17,8 +17,6 @@ export const sanitizeCard = (card) => {
     const extended = _.extend({"filePath" : "temp"}, imageObj)
     return _.omit(extended, '__typename') as ImageSetT;
     })
-    //const sports = card.sports
-    console.log("sportssssssssssss",  sports)
     const  potentialMatch: PotentialMatchType= {
        "first_name": card.first_name,
        "age": card.age,
@@ -36,9 +34,6 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     // update mutation for both users
     const matchUSerLikedIDs = _.find(card.matches, match => { return match._id})
     const userMatchingData = sanitizeCard(currentUser)
-    console.log("card", card)
-    console.log("_id", card)
-
     var array = likesVar()
     const potentialMatch = sanitizeCard(card)
     array.push(potentialMatch)
@@ -53,7 +48,6 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
         }})
 
     if (_.find(card.likes, (likeObj) => {return likeObj._id == _id})){
-    console.log("Matched")
     const matchedUser = sanitizeCard(card)
     setMatched(true)
     updateMatches({variables: {currentUserId: _id,
@@ -61,21 +55,6 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
                   currentUser: userMatchingData,
                   potentialMatch: matchedUser}})
     }
-    // matched UI
-
-
-
-    // test //
-    //
-    //if (array.length  == MAX_LIKES){
-        //// update mutation for likes
-        //updateLikes({variables: {
-            //_id: _id,
-            //likes: array,
-            //currentUserData: userMatchingData
-        //}})
-        //array = []
-    //}
 }
 const swipeLeftDisliked = async (_id, card, updateDislikes) => {
     // push all ids when likes or dislikes and bulk send mutation

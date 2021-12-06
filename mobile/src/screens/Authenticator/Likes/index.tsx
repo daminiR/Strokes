@@ -20,7 +20,6 @@ type LikesT = {
   navigation: LikesScreenNavigationProp
 }
 const Likes  = ({ navigation }: LikesT ): ReactElement => {
-  //<Button title="Profile" onPress={_onPressProfile}/>
   const [loading, setLoading] = useState(false)
   return (
     <>
