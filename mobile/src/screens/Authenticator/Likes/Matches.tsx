@@ -64,9 +64,7 @@ const Matches = () => {
       getSquashProfile({variables: {id: currentUser.uid}});
       console.log('AppState', appState.current);
     });
-
     return () => {
-      //subscription.remove();
     }
     }, [])
   return (
