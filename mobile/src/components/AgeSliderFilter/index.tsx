@@ -9,8 +9,6 @@ import {FilterFields} from '../../localModels/UserSportsList'
 import { useImperativeHandle, forwardRef } from 'react'
 import {_storeAgeRangeFilter} from '../../utils/AsyncStorage/storeData'
 
-
-
 const AgeSliderFilter = (props, ref) => {
 useImperativeHandle(ref, () => ({
   _onPressDoneAgeSlide: () => {_onDoneAgeSlide()}
@@ -19,38 +17,15 @@ useImperativeHandle(ref, () => ({
   const [multiSliderValue, setMultiSliderValue] = useState(defaultAgeRange);
   const [loadingAgeRange, setLoadingAgeRange] = useState(true);
   useEffect(() => {
-    console.log("age range in slider", filterValues.ageRange)
     setLoadingAgeRange(true)
     setMultiSliderValue(filterValues.ageRange)
     setLoadingAgeRange(false)
   }, []);
 const _onDoneAgeSlide = () => {
-  //console.log("age",multiSliderValue)
-  //const newValues = {
-    //gameLevels: filterValues.gameLevels,
-    //ageRange: multiSliderValue,
-    //sportFilters: filterValues.sportFilters
-  //}
-    //setValues({... filterValues, 'ageRange': multiSliderValue});
-    //setValues(prevValues => ({
-      //...prevValues,
-    //}));
-    //setFieldValue('ageRange', multiSliderValue);
     _storeAgeRangeFilter(multiSliderValue)
 }
 const _onAgeChanged = () => {
-  console.log("age finsihed changing",multiSliderValue)
-  //const newValues = {
-    //gameLevels: filterValues.gameLevels,
-    //ageRange: multiSliderValue,
-    //sportFilters: filterValues.sportFilters
-  //}
     setValues({... filterValues, 'ageRange': multiSliderValue});
-    //setValues(prevValues => ({
-      //...prevValues,
-    //}));
-    //setFieldValue('ageRange', multiSliderValue);
-    //_storeAgeRangeFilter(multiSliderValue)
 }
   return (
     <>

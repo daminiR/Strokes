@@ -3,7 +3,7 @@ import {sanitizeCard} from './swipeFuntions'
 import _ from 'lodash'
 import {PatronListType, Sport, ImageSetT} from '../../localModels/UserSportsList'
 import { sportsList, defaultGameLevel, defaultAgeRange} from '../../constants'
-//const createPatronList = (allUsers, likes, dislikes, i_blocked, blocked_me, matches)=>{
+
 export const patronCard = (card) => {
     let sports  = _.map(card.sports, (sportObj) => {
       return _.omit(sportObj, '__typename') as Sport;
@@ -12,8 +12,6 @@ export const patronCard = (card) => {
     const extended = _.extend({"filePath" : "temp"}, imageObj)
     return _.omit(extended, '__typename') as ImageSetT;
     })
-    //const sports = card.sports
-    console.log("sportssssssssssss",  sports)
     const  potentialMatch: PatronListType= {
        "first_name": card.first_name,
        "age": card.age,
@@ -29,11 +27,6 @@ export const patronCard = (card) => {
 }
 
 const filterByFieldsByUser = ({patron_list, filterBySport, filterByAge = defaultAgeRange, filterByGameLeve = defaultGameLevel}) => {
-    // filter by sport
-    //console.log("all sport filter before", patron_list)
-    //filterBySport = 'Tennis'
-    //filterByGameLeve = [1]
-    //filterBySport = null
     const filterFunctionSport = (matchObj) => {
         const isSportInUser = _.some(matchObj.sports, (sportObj) => {
             if (filterBySport == null) {
@@ -62,8 +55,6 @@ const createPatronList = (currentUseLocation, allUsers, likes, dislikes, matches
     const exclude = _.concat(likes, dislikes, matches)
     const patron_list = _.differenceBy(activeUsers, exclude, '_id')
     const newPatronList = filterByCity(currentUseLocation, patron_list)
-    // test//
-    //const trial = filterByFieldsByUser({patron_list : patron_list})
     return newPatronList
 }
 export {createPatronList}
