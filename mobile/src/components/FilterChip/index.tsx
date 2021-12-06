@@ -1,20 +1,15 @@
 import {Chip} from 'react-native-elements'
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import styles from '../../assets/styles'
-import {FilterSportContext} from '../FilterSportsChips'
+import {FilterSportContext} from '../FilterOverlaySingle'
 import _ from 'lodash'
 import { useFormikContext} from 'formik';
 import {FilterFields} from '../../localModels/UserSportsList'
 import { useImperativeHandle, forwardRef } from 'react'
 import {_storeSportFilter} from '../../utils/AsyncStorage/storeData'
 
-const FilterChip = (props, ref) => {
+const FilterChip = (props) => {
   const sport = props.sport;
-  useImperativeHandle(ref, () => ({
-    _onPressDoneSportFilter: () => {
-      _onDoneSportFilter();
-    },
-  }));
   const {setValues, values: filterValues} = useFormikContext<FilterFields>();
   const {allUserSportsFilter, setAllUserSportsFilter} = useContext(
     FilterSportContext
@@ -33,11 +28,7 @@ const FilterChip = (props, ref) => {
       setDynamicStyle(styles.ChipButton);
     }
   }, [allUserSportsFilter]);
-  useEffect(() => {}, [filterValues]);
 
-  const _onDoneSportFilter = () => {
-    _storeSportFilter(allUserSportsFilter)
-  };
   const _selected = () => {
     const trial = _.map(allUserSportsFilter, (obj) => {
       if (obj.sport == sport) {
@@ -47,7 +38,7 @@ const FilterChip = (props, ref) => {
       }
     });
     setAllUserSportsFilter(trial);
-    setValues({...filterValues, sportFilters: trial});
+    //setValues({...filterValues, sportFilters: trial});
   };
   return (
     <>

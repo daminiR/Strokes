@@ -8,7 +8,6 @@ import { useFormikContext} from 'formik';
 import _ from 'lodash'
 import {forwardRef } from 'react'
 
-export const FilterSportContext = createContext(null);
 const FilterSportsChips = (props, ref) => {
   const sportsList = props.sportsList
   const {values: filterValues} = useFormikContext<FilterFields>();
@@ -37,9 +36,9 @@ const FilterSportsChips = (props, ref) => {
     setAllUserSportsFilter: setAllUserSportsFilter,
   };
   return (
-    <FilterSportContext.Provider value={value}>
+    <>
       {renderFormikSports()}
-    </FilterSportContext.Provider>
+    </>
   )
 };
 export default forwardRef(FilterSportsChips)

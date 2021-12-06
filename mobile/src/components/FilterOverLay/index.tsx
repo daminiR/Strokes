@@ -12,25 +12,8 @@ import AgeSliderFilter from '../../components/AgeSliderFilter'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../utils/AsyncStorage/retriveData'
 import {defaultAgeRange, defaultGameLevel} from '../../constants'
 import { useFormikContext, Formik, ErrorMessage} from 'formik'
-
-const createInitialFilterFormik = async (sports) => {
-  const defailtSportFilter = _.map(sports, (sportObj, key) => {
-    if (key == '0') {
-      return {sport: sportObj.sport, filterSelected: true};
-    } else {
-      return {sport: sportObj.sport, filterSelected: false};
-    }
-  })
-
-  const ageRange = await _retriveAgeRangeFilter()
-  const sportFilter = await _retriveSportFilter()
-  const gameLevelFilter = await _retriveGameLevel()
-  return {
-    ageRange: ageRange ? ageRange : defaultAgeRange,
-    sportFilters: sportFilter ? sportFilter: defailtSportFilter,
-    gameLevels: gameLevelFilter ? gameLevelFilter :defaultGameLevel,
-  };
-};
+import {FilterSchema} from '../../validationSchemas/FilterSchema'
+import {createInitialFilterFormik} from '../../utils/formik/index'
 
   //// TODO : this needs to update every time user changes list of activities
 const FilterOverlay = ({filter, setFilter}) => {
@@ -42,18 +25,17 @@ const FilterOverlay = ({filter, setFilter}) => {
   const [loadingSports, setLoadingSports] = useState(true)
   const [sportsList, setSportsList] = useState(null)
   const [selectedSport, setSelectedSport] = useState(null)
-  const [initialValuesFormik, setInitialValuesFormik] = useState(null);
 
-  useEffect(() => {
-    createInitialFilterFormik(
-      currentUserData.squash.sports,
-    ).then((initialValues) => {
-      setInitialValuesFormik(initialValues);
-    })
-    .catch (error => {
-      console.log(error);
-    })
-  }, [filter])
+  //useEffect(() => {
+    //createInitialFilterFormik(
+      //currentUserData.squash.sports,
+    //).then((initialValues) => {
+      //setInitialValuesFormik(initialValues);
+    //})
+    //.catch (error => {
+      //console.log(error);
+    //})
+  //}, [filter])
 
   useEffect(() => {
     if(currentUserData){
@@ -92,12 +74,7 @@ const FilterOverlay = ({filter, setFilter}) => {
   return (
     // TODO:set the sports car filters, age, and game level thats all for now
     <Overlay isVisible={filter}>
-      <Formik
-        //enableReinitialize={true}
-        initialValues={initialValuesFormik}
-        //validationSchema={FilterSchema}
-        onSubmit={(values) => console.log(values)}>
-        <View>
+      <View>
         <View style={styles.top}>
           <Cancel _onPressCancel={_onCancel} />
           <Done _onPressDone={_onDone} />
@@ -111,8 +88,7 @@ const FilterOverlay = ({filter, setFilter}) => {
           </View>
           <GameLevelCheckBox ref={gameLevelRef} />
         </View>
-        </View>
-      </Formik>
+      </View>
     </Overlay>
   );
   }

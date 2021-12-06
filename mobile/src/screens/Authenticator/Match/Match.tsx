@@ -22,16 +22,10 @@ import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '..
 import {FilterSchema} from '../../../validationSchemas/FilterSchema'
 import {createInitialFilterFormik} from '../../../utils/formik/index'
 
-type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
-export const FilterSportContext = createContext(null);
-
-type MatchT = {
-  navigation: MatchScreenNavigationProp
-}
 export const MatchesProfileContext = createContext(null)
 export const FilterContext = createContext(null)
 
-const MatchMain  =  ({ navigation}: MatchT )  => {
+const Match  =  ({ navigation}: MatchT )  => {
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [matches, setMatches] = useState(null)
   const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
