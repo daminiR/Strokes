@@ -26,25 +26,49 @@ export const patronCard = (card) => {
     return potentialMatch
 }
 
-const filterByFieldsByUser = ({patron_list, filterBySport, filterByAge = defaultAgeRange, filterByGameLevel = defaultGameLevel}) => {
+const filterByFieldsByUser = (patron_list, filters) => {
+    //TODO: to maintain structure cange gamelevel backend to match filter gamelevel style
+    console.log("in filters //////////", filters)
+    const filterBySport = _.find(filters.sportFilters, sportObj => {return sportObj.filterSelected == true}).sport
+    console.log("filterbysport",filterBySport)
+    const filterByAge = filters.ageRange
+    console.log("filter by age",filterByAge)
+    const filterByGameLevel = Object.entries(filters.gameLevels).map(
+      ([key, value]) => {
+        switch (key) {
+          case 'gameLevel0': {
+            if (value == true) {
+              return 0;
+            }
+          }
+          case 'gameLevel1': {
+            if (value == true) {
+              return 1;
+            }
+          }
+          case 'gameLevel2': {
+            if (value == true) {
+              return 2;
+            }
+          }
+        }
+      },
+    );
     const filterFunctionSport = (matchObj) => {
         const isSportInUser = _.some(matchObj.sports, (sportObj) => {
             if (filterBySport == null) {
               return true;
             } else {
                 const sportIncluded = sportObj.sport == filterBySport
-                //const gameLevelIncluded = _.includes(filterByGameLevel, sportObj.game_level)
-              //return sportIncluded && gameLevelIncluded
-              return sportIncluded
+                const gameLevelIncluded = _.includes(filterByGameLevel, sportObj.game_level)
+              return sportIncluded && gameLevelIncluded
             }
         })
-        //const isUserInAgeRange = matchObj.age >= filterByAge.minAge && matchObj.age <= filterByAge.maxAge
-        return isSportInUser
-        //return isSportInUser && isUserInAgeRange
+        const isUserInAgeRange = matchObj.age >= filterByAge.minAge && matchObj.age <= filterByAge.maxAge
+        return isSportInUser && isUserInAgeRange
     }
     const moreFilter = _.filter(patron_list, filterFunctionSport)
-    console.log("all sport filter", moreFilter)
-    console.log( "valeu", _.includes([1, 2, 3], 1))
+    console.log("aa///////", moreFilter)
     return moreFilter
 }
 const filterByCity = (currentUseLocation, patron_list) => {
@@ -57,7 +81,7 @@ const createPatronList = (currentUseLocation, allUsers, likes, dislikes, matches
     const exclude = _.concat(likes, dislikes, matches)
     const patron_list = _.differenceBy(activeUsers, exclude, '_id')
     const newPatronList = filterByCity(currentUseLocation, patron_list)
-    //const newPatronList2 = filterByFieldsByUser(patron_list)
-    return newPatronList
+    const newPatronList2 = filterByFieldsByUser(newPatronList, filters)
+    return newPatronList2
 }
 export {createPatronList}

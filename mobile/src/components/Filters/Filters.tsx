@@ -18,15 +18,11 @@ import {FilterOverlay} from '../../components/FilterOverLay'
 import {FilterOverlaySingle} from '../../components/FilterOverlaySingle'
 
 
-const Filters = ({getFilterValue}) => {
+const Filters = () => {
   const [filter, setFilter] = useState(false);
   const _onFilter = () => {
     setFilter(true);
   };
-
-  useEffect(() => {
-    getFilterValue(filter)
-  }, [filter]);
 
   return (
     <>
