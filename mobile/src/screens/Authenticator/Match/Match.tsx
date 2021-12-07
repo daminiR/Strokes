@@ -21,60 +21,51 @@ import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../../utils/AsyncStorage/retriveData'
 import {FilterSchema} from '../../../validationSchemas/FilterSchema'
 import {createInitialFilterFormik} from '../../../utils/formik/index'
+import {FilterFields} from '../../localModels/UserSportsList'
 
 export const MatchesProfileContext = createContext(null)
 export const FilterContext = createContext(null)
 
-const Match  =  ({ navigation}: MatchT )  => {
+const Patron = ()  => {
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [matches, setMatches] = useState(null)
+  const [allUsers, setAllUsers] = useState(null)
+  const {setValues, values: filterValues } = useFormikContext<FilterFields>();
   const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
+  // you have to re querry and reget filters everytime filters change -> useEffect
   const [filterFlag, setFilterFlag] = useState(false)
-  const [initialValuesFormik, setInitialValuesFormik] = useState(null);
     //fetchPolicy: "network-only",
-  const { data: squashData } = useQuery(GET_POTENTIAL_MATCHES, {
-    variables: {_id: currentUser.uid},
+  const [queryProssibleMatches, { data: squashData }] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     onCompleted: (data) => {
+        console.log("are we here ever")
         const all_users = data.queryProssibleMatches
-        //const patron_list = createPatronList(all_users, currentUserData.squash.likes, currentUserData.squash.dislikes, currentUserData.squash.i_blocked, currentUser.squash.blocked_me, currentUser.squash.matches)
-        const patron_list = createPatronList(currentUserData.squash?.location, all_users, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches)
+        setAllUsers(all_users)
+        const patron_list = createPatronList(currentUserData.squash?.location, all_users, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches, filterValues)
         setMatches(patron_list)
         setLoadingMatches(false)
     }
   });
-  const getFilterMain = (filter) => {
-    console.log("filter in main", filter)
-    setFilterFlag(filter)
-  }
-  const matchesProfileValue = {matches, loadingMatches};
   useEffect(() => {
-    setLoadingMatches(true);
-    createInitialFilterFormik(currentUserData.squash.sports)
-      .then((initialValues) => {
-        setInitialValuesFormik(initialValues);
-        setLoadingMatches(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    queryProssibleMatches({variables: {_id: currentUser.uid}})
   }, []);
-    console.log("inital values in match2", initialValuesFormik)
+  useEffect(() => {
+    console.log("run every time new filter values")
+        setLoadingMatches(true)
+        const patron_list = createPatronList(currentUserData.squash?.location, allUsers, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches, filterValues)
+        console.log("new filter patron list ////////////", patron_list)
+        setMatches(patron_list)
+        setLoadingMatches(false)
+  }, [filterValues]);
+  const matchesProfileValue = {matches, loadingMatches};
+  console.log("whaaaa",matchesProfileValue)
   return (
     <>
       {!loadingMatches && (
         <MatchesProfileContext.Provider value={matchesProfileValue}>
-          <Formik
-            //enableReinitialize={true}
-            initialValues={initialValuesFormik}
-            //validationSchema={FilterSchema}
-            onSubmit={(values) =>
-              console.log('if it works it submits', values)
-            }>
-            <Test getFilterMain={getFilterMain}/>
-          </Formik>
+          <Test/>
         </MatchesProfileContext.Provider>
       )}
     </>
   );
 }
-export { Match }
+export { Patron }

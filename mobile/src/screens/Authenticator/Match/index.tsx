@@ -21,6 +21,7 @@ import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../../utils/AsyncStorage/retriveData'
 import {FilterSchema} from '../../../validationSchemas/FilterSchema'
 import {createInitialFilterFormik} from '../../../utils/formik/index'
+import {Patron} from './Match'
 
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
 export const FilterSportContext = createContext(null);
@@ -28,47 +29,26 @@ export const FilterSportContext = createContext(null);
 type MatchT = {
   navigation: MatchScreenNavigationProp
 }
-export const MatchesProfileContext = createContext(null)
-export const FilterContext = createContext(null)
 
-const MatchMain  =  ({ navigation}: MatchT )  => {
-  const [loadingMatches, setLoadingMatches] = useState(true)
-  const [matches, setMatches] = useState(null)
-  const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
-  const [filterFlag, setFilterFlag] = useState(false)
+const Match  =  ({ navigation}: MatchT )  => {
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
-    //fetchPolicy: "network-only",
-  const { data: squashData } = useQuery(GET_POTENTIAL_MATCHES, {
-    variables: {_id: currentUser.uid},
-    onCompleted: (data) => {
-        const all_users = data.queryProssibleMatches
-        //const patron_list = createPatronList(all_users, currentUserData.squash.likes, currentUserData.squash.dislikes, currentUserData.squash.i_blocked, currentUser.squash.blocked_me, currentUser.squash.matches)
-        const patron_list = createPatronList(currentUserData.squash?.location, all_users, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches)
-        setMatches(patron_list)
-        setLoadingMatches(false)
-    }
-  });
-  const getFilterMain = (filter) => {
-    console.log("filter in main", filter)
-    setFilterFlag(filter)
-  }
-  const matchesProfileValue = {matches, loadingMatches};
+  const [loadingFormik, setLoadingFormik] = useState(true)
+  const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
   useEffect(() => {
-    setLoadingMatches(true);
+    setLoadingFormik(true);
     createInitialFilterFormik(currentUserData.squash.sports)
       .then((initialValues) => {
         setInitialValuesFormik(initialValues);
-        setLoadingMatches(false);
+        setLoadingFormik(false);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-    console.log("inital values in match2", initialValuesFormik)
+  console.log("inital values in match2", initialValuesFormik)
   return (
     <>
-      {!loadingMatches && (
-        <MatchesProfileContext.Provider value={matchesProfileValue}>
+      {!loadingFormik && (
           <Formik
             //enableReinitialize={true}
             initialValues={initialValuesFormik}
@@ -76,11 +56,10 @@ const MatchMain  =  ({ navigation}: MatchT )  => {
             onSubmit={(values) =>
               console.log('if it works it submits', values)
             }>
-            <Test getFilterMain={getFilterMain}/>
+          <Patron/>
           </Formik>
-        </MatchesProfileContext.Provider>
       )}
     </>
   );
 }
-export { Match }
+export { Match}

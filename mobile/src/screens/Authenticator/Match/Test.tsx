@@ -14,7 +14,7 @@ import Demo from '../../../assets/data/demo.js';
 import styles from '../../../assets/styles/'
 import {PRIMARY_COLOR} from '../../../assets/styles/'
 import {GET_INPUT_TYPE, READ_SQUASH} from '../../../graphql/queries/profile'
-import {MatchesProfileContext} from './index'
+import {MatchesProfileContext} from './Match'
 import {swipeRightLiked, swipeLeftDisliked} from '../../../utils/matching/swipeFuntions'
 import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
 import {UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '../../../graphql/mutations/profile'
@@ -42,8 +42,9 @@ const renderMatches =  (card, index) => {
             )
 }
 export const FilterContext = createContext(null)
-const Test = ({getFilterMain}) => {
+const Test = () => {
   const image = require('../../../assets/images/01.jpg');
+  console.log("in test")
   const {matches, loadingMatches} = useContext(MatchesProfileContext);
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
@@ -84,9 +85,6 @@ const Test = ({getFilterMain}) => {
   ];
   const match = (matchVal) => {
     setMatched(matchVal)
-  }
-  const getFilterValue = (filter) => {
-    getFilterMain(filter)
   }
   return (
     <>
@@ -134,7 +132,7 @@ const Test = ({getFilterMain}) => {
             stackSize={3}>
             <View style={styles.top}>
               <City />
-              <Filters getFilterValue={getFilterValue}/>
+              <Filters/>
             </View>
           </Swiper>
         )}
