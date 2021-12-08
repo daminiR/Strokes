@@ -21,12 +21,13 @@ import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../../utils/AsyncStorage/retriveData'
 import {FilterSchema} from '../../../validationSchemas/FilterSchema'
 import {createInitialFilterFormik} from '../../../utils/formik/index'
-import {FilterFields} from '../../localModels/UserSportsList'
+import {FilterFields} from '../../../localModels/UserSportsList'
 
 export const MatchesProfileContext = createContext(null)
 export const FilterContext = createContext(null)
 
 const Patron = ()  => {
+  const didMountRef = useRef(false)
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [matches, setMatches] = useState(null)
   const [allUsers, setAllUsers] = useState(null)
@@ -49,15 +50,19 @@ const Patron = ()  => {
     queryProssibleMatches({variables: {_id: currentUser.uid}})
   }, []);
   useEffect(() => {
-    console.log("run every time new filter values")
+    if (didMountRef.current) {
+        console.log("run every time new filter values")
         setLoadingMatches(true)
         const patron_list = createPatronList(currentUserData.squash?.location, allUsers, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches, filterValues)
         console.log("new filter patron list ////////////", patron_list)
-        setMatches(patron_list)
+        setMatches(patron_list);
         setLoadingMatches(false)
+    } else {
+      didMountRef.current = true;
+    }
   }, [filterValues]);
   const matchesProfileValue = {matches, loadingMatches};
-  console.log("whaaaa",matchesProfileValue)
+  console.log("matches everytim ebefore usecontext", matchesProfileValue)
   return (
     <>
       {!loadingMatches && (

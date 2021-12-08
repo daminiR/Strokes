@@ -18,6 +18,9 @@ import {MatchesProfileContext} from './Match'
 import {swipeRightLiked, swipeLeftDisliked} from '../../../utils/matching/swipeFuntions'
 import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
 import {UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '../../../graphql/mutations/profile'
+import {createInitialFilterFormik} from '../../../utils/formik/index'
+import {FilterFields} from '../../../localModels/UserSportsList'
+import { useFormikContext } from 'formik'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -43,9 +46,8 @@ const renderMatches =  (card, index) => {
 }
 export const FilterContext = createContext(null)
 const Test = () => {
-  const image = require('../../../assets/images/01.jpg');
-  console.log("in test")
-  const {matches, loadingMatches} = useContext(MatchesProfileContext);
+  const {values: filterValues } = useFormikContext<FilterFields>();
+  const {matches} = useContext(MatchesProfileContext);
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
@@ -59,10 +61,13 @@ const Test = () => {
     },
   })
   useEffect(() => {
-      if (matches.length == 0){
-          setEndingText("No more matches left!")
+    console.log("matches in useffectkj", matches)
+      if (matches.length == 0) {
+        setEndingText('No more matches left!');
+      } else {
+        setEndingText(null);
       }
-  }, [])
+  }, [matches])
   const [ getSquashProfile, {data: newUserData, loading: newUserLaodingData}] = useLazyQuery(READ_SQUASH, {
     variables: {id: currentUser.uid},
     //fetchPolicy:"cache-and-network",
@@ -89,6 +94,10 @@ const Test = () => {
   return (
     <>
       <MatchCard matched={matched} setMatched={setMatched}/>
+            <View style={styles.top}>
+              <City />
+              <Filters/>
+            </View>
       <View style={stylesSwipe.container}>
         {matches.length != 0 && (
           <Swiper
@@ -130,10 +139,6 @@ const Test = () => {
             useViewOverflow={true}
             backgroundColor={'#FFFFFF'}
             stackSize={3}>
-            <View style={styles.top}>
-              <City />
-              <Filters/>
-            </View>
           </Swiper>
         )}
         {endingText && (
@@ -189,12 +194,4 @@ const stylesSwipe = StyleSheet.create({
     backgroundColor: "transparent"
   }
 });
-  const imageStyle = [
-    {
-      borderRadius: 8,
-      width:  width - 80,
-      height:  350,
-      margin:  20
-    }
-  ];
 export {Test};

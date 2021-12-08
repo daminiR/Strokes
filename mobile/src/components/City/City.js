@@ -1,16 +1,21 @@
 import React from 'react';
 import styles from '../../assets/styles';
 
-import { Text, TouchableOpacity } from 'react-native';
-import {Icon} from '../Icon/Icon';
+import { View, Text} from 'react-native';
+import {Icon} from 'react-native-elements';
 
-const City = () => {
+const City = ({city}) => {
+  const [city, setCity] = useState(null)
+  useEffect(() => {
+    setCity(city)
+  }, []);
   return (
-    <TouchableOpacity style={styles.city}>
-      <Text style={styles.cityText}>
-        <Icon name="marker" /> New York
+    <View style={styles.cityText}>
+      <Icon name="city" type='material-community'/>
+      <Text>
+        {city}
       </Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 
