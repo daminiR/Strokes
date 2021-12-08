@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useRef, createContext, useEffect, useContext, useState, ReactElement } from 'react'
 import styles from '../../assets/styles';
 
 import { View, Text} from 'react-native';
 import {Icon} from 'react-native-elements';
-
-const City = ({city}) => {
+import  {cityVar} from '../../cache'
+const City = () => {
   const [city, setCity] = useState(null)
   useEffect(() => {
-    setCity(city)
-  }, []);
+    const City = cityVar()
+    setCity(City)
+  }, [cityVar()]);
   return (
     <View style={styles.cityText}>
       <Icon name="city" type='material-community'/>
