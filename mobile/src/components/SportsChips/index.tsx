@@ -6,26 +6,42 @@ import {useNavigation} from '@react-navigation/native';
 import { onScreen, goBack } from '../../../constants'
 import {ProfileContext} from './index'
 import { useQuery, useMutation, useLazyQuery, HTTPFetchNetworkInterface} from '@apollo/client'
-//import {sportsList} from './../../../constants';
-import  DatePicker  from 'react-native-date-picker'
-import { RootStackParamList } from '../../../AppNavigator'
-import { ProfileScreenNavigationProp} from './index'
-import { SportContext } from '../IndividualSports/index'
-import {GET_SPORTS_LIST} from '../../../graphql/queries/profile'
-import {ProfileAttirbutes} from "./ProfileAttributes"
 import styles from '../../assets/styles'
 
- const SportChips = ({sport, isSelected = false, isDisplay, getData=null}) => {
+ const SportChips = ({sport, gameLevel = null, isSelected = false, isDisplay, getData=null}) => {
   const [dynamicStyle, setDynamicStyle] = React.useState(styles.ChipButton)
+  const [gameLevelStyle, setGameLevelStyle] = React.useState(styles.ChipButton)
   const [selected, setSelected] = React.useState(isSelected)
   useEffect(() => {
-    if (selected){
-      setDynamicStyle(styles.ChipButtonSelected)
-    }
-    else {
+    if (!isDisplay){
+    if (selected) {
+      setDynamicStyle(styles.ChipButtonSelected);
+    } else {
       setDynamicStyle(styles.ChipButton);
     }
+    }
   }, [selected])
+  useEffect(() => {
+    if (isDisplay) {
+      console.log("gameLevel",gameLevel)
+      if (gameLevel){
+        switch (gameLevel) {
+          // beginners
+          case 0: {
+            setGameLevelStyle(styles.ChipButtonGameLevel2);
+          }
+          // intermediate
+          case 1: {
+            setGameLevelStyle(styles.ChipButtonGameLevel1);
+          }
+          // advanced
+          case 2: {
+            setGameLevelStyle(styles.ChipButtonGameLevel2);
+          }
+        }
+    }
+      }
+  }, [])
 
   const _selected = (selected) => {
     if (selected) {
@@ -42,6 +58,7 @@ import styles from '../../assets/styles'
       <Chip
         title= {sport}
         titleStyle={styles.chipText}
+        type="solid"
         icon={{
           name: 'bluetooth',
           type: 'font-awesome',
@@ -53,7 +70,7 @@ import styles from '../../assets/styles'
         onPress={() => _selected(selected)}
         disabled={isDisplay}
         disabledTitleStyle={styles.chipText}
-        disabledStyle={styles.ChipButton}
+        disabledStyle={gameLevelStyle}
       />
     </>
   );

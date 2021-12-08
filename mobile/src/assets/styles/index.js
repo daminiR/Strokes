@@ -136,13 +136,34 @@ export default StyleSheet.create({
   ChipButtonSelected: {
     borderColor: 'grey',
     backgroundColor: '#d3d3d3',
-    fontSize: 200,
+    fontSize: 20,
+    borderWidth: 1,
+    padding: 4
+  },
+  ChipButtonGameLevel0: {
+    borderColor: 'red',
+    backgroundColor: 'red',
+    fontSize: 20,
+    borderWidth: 1,
+    padding: 4
+  },
+  ChipButtonGameLevel1: {
+    borderColor: 'grey',
+    backgroundColor: 'green',
+    fontSize: 20,
+    borderWidth: 1,
+    padding: 4
+  },
+  ChipButtonGameLevel2: {
+    borderColor: 'grey',
+    backgroundColor: 'blue',
+    fontSize: 20,
     borderWidth: 1,
     padding: 4
   },
   ChipButton: {
     borderColor: 'grey',
-    fontSize: 200,
+    fontSize: 20,
     backgroundColor: '#fff',
     borderWidth: 1,
     padding: 4

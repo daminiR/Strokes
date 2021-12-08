@@ -69,7 +69,7 @@ const CardItem = ({
           { sportsList && <View style={{marginVertical: 10}}>
             <View style={styles.sportChipSet}>
               {sportsList.map((sport, i) => (
-                  <SportChips key={i} sport={sport.sport} isDisplay={true} />
+                  <SportChips key={i} sport={sport.sport} gameLevel={sport.game_level} isDisplay={true} />
                 ))}
             </View>
           </View>}
