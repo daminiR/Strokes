@@ -6,7 +6,7 @@ import styles from '../../assets/styles'
 import {SportChips} from '../SportsChips'
 import { EditFields} from '../../localModels/UserSportsList'
 import { useFormikContext} from 'formik';
-import { EditInputVar} from '../../../cache'
+import { EditInputVar} from '../../cache'
 
 const Description = () => {
   const _editDescription = (props) => {

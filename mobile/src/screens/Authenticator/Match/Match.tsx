@@ -22,6 +22,7 @@ import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '..
 import {FilterSchema} from '../../../validationSchemas/FilterSchema'
 import {createInitialFilterFormik} from '../../../utils/formik/index'
 import {FilterFields} from '../../../localModels/UserSportsList'
+import {cityVar}from '../../../cache'
 
 export const MatchesProfileContext = createContext(null)
 export const FilterContext = createContext(null)
@@ -38,7 +39,6 @@ const Patron = ()  => {
     //fetchPolicy: "network-only",
   const [queryProssibleMatches, { data: squashData }] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     onCompleted: (data) => {
-        console.log("are we here ever")
         const all_users = data.queryProssibleMatches
         setAllUsers(all_users)
         const patron_list = createPatronList(currentUserData.squash?.location, all_users, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches, filterValues)
@@ -48,6 +48,9 @@ const Patron = ()  => {
   });
   useEffect(() => {
     queryProssibleMatches({variables: {_id: currentUser.uid}})
+  }, []);
+  useEffect(() => {
+        cityVar(currentUserData?.squash.location.city)
   }, []);
   useEffect(() => {
     if (didMountRef.current) {

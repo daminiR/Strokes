@@ -25,7 +25,7 @@ const ImageInput = ({_submit, isSignUp}) => {
     }
     return (
       <View style={styles.imageContainer}>
-          <Pictures getImages={getImages}/>
+          <Pictures/>
           <Button style={{flexDirection:'row', alignSelf: 'center', justifyContent: 'flex-end'}} onPress={() => _submit()} title="Submit" />
     </View>
     )}

@@ -64,35 +64,5 @@ const ProfileView = (props) => {
     </>
   );
 }
-const ProfileStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 2,
-    margin: 0,
-  },
-  top: {
-    flex: 0.9,
-    margin: 1,
-    backgroundColor: 'white',
-    borderWidth: 5,
-  },
-  middle: {
-    flex: 1.1,
-    backgroundColor: 'white',
-    borderWidth: 5,
-  },
-  profileViewImageDisplay: {
-    flex:1,
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    alignItems: 'center'
-  },
-  verticalImageplaceholder: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-});
 
 export  { ProfileView }

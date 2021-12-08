@@ -24,7 +24,7 @@ import { EditFields, ProfileFields} from '../../../localModels/UserSportsList'
 import {ProfileSettings} from './profileSettings'
 import {_onPressSignOut} from '../../../utils/Upload'
 import { EditInput } from './EditInputs'
-import { EditInputVar} from '../../../cache'
+import { cityVar, EditInputVar} from '../../../cache'
 import {convertImagesToFormat } from '../../../utils/User'
 export const ProfileContext = createContext()
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
@@ -123,6 +123,7 @@ const _onPressDoneProfile = () => {
           description: formikValues.description,
         },
       });
+      cityVar(formikValues.location.city)
       //// as soon as done new data needs to be grabbed and replaced
     }
     setIsVisible(false);
