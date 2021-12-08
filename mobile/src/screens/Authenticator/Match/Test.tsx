@@ -25,6 +25,7 @@ import { useFormikContext } from 'formik'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const renderMatches =  (card, index) => {
+      console.log("card gamelevle stuff", card)
       const profileImage = card.image_set.find(imgObj => imgObj.img_idx == 0)
       const image_set_copy = card.image_set
       const min_idx_obj = image_set_copy.reduce((res, obj) => {return (obj.img_idx < res.img_idx)? obj: res})
@@ -61,7 +62,6 @@ const Test = () => {
     },
   })
   useEffect(() => {
-    console.log("matches in useffectkj", matches)
       if (matches.length == 0) {
         setEndingText('No more matches left!');
       } else {

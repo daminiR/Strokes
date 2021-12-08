@@ -22,7 +22,6 @@ import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '..
 import {FilterSchema} from '../../../validationSchemas/FilterSchema'
 import {createInitialFilterFormik} from '../../../utils/formik/index'
 import {Patron} from './Match'
-import {cityVar}from '../../../cache'
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
 export const FilterSportContext = createContext(null);
 
@@ -39,14 +38,11 @@ const Match  =  ({ navigation}: MatchT )  => {
     createInitialFilterFormik(currentUserData.squash.sports)
       .then((initialValues) => {
         setInitialValuesFormik(initialValues);
-        //cityVar(initialValues)
         setLoadingFormik(false);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
-  useEffect(() => {
   }, []);
   console.log("inital values in match2", initialValuesFormik)
   return (
