@@ -16,7 +16,6 @@ import { ProfileFields, EditFields, SignIn} from '../../../localModels/UserSport
 import { useFormikContext} from 'formik';
 
 const Pictures =() => {
-  const didMountRef = useRef(false)
   const [image, setImage] = useState(null)
   const [images, setImages] = useState([])
   const [loadPictures, setLoadPictures] = useState(false)

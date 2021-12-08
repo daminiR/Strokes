@@ -307,6 +307,7 @@ export default StyleSheet.create({
   },
   cityText: {
     //fontFamily: ICON_FONT,
+    paddingBottom: 10,
     color: DARK_GRAY,
     fontSize: 13,
   },
