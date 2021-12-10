@@ -1,15 +1,8 @@
-import React, { useRef, createContext, useEffect, useContext, useState, ReactElement } from 'react'
-import {StackNavigationProp } from '@react-navigation/stack'
-import {
-  TouchableOpacity,
-  View,
-  Modal,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import React from 'react';
+import {TouchableOpacity, Text} from 'react-native';
 import styles from '../../assets/styles/'
 
-const Cancel = ({_onPressCancel=null}) => {
+const Cancel = ({_onPressCancel}) => {
   return (
     <TouchableOpacity onPress={() => _onPressCancel()} style={styles.city}>
       <Text style={styles.cityText}>

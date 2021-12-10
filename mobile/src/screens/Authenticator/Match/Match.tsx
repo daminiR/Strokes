@@ -1,26 +1,12 @@
-import React, { useEffect, useContext,createContext, useRef, useState, ReactElement } from 'react'
-import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack'
-import { View, Text, Button, AppState} from 'react-native'
-import {Icon, FAB, Overlay} from 'react-native-elements'
-import { onScreen, goBack } from '../../../constants'
-import { AppContainer } from '../../../components'
-import { RootStackParamList } from '../../../AppNavigator'
-import auth from '@react-native-firebase/auth'
+import React, { useEffect, useContext,createContext, useRef, useState } from 'react'
 import {UserContext} from '../../../UserContext'
-import { useLazyQuery, useQuery, useMutation } from '@apollo/client'
-import { GET_POTENTIAL_MATCHES, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from '../../../graphql/queries/profile'
-import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import  {Matches}  from './Matches'
-import  {Home}  from './Home'
+import { useLazyQuery} from '@apollo/client'
+import { GET_POTENTIAL_MATCHES} from '../../../graphql/queries/profile'
 import {Test} from './Test'
 import {createPatronList} from '../../../utils/matching/patron_list'
-import { useFormikContext, Formik, ErrorMessage} from 'formik'
-import {defaultAgeRange, defaultGameLevel} from '../../../constants'
+import { useFormikContext} from 'formik'
 import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../../utils/AsyncStorage/retriveData'
-import {FilterSchema} from '../../../validationSchemas/FilterSchema'
-import {createInitialFilterFormik} from '../../../utils/formik/index'
 import {FilterFields} from '../../../localModels/UserSportsList'
 import {cityVar}from '../../../cache'
 
@@ -32,12 +18,11 @@ const Patron = ()  => {
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [matches, setMatches] = useState(null)
   const [allUsers, setAllUsers] = useState(null)
-  const {setValues, values: filterValues } = useFormikContext<FilterFields>();
-  const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
+  const {values: filterValues } = useFormikContext<FilterFields>();
+  const {currentUser, data: currentUserData} = useContext(UserContext)
   // you have to re querry and reget filters everytime filters change -> useEffect
-  const [filterFlag, setFilterFlag] = useState(false)
     //fetchPolicy: "network-only",
-  const [queryProssibleMatches, { data: squashData }] = useLazyQuery(GET_POTENTIAL_MATCHES, {
+  const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     onCompleted: (data) => {
         const all_users = data.queryProssibleMatches
         setAllUsers(all_users)
@@ -54,10 +39,8 @@ const Patron = ()  => {
   }, []);
   useEffect(() => {
     if (didMountRef.current) {
-        console.log("run every time new filter values")
         setLoadingMatches(true)
         const patron_list = createPatronList(currentUserData.squash?.location, allUsers, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches, filterValues)
-        console.log("new filter patron list ////////////", patron_list)
         setMatches(patron_list);
         setLoadingMatches(false)
     } else {
@@ -65,7 +48,6 @@ const Patron = ()  => {
     }
   }, [filterValues]);
   const matchesProfileValue = {matches, loadingMatches};
-  console.log("matches everytim ebefore usecontext", matchesProfileValue)
   return (
     <>
       {!loadingMatches && (

@@ -1,16 +1,12 @@
 import {Chip} from 'react-native-elements'
-import React, { useEffect, useContext, useState, ReactElement } from 'react'
+import React, { useEffect, useContext } from 'react'
 import styles from '../../assets/styles'
 import {FilterSportContext} from '../FilterOverlaySingle'
 import _ from 'lodash'
-import { useFormikContext} from 'formik';
-import {FilterFields} from '../../localModels/UserSportsList'
-import { useImperativeHandle, forwardRef } from 'react'
 import {_storeSportFilter} from '../../utils/AsyncStorage/storeData'
 
 const FilterChip = (props) => {
   const sport = props.sport;
-  const {setValues, values: filterValues} = useFormikContext<FilterFields>();
   const {allUserSportsFilter, setAllUserSportsFilter} = useContext(
     FilterSportContext
   );
@@ -62,4 +58,4 @@ const FilterChip = (props) => {
   );
 };
 
-export default forwardRef(FilterChip)
+export  {FilterChip}

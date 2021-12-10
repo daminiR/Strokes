@@ -1,14 +1,13 @@
-import React, { useEffect, useContext, useState, ReactElement } from 'react'
-import {useMutation , makeVar} from '@apollo/client'
+import React, { useContext, useState, ReactElement } from 'react'
+import {useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
 import {signUpSlides, intitialFormikSignUp} from '../../../constants'
-import {  RootStackSignOutParamList } from '../../../navigation/'
+import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput} from '../../../components'
-import { ConfirmationCode } from '../../../components'
+import {ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput} from '../../../components'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
 
@@ -29,10 +28,9 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
   );
 }
 const Slider =  () => {
-  const {values, handleChange} = useFormikContext<ProfileFields>();
+  const {values} = useFormikContext<ProfileFields>();
   const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
-  const [confirmSlide, setConfirmSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const [index, setIndex] = useState(0)
   const [showNextButton, setShowNextButton] = useState(true)

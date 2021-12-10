@@ -1,33 +1,25 @@
 import styles from '../../assets/styles';
 import React, { createContext, useEffect,useContext, useState } from 'react'
-import FilterChip from '../FilterChip'
+import {FilterChip} from '../FilterChip'
 import { View, Text } from 'react-native';
 import {Overlay, CheckBox, Card} from 'react-native-elements'
 import {UserContext} from '../../UserContext'
 import { Cancel, Done, } from '..'
-import FilterSportsChips from '../FilterSportsChips'
 import _ from 'lodash'
 import {FilterFields} from '../../localModels/UserSportsList'
-import GameLevelCheckBox from '../GameLevelCheckBox'
-import AgeSliderFilter from '../AgeSliderFilter'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../utils/AsyncStorage/retriveData'
-import {defaultAgeRange, defaultGameLevel} from '../../constants'
-import { useFormikContext, Formik, ErrorMessage} from 'formik'
-import {FilterSchema} from '../../validationSchemas/FilterSchema'
-import {createInitialFilterFormik} from '../../utils/formik/index'
+import {defaultAgeRange} from '../../constants'
+import { useFormikContext} from 'formik'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import {_storeAgeRangeFilter, _storeGameLevelFilter, _storeSportFilter} from '../../utils/AsyncStorage/storeData'
 
   //// TODO : this needs to update every time user changes list of activities
 export const FilterSportContext = createContext(null);
 const FilterOverlaySingle = ({filter, setFilter}) => {
-  const {handleReset, setValues, values: filterValues } = useFormikContext<FilterFields>();
-  const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
+  const {setValues, values: filterValues } = useFormikContext<FilterFields>();
+  const {data: currentUserData, userLoading} = useContext(UserContext)
   const [loadingSports, setLoadingSports] = useState(true)
-  const [sportsList, setSportsList] = useState(null)
   const [multiSliderValue, setMultiSliderValue] = useState(defaultAgeRange);
-  const [selectedSport, setSelectedSport] = useState(null)
-
 
   const [allUserSportsFilter, setAllUserSportsFilter] = useState(filterValues.sportFilters);
 
@@ -51,15 +43,6 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
     setAllUserSportsFilter(filterValues.sportFilters)
 
   }, [filter]);
-
-  useEffect(() => {
-    if(currentUserData){
-        setLoadingSports(true);
-        const sports = _.map(currentUserData.squash.sports, (sportObj) => {return sportObj.sport});
-        setSportsList(sports);
-        setLoadingSports(false);
-    }
-  }, [userLoading]);
 
   const _onCancel = () => {
     console.log("is this working")

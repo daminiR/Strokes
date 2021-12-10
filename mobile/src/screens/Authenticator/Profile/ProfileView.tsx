@@ -1,33 +1,20 @@
-import {Button, Image, withBadge, Icon, Avatar, Badge } from 'react-native-elements'
-import { ActivityIndicator } from 'react-native'
-import React, { useContext, useEffect, useState, ReactElement } from 'react'
-import CardStack, { Card } from 'react-native-card-stack-swiper';
-import {UserContext} from '../../../UserContext'
-import {ProfileContext} from './index'
-import {UPLOAD_FILE, DELETE_IMAGE} from '../../../graphql/mutations/profile'
-import {READ_SQUASH} from '../../../graphql/queries/profile'
-import { ProfileSettingsInput } from "./profileSettingInput"
+import React, {useEffect} from 'react'
 import { CardItem } from '../../../components/CardItem/CardItem';
-import {ImageBackground,View, ScrollView, StyleSheet } from 'react-native'
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { Card } from 'react-native-card-stack-swiper';
+import {ImageBackground,View} from 'react-native'
 import styles from '../../../assets/styles';
-import { generateRNFile } from '../../../utils/Upload'
 import { _check_single } from '../../../utils/Upload'
-import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
-import Demo from '../../../assets/data/demo.js';
 import { useFormikContext} from 'formik';
-import { EditFields, SignIn} from '../../../localModels/UserSportsList'
+import { EditFields} from '../../../localModels/UserSportsList'
 
-const ProfileView = (props) => {
+const ProfileView = () => {
   const [loading, setLoading] = React.useState(true)
   const [newImageSet, setNewImageSet] = React.useState([])
   const [profileTitle, setProfileTitle] = React.useState('')
-  const {currentUser, userData, userLoading} = useContext(UserContext);
   const [userProfile, setUserProfile] = React.useState(null)
   const [profileImageValue, setProfileImageValue] = React.useState(null)
-  const {values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
+  const {values: formikValues} = useFormikContext<EditFields>();
   useEffect(() => {
-    console.log("how ma times")
     setLoading(true)
     // TODO: not important sort image by order
       const user = formikValues

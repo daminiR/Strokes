@@ -1,23 +1,22 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
-import {useMutation , makeVar} from '@apollo/client'
+import {useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
 import {signInSlides, iniitialSignInForm} from '../../../constants'
-import {  RootStackSignOutParamList } from '../../../navigation/'
+import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, ImageInput, SportsInput} from '../../../components'
+import {PhoneInput, EmailInput} from '../../../components'
 import { ConfirmationCode } from '../../../components'
-import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
+import { registerOnFirebase} from '../../../utils/User'
 import { UserContext } from '../../../UserContext'
+
 type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
 type SignInT = {
   navigation: SignInScreenNavigationProp
 }
 const SignIn = ({ navigation }: SignInT): ReactElement => {
-  const [loading, setLoading] = useState(false)
-  const [error2, setError] = useState('');
   return (
     <Formik
       initialValues={iniitialSignInForm}
@@ -27,18 +26,13 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
   );
 }
 const Slider =  () => {
-  const {values, handleChange} = useFormikContext<ProfileFields>();
+  const {values} = useFormikContext<ProfileFields>();
   const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
-  const [confirmSlide, setConfirmSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const [index, setIndex] = useState(0)
   const [showNextButton, setShowNextButton] = useState(true)
-  const [createSquash2, {client, data}] = useMutation(ADD_PROFILE2, {
-    ignoreResults: false,
-    onCompleted: (data) => {
-    },
-  });
+
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
     console.log(index)

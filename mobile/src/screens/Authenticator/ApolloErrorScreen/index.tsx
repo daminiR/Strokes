@@ -1,14 +1,6 @@
-import React, { useContext, useState, ReactElement } from 'react'
-import * as Keychain from 'react-native-keychain'
-import { StackNavigationProp } from '@react-navigation/stack'
+import React, {useState, ReactElement } from 'react'
 import styles from '../../../assets/styles'
-import { AppContainer, Space, Txt } from '../../../components'
-import { onScreen } from '../../../constants'
-import { RootStackSignOutParamList } from '../../../navigation/SignOutStack'
-import { LoginButton, AccessToken } from 'react-native-fbsdk';
-import  auth  from '@react-native-firebase/auth'
-import { UserContext } from '../../../UserContext'
-import {isProfileCompleteVar} from '../../../cache'
+import { AppContainer, Space } from '../../../components'
 import { Text } from 'react-native'
 import { Button, Overlay } from 'react-native-elements';
 import Emoji from 'react-native-emoji'
@@ -18,7 +10,6 @@ import {View} from 'react-native'
 const ApolloErrorScreen = ({isApolloConected}): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [modalVisible, setModalVisible] = useState(!isApolloConected)
-  const [loggedIn, setLoggedIn] = useState(false)
   const _onPressSignIn = () => {
     if (!isApolloConected) {
       setModalVisible(true)

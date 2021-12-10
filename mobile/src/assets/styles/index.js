@@ -56,7 +56,86 @@ export default StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
+  // PICTURES WALL
+  picturesContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 2,
+    margin: 0,
+  },
+  profileSettings: {
+    flex: 1.1,
+    backgroundColor: 'white',
+    borderWidth: 5,
+  },
+  // SWIPE STYLES
+  swipeContainer: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  swipeMatched: {
+      width:  80,
+      height:  350,
+  },
+  swipeText: {
+    textAlign: "center",
+    fontSize: 50,
+    backgroundColor: "transparent"
+  },
 
+  // pencil edit icon
+  pencilEdit: {
+    alignSelf: 'flex-end',
+    margin: 4,
+  },
+
+  headerBackgroundImage: {
+    paddingBottom: 20,
+    paddingTop: 45,
+  },
+  headerColumn: {
+    backgroundColor: 'transparent',
+    ...Platform.select({
+      ios: {
+        alignItems: 'center',
+        elevation: 1,
+        marginTop: -1,
+      },
+      android: {
+        alignItems: 'center',
+      },
+    }),
+  },
+  scroll: {
+    backgroundColor: '#FFF',
+  },
+  nameStyle: {
+      paddingTop: 15,
+      paddingBottom: 7,
+      color: '#363636',
+      fontSize: 20,
+    },
+
+  cardContainer: {
+    backgroundColor: '#FFF',
+    borderWidth: 0,
+    flex: 1,
+    margin: 0,
+    padding: 0,
+  },
+  telContainer: {
+    backgroundColor: '#FFF',
+    flex: 1,
+    paddingTop: 30,
+  },
+  userImage: {
+    borderColor: '#FFF',
+    borderRadius: 85,
+    borderWidth: 3,
+    height: 170,
+    marginBottom: 15,
+    width: 170,
+  },
   //SIGNUP SLIDES
 
   phoneNumberContainer: {

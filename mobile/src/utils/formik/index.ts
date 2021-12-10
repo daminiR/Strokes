@@ -13,6 +13,37 @@ import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '..
 import {defaultAgeRange, defaultGameLevel} from '../../constants'
 import { useFormikContext, Formik, ErrorMessage} from 'formik'
 
+const createInitialValuesFormik = (userData) => {
+    if (userData){
+      const formik_images = userData.squash.image_set.map((imageObj) => ({
+      img_idx: imageObj.img_idx,
+      imageURL: imageObj.imageURL,
+      filePath: imageObj.filePath,
+    }));
+      const formik_sports = userData.squash.sports.map((sportObj) => ({
+        sport: sportObj.sport,
+        game_level: sportObj.game_level,
+      }));
+      const formik_location =  {
+        city: userData.squash.location.city,
+        state: userData.squash.location.state,
+        country: userData.squash.location.country,
+      }
+      return {
+        first_name: userData.squash.first_name,
+        last_name: userData.squash.last_name,
+        age: userData.squash.age,
+        gender: userData.squash.gender,
+        image_set: formik_images,
+        sports: formik_sports,
+        location: formik_location,
+        description: userData.squash.description,
+        remove_uploaded_images: [],
+        add_local_images: [],
+        original_uploaded_image_set: formik_images
+      }
+    }
+}
 const createInitialFilterFormik = async (sports) => {
   const defailtSportFilter = _.map(sports, (sportObj, key) => {
     if (key == '0') {
@@ -31,4 +62,4 @@ const createInitialFilterFormik = async (sports) => {
     gameLevels: gameLevelFilter ? gameLevelFilter :defaultGameLevel,
   };
 };
-export {createInitialFilterFormik}
+export {createInitialValuesFormik, createInitialFilterFormik}

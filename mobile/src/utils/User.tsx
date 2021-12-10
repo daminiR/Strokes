@@ -80,6 +80,4 @@ export {registerOnFirebase, convertImagesToFormat, registerOnMongoDb}
 
 //};
 
-const deleteUser = () => {
-}
 

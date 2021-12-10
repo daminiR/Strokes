@@ -1,10 +1,7 @@
 import React from 'react';
 import styles from '../../assets/styles';
-import {ProfileContext} from '../../screens/Authenticator/Profile/index'
-import { useRef, useEffect, useContext, useState, ReactElement } from 'react'
-import {TouchableWithoutFeedback, FlatList, ImageBackground, ScrollView, Text, View, Image, Dimensions, TouchableOpacity} from 'react-native';
-import {Card, FAB } from 'react-native-elements'
-import {Icon} from '../Icon/Icon';
+import {TouchableWithoutFeedback, ImageBackground, ScrollView, View, Image, Dimensions} from 'react-native';
+import {Text} from 'react-native-elements'
 import {SportChips} from '../SportsChips'
 
 
@@ -29,14 +26,6 @@ const CardItem = ({
     }
   ];
 
-  const nameStyle =
-    {
-      paddingTop: variant ? 10 : 15,
-      paddingBottom: variant ? 5 : 7,
-      color: '#363636',
-      fontSize: variant ? 15 : 30,
-      textAlign: 'center'
-    }
   return (
     <>
       <ScrollView>
@@ -60,7 +49,7 @@ const CardItem = ({
           </View>
           </ImageBackground>}
           {/* NAME */}
-          {profileTitle && (<Text style={nameStyle}>{profileTitle}</Text>)}
+          {profileTitle && (<Text style={styles.nameStyle}>{profileTitle}</Text>)}
           {/* DESCRIPTION */}
           {description && (
             <Text style={styles.descriptionCardItem}>{description}</Text>
