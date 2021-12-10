@@ -17,7 +17,6 @@ type ChatT = {
   navigation: MatchScreenNavigationProp
 }
 const Chat  = ({ navigation }: ChatT ): ReactElement => {
-  const [loading, setLoading] = useState(false)
   return (
     <>
       <Messages/>

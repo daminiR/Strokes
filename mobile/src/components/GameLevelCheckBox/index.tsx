@@ -1,14 +1,9 @@
 import styles from '../../assets/styles';
-import React, { useEffect, createContext,useContext, useState, ReactElement } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { View, Text } from 'react-native';
 import {CheckBox} from 'react-native-elements'
-import MultiSlider from '@ptomasroos/react-native-multi-slider'
-import { defaultAgeRange } from '../../constants'
-import {UserContext} from '../../UserContext'
-import { Cancel, Done, FilterSportsChips } from '../../components'
 import _ from 'lodash'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useFormikContext, Formik} from 'formik';
+import { useFormikContext} from 'formik';
 import {FilterFields} from '../../localModels/UserSportsList'
 import { useImperativeHandle, forwardRef } from 'react'
 import {_storeGameLevelFilter} from '../../utils/AsyncStorage/storeData'
@@ -21,23 +16,17 @@ const GameLevelCheckBox =  (props, ref) => {
   }));
   const {
     setValues,
-    setFieldValue,
     values: filterValues,
   } = useFormikContext<FilterFields>();
   const [gameLevel1, setGameLevel1] = useState(false);
   const [gameLevel2, setGameLevel2] = useState(false);
   const [gameLevel0, setGameLevel0] = useState(false);
-  const [filterSport, setFilterSport] = useState(null);
+  const [filterSport] = useState(null);
 
   useEffect(() => {
     setGameLevel0(filterValues.gameLevels.gameLevel0);
     setGameLevel1(filterValues.gameLevels.gameLevel1);
     setGameLevel2(filterValues.gameLevels.gameLevel2);
-    const gameLevelObj = {
-      gameLevel0: gameLevel0,
-      gameLevel1: gameLevel1,
-      gameLevel2: gameLevel2,
-    };
   }, []);
   useEffect(() => {
     const gameLevelObj = {

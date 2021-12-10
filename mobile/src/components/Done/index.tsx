@@ -1,14 +1,8 @@
-import React, { useRef, createContext, useEffect, useContext, useState, ReactElement } from 'react'
-import {
-  TouchableOpacity,
-  View,
-  Modal,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import React from 'react';
+import {TouchableOpacity, Text} from 'react-native';
 import styles from '../../assets/styles/'
 
-const Done = ({_onPressDone=null}) => {
+const Done = ({_onPressDone}) => {
   return (
     <TouchableOpacity onPress={()=> _onPressDone()} style={styles.city}>
       <Text style={styles.cityText}>

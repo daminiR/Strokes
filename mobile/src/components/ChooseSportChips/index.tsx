@@ -1,16 +1,14 @@
 import {Card} from 'react-native-elements'
-import React, { useContext, useEffect, useState, ReactElement } from 'react'
+import React from 'react'
 import {View} from 'react-native';
 import {sportsList} from '../../constants';
 import styles from '../../assets/styles'
 import {SportChips} from '../SportsChips'
-import {sportsItemsVar} from '../../cache'
-import { useReactiveVar } from "@apollo/client"
 import { EditFields} from '../../localModels/UserSportsList'
 import { useFormikContext} from 'formik';
 
-const ChooseSportsChips = ({isFilter = false}) => {
-  const {setFieldValue, values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
+const ChooseSportsChips = () => {
+  const {setFieldValue, values: formikValues} = useFormikContext<EditFields>();
   const getData = (newSport, isSelected) => {
     if(isSelected){
       const sportObj = [{sport: newSport, game_level: 0}];
@@ -57,7 +55,6 @@ const ChooseSportsChips = ({isFilter = false}) => {
       </>
     );
   };
-
   return (
     renderFormikSports()
   )

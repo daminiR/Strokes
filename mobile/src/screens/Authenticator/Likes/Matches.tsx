@@ -1,45 +1,26 @@
-import React, { useEffect, useContext,createContext, useRef, useState, ReactElement } from 'react'
+import React, { useEffect, useContext, useRef, useState } from 'react'
 import styles from '../../../assets/styles';
 import _ from 'lodash'
 import {
-  StyleSheet,
-  ScrollView,
   View,
   Text,
   TouchableOpacity,
-  ImageBackground,
   FlatList,
   AppState
 } from 'react-native';
-import {CardItem} from '../../../components/CardItem/CardItem'
-import {GET_INPUT_TYPE, READ_SQUASH} from '../../../graphql/queries/profile'
+import {READ_SQUASH} from '../../../graphql/queries/profile'
 import {Icon} from '../../../components/Icon/Icon'
-import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
+import { useLazyQuery} from '@apollo/client'
 import {UserContext} from '../../../UserContext'
-import Demo from '../../../assets/data/demo.js'
-import {likesVar} from '../../../cache'
+import {renderMatchCard} from '../../../utils/matching/swipeFuntions'
 
-const renderMatchCard = (card) => {
-      const profileImage = card.image_set.find(imgObj => imgObj.img_idx == 0)
-      const title = card.first_name +', ' + card.age
-      return (
-              <TouchableOpacity>
-                <CardItem
-                  profileImage={profileImage}
-                  profileTitle={title}
-                  variant
-                />
-              </TouchableOpacity>
-
-      )
-}
 const Matches = () => {
   const [totalLikesFromUsers, setTotalLikesFromUsers] = useState(null)
-  const {currentUser, data: currentUserData, setData, userLoading} = useContext(UserContext)
+  const {currentUser, data: currentUserData} = useContext(UserContext)
   const [loading, setLoading] = useState(true)
-  const [getSquashProfile, {data: userData, error}] = useLazyQuery(READ_SQUASH, {
+  const [getSquashProfile] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
-    onCompleted: (data) => {
+    onCompleted: () => {
     setLoading(true)
     // setting likes from query results of people who like current user
     const user = currentUserData.squash
@@ -90,8 +71,4 @@ const Matches = () => {
     </View>
   );
 };
-const stylesSwipe = StyleSheet.create({
-  tempStyle : {
-}
-})
 export {Matches}

@@ -1,5 +1,6 @@
 import { Dimensions, Platform } from 'react-native'
-import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
+import { RadioButtonProps } from 'react-native-radio-buttons-group'
+import { _neighborhood, _gender, _age, _first_name} from './utils/navigation'
 
 export const primary = '#50E3C2'
 export const secondary = '#ff06f4'
@@ -54,6 +55,14 @@ export const onScreen = (screen: string, navigation: any, obj?: unknown) => () =
 }
 
 export const goHome = (navigation: any) => () => navigation.popToTop()()
+// setting flatlist constants
+
+export const settingsFlatList = [
+  {title: 'Name', icon: 'av-timer', subtitle: 'Damini', buttonPress: _first_name},
+  {title: 'Age', icon: 'flight-takeoff', subtitle: '27',buttonPress: _age},
+  {title: 'gender', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _gender},
+  {title: 'Neighborhood', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _neighborhood},
+]
 
 // Sign Up Slide Labels
  export const iniitialSignInForm = {
