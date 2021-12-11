@@ -6,6 +6,7 @@ import {SportChips} from '../SportsChips'
 
 
 const CardItem = ({
+  isProfileView=null,
   profileImage = null,
   image_set = null,
   profileTitle = null,
@@ -41,7 +42,7 @@ const CardItem = ({
           {location && (
             <Text style={styles.descriptionCardItem}>{location}</Text>
           )}
-          {image_set && image_set.map((imgObj, index) => renderImages(imgObj, index, image_set.length)
+          {image_set && image_set.map((imgObj, index) => renderImages(imgObj, index, image_set.length, isProfileView)
           )}
         </View>
         </TouchableWithoutFeedback>
@@ -50,11 +51,17 @@ const CardItem = ({
   )
 }
 
-const renderImages = (imgObj, index, numImages) => {
+const renderImages = (imgObj, index, numImages, isProfileView) => {
             let imageStyle = styles.imageContainer
             if (index == numImages - 1) {
+              if (isProfileView){
+              imageStyle = styles.lastImageContainerProfileView;
+              }
+              else{
               imageStyle = styles.lastImageContainer;
-            } else {
+              }
+            }
+            else {
               imageStyle = styles.imageContainer;
             }
             return (

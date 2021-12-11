@@ -191,8 +191,16 @@ export default StyleSheet.create({
     borderRadius: 8,
     width: DIMENSION_WIDTH,
     height: 350,
+    marginVertical: 0,
     marginTop: 20,
     marginBottom: 60,
+  },
+  lastImageContainerProfileView: {
+    borderRadius: 8,
+    width: DIMENSION_WIDTH,
+    height: 350,
+    marginTop: 0,
+    marginVertical: 20
   },
   swiperCardStyle: {
     flex: 1,
@@ -627,13 +635,12 @@ export default StyleSheet.create({
   containerHome: {flex: 1, marginHorizontal: 10},
   // TOPTAB
   topTabUnderLineStyle: {
-    backgroundColor:GRAY
+    backgroundColor:PRIMARY_THEME
   },
 
   topTabStyle: {
     flex:1,
     height: DIMENSION_HEIGHT * 0.05,
-    borderWidth: 2,
   },
   topTabText: {
     fontSize: 15,

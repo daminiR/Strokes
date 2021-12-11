@@ -36,6 +36,7 @@ const ProfileView = () => {
             <View style={styles.containerHome}>
                 <Card>
                   <CardItem
+                    isProfileView={true}
                     profileImage={profileImageValue}
                     image_set={newImageSet}
                     description={userProfile.description}
