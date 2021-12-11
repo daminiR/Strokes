@@ -108,7 +108,7 @@ const SingleImage = ({img_idx}) => {
     return (
       <>
         <Avatar
-          size={130}
+          size={120}
           renderPlaceholderContent={
             <Icon
               reverse

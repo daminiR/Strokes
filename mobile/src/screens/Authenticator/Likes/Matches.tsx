@@ -52,11 +52,6 @@ const Matches = () => {
     <View style={styles.containerMatches}>
       <View style={styles.top}>
         <Text style={styles.title}>Matches</Text>
-        <TouchableOpacity>
-          <Text style={styles.icon}>
-            <Icon name="optionsV" />
-          </Text>
-        </TouchableOpacity>
       </View>
       <View>
         {!loading && (

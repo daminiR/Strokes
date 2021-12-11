@@ -136,17 +136,18 @@ const _editDisplay2 = (display) => {
           onRequestClose={() => {
             setIsVisible(!isVisible);
           }}>
-            <View style={{flex: 1, paddingTop: 50}}>
             <View style={styles.top}>
               <Cancel _onPressCancel={_onPressCancelProfile} />
               <Done _onPressDone={_onPressDoneProfile} />
             </View>
             <ScrollableTabView
-              style={{flex: 1}}>
+              style={styles.topTabStyle}
+              tabBarTextStyle={styles.topTabText}
+              tabBarUnderlineStyle={styles.topTabUnderLineStyle}
+            >
               <PictureWall tabLabel="Edit Profile" />
               <ProfileView tabLabel="View Profile" />
             </ScrollableTabView>
-          </View>
           <Modal
             animationType="slide"
             transparent={false}

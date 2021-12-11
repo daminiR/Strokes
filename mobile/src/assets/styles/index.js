@@ -1,7 +1,9 @@
 import { StyleSheet, Dimensions } from "react-native";
 
 export const PRIMARY_COLOR = "#7444C0";
+export const PRIMARY_THEME = "#ff7f02";
 const SECONDARY_COLOR = "#5636B8";
+const SECONDARY_THEME = "#2b1d08";
 const WHITE = "#FFFFFF";
 const GRAY = "#757E90";
 const DARK_GRAY = "#363636";
@@ -15,6 +17,8 @@ const LIKE_ACTIONS = "#B644B2";
 const DISLIKE_ACTIONS = "#363636";
 const FLASH_ACTIONS = "#5028D7";
 
+
+const FONT_TEXT_FAM = 'OpenSans-Regular'
 //const ICON_FONT = "tinderclone";
 //const ICON_FONT = "tinderclone";
 
@@ -30,13 +34,11 @@ export default StyleSheet.create({
     height: DIMENSION_HEIGHT * 0.8,
   },
 
-
   // IMAGE PLACEHOLDER COMPONENET
   imagecontainer: {
     flex: 1,
     padding: 0,
     margin: 0,
-
   },
   horizontalImageplaceholder: {
     flex: 0,
@@ -59,28 +61,26 @@ export default StyleSheet.create({
   // PICTURES WALL
   picturesContainer: {
     flex: 1,
-    backgroundColor: '#fff',
     padding: 2,
-    margin: 0,
+    margin: 10,
   },
   profileSettings: {
     flex: 1.1,
     backgroundColor: 'white',
-    borderWidth: 5,
   },
   // SWIPE STYLES
   swipeContainer: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   swipeMatched: {
-      width:  80,
-      height:  350,
+    width: 80,
+    height: 350,
   },
   swipeText: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 50,
-    backgroundColor: "transparent"
+    backgroundColor: 'transparent',
   },
 
   // pencil edit icon
@@ -110,11 +110,11 @@ export default StyleSheet.create({
     backgroundColor: '#FFF',
   },
   nameStyle: {
-      paddingTop: 15,
-      paddingBottom: 7,
-      color: '#363636',
-      fontSize: 20,
-    },
+    paddingTop: 15,
+    paddingBottom: 7,
+    color: '#363636',
+    fontSize: 20,
+  },
 
   cardContainer: {
     backgroundColor: '#FFF',
@@ -174,10 +174,32 @@ export default StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 10,
   },
+  profileContainer: {
+    borderRadius: 8,
+    width: DIMENSION_WIDTH,
+    height: 350,
+    margin: 0,
+  },
   imageContainer: {
+    borderRadius: 8,
+    width: DIMENSION_WIDTH,
+    height: 350,
+    marginTop: 20,
+    marginVertical: 10,
+  },
+  lastImageContainer: {
+    borderRadius: 8,
+    width: DIMENSION_WIDTH,
+    height: 350,
+    marginTop: 20,
+    marginBottom: 60,
+  },
+  swiperCardStyle: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 10,
+  },
+  swiperContainerCardStyle: {
+    flex: 1,
   },
   // TEXT SETTING FONT
   textSettingFont: {
@@ -210,43 +232,42 @@ export default StyleSheet.create({
     color: '#242424',
     fontFamily: 'OpenSans-Regular',
     fontSize: 16,
-    fontWeight: "normal"
+    fontWeight: 'normal',
   },
   ChipButtonSelected: {
     borderColor: 'grey',
     backgroundColor: '#d3d3d3',
     fontSize: 20,
     borderWidth: 1,
-    padding: 4
+    padding: 4,
   },
   ChipButtonGameLevel0: {
-    borderColor: 'red',
-    backgroundColor: 'red',
+    borderColor: 'grey',
+    backgroundColor: '#ffab33',
     fontSize: 20,
     borderWidth: 1,
-    padding: 4
+    padding: 4,
   },
   ChipButtonGameLevel1: {
     borderColor: 'grey',
-    backgroundColor: 'green',
+    backgroundColor: '#ffab33',
     fontSize: 20,
     borderWidth: 1,
-    padding: 4
+    padding: 4,
   },
   ChipButtonGameLevel2: {
     borderColor: 'grey',
-    backgroundColor: 'blue',
+    backgroundColor: '#ffab33',
     fontSize: 20,
     borderWidth: 1,
-    padding: 4
+    padding: 4,
   },
   ChipButton: {
     borderColor: 'grey',
     fontSize: 20,
     backgroundColor: '#fff',
     borderWidth: 1,
-    padding: 4
-
+    padding: 4,
   },
   CardStyle: {
     padding: 5,
@@ -259,12 +280,12 @@ export default StyleSheet.create({
     padding: 3,
   },
   sportChipSet: {
-    flexWrap: "wrap",
+    flexWrap: 'wrap',
     justifyContent: 'center',
     color: 'grey',
     fontSize: 20,
     fontFamily: 'OpenSans-Regular',
-    flexDirection: "row"
+    flexDirection: 'row',
   },
 
   // COMPONENT - CARD ITEM
@@ -274,7 +295,7 @@ export default StyleSheet.create({
     margin: 4,
   },
   CardStyle: {
-    padding: 5,
+    padding: 0,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     borderBottomLeftRadius: 20,
@@ -285,7 +306,6 @@ export default StyleSheet.create({
     //flexGrow: 1,
     backgroundColor: WHITE,
     borderRadius: 8,
-    margin: 10,
     shadowOpacity: 0.05,
     shadowRadius: 10,
     shadowColor: BLACK,
@@ -319,7 +339,7 @@ export default StyleSheet.create({
     color: DARK_GRAY,
     textAlign: 'center',
     fontSize: 17,
-    padding: 10
+    padding: 10,
   },
   status: {
     paddingBottom: 10,
@@ -456,11 +476,20 @@ export default StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 10,
   },
-  nameStyle: { paddingTop: 15,
-      paddingBottom: 7,
-      color: '#363636',
-      fontSize: 30,
-      textAlign: 'center'},
+  nameStyleLikes: {
+    paddingTop: 15,
+    paddingBottom: 7,
+    color: '#363636',
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  nameStyle: {
+    paddingTop: 15,
+    paddingBottom: 7,
+    color: '#363636',
+    fontSize: 30,
+    textAlign: 'center',
+  },
   // COMPONENT - MESSAGE
   containerMessage: {
     flex: 1,
@@ -548,19 +577,28 @@ export default StyleSheet.create({
     height: DIMENSION_HEIGHT,
   },
   top: {
-    paddingTop: 35,
-    marginHorizontal: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        paddingTop: DIMENSION_HEIGHT * 0.05,
+        marginHorizontal: DIMENSION_HEIGHT * 0.02,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      },
+      android: {
+        paddingTop: DIMENSION_HEIGHT * 0.01,
+        marginHorizontal: DIMENSION_HEIGHT * 0.02,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      },
+    }),
   },
   spaceLikeDislike: {
-      flexDirection: 'row-reverse',
-        justifyContent: 'space-between',
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
   },
   bottom: {
-    marginHorizontal: 25,
-    marginVertical: 10,
     flexDirection: 'column',
   },
   center: {
@@ -579,8 +617,39 @@ export default StyleSheet.create({
     paddingRight: 10,
   },
 
+  //FAB
+  likeDislikeFAB: {
+    padding:0,
+    margin:0,
+    shadowOpacity:0,
+  },
   // CONTAINER - HOME
   containerHome: {flex: 1, marginHorizontal: 10},
+  // TOPTAB
+  topTabUnderLineStyle: {
+    backgroundColor:GRAY
+  },
+
+  topTabStyle: {
+    flex:1,
+    height: DIMENSION_HEIGHT * 0.05,
+    borderWidth: 2,
+  },
+  topTabText: {
+    fontSize: 15,
+    fontFamily: FONT_TEXT_FAM,
+    color: DARK_GRAY
+  },
+
+
+  // Button Styles
+  buttonStyle: {
+    backgroundColor: PRIMARY_THEME,
+    borderRadius: 8,
+    borderColor: '#2b1d08',
+    height: DIMENSION_HEIGHT * 0.08,
+    borderWidth: 2,
+  },
 
   // CONTAINER - MATCHES
   tiralNeighbor: {

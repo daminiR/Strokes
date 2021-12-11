@@ -5,6 +5,7 @@ import styles from '../../../assets/styles'
 import { EditFields} from '../../../localModels/UserSportsList'
 import {Image, ScrollView, Text, View} from 'react-native';
 import { useFormikContext} from 'formik';
+import { EditPencil} from '../../../components/';
 
 const ProfileSettings = ({_editUserInfo, signOut}) => {
   const [displayImage, setDisplayImage] = React.useState(null)
@@ -30,7 +31,7 @@ const ProfileSettings = ({_editUserInfo, signOut}) => {
         {!loadingUser && (
           <View style={styles.headerColumn}>
             <Image style={styles.userImage} source={{uri: displayImage}} />
-            <Icon size={28}  onPress={() => _editUserInfo(true)} name="pencil" type='material-community' style={styles.pencilEdit} />
+            <EditPencil _edit={_editUserInfo}/>
             <Text style={styles.nameStyle}>{displayName}</Text>
           </View>
         )}
@@ -50,7 +51,7 @@ const ProfileSettings = ({_editUserInfo, signOut}) => {
           <ListItem.Chevron />
         </ListItem>
       ))}
-      <Button  title="Sign Out" onPress={()=> signOut()}/>
+      <Button  title="Sign Out"  buttonStyle={styles.buttonStyle} onPress={()=> signOut()}/>
     </View>
   );
   }

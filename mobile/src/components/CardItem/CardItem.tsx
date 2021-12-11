@@ -12,19 +12,10 @@ const CardItem = ({
   sportsList = null,
   description= null,
   variant=null,
+  location=null,
   onPressLeft= null,
   onPressRight=null,
 }) => {
-  console.log("is this title", profileTitle)
-  const fullWidth = Dimensions.get('window').width;
-  const imageStyle = [
-    {
-      borderRadius: 8,
-      width: variant ? fullWidth / 2 - 30 : fullWidth - 80,
-      height: variant ? 170 : 350,
-      margin: variant ? 0 : 20
-    }
-  ];
 
   return (
     <>
@@ -32,24 +23,9 @@ const CardItem = ({
         <TouchableWithoutFeedback>
         <View style={styles.containerCardItem}>
           {/* IMAGE */}
-          {profileImage && <ImageBackground source={{uri:profileImage.imageURL}} style={imageStyle}>
-          <View
-            style={{
-              position: 'absolute',
-              marginBottom: 10,
-              marginLeft:10,
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              justifyContent: 'flex-end',
-              alignItems: 'flex-start',
-              //<Text style={styles.firstImageText}>{profileTitle}</Text>
-            }}>
-          </View>
-          </ImageBackground>}
+          {profileImage &&   <Image source={{uri: profileImage.imageURL}} style={styles.profileContainer}/>}
           {/* NAME */}
-          {profileTitle && (<Text style={styles.nameStyle}>{profileTitle}</Text>)}
+          {profileTitle && (<Text style={description? styles.nameStyle: styles.nameStyleLikes}>{profileTitle}</Text>)}
           {/* DESCRIPTION */}
           {description && (
             <Text style={styles.descriptionCardItem}>{description}</Text>
@@ -62,8 +38,10 @@ const CardItem = ({
                 ))}
             </View>
           </View>}
-          {image_set && image_set.map((imgObj, index) => (
-            <Image key={index} source={{uri: imgObj.imageURL}} style={imageStyle}/>)
+          {location && (
+            <Text style={styles.descriptionCardItem}>{location}</Text>
+          )}
+          {image_set && image_set.map((imgObj, index) => renderImages(imgObj, index, image_set.length)
           )}
         </View>
         </TouchableWithoutFeedback>
@@ -72,4 +50,13 @@ const CardItem = ({
   )
 }
 
+const renderImages = (imgObj, index, numImages) => {
+            let imageStyle = styles.imageContainer
+            if (index == numImages - 1) {
+              imageStyle = styles.lastImageContainer;
+            } else {
+              imageStyle = styles.imageContainer;
+            }
+            return (
+            <Image key={index} source={{uri: imgObj.imageURL}} style={imageStyle}/>)}
 export {CardItem};

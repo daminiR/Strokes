@@ -39,9 +39,17 @@ const ProfileSettingsInput = () => {
         <Card.Divider />
         <View style={styles.sportChipSet}>
           {!loadingSports &&
-            sportsList.map((sport, i) => (
-              <SportChips key={i} sport={sport.sport} gameLevel={sport.game_level} isDisplay={true}/>
-            ))}
+            sportsList.map((sport, i) => {
+            console.log("before profiel shows", sport.game_level)
+              return (
+                <SportChips
+                  key={i}
+                  sport={sport.sport}
+                  gameLevel={0}
+                  isDisplay={true}
+                />
+              );
+            })}
         </View>
       </Card>
       <Card containerStyle={styles.CardStyle}>
