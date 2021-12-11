@@ -11,6 +11,8 @@ export const black = '#17191A'
 export const dimGray = '#707070'
 export const lightGray = '#D1CDCD'
 
+export const tabBarSize = 45
+
 //export const KLMN = Platform.OS === 'ios' ? 'KLMN-Flash-Pix' : 'KLMN_Flash_Pix'
 export const Dolbak = Platform.OS === 'ios' ? 'The Dolbak' : 'TheDolbak-Brush'
 //export const Etna = Platform.OS === 'ios' ? 'Etna' : 'etna-free-font'

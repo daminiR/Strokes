@@ -1,9 +1,8 @@
 import styles from '../../assets/styles';
-import React, { createContext, useEffect,useContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import {FilterChip} from '../FilterChip'
 import { View, Text } from 'react-native';
 import {Overlay, CheckBox, Card} from 'react-native-elements'
-import {UserContext} from '../../UserContext'
 import { Cancel, Done, } from '..'
 import _ from 'lodash'
 import {FilterFields} from '../../localModels/UserSportsList'
@@ -17,8 +16,6 @@ import {_storeAgeRangeFilter, _storeGameLevelFilter, _storeSportFilter} from '..
 export const FilterSportContext = createContext(null);
 const FilterOverlaySingle = ({filter, setFilter}) => {
   const {setValues, values: filterValues } = useFormikContext<FilterFields>();
-  const {data: currentUserData, userLoading} = useContext(UserContext)
-  const [loadingSports, setLoadingSports] = useState(true)
   const [multiSliderValue, setMultiSliderValue] = useState(defaultAgeRange);
 
   const [allUserSportsFilter, setAllUserSportsFilter] = useState(filterValues.sportFilters);
@@ -35,13 +32,10 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
     setGameLevel0(filterValues.gameLevels.gameLevel0);
     setGameLevel1(filterValues.gameLevels.gameLevel1);
     setGameLevel2(filterValues.gameLevels.gameLevel2);
-
     // age changes if any
     setMultiSliderValue(filterValues.ageRange)
-
     /// sport filter
     setAllUserSportsFilter(filterValues.sportFilters)
-
   }, [filter]);
 
   const _onCancel = () => {
@@ -102,7 +96,6 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
               snapped
             />
             <View style={styles.sportChipSet}>
-              {!loadingSports && (
                 <FilterSportContext.Provider value={value}>
                   <Card containerStyle={styles.CardStyle}>
                     <Card.Title> List of Acitivities</Card.Title>
@@ -114,7 +107,6 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
                     </View>
                   </Card>
                 </FilterSportContext.Provider>
-              )}
             </View>
           </View>
           <View style={{marginTop: 20}}>

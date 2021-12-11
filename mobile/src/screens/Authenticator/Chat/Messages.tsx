@@ -45,18 +45,9 @@ const Messages = () => {
   }, [currentUserData.squash.matches])
 
   return (
-    <ImageBackground
-      source={require('../../../assets/images/bg.png')}
-      style={styles.bg}
-    >
       <View style={styles.containerMessages}>
           <View style={styles.top}>
             <Text style={styles.title}>Messages</Text>
-            <TouchableOpacity>
-              <Text style={styles.icon}>
-                <Icon name="optionsV" />
-              </Text>
-            </TouchableOpacity>
           </View>
         { !loading && <FlatList
             data={matches}
@@ -64,7 +55,6 @@ const Messages = () => {
             renderItem={({ item }) => renderMessage(item, navigation, currentUser.uid)}
           />}
       </View>
-    </ImageBackground>
   );
 };
 export {Messages};

@@ -12,7 +12,31 @@ import {MatchesProfileContext} from './Match'
 import {renderMatches, swipeRightLiked, swipeLeftDisliked} from '../../../utils/matching/swipeFuntions'
 import { useLazyQuery, useMutation} from '@apollo/client'
 import {UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '../../../graphql/mutations/profile'
-import {W}  from '../../../constants'
+import {W, tabBarSize}  from '../../../constants'
+const likeIconStyle= {
+    type: 'material-community',
+    name: 'heart',
+    color: '#ff7f02',
+    size: 60,
+    style:{margin:0, padding: 0,
+    shadowOpacity:0,
+    elevation:0
+    },
+    containerStyle: {padding:0,
+    },
+  }
+const dislikeIconStyle= {
+    type: 'material-community',
+    name: 'close-circle-outline',
+    color: '#ff7f02',
+    style:{margin:0, padding: 0,
+    shadowOpacity:0,
+    elevation:0
+    },
+    containerStyle: {padding:0,
+    },
+    size: 60,
+  }
 
 export const FilterContext = createContext(null)
 const Test = () => {
@@ -53,11 +77,11 @@ const Test = () => {
   }
   return (
     <>
-      <MatchCard matched={matched} setMatched={setMatched}/>
-            <View style={styles.top}>
-              <City />
-              <Filters/>
-            </View>
+      <MatchCard matched={matched} setMatched={setMatched} />
+      <View style={styles.top}>
+        <City/>
+        <Filters/>
+      </View>
       <View style={styles.swipeContainer}>
         {matches.length != 0 && (
           <Swiper
@@ -77,13 +101,13 @@ const Test = () => {
               );
             }}
             onSwipedRight={(index) => {
-            swipeRightLiked(
+              swipeRightLiked(
                 userData.squash,
                 currentUser.uid,
                 matches[index],
                 updateLikes,
                 updateMatches,
-                match
+                match,
               );
             }}
             //hacky solution to add note at the last deck
@@ -97,8 +121,13 @@ const Test = () => {
             stackAnimationFriction={500}
             useViewOverflow={true}
             backgroundColor={'#FFFFFF'}
-            stackSize={3}>
-          </Swiper>
+            cardVerticalMargin={0}
+            cardHorizontalMargin={20}
+            marginBottom={tabBarSize + 20}
+            cardStyle={styles.swiperCardStyle}
+            containerStyle={styles.swiperContainerCardStyle}
+            stackSize={3}></Swiper>
+
         )}
         {endingText && (
           <View style={styles.center}>
@@ -109,28 +138,21 @@ const Test = () => {
       <View style={styles.bottom}>
         <View style={styles.spaceLikeDislike}>
           <FAB
-            icon={{
-              type: 'material-community',
-              name: 'heart',
-              color: 'grey',
-              size: 50,
-              containerStyle: {marginHorizontal: -15, marginVertical: -15},
-            }}
-            color="white"
+            icon={likeIconStyle}
+            color="transparent"
             disabled={matches.length == 0}
             onPress={() => this.swiper.swipeRight()}
+            buttonStyle={styles.likeDislikeFAB}
+            containerStyle={{width:60, height:60}}
           />
           <FAB
-            icon={{
-              type: 'material-community',
-              name: 'close-circle-outline',
-              color: 'grey',
-              size: 50,
-              containerStyle: {marginHorizontal: -15, marginVertical: -15},
-            }}
-            color="white"
+            icon={dislikeIconStyle}
+            style={{margin:0, padding: 0}}
+            color="transparent"
             disabled={matches.length == 0}
             onPress={() => this.swiper.swipeLeft()}
+            buttonStyle={styles.likeDislikeFAB}
+            containerStyle={{width:60, height:60}}
           />
         </View>
       </View>

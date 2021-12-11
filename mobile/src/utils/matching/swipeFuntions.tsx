@@ -33,19 +33,21 @@ const renderMatches =  (card, index) => {
       const min_idx_obj = image_set_copy.reduce((res, obj) => {return (obj.img_idx < res.img_idx)? obj: res})
       const image_set_copy2 = card.image_set.filter(imgObj => imgObj.img_idx != min_idx_obj.img_idx)
       const title = card.first_name +', ' + card.age
+      const location = card.location.city
             return (
-      <Card key={index}>
+              <Card key={index}>
                 <CardItem
-                profileImage={min_idx_obj}
-                image_set={image_set_copy2}
-                description={card.description}
-                profileTitle={title}
-                sportsList={card.sports}
-                onPressLeft={() => this.swiper.swipeLeft()}
-                onPressRight={() => this.swiper.swipeRight()}
-                  />
-                </Card>
-            )
+                  profileImage={min_idx_obj}
+                  image_set={image_set_copy2}
+                  description={card.description}
+                  location={location}
+                  profileTitle={title}
+                  sportsList={card.sports}
+                  onPressLeft={() => this.swiper.swipeLeft()}
+                  onPressRight={() => this.swiper.swipeRight()}
+                />
+              </Card>
+            );
 }
 
 export const sanitizeCard = (card) => {
