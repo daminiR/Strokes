@@ -19,7 +19,7 @@ const Patron = ()  => {
   const [matches, setMatches] = useState(null)
   const [allUsers, setAllUsers] = useState(null)
   const {values: filterValues } = useFormikContext<FilterFields>();
-  const {currentUser, data: currentUserData} = useContext(UserContext)
+  const {currentUser, data: currentUserData, userLoading} = useContext(UserContext)
   // you have to re querry and reget filters everytime filters change -> useEffect
     //fetchPolicy: "network-only",
   const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
