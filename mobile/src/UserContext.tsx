@@ -77,7 +77,7 @@ export const AuthNavigator = () => {
 
   if (loadingSigning) return null
   const value = {
-    userData: data,
+    userData: userData,
     setData: setData,
     data: data,
     userLoading: userLoading,
