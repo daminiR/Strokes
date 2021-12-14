@@ -1,10 +1,11 @@
 import React, { useContext, ReactElement } from 'react'
-import { Button } from 'react-native-elements';
+import { Button} from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack'
 import { Space} from '../../../components'
 import { RootStackSignOutParamList } from '../../../navigation/SignOutStack'
+import  styles  from '../../../assets/styles'
 import { UserContext } from '../../../UserContext'
-import { Text } from 'react-native'
+import { Text, View} from 'react-native'
 export type HelloTScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'HELLO'>
 
 export type HelloT = {
@@ -20,11 +21,26 @@ const Hello = ({ navigation }: HelloT): ReactElement => {
   };
   return (
     <>
-      <Space height={80} />
-      <Button title="Sign In" onPress={() => _onPressSignIn()} />
-      <Button title="Sign Up" onPress={() => _onPressSignUp()} />
-      <Text>{JSON.stringify(currentUser)}</Text>
-      <Space height={10} />
+      <View style={styles.helloContainer}>
+        <View style={styles.buttonIndStyle}>
+          <Button
+            title="Sign In"
+            titleStyle={styles.buttonText}
+            onPress={() => _onPressSignIn()}
+            style={styles.buttonIndStyle}
+            buttonStyle={styles.buttonStyle}
+          />
+        </View>
+        <View style={styles.buttonIndStyle}>
+          <Button
+            title="Sign Up"
+            titleStyle={styles.buttonText}
+            style={styles.buttonIndStyle}
+            onPress={() => _onPressSignUp()}
+            buttonStyle={styles.buttonStyle}
+          />
+        </View>
+      </View>
     </>
   );
 }

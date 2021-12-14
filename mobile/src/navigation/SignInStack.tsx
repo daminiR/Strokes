@@ -60,7 +60,6 @@ export default function MatchStackScreen() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-            console.log("what is focues", route.name)
             let iconName;
             switch (route.name) {
               case 'Match':

@@ -14,15 +14,6 @@ import { EditFields, ProfileFields, SignIn} from '../../localModels/UserSportsLi
 
 const ImageInput = ({_submit, isSignUp}) => {
   const { values, setValues, handleChange, handleSubmit } = useFormikContext<SignType>();
-    const getImages = (images) =>{
-      if (isSignUp){
-
-      }
-      else{
-
-        setValues({... values, 'images': images})
-      }
-    }
     return (
       <View style={styles.imageContainer}>
           <Pictures/>
@@ -74,16 +65,22 @@ const ImageInput = ({_submit, isSignUp}) => {
         />
       </View>
     )}
-  const EmailInput = ({isSignUp=true, _signIn=null}) => {
+  const EmailInput = ({isSignUp=true, _signIn=null, getData=null}) => {
     const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
+    const [email, setEmail] = useState(values.email)
+    useEffect(() => {
+      if (getData){
+      getData(email, 'Email Input');
+      }
+    }, [email])
     return (
       <View style={styles.emailContainer}>
         <Input
           placeholder="Email"
           label="Email"
           leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-          onChangeText={handleChange('email')}
-          value={values.email}
+          onChangeText={getData? setEmail : handleChange('email')}
+          value={getData ? email : values.email}
         />
         {!isSignUp && _signIn && <Button style={{flexDirection:'row', alignSelf: 'center', justifyContent: 'flex-end'}} onPress={() => _signIn()} title="Submit"/>}
     </View>

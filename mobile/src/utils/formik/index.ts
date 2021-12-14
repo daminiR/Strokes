@@ -13,7 +13,7 @@ import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '..
 import {defaultAgeRange, defaultGameLevel} from '../../constants'
 import { useFormikContext, Formik, ErrorMessage} from 'formik'
 
-const createInitialValuesFormik = (userData) => {
+const createInitialValuesFormik = (userData, phoneNumber, email) => {
     if (userData){
       const formik_images = userData.squash.image_set.map((imageObj) => ({
       img_idx: imageObj.img_idx,
@@ -30,6 +30,8 @@ const createInitialValuesFormik = (userData) => {
         country: userData.squash.location.country,
       }
       return {
+        email: email,
+        phoneNumber: phoneNumber,
         first_name: userData.squash.first_name,
         last_name: userData.squash.last_name,
         age: userData.squash.age,

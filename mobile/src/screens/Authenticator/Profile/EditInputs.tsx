@@ -1,9 +1,46 @@
 import React  from 'react'
 import {View} from 'react-native';
 import {_onPressSignOut} from '../../../utils/Upload'
-import { NeighborhoodSearch, NameInput, SportsInput, DescriptionInput, BirthdayInput, GenderInput} from '../../../components'
+import { EmailInput, PhoneInput, AccountDetails, NeighborhoodSearch, NameInput, SportsInput, DescriptionInput, BirthdayInput, GenderInput} from '../../../components'
 
-const EditInput = ({inputType= null}) => {
+const EditAccountDetailsInput = ({inputType= null, signOut = null, getData=null}) => {
+  const renderInput = () => {
+    switch (inputType) {
+      case 'Email Input':
+        return <EmailInput getData={getData}/>;
+        break;
+      case 'Phone Input':
+        return <PhoneInput/>;
+        break;
+    }
+  }
+  return (
+    <>
+        <View style={{flex:1}}>
+          {renderInput()}
+        </View>
+    </>
+  );
+};
+
+const EditAccountInput = ({inputType= null, signOut}) => {
+  const renderInput = () => {
+    switch (inputType) {
+      case 'Account Input':
+        return <AccountDetails signOut={signOut}/>;
+        break;
+    }
+  }
+  return (
+    <>
+        <View style={{flex:1}}>
+          {renderInput()}
+        </View>
+    </>
+  );
+};
+
+const EditInput = ({inputType= null, signOut = null}) => {
   const renderInput = () => {
     switch (inputType) {
       case 'Name Input':
@@ -34,4 +71,4 @@ const EditInput = ({inputType= null}) => {
     </>
   );
 };
-export { EditInput }
+export { EditAccountDetailsInput, EditAccountInput, EditInput }

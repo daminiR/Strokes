@@ -23,7 +23,9 @@ const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {
     }
   }, [isLastSlide]);
   return (
-    <View style={styles.phoneNumberContainer}>
+    <>
+    <View style={styles.confirmationContainer}>
+    <View style={styles.emailInput}>
       <Input
         placeholder="ConfirmationCode"
         label="Confirmation Code"
@@ -31,9 +33,11 @@ const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {
         onChangeText={handleChange('confirmationCode')}
         value={values.confirmationCode}
       />
-      {delayed && <Button title="Resend" />}
-       <Button onPress={() => _confirmSignInGC()} title="Confirm" />
     </View>
+      {delayed && <Button title="Resend" buttonStyle={styles.buttonStyle} titleStyle={styles.buttonText}/>}
+       <Button buttonStyle={styles.buttonStyle} titleStyle={styles.buttonText} onPress={() => _confirmSignInGC(values.confirmationCode)} title="Confirm" />
+    </View>
+    </>
   );
 }
 export { ConfirmationCode }

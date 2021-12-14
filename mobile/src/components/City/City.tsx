@@ -12,8 +12,8 @@ const City = () => {
   }, [cityVar()]);
   return (
     <View style={styles.cityText}>
-      <Icon name="city" type='material-community'/>
-      <Text>
+      <Icon name="city" type='material-community' size={38}/>
+      <Text style={{marginLeft: 4, marginTop: 10}}>
         {city}
       </Text>
     </View>

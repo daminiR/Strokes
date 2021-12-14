@@ -1,7 +1,7 @@
 import {Text, Card, Button, Icon } from 'react-native-elements'
 import React, { useRef, useEffect, useContext } from 'react'
 import {View, StyleSheet} from 'react-native';
-import { SportChips} from '../../../components'
+import { SportChips, EditPencil} from '../../../components'
 import { ProfileScreenNavigationProp} from './index'
 import {ProfileAttirbutes} from "./ProfileAttributes"
 import styles from '../../../assets/styles'
@@ -34,7 +34,7 @@ const ProfileSettingsInput = () => {
   return (
     <>
       <Card containerStyle={styles.CardStyle}>
-        <Icon size={28} onPress={_editSports} name="pencil" type='material-community' style={styles.pencilEdit} />
+        <EditPencil _edit={_editSports}/>
         <Card.Title>CARD WITH DIVIDER</Card.Title>
         <Card.Divider />
         <View style={styles.sportChipSet}>

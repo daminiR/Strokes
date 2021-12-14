@@ -6,7 +6,7 @@ import styles from '../../assets/styles'
 const EditPencil = ({_edit}) => {
   return (
   <Icon
-    color="#ff7f02"
+    color="black"
     size={28}
     onPress={() => _edit(true)}
     name="pencil"

@@ -1,15 +1,18 @@
 import React, { useContext, useState, ReactElement } from 'react'
 import {useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
+import {useNavigation} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
 import {signUpSlides, intitialFormikSignUp} from '../../../constants'
 import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput} from '../../../components'
+import {ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel} from '../../../components'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
+import {View} from 'react-native'
+import styles from '../../../assets/styles'
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
@@ -34,6 +37,7 @@ const Slider =  () => {
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const [index, setIndex] = useState(0)
   const [showNextButton, setShowNextButton] = useState(true)
+  const navigation = useNavigation()
   const [createSquash2, {client, data}] = useMutation(ADD_PROFILE2, {
     ignoreResults: false,
     onCompleted: (data) => {
@@ -82,38 +86,106 @@ const Slider =  () => {
         });
 
   }
+  const _onPressCancel = () => {
+    navigation.navigate('HELLO');
+  }
   const renderInputForm = ({item}) => {
           switch (item.type) {
             case 'Phone Input':
-              return <PhoneInput />;
-              break;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                  <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <PhoneInput />
+                </>
+              )
+              break
             case 'Email Input':
-              return <EmailInput />;
-              break;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <EmailInput />
+                </>
+              )
+              break
             case 'Name Input':
-              return <NameInput />;
-              break;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <NameInput />
+                </>
+              )
+              break
             case 'Birthday Input':
-              return <BirthdayInput />;
-              break;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <BirthdayInput />
+                </>
+              )
+              break
             case 'Gender Input':
-              return <GenderInput />;
-              break;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <GenderInput />
+                </>
+              )
+              break
             case 'Sports Input':
-              return <SportsInput />;
-              break;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <SportsInput />
+                </>
+              )
+              break
             case 'Image Input':
-              return <ImageInput _submit={_submit}/>;
-              break;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <ImageInput isSignUp={true} _submit={_submit} />
+                </>
+              )
+              break
             case 'Description Input':
-              return <DescriptionInput/>;
-              break;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <DescriptionInput />
+                </>
+              )
+              break
             case 'Confirmation Code':
-              return <ConfirmationCode isLastSlide={lastSlide} _confirmSignInGC={_confirmSignInGC}/>;
-              break;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <ConfirmationCode
+                    isLastSlide={lastSlide}
+                    _confirmSignInGC={_confirmSignInGC}
+                  />
+                </>
+              )
+              break
           }
   };
-
   return (
       <AppIntroSlider
         renderItem={renderInputForm}

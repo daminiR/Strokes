@@ -9,6 +9,8 @@ const sportInitialValue: SportsList = [];
 export const sportsItemsVar:ReactiveVar<SportsList> = makeVar<SportsList>(sportInitialValue)
 export const FirstNameVar:ReactiveVar<NameT> = makeVar<NameT>({FirstName: '', LastName:''})
 export const EditInputVar:ReactiveVar<InputT> = makeVar<InputT>({inputType: '', displayInput: false})
+export const EditAccountInputVar:ReactiveVar<InputT> = makeVar<InputT>({inputType: '', displayInput: false})
+export const EditAccounDetailInputVar:ReactiveVar<InputT> = makeVar<InputT>({inputType: '', displayInput: false})
 export const AgeVar:ReactiveVar<Number> = makeVar<Number>(0)
 export const GenderVar:ReactiveVar<String> = makeVar<String>(null)
 export const DescriptionVar:ReactiveVar<String> = makeVar<String>('')
@@ -29,6 +31,16 @@ export const cache = new InMemoryCache({
         inputItems: {
           read() {
             return EditInputVar();
+          },
+        },
+        inputAccountItems: {
+          read() {
+            return EditAccountInputVar();
+          },
+        },
+        inputAccountDetailItems: {
+          read() {
+            return EditAccounDetailInputVar();
           },
         },
         dislikedItems: {

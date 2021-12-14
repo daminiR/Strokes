@@ -30,9 +30,6 @@ const ProfileView = () => {
   return (
     <>
         {!loading && (
-          <ImageBackground
-            source={require('../../../assets/images/bg.png')}
-            style={styles.bg}>
             <View style={styles.containerHome}>
                 <Card>
                   <CardItem
@@ -40,6 +37,7 @@ const ProfileView = () => {
                     profileImage={profileImageValue}
                     image_set={newImageSet}
                     description={userProfile.description}
+                    location={userProfile.location.city}
                     profileTitle={profileTitle}
                     sportsList={userProfile.sports}
                     onPressLeft={() => this.swiper.swipeLeft()}
@@ -47,7 +45,6 @@ const ProfileView = () => {
                   />
                 </Card>
             </View>
-          </ImageBackground>
         )}
     </>
   );
