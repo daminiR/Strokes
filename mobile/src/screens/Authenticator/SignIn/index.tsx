@@ -5,9 +5,8 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import {signInSlides, iniitialSignInForm} from '../../../constants'
 import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {Cancel, PhoneInput, EmailInput} from '../../../components'
+import {Cancel, PhoneInput, EmailInput, PrevButton, NextButton} from '../../../components'
 import { ConfirmationCode } from '../../../components'
 import { registerOnFirebase} from '../../../utils/User'
 import { UserContext } from '../../../UserContext'
@@ -61,6 +60,12 @@ export const Slider =  ({changeEmail}) => {
         console.log(err);
       });
   }
+  const renderNext = () => {
+    return <NextButton />;
+  };
+  const renderPrev = () => {
+    return <PrevButton />;
+  };
 
 const _confirmSignInGC = () => {
     confirmationFunc
@@ -130,6 +135,8 @@ const _confirmSignInGC = () => {
         onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
         onDone={() => {_confirmSignInGC()}}
         showNextButton={showNextButton}
+        renderNextButton={renderNext}
+        renderPrevButton={renderPrev}
         ref={(ref) => (this.slider = ref!)}
       />
   )

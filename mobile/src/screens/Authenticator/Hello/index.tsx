@@ -22,7 +22,7 @@ const Hello = ({ navigation }: HelloT): ReactElement => {
   return (
     <>
       <View style={styles.helloContainer}>
-        <View style={styles.buttonIndStyle}>
+        <View style={styles.helloButtons}>
           <Button
             title="Sign In"
             titleStyle={styles.buttonText}
@@ -31,7 +31,7 @@ const Hello = ({ navigation }: HelloT): ReactElement => {
             buttonStyle={styles.buttonStyle}
           />
         </View>
-        <View style={styles.buttonIndStyle}>
+        <View style={styles.helloButtons}>
           <Button
             title="Sign Up"
             titleStyle={styles.buttonText}
