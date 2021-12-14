@@ -5,7 +5,7 @@ import styles from '../../assets/styles/'
 const Cancel = ({_onPressCancel=null}) => {
   return (
     <TouchableOpacity onPress={() => _onPressCancel()} style={styles.city}>
-      <Text style={styles.cityText}>
+      <Text style={styles.cancelText}>
        Cancel
       </Text>
     </TouchableOpacity>

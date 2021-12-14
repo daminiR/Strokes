@@ -42,6 +42,7 @@ export default StyleSheet.create({
     alignSelf: 'stretch',
   },
   buttonIndStyle: {
+    padding: 20,
     paddingHorizontal: 10,
   },
   helloContainer: {
@@ -49,14 +50,22 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center'
   },
+  helloButtons: {
+    padding: 10,
+    paddingHorizontal: 10,
+  },
   // Cancel Button
   cancel: {
+    padding: 10,
     flexDirection: 'row-reverse',
     justifyContent: 'flex-start'
   },
-
-
-
+  cancelText: {
+    color: DARK_GRAY,
+    fontSize: 15,
+    fontFamily: 'OpenSans-Regular',
+    alignSelf: 'center',
+  },
 
   // FILTER OVERLAY STYLES
   filterOverlay: {
@@ -67,14 +76,14 @@ export default StyleSheet.create({
 
   // IMAGE PLACEHOLDER COMPONENET
   imagecontainer: {
-    flex: 1,
+    //flex: 1,
     padding: 0,
     margin: 0,
   },
   horizontalImageplaceholder: {
-    flex: 0,
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignSelf: 'center'
   },
   verticalImageplaceholder: {
     //flex: 1,
@@ -177,7 +186,6 @@ export default StyleSheet.create({
   },
   emailContainer: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
   },
@@ -212,11 +220,11 @@ export default StyleSheet.create({
     margin: 0,
   },
   imageContainer: {
+    flex: 1,
     borderRadius: 8,
-    width: DIMENSION_WIDTH,
-    height: 350,
     marginTop: 20,
     marginVertical: 10,
+    padding: 10
   },
   lastImageContainer: {
     borderRadius: 8,

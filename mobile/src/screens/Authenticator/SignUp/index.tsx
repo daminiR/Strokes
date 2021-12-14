@@ -8,7 +8,7 @@ import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel} from '../../../components'
+import {ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel, NextButton, PrevButton} from '../../../components'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
 import {View} from 'react-native'
@@ -56,6 +56,12 @@ const Slider =  () => {
       setShowNextButton(true)
     }
   }
+  const renderNext = () => {
+    return <NextButton />;
+  };
+  const renderPrev = () => {
+    return <PrevButton />;
+  };
   const _submit = ( value ) => {
     registerOnFirebase(values.phoneNumber, values.email)
       .then((confirmation: any) => {
@@ -195,6 +201,8 @@ const Slider =  () => {
         onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
         onDone={() => {_confirmSignInGC()}}
         showNextButton={showNextButton}
+        renderNextButton={renderNext}
+        renderPrevButton={renderPrev}
         ref={(ref) => (this.slider = ref!)}
       />
   )

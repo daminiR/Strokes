@@ -15,11 +15,20 @@ import { EditFields, ProfileFields, SignIn} from '../../localModels/UserSportsLi
 const ImageInput = ({_submit, isSignUp}) => {
   const { values, setValues, handleChange, handleSubmit } = useFormikContext<SignType>();
     return (
+      <>
       <View style={styles.imageContainer}>
-          <Pictures/>
-          <Button style={{flexDirection:'row', alignSelf: 'center', justifyContent: 'flex-end'}} onPress={() => _submit()} title="Submit" />
-    </View>
-    )}
+        <Pictures />
+        <View style={styles.buttonIndStyle}>
+          <Button
+            buttonStyle={styles.buttonStyle}
+            titleStyle={styles.buttonText}
+            onPress={() => _submit()}
+            title="Submit"
+          />
+      </View>
+        </View>
+      </>
+    );}
   const GenderInput = () => {
   const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const [radioButtons, setRadioButtons] = useState(genderRadioObject)
@@ -74,6 +83,7 @@ const ImageInput = ({_submit, isSignUp}) => {
       }
     }, [email])
     return (
+      <>
       <View style={styles.emailContainer}>
         <Input
           placeholder="Email"
@@ -82,8 +92,11 @@ const ImageInput = ({_submit, isSignUp}) => {
           onChangeText={getData? setEmail : handleChange('email')}
           value={getData ? email : values.email}
         />
-        {!isSignUp && _signIn && <Button style={{flexDirection:'row', alignSelf: 'center', justifyContent: 'flex-end'}} onPress={() => _signIn()} title="Submit"/>}
+        <View style={styles.buttonIndStyle}>
+        {!isSignUp && _signIn && <Button buttonStyle={styles.buttonStyle} onPress={() => _signIn()} titleStyle={styles.buttonText} title="Submit"/>}
+        </View>
     </View>
+      </>
     )}
 
 

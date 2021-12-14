@@ -146,11 +146,6 @@ const confirmWithCode = async(code) => {
             <ListItem.Chevron />
           </ListItem>
         ))}
-        <Button
-          title="Sign Out"
-          buttonStyle={styles.buttonStyle}
-          onPress={() => signOut()}
-        />
         <Modal
           animationType="slide"
           transparent={false}
