@@ -120,7 +120,8 @@ const advanced = {
        </>
      );
    };
-   return (renderColored())
+
+   return <>{gameLevel ? renderColored() : renderNormal()}</>;
  };
 
 export { SportChips }

@@ -7,10 +7,13 @@ import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {PhoneInput, EmailInput} from '../../../components'
+import {Cancel, PhoneInput, EmailInput} from '../../../components'
 import { ConfirmationCode } from '../../../components'
 import { registerOnFirebase} from '../../../utils/User'
 import { UserContext } from '../../../UserContext'
+import {useNavigation} from '@react-navigation/native';
+import {View} from 'react-native'
+import styles from '../../../assets/styles'
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
 type SignInT = {
@@ -21,15 +24,16 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
     <Formik
       initialValues={iniitialSignInForm}
       onSubmit={(values) => console.log(values)}>
-      <Slider/>
+      <Slider changeEmail={false}/>
     </Formik>
   );
 }
-const Slider =  () => {
+export const Slider =  ({changeEmail}) => {
   const {values} = useFormikContext<ProfileFields>();
   const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
+  const navigation = useNavigation()
   const [index, setIndex] = useState(0)
   const [showNextButton, setShowNextButton] = useState(true)
 
@@ -58,11 +62,15 @@ const Slider =  () => {
       });
   }
 
-  const _confirmSignInGC = () => {
+const _confirmSignInGC = () => {
     confirmationFunc
       .confirm(values.confirmationCode)
       .then((userCredential) => {
         console.log('logged in');
+        //if (changeEmail) {
+          //setAuthOverlay(true)
+          //console.log("changeemail here")
+        //}
         setIsUseOnMongoDb(true);
       })
       .catch(async (err) => {
@@ -70,16 +78,45 @@ const Slider =  () => {
         console.log(err);
       });
   };
+  const _onPressCancel = () => {
+    navigation.navigate('HELLO');
+  }
   const renderInputForm = ({item}) => {
           switch (item.type) {
             case 'Phone Input':
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <PhoneInput />
+                </>
+              );
+              break
+            case 'Email Input':
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <EmailInput isSignUp={false} _signIn={_signIn} />
+                </>
+              );
+              break
               return <PhoneInput />;
               break;
-            case 'Email Input':
-              return <EmailInput isSignUp={false} _signIn={_signIn}/>;
-              break;
             case 'Confirmation Code':
-             return <ConfirmationCode isLastSlide={lastSlide} _confirmSignInGC={_confirmSignInGC}/>;
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <ConfirmationCode
+                    isLastSlide={lastSlide}
+                    _confirmSignInGC={_confirmSignInGC}
+                  />
+                </>
+              );
               break;
           }
   };

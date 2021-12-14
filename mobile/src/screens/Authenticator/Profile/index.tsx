@@ -1,5 +1,6 @@
 import React, { useRef, createContext, useEffect, useContext, useState, ReactElement } from 'react'
 import {StackNavigationProp } from '@react-navigation/stack'
+import auth from '@react-native-firebase/auth'
 import {
   TouchableOpacity,
   View,
@@ -100,6 +101,7 @@ const _onPressDoneProfile = () => {
           description: formikValues.description,
         },
       });
+      // update firebase auth
       cityVar(formikValues.location.city)
       //// as soon as done new data needs to be grabbed and replaced
     }
@@ -176,9 +178,12 @@ const Profile = (): ReactElement => {
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   useEffect(() => {
     setLoadingFormikValues(true)
-    const initialValues = createInitialValuesFormik(data)
+    const userDetails = auth().currentUser
+    if (userDetails) {
+    const initialValues = createInitialValuesFormik(data, userDetails.phoneNumber, userDetails.email)
     setInitialValuesFormik(initialValues)
     setLoadingFormikValues(false)
+    }
     }, [data])
   return (
     <>

@@ -1,6 +1,6 @@
 import { Dimensions, Platform } from 'react-native'
 import { RadioButtonProps } from 'react-native-radio-buttons-group'
-import { _neighborhood, _gender, _age, _first_name} from './utils/navigation'
+import { _email, _phone_number, _neighborhood, _gender, _age, _first_name} from './utils/navigation'
 
 export const primary = '#50E3C2'
 export const secondary = '#ff06f4'
@@ -58,6 +58,10 @@ export const onScreen = (screen: string, navigation: any, obj?: unknown) => () =
 
 export const goHome = (navigation: any) => () => navigation.popToTop()()
 // setting flatlist constants
+export const AccountList = [
+  {title: 'Phone Number', icon: 'av-timer', subtitle: '', buttonPress: null},
+  {title: 'Email', icon: 'flight-takeoff', subtitle: '',buttonPress: _email},
+]
 
 export const settingsFlatList = [
   {title: 'Name', icon: 'av-timer', subtitle: 'Damini', buttonPress: _first_name},

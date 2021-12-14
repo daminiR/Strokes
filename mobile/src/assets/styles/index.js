@@ -27,6 +27,37 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 
 export default StyleSheet.create({
+  // Auth email overlay
+
+  authEmailOverlay: {
+    flex: 1,
+    width: DIMENSION_WIDTH * .8,
+    height: DIMENSION_HEIGHT * 0.5
+  },
+  // BUTTON STYLE
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
+    fontFamily: 'OpenSans-Regular',
+    alignSelf: 'stretch',
+  },
+  buttonIndStyle: {
+    paddingHorizontal: 10,
+  },
+  helloContainer: {
+    backgroundColor: SECONDARY_THEME,
+    flex: 1,
+    justifyContent: 'center'
+  },
+  // Cancel Button
+  cancel: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-start'
+  },
+
+
+
+
   // FILTER OVERLAY STYLES
   filterOverlay: {
     paddingHorizontal: 10,

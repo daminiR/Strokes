@@ -5,13 +5,14 @@ import styles from '../../assets/styles'
 import { EditFields} from '../../localModels/UserSportsList'
 import { useFormikContext} from 'formik';
 import {_editDescription} from '../../utils/navigation'
+import {EditPencil} from '../../components'
 
 const Description = () => {
   const {values: formikValues} = useFormikContext<EditFields>();
   return (
     <>
       <Card containerStyle={styles.CardStyle}>
-        <Icon size={28} onPress={_editDescription} name="pencil" type='material-community' style={styles.edit_pencil} />
+        <EditPencil _edit={_editDescription}/>
         <Card.Title> Description </Card.Title>
         <Card.Divider/>
         <View style={styles.sportChipSet}>

@@ -48,7 +48,7 @@ const ProfileAttirbutes = () => {
     <>
       {settingsFlatList.map((item, i) => (
         <ListItem
-          onPress={() => item.buttonPress(navigation)}
+          onPress={() => item.buttonPress()}
           key={i}
           bottomDivider>
           <ListItem.Content>

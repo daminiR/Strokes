@@ -14,18 +14,20 @@ export const FilterSportContext = createContext(null);
 const Match =()  => {
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   const [loadingFormik, setLoadingFormik] = useState(true);
-  const {data: currentUserData} = useContext(UserContext)
+  const {data: currentUserData, userLoading} = useContext(UserContext)
   useEffect(() => {
-    setLoadingFormik(true);
-    createInitialFilterFormik(currentUserData.squash.sports)
-      .then((initialValues) => {
-        setInitialValuesFormik(initialValues);
-        setLoadingFormik(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    if (!userLoading){
+      setLoadingFormik(true);
+      createInitialFilterFormik(currentUserData.squash.sports)
+        .then((initialValues) => {
+          setInitialValuesFormik(initialValues);
+          setLoadingFormik(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [userLoading]);
   return (
     <>
       {!loadingFormik && (
