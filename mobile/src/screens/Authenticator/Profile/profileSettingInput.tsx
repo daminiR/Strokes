@@ -45,7 +45,7 @@ const ProfileSettingsInput = () => {
                 <SportChips
                   key={i}
                   sport={sport.sport}
-                  gameLevel={0}
+                  gameLevel={sport.game_level.toString()}
                   isDisplay={true}
                 />
               );
