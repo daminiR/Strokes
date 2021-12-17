@@ -3,7 +3,7 @@ import React, {useEffect, useState, ReactElement } from 'react'
 import {launchImageLibrary} from 'react-native-image-picker';
 import { generateRNFile } from '../../utils/Upload'
 import { _check_single } from '../../utils/Upload'
-import styles from '../../assets/styles/'
+import styles, {SECONDARY_THEME} from '../../assets/styles/'
 import { EditFields, SignIn} from '../../localModels/UserSportsList'
 import { useFormikContext} from 'formik';
 
@@ -112,9 +112,9 @@ const SingleImage = ({img_idx}) => {
           renderPlaceholderContent={
             <Icon
               reverse
-              name="ios-american-football"
-              type="ionicon"
-              color="#517fa4"
+              name="camera-enhance"
+              type="material-community"
+              color={SECONDARY_THEME}
             />
           }
           source={{uri: displayImage}}
