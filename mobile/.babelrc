@@ -1,0 +1,11 @@
+{
+
+  "plugins": [
+    ["transform-inline-environment-variables", {
+      "include": [
+        "NODE_ENV"
+      ]
+    }],
+    ["module:react-native-dotenv"]
+  ]
+}
