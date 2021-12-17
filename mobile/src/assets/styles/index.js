@@ -1,9 +1,10 @@
 import { StyleSheet, Dimensions } from "react-native";
+import {StatusBar} from 'react-native';
 
 export const PRIMARY_COLOR = "#7444C0";
 export const PRIMARY_THEME = "#ff7f02";
-const SECONDARY_COLOR = "#5636B8";
-const SECONDARY_THEME = "#2b1d08";
+export const SECONDARY_COLOR = "#5636B8";
+export const SECONDARY_THEME = "#2b1d08";
 const WHITE = "#FFFFFF";
 const GRAY = "#757E90";
 const DARK_GRAY = "#363636";
@@ -17,6 +18,7 @@ const LIKE_ACTIONS = "#B644B2";
 const DISLIKE_ACTIONS = "#363636";
 const FLASH_ACTIONS = "#5028D7";
 
+const IOS_TOP_BAR = 40
 
 const FONT_TEXT_FAM = 'OpenSans-Regular'
 //const ICON_FONT = "tinderclone";
@@ -56,9 +58,19 @@ export default StyleSheet.create({
   },
   // Cancel Button
   cancel: {
+    ...Platform.select({
+      ios: {
+    padding: 10,
+    paddingTop: IOS_TOP_BAR,
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-start'
+      },
+      android: {
     padding: 10,
     flexDirection: 'row-reverse',
     justifyContent: 'flex-start'
+      },
+    }),
   },
   cancelText: {
     color: DARK_GRAY,
