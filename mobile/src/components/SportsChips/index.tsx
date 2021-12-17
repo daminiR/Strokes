@@ -37,21 +37,23 @@ const advanced = {
    }, [selected]);
    useEffect(() => {
      if (isDisplay) {
+         if (gameLevel){
          switch (gameLevel) {
             //beginners
-           case 0:
+           case '0':
              setGameLevelStyle(beginners);
              break;
 
            // intermediate
-           case 1:
+           case '1':
              setGameLevelStyle(intermediate);
              break;
 
            // advanced
-           case 2:
+           case '2':
              setGameLevelStyle(advanced);
              break;
+         }
          }
      }
      setLoadingGameStyle(false)
