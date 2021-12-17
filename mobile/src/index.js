@@ -25,6 +25,8 @@ const App = () =>
   const [client, setClient] = useState();
   const [ready, setReady] = useState(false);
   const [persistor, setPersistor] = useState();
+  const uri_upload = process.env.React_App_UPLOAD_URI
+  const uri_ws = process.env.React_App_WSLINK_local
   useEffect(() => {
     async function init() {
       console.log('getting fired up');
@@ -39,51 +41,15 @@ const App = () =>
       //setPersistor(newPersistor);
       //newPersistor.pause()
       //newPersistor.purge()
-      //const myHtttpLink = new HttpLink({
-      //uri: 'http://192.168.1.12:4000/graphql',
-      ////uri : 'http://localhost:4000/graphql'
-      //});
-      //const uploadLink = createUploadLink({
-      //uri: 'http://10.0.2.2:3000/graphql',
-      //});
-      //const uploadLink = createUploadLink({ uri: 'http://192.168.1.8:4000/graphql', })
-      //const uploadLink = createUploadLink({ uri:'http://192.168.1.12:4000/graphql'})
-      //const uploadLink = createUploadLink({
-      //uri: 'http://localhost:4000/graphql',
-      //});
       const uploadLink = createUploadLink({
-        uri: 'http://10.0.2.2:4000/graphql',
+      uri: uri_upload,
       });
       const wsLink = new WebSocketLink({
-        uri: 'ws://10.0.2.2:4000/graphql',
+        uri: wsLink,
         options: {
           reconnect: true,
         },
       });
-      //const uploadLink = createUploadLink({
-      //uri: 'http://192.168.1.12:4000/graphql',
-      //});
-      //const uploadLink = createUploadLink({
-        //uri: 'http://10.0.2.2:4000/graphql',
-      //});
-      //const wsLink = new WebSocketLink({
-        ////uri: 'ws://10.0.2.2:4000/graphql',
-        //uri: 'ws://192.168.1.12:4000/graphql',
-        //options: {
-          //reconnect: true,
-        //},
-      //});
-      //const wsLink = new WebSocketLink({
-        //uri: 'ws://192.168.1.8:4000/graphql',
-        //options: {
-          //reconnect: true,
-        //},
-      //});
-      // The split function takes three parameters:
-      //
-      // * A function that's called for each operation to execute
-      // * The Link to use for an operation if the function returns a "truthy" value
-      // * The Link to use for an operation if the function returns a "falsy" value
       const splitLink = split(
         ({query}) => {
           const definition = getMainDefinition(query);
@@ -96,7 +62,6 @@ const App = () =>
         uploadLink,
       );
       //const link = ApolloLink.from([onErrorLink, uploadLink]);
-      //const uri = 'http://localhost:4000/graphql'
       var apolloClient = new ApolloClient({
         link: splitLink,
         cache: cache,
