@@ -1,4 +1,5 @@
 import { Dimensions, Platform } from 'react-native'
+import {DIMENSION_HEIGHT} from './assets/styles'
 import { RadioButtonProps } from 'react-native-radio-buttons-group'
 import { _email, _phone_number, _neighborhood, _gender, _age, _first_name} from './utils/navigation'
 
@@ -11,7 +12,7 @@ export const black = '#17191A'
 export const dimGray = '#707070'
 export const lightGray = '#D1CDCD'
 
-export const tabBarSize = 45
+export const tabBarSize = DIMENSION_HEIGHT * 0.08
 
 //export const KLMN = Platform.OS === 'ios' ? 'KLMN-Flash-Pix' : 'KLMN_Flash_Pix'
 export const Dolbak = Platform.OS === 'ios' ? 'The Dolbak' : 'TheDolbak-Brush'

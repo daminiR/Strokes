@@ -25,7 +25,7 @@ const FONT_TEXT_FAM = 'OpenSans-Regular'
 //const ICON_FONT = "tinderclone";
 
 export const DIMENSION_WIDTH = Dimensions.get("window").width;
-const DIMENSION_HEIGHT = Dimensions.get("window").height;
+export const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 
 export default StyleSheet.create({

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styles from '../../assets/styles';
+import styles, {DIMENSION_HEIGHT} from '../../assets/styles';
 
 import { View, Text} from 'react-native';
 import {Icon} from 'react-native-elements';
@@ -12,7 +12,7 @@ const City = () => {
   }, [cityVar()]);
   return (
     <View style={styles.cityText}>
-      <Icon name="city" type='material-community' size={38}/>
+      <Icon name="city" type='material-community' size={DIMENSION_HEIGHT * 0.03}/>
       <Text style={{marginLeft: 4, marginTop: 10}}>
         {city}
       </Text>

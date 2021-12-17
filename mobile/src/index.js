@@ -26,7 +26,7 @@ const App = () =>
   const [ready, setReady] = useState(false);
   const [persistor, setPersistor] = useState();
   const uri_upload = process.env.React_App_UPLOAD_URI
-  const uri_ws = process.env.React_App_WSLINK_local
+  const uri_ws = process.env.React_App_WSLINK_local;
   useEffect(() => {
     async function init() {
       console.log('getting fired up');
@@ -35,8 +35,6 @@ const App = () =>
         storage: new AsyncStorageWrapper(AsyncStorage),
         trigger: 'write',
       });
-      //const prevIsComplete = await AsyncStorage.getItem('isProfileComplete')
-      //isProfileCompleteVar(JSON.parse(prevIsComplete))
       await newPersistor.restore();
       //setPersistor(newPersistor);
       //newPersistor.pause()
@@ -45,11 +43,17 @@ const App = () =>
       uri: uri_upload,
       });
       const wsLink = new WebSocketLink({
-        uri: wsLink,
+        uri: 'ws://10.0.2.2:4000/graphql',
+        //uri: uri_ws,
         options: {
           reconnect: true,
         },
       });
+      // The split function takes three parameters:
+      //
+      // * A function that's called for each operation to execute
+      // * The Link to use for an operation if the function returns a "truthy" value
+      // * The Link to use for an operation if the function returns a "falsy" value
       const splitLink = split(
         ({query}) => {
           const definition = getMainDefinition(query);
@@ -62,6 +66,7 @@ const App = () =>
         uploadLink,
       );
       //const link = ApolloLink.from([onErrorLink, uploadLink]);
+      //const uri = 'http://localhost:4000/graphql'
       var apolloClient = new ApolloClient({
         link: splitLink,
         cache: cache,
