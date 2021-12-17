@@ -48,7 +48,6 @@ const advanced = {
            case '1':
              setGameLevelStyle(intermediate);
              break;
-
            // advanced
            case '2':
              setGameLevelStyle(advanced);
