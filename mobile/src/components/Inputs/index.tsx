@@ -75,6 +75,7 @@ const ImageInput = ({_submit, isSignUp}) => {
       </View>
     )}
   const EmailInput = ({isSignUp=true, _signIn=null, getData=null}) => {
+    console.log("does it go throu twice")
     const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
     const [email, setEmail] = useState(values.email)
     useEffect(() => {
@@ -127,6 +128,7 @@ const ImageInput = ({_submit, isSignUp}) => {
     </View>
     )}
   const SportsInput = () => {
+    console.log("running on ever slide")
   const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
     return (
       <View style={styles.sportsContainer}>

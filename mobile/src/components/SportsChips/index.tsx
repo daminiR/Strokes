@@ -4,6 +4,8 @@ import {View, ScrollView, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../../assets/styles'
 import LinearGradient from 'react-native-linear-gradient'
+import {GameLevelChoose} from '../ChooseSportChips/'
+
 const intermediate = {
                  colors: ['#ff7f02', 'white', 'white', 'white'],
                  start: {x: 0.75, y: 0},
@@ -21,44 +23,44 @@ const advanced = {
                  end: {x: 0.65, y: 0},
 }
 
- const SportChips = ({sport, gameLevel = null, isSelected = false, isDisplay, getData=null}) => {
-   const [dynamicStyle, setDynamicStyle] = useState(styles.ChipButtonGameLevel2);
+ const SportChips = ({sport, isUndo= false, gameLevel = null, isSelected = false, isDisplay, getData=null}) => {
+   const [dynamicStyle, setDynamicStyle] = useState(styles.ChipButton);
    const [loadingGameStyle, setLoadingGameStyle] = useState(true);
    const [gameLevelStyle, setGameLevelStyle] = useState(null);
-   const [selected, setSelected] = React.useState(isSelected);
-   useEffect(() => {
-     if (!isDisplay) {
-       if (selected) {
-         setDynamicStyle(styles.ChipButtonSelected);
-       } else {
-         setDynamicStyle(styles.ChipButton);
-       }
-     }
-   }, [selected]);
-   useEffect(() => {
-     if (isDisplay) {
-         if (gameLevel){
-         switch (gameLevel) {
-            //beginners
-           case '0':
-             setGameLevelStyle(beginners);
-             break;
+   const [selected, setSelected] = useState(isSelected);
+   const [isCancelled, setIsCancelled] = useState(false);
+   const [gameLevelVisible, setGameLevelVisible] = useState(false)
+   const [trial, setTrial] = useState('0')
+   const [gameLevelInput, setGameLevelInput] = useState(gameLevel)
+   const [isDisplayInput, setIsDisplayInput] = useState(isDisplay)
 
-           // intermediate
-           case '1':
-             setGameLevelStyle(intermediate);
-             break;
-           // advanced
-           case '2':
-             setGameLevelStyle(advanced);
-             break;
-         }
-         }
-     }
-     setLoadingGameStyle(false)
-   }, []);
+   useEffect(() => {
+     //if (isDisplayInput) {
+    setLoadingGameStyle(true);
+    if (gameLevelInput) {
+      switch (gameLevelInput) {
+        //beginners
+        case '0':
+          setGameLevelStyle(beginners);
+          setLoadingGameStyle(false);
+          break;
+        // intermediate
+        case '1':
+          setGameLevelStyle(intermediate);
+          setLoadingGameStyle(false);
+          break;
+        // advanced
+        case '2':
+          setGameLevelStyle(advanced);
+          setLoadingGameStyle(false);
+          break;
+      }
+    }
+     //}
+   }, [gameLevelInput]);
 
    const _selected = (selected) => {
+    setGameLevelVisible(true)
      if (selected) {
        selected = false;
        setSelected(selected);
@@ -71,7 +73,7 @@ const advanced = {
    const renderColored = () => {
      return (
        <>
-         {!loadingGameStyle && (
+         {!loadingGameStyle ? (
            <>
              <Chip
                ViewComponent={LinearGradient}
@@ -88,11 +90,13 @@ const advanced = {
                buttonStyle={dynamicStyle}
                containerStyle={styles.singleChip}
                onPress={() => _selected(selected)}
-               disabled={isDisplay}
+               disabled={isDisplayInput}
                disabledTitleStyle={styles.chipText}
                disabledStyle={styles.ChipButton}
              />
            </>
+         ) : (
+           renderNormal()
          )}
        </>
      );
@@ -114,15 +118,21 @@ const advanced = {
            buttonStyle={dynamicStyle}
            containerStyle={styles.singleChip}
            onPress={() => _selected(selected)}
-           disabled={isDisplay}
+           disabled={isDisplayInput}
            disabledTitleStyle={styles.chipText}
            disabledStyle={gameLevelStyle}
+         />
+         <GameLevelChoose
+           setDynamicStyle={setDynamicStyle}
+           isVisible={gameLevelVisible}
+           setIsVisible={setGameLevelVisible}
+           setGameLevelInput={setGameLevelInput}
+           setIsDisplayInput={setIsDisplayInput}
          />
        </>
      );
    };
-
-   return <>{gameLevel ? renderColored() : renderNormal()}</>;
+   return <>{gameLevelInput ? renderColored() : renderNormal()}</>;
  };
 
 export { SportChips }
