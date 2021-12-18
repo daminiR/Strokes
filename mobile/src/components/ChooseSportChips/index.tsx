@@ -92,7 +92,6 @@ const undoSportSelect = (newSport, setTempSports, temptSports) => {
 const ChooseSportsChips = () => {
   const {setDisplayInput} = useContext(DoneCancelContext)
   const {setFieldValue, values: formikValues} = useFormikContext<EditFields>();
-  const [isSelected, setIsSelected] = useState(false)
   const [temptSports, setTempSports] = useState(formikValues.sports)
   const getData = (newSport, isSelected, game_level) => {
     // need new logic here
