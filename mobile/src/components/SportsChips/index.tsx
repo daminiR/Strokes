@@ -23,16 +23,17 @@ const advanced = {
                  end: {x: 0.65, y: 0},
 }
 
- const SportChips = ({sport, isUndo= false, gameLevel = null, isSelected = false, isDisplay, getData=null}) => {
+ const SportChips = ({sport, removeSport=null, gameLevel = null, isSelected = false, isDisplay, getData=null}) => {
+   console.log("sprt, isselc",sport, gameLevel)
    const [dynamicStyle, setDynamicStyle] = useState(styles.ChipButton);
    const [loadingGameStyle, setLoadingGameStyle] = useState(true);
    const [gameLevelStyle, setGameLevelStyle] = useState(null);
-   const [selected, setSelected] = useState(isSelected);
-   const [isCancelled, setIsCancelled] = useState(false);
    const [gameLevelVisible, setGameLevelVisible] = useState(false)
-   const [trial, setTrial] = useState('0')
    const [gameLevelInput, setGameLevelInput] = useState(gameLevel)
    const [isDisplayInput, setIsDisplayInput] = useState(isDisplay)
+   useEffect(() => {
+     setGameLevelInput(gameLevel)
+   }, [gameLevel]);
 
    useEffect(() => {
      //if (isDisplayInput) {
@@ -59,17 +60,6 @@ const advanced = {
      //}
    }, [gameLevelInput]);
 
-   const _selected = (selected) => {
-    setGameLevelVisible(true)
-     if (selected) {
-       selected = false;
-       setSelected(selected);
-     } else {
-       selected = true;
-       setSelected(selected);
-     }
-     getData(sport, selected);
-   };
    const renderColored = () => {
      return (
        <>
@@ -89,7 +79,7 @@ const advanced = {
                }}
                buttonStyle={dynamicStyle}
                containerStyle={styles.singleChip}
-               onPress={() => _selected(selected)}
+               onPress={() => setGameLevelVisible(true)}
                disabled={isDisplayInput}
                disabledTitleStyle={styles.chipText}
                disabledStyle={styles.ChipButton}
@@ -117,22 +107,30 @@ const advanced = {
            }}
            buttonStyle={dynamicStyle}
            containerStyle={styles.singleChip}
-           onPress={() => _selected(selected)}
+           onPress={() => setGameLevelVisible(true)}
            disabled={isDisplayInput}
            disabledTitleStyle={styles.chipText}
            disabledStyle={gameLevelStyle}
          />
-         <GameLevelChoose
-           setDynamicStyle={setDynamicStyle}
-           isVisible={gameLevelVisible}
-           setIsVisible={setGameLevelVisible}
-           setGameLevelInput={setGameLevelInput}
-           setIsDisplayInput={setIsDisplayInput}
-         />
+
        </>
      );
    };
-   return <>{gameLevelInput ? renderColored() : renderNormal()}</>;
+   return (
+     <>
+       <GameLevelChoose
+         setDynamicStyle={setDynamicStyle}
+         isVisible={gameLevelVisible}
+         setIsVisible={setGameLevelVisible}
+         setGameLevelInput={setGameLevelInput}
+         setIsDisplayInput={setIsDisplayInput}
+         sport={sport}
+         getData={getData}
+         removeSport={removeSport}
+       />
+       {gameLevelInput ? renderColored() : renderNormal()}
+     </>
+   );
  };
 
 export { SportChips }

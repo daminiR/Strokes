@@ -56,7 +56,7 @@ const EditInput = ({inputType= null, signOut = null}) => {
         return <NeighborhoodSearch />;
         break;
       case 'Sports Input':
-        return <SportsInput />;
+        return <SportsInput/>;
         break;
       case 'Description Input':
         return <DescriptionInput />;
