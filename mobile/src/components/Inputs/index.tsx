@@ -128,7 +128,6 @@ const ImageInput = ({_submit, isSignUp}) => {
     </View>
     )}
   const SportsInput = () => {
-    console.log("running on ever slide")
   const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
     return (
       <View style={styles.sportsContainer}>

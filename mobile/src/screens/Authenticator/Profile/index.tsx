@@ -29,6 +29,7 @@ import {Done, Cancel} from '../../../components'
 
 
 export const ProfileContext = createContext(null)
+export const DoneCancelContext = createContext(null)
 
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
 export type ProfileScreenRouteProp = RouteProp<RootStackSignInParamList, 'PROFILE'>;
@@ -114,7 +115,6 @@ const _onPressCancelProfile = () => {
     setIsVisible(false);
 }
 const _onPressDoneInput = () => {
-  // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!/
     EditInputVar({inputType:'', displayInput: false})
     setDisplayInput(false);
 }
@@ -125,6 +125,8 @@ const _onPressCancelInput = () => {
 const _editDisplay2 = (display) => {
     setIsVisible(display)
 }
+
+const doneCancelValues = {setDisplayInput}
     return (
       <>
         <ProfileSettings
@@ -138,18 +140,17 @@ const _editDisplay2 = (display) => {
           onRequestClose={() => {
             setIsVisible(!isVisible);
           }}>
-            <View style={styles.top}>
-              <Cancel _onPressCancel={_onPressCancelProfile} />
-              <Done _onPressDone={_onPressDoneProfile} />
-            </View>
-            <ScrollableTabView
-              style={styles.topTabStyle}
-              tabBarTextStyle={styles.topTabText}
-              tabBarUnderlineStyle={styles.topTabUnderLineStyle}
-            >
-              <PictureWall tabLabel="Edit Profile" />
-              <ProfileView tabLabel="View Profile" />
-            </ScrollableTabView>
+          <View style={styles.top}>
+            <Cancel _onPressCancel={_onPressCancelProfile} />
+            <Done _onPressDone={_onPressDoneProfile} />
+          </View>
+          <ScrollableTabView
+            style={styles.topTabStyle}
+            tabBarTextStyle={styles.topTabText}
+            tabBarUnderlineStyle={styles.topTabUnderLineStyle}>
+            <PictureWall tabLabel="Edit Profile" />
+            <ProfileView tabLabel="View Profile" />
+          </ScrollableTabView>
           <Modal
             animationType="slide"
             transparent={false}
@@ -158,11 +159,9 @@ const _editDisplay2 = (display) => {
               setIsVisible(!displayInput);
             }}>
             <View style={{flex: 1}}>
-              <View style={styles.top}>
-                <Cancel _onPressCancel={_onPressCancelInput} />
-                <Done _onPressDone={_onPressDoneInput} />
-              </View>
-              <EditInput inputType={inputType} />
+              <DoneCancelContext.Provider value={doneCancelValues}>
+                <EditInput inputType={inputType} />
+              </DoneCancelContext.Provider>
             </View>
           </Modal>
         </Modal>
@@ -171,6 +170,10 @@ const _editDisplay2 = (display) => {
 
 
 }
+              //<View style={styles.top}>
+                //<Cancel _onPressCancel={_onPressCancelInput} />
+                //<Done _onPressDone={_onPressDoneInput} />
+              //</View>
 const Profile = (): ReactElement => {
   // TODO: very hacky way to stop useEffect from firt render => need more elegant sol
   const [loadingFormikValues, setLoadingFormikValues] = useState(true)
