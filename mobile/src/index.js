@@ -43,8 +43,8 @@ const App = () =>
       uri: uri_upload,
       });
       const wsLink = new WebSocketLink({
-        uri: 'ws://10.0.2.2:4000/graphql',
-        //uri: uri_ws,
+        //uri: 'ws://10.0.2.2:4000/graphql',
+        uri: uri_ws,
         options: {
           reconnect: true,
         },
