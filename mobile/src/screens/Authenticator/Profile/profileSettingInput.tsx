@@ -23,12 +23,12 @@ const ProfileSettingsInput = () => {
         setLoadingSports(true);
         setLoadingDescription(true);
         setSportsList(formikValues.sports);
-        console.log("in settigninput" , formikValues.sports)
         setLoadingSports(false);
            //TODO: add this to sigup
          //TODO: description change here
           const descriptionValue = user.description;
           setDescription(descriptionValue);
+        console.log("///check in sport",formikValues.sports)
           setLoadingDescription(false);
   }, [formikValues]);
   return (
@@ -40,7 +40,7 @@ const ProfileSettingsInput = () => {
         <View style={styles.sportChipSet}>
           {!loadingSports &&
             sportsList.map((sport, i) => {
-            console.log("before profiel shows", sport.game_level)
+            console.log("check in profile settign inputs", sport.game_level)
               return (
                 <SportChips
                   key={i}
