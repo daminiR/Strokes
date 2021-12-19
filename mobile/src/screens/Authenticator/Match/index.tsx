@@ -27,7 +27,8 @@ const Match =()  => {
           console.log(error);
         });
     }
-  }, [userLoading]);
+    // bruhhh
+  }, [currentUserData]);
   return (
     <>
       {!loadingFormik && (

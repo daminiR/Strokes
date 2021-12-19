@@ -30,6 +30,7 @@ const filterByFieldsByUser = (patron_list, filters) => {
     //TODO: to maintain structure cange gamelevel backend to match filter gamelevel style
     console.log("in filters //////////", filters)
     const filterBySport = _.find(filters.sportFilters, sportObj => {return sportObj.filterSelected == true}).sport
+    console.log("sport in retrive ",filterBySport)
     console.log("filterbysport",filterBySport)
     const filterByAge = filters.ageRange
     console.log("filter by age",filterByAge)

@@ -24,7 +24,6 @@ const advanced = {
 }
 
  const SportChips = ({sport, removeSport=null, gameLevel = null, isSelected = false, isDisplay, getData=null}) => {
-   console.log("sprt, isselc",sport, gameLevel)
    const [dynamicStyle, setDynamicStyle] = useState(styles.ChipButton);
    const [loadingGameStyle, setLoadingGameStyle] = useState(true);
    const [gameLevelStyle, setGameLevelStyle] = useState(null);
