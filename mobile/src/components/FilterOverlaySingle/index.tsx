@@ -51,7 +51,9 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
     };
     setValues({... filterValues, 'ageRange': multiSliderValue, 'gameLevels': gameLevelObj, 'sportFilters': allUserSportsFilter});
     _storeAgeRangeFilter(multiSliderValue)
-    _storeSportFilter(allUserSportsFilter)
+    const sportFilter = _.find(allUserSportsFilter, ['filterSelected', true])
+    console.log("new sotrage sports", sportFilter )
+    _storeSportFilter(sportFilter)
     _storeGameLevelFilter(gameLevelObj);
     setFilter(false)
   };

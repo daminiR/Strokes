@@ -40,7 +40,6 @@ const ProfileSettingsInput = () => {
         <View style={styles.sportChipSet}>
           {!loadingSports &&
             sportsList.map((sport, i) => {
-            console.log("check in profile settign inputs", sport.game_level)
               return (
                 <SportChips
                   key={i}

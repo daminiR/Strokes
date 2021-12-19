@@ -47,20 +47,30 @@ const createInitialValuesFormik = (userData, phoneNumber, email) => {
     }
 }
 const createInitialFilterFormik = async (sports) => {
+  const ageRange = await _retriveAgeRangeFilter()
+  const sportFilter = await _retriveSportFilter()
+  const gameLevelFilter = await _retriveGameLevel()
   const defailtSportFilter = _.map(sports, (sportObj, key) => {
+    if (sportFilter){
+    if (sportObj.sport == sportFilter.sport) {
+      return sportFilter;
+    } else {
+      return {sport: sportObj.sport, filterSelected: false};
+    }
+
+    }
+    else{
     if (key == '0') {
       return {sport: sportObj.sport, filterSelected: true};
     } else {
       return {sport: sportObj.sport, filterSelected: false};
     }
+    }
   })
 
-  const ageRange = await _retriveAgeRangeFilter()
-  const sportFilter = await _retriveSportFilter()
-  const gameLevelFilter = await _retriveGameLevel()
   return {
     ageRange: ageRange ? ageRange : defaultAgeRange,
-    sportFilters: sportFilter ? sportFilter: defailtSportFilter,
+    sportFilters: defailtSportFilter,
     gameLevels: gameLevelFilter ? gameLevelFilter :defaultGameLevel,
   };
 };
