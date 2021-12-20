@@ -5,8 +5,11 @@ export const PRIMARY_COLOR = "#7444C0";
 export const PRIMARY_THEME = "#ff7f02";
 export const SECONDARY_COLOR = "#5636B8";
 export const SECONDARY_THEME = "#2b1d08";
+export const CHAT_TEXT_COLOR_USER = "#804000";
+export const CHAT_TEXT_COLOR_MACTHED_USER= "#ffa64d";
 const WHITE = "#FFFFFF";
-const GRAY = "#757E90";
+export const GRAY = "#757E90";
+export const LIGHT_GRAY = "#d9d9d9";
 const DARK_GRAY = "#363636";
 const BLACK = "#000000";
 
