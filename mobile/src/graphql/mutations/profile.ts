@@ -165,7 +165,11 @@ const UPDATE_MATCHES = gql`
         sport
         game_level
       }
-      country
+      location {
+        city
+        state
+        country
+      }
       description
       image_set {
         img_idx

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { GiftedChat } from 'react-native-gifted-chat'
+import { Bubble, GiftedChat } from 'react-native-gifted-chat'
 import { RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import {GET_MESSAGES, MESSAGE_POSTED} from '../../../graphql/queries/profile'
 import {POST_MESSAGE} from '../../../graphql/mutations/profile'
 import { useQuery, useMutation, useSubscription} from '@apollo/client'
 import _ from 'lodash'
+import {LIGHT_GRAY, CHAT_TEXT_COLOR_USER, CHAT_TEXT_COLOR_MACTHED_USER} from '../../../assets/styles'
 import {createMessageObject} from '../../../utils/Chat'
 
 export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'HELLO'>
@@ -62,11 +63,31 @@ const ActiveChat = ({ route, navigation}) => {
       },
     });
   }
+  const renderBubble =(props) => {
+    return (
+      <Bubble
+        {...props}
+        textStyle={{
+          right: {
+            color: 'white',
+          },
+        }}
+        wrapperStyle={{
+          left: {
+            backgroundColor: LIGHT_GRAY},
+          right: {
+            backgroundColor: CHAT_TEXT_COLOR_USER,
+          },
+        }}
+      />
+    );
+  }
 
   return (
     <GiftedChat
       messages={messages}
       onSend={messages => onSend(messages)}
+      renderBubble={(props) => renderBubble(props)}
       user={{
         _id: 1,
       }}
