@@ -24,6 +24,7 @@ const Patron = ()  => {
     //fetchPolicy: "network-only",
   const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     onCompleted: (data) => {
+        setLoadingMatches(true)
         const all_users = data.queryProssibleMatches
         setAllUsers(all_users)
         const patron_list = createPatronList(currentUserData.squash?.location, all_users, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches, filterValues)
@@ -48,6 +49,7 @@ const Patron = ()  => {
     }
   }, [filterValues]);
   const matchesProfileValue = {matches, loadingMatches};
+  console.log("values o fmatches debug", matchesProfileValue)
   return (
     <>
       {!loadingMatches && (

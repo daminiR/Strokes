@@ -40,7 +40,7 @@ const dislikeIconStyle= {
 
 export const FilterContext = createContext(null)
 const Test = () => {
-  const {matches} = useContext(MatchesProfileContext);
+  const {matches, loadingMatches} = useContext(MatchesProfileContext);
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
@@ -83,7 +83,7 @@ const Test = () => {
         <Filters/>
       </View>
       <View style={styles.swipeContainer}>
-        {matches.length != 0 && (
+        {!loadingMatches && matches.length != 0 && (
           <Swiper
             cards={matches}
             ref={(swiper) => {

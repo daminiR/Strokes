@@ -32,6 +32,11 @@ export const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 
 export default StyleSheet.create({
+  //CHAT styles
+  ChatUserContainer: {
+    flex: 1,
+    alignSelf: 'center'
+  },
   // Auth email overlay
 
   authEmailOverlay: {
