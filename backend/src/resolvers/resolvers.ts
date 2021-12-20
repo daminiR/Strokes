@@ -12,6 +12,7 @@ import {format} from 'util'
 import axios from 'axios'
 import { ObjectId } from 'mongodb'
 import { typeDefs }  from '../typeDefs/typeDefs'
+import _ from 'lodash'
 //import { PubSub } from 'graphql-subscriptions';
 import { pubsub } from '../pubsub'
 //const pubsub = new PubSub()
@@ -104,13 +105,14 @@ const deleteFromGC = async (file_to_del: string) => {
 }
 const dest_gcs_images = "all_images"
 const POST_CHANNEL = 'MESSAGE_CHANNEL'
-const messages = []
 export const resolvers = {
   Query: {
     messages: async (parents, {currentUserID, matchedUserID}, context, info) => {
-      const messages = Message.find({
+      //TODO: index the sorting id thing! high latency
+      const messages = await Message.find({
         $or: [{sender: currentUserID, receiver: matchedUserID},{sender: matchedUserID, receiver: currentUserID}]
-      })
+      }).sort({"_id": -1})
+      // sort based on objectId
       console.log(messages)
       return messages
     },

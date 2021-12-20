@@ -23,7 +23,7 @@ const renderMessage = (item, navigation, currentUserID) => {
                 <Message
                   image={profileImage}
                   name={title}
-                  lastMessage={"display last messgae here"}
+                  //lastMessage={"display last messgae here"}
                 />
         </TouchableOpacity>
   )

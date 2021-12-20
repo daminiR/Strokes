@@ -6,13 +6,13 @@ import {gql} from 'apollo-server-express';
     city: String!,
     state: String!,
     country: String!
-`
+`;
  const MessageType = `
  _id: ID!,
  sender: String!,
  receiver: String!,
  text: String!
-`
+`;
  const SquashNodeType = `
     sport: String!,
     game_level: Int!,
@@ -154,7 +154,6 @@ export const typeDefs = gql`
     updateDescription(_id: String!, description: String!): String
     uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
 
-
     updateLocation(check: String): String
 
     updateLikes(_id: String!, likes: [PotentialMatchInput!], currentUserData: PotentialMatchInput!): Squash
@@ -176,6 +175,7 @@ export const typeDefs = gql`
       remove_uploaded_images: [DataInput],
       original_uploaded_image_set: [DataInput!]!,
     ): Squash
+
     createSquash2(
       _id: String!
       first_name: String!
@@ -193,6 +193,7 @@ export const typeDefs = gql`
       dislikes : [PotentialMatchInput!]
       likedByUSers: [PotentialMatchInput!]
     ): Squash!
+
     createSquashTestSamples(
       _id: String!
       first_name: String!
@@ -204,7 +205,9 @@ export const typeDefs = gql`
       description: String!
       image_set: [DataInput!]!
     ): Squash!
+
     deleteSquash(_id: String): Squash!
+
     testMut(name: Int!):Int
   }
 `;

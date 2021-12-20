@@ -4,13 +4,15 @@ import { RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import {GET_MESSAGES, MESSAGE_POSTED} from '../../../graphql/queries/profile'
 import {POST_MESSAGE} from '../../../graphql/mutations/profile'
 import { useQuery, useMutation, useSubscription} from '@apollo/client'
+import { StackNavigationProp } from '@react-navigation/stack'
+import {View} from 'react-native'
 import _ from 'lodash'
 import {LIGHT_GRAY, CHAT_TEXT_COLOR_USER, CHAT_TEXT_COLOR_MACTHED_USER} from '../../../assets/styles'
 import {createMessageObject} from '../../../utils/Chat'
 
-export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'HELLO'>
+export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'ACTIVE_CHAT'>
 export type ActiveChatT = {
-  navigation: ActiveChatTTScreenNavigationProp
+  navigation: ActiveChatTScreenNavigationProp
 }
 const ActiveChat = ({ route, navigation}) => {
   const [postMessage2] = useMutation(POST_MESSAGE)
@@ -31,11 +33,10 @@ const ActiveChat = ({ route, navigation}) => {
   }, [])
   useEffect(() => {
   if (postedMessages){
-      console.log(loadingMessagePosted);
     if (!loadingMessagePosted) {
       const m2 = postedMessages.messagePosted;
-      const what = createMessageObject(m2, currentUserID, matchedUserProfileImage);
-      setMessages(previousMessages => GiftedChat.append(previousMessages, [what]))
+      const msgObj = createMessageObject(m2, currentUserID, matchedUserProfileImage);
+      setMessages(previousMessages => GiftedChat.append(previousMessages, [msgObj]))
     }
   }
   }, [postedMessages])
@@ -46,8 +47,7 @@ const ActiveChat = ({ route, navigation}) => {
         const displayUserMessages = _.map(messages, (messageObj) =>
           createMessageObject(messageObj, currentUserID, matchedUserProfileImage),
         );
-        console.log(displayUserMessages)
-    setMessages(displayUserMessages);
+        setMessages(displayUserMessages);
       }
     }
   }, [loadingMessages])
@@ -84,14 +84,16 @@ const ActiveChat = ({ route, navigation}) => {
   }
 
   return (
-    <GiftedChat
-      messages={messages}
-      onSend={messages => onSend(messages)}
-      renderBubble={(props) => renderBubble(props)}
-      user={{
-        _id: 1,
-      }}
-    />
-  )
+    <View style={{flex: 1}}>
+      <GiftedChat
+        messages={messages}
+        onSend={(messages) => onSend(messages)}
+        renderBubble={(props) => renderBubble(props)}
+        user={{
+          _id: 1,
+        }}
+      />
+    </View>
+  );
 }
 export {ActiveChat}
