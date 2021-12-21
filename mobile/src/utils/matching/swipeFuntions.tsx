@@ -82,11 +82,11 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     console.log(likesVar())
     // test //
 
-    //updateLikes({variables: {
-            //_id: _id,
-            //likes: array,
-            //currentUserData: userMatchingData
-        //}})
+    updateLikes({variables: {
+            _id: _id,
+            likes: array,
+            currentUserData: userMatchingData
+        }})
 
     if (_.find(card.likes, (likeObj) => {return likeObj._id == _id})){
     const matchedUser = sanitizeCard(card)

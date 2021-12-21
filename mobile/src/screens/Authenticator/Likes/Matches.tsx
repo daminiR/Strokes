@@ -14,7 +14,7 @@ import { useLazyQuery} from '@apollo/client'
 import {UserContext} from '../../../UserContext'
 import {renderMatchCard} from '../../../utils/matching/swipeFuntions'
 
-const Matches = () => {
+const Matches = ({navigation}) => {
   const [totalLikesFromUsers, setTotalLikesFromUsers] = useState(null)
   const {currentUser, data: currentUserData} = useContext(UserContext)
   const [loading, setLoading] = useState(true)
@@ -35,7 +35,16 @@ const Matches = () => {
   const appState = useRef(AppState.currentState)
   useEffect(() => {
       getSquashProfile({variables: {id: currentUser.uid}});
-  }, [])
+  }, [currentUserData.squash.matches])
+
+  //useEffect(() => {
+    //setLoading(true)
+    //const user = currentUserData.squash
+    //setTitle(title)
+    //// set total likes to be local and database likes
+    //setMatches(user.matches)
+    //setLoading(false)
+  //}, [currentUserData.squash.matches])
   //useEffect(() => {
     //}, [currentUserData.squash.matches, currentUserData.squash.likedByUSers])
   useEffect(() => {
