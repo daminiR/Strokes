@@ -94,7 +94,8 @@ export const AuthNavigator = () => {
     currentUser: currentUser,
     isProfileComplete: isProfileComplete,
     setProfileState: setProfileState,
-    potentialMatches: allUsers
+    potentialMatches: allUsers,
+    setPotentialMatches: setAllUsers
   };
   const render2 = () =>{
     if (currentUser && isUserOnmongoDb) {
