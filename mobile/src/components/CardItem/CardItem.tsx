@@ -17,6 +17,24 @@ const CardItem = ({
   onPressLeft= null,
   onPressRight=null,
 }) => {
+  const fullWidth = Dimensions.get('window').width;
+  const imageStyle = [
+    {
+      borderRadius: 8,
+      width: variant ? fullWidth / 2 - 30 : fullWidth - 80,
+      height: variant ? 170 : 350,
+      margin: variant ? 0 : 20
+    }
+  ];
+
+  const nameStyle =
+    {
+      paddingTop: variant ? 10 : 15,
+      paddingBottom: variant ? 5 : 7,
+      color: '#363636',
+      fontSize: variant ? 15 : 30,
+      textAlign: 'center'
+    }
 
   return (
     <>
@@ -24,9 +42,9 @@ const CardItem = ({
         <TouchableWithoutFeedback>
         <View style={styles.containerCardItem}>
           {/* IMAGE */}
-          {profileImage &&   <Image source={{uri: profileImage.imageURL}} style={styles.profileContainer}/>}
+          {profileImage &&   <Image source={{uri: profileImage.imageURL}} style={variant ? styles.profileLikesContainer : styles.profileContainer}/>}
           {/* NAME */}
-          {profileTitle && (<Text style={description? styles.nameStyle: styles.nameStyleLikes}>{profileTitle}</Text>)}
+          {profileTitle && (<Text style={variant? styles.nameStyleLikes :styles.nameStyle }>{profileTitle}</Text>)}
           {/* DESCRIPTION */}
           {description && (
             <Text style={styles.descriptionCardItem}>{description}</Text>
@@ -52,7 +70,7 @@ const CardItem = ({
 }
 
 const renderImages = (imgObj, index, numImages, isProfileView) => {
-            let imageStyle = styles.imageContainer
+            var imageStyle = styles.imageContainer as any
             if (index == numImages - 1) {
               if (isProfileView){
               imageStyle = styles.lastImageContainerProfileView;
@@ -63,6 +81,7 @@ const renderImages = (imgObj, index, numImages, isProfileView) => {
             }
             else {
               imageStyle = styles.imageContainer;
+              //imageStyle = styles.lastImageContainer;
             }
             return (
             <Image key={index} source={{uri: imgObj.imageURL}} style={imageStyle}/>)}

@@ -23,7 +23,6 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 const App = () =>
 {
   const [client, setClient] = useState();
-  const [ready, setReady] = useState(false);
   const [persistor, setPersistor] = useState();
   const uri_upload = process.env.React_App_UPLOAD_URI
   const uri_ws = process.env.React_App_WSLINK_local;
@@ -74,7 +73,6 @@ const App = () =>
       setClient(apolloClient);
     }
     init();
-    setReady(true);
   }, []);
     if (!client) {
     console.log(' still no clinet');

@@ -9,6 +9,8 @@ import {useReactiveVar} from '@apollo/client'
 import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from './graphql/queries/profile'
 import { useQuery, useSubscription, useMutation, useLazyQuery} from '@apollo/client'
 import {MESSAGE_POSTED} from './graphql/queries/profile'
+import {createPatronList} from './utils/matching/patron_list'
+import { GET_POTENTIAL_MATCHES} from './graphql/queries/profile'
 
 export const UserContext = createContext(null);
 export const AuthNavigator = () => {
@@ -18,10 +20,16 @@ export const AuthNavigator = () => {
   const [loadingSigning, setLoadingSiginig] = useState(false);
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
-  const [aloading, setALoading] = useState(false);
   const [data, setData] = useState(true);
+  const [allUsers, setAllUsers] = useState(null)
+  //const{data: potentialMatches} = useQuery(GET_POTENTIAL_MATCHES, {
+  const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
+    onCompleted: (data) => {
+        const all_users = data.queryProssibleMatches
+        setAllUsers(all_users)
+    }
+  });
   const { data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
-  console.log(postedMessages)
   const [getSquashProfile, {data: userData, loading: userLoading, error}] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
@@ -58,6 +66,7 @@ export const AuthNavigator = () => {
       setCurrentUser(currentUser);
       if (currentUser) {
         getSquashProfile({variables: {id: currentUser.uid}});
+        queryProssibleMatches({variables: {_id: currentUser.uid}})
         setLoadingUser(false)
       }
       else{
@@ -71,10 +80,6 @@ export const AuthNavigator = () => {
       return unsubscribe
   }, [isUserOnmongoDb])
 
-  useEffect(() => {
-      setALoading(userLoading)
-  }, [userLoading])
-
   if (loadingSigning) return null
   const value = {
     userData: userData,
@@ -85,7 +90,7 @@ export const AuthNavigator = () => {
     currentUser: currentUser,
     isProfileComplete: isProfileComplete,
     setProfileState: setProfileState,
-    setALoading: aloading
+    potentialMatches: allUsers
   };
   const render2 = () =>{
     if (currentUser && isUserOnmongoDb) {
