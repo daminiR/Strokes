@@ -29,7 +29,6 @@ const renderMatchCard = (card) => {
       )
 }
 const renderMatches =  (card, index) => {
-    console.log("card details///////////////", card, index)
       const image_set_copy = card.image_set
       const min_idx_obj = image_set_copy.reduce((res, obj) => {return (obj.img_idx < res.img_idx)? obj: res})
       const image_set_copy2 = card.image_set.filter(imgObj => imgObj.img_idx != min_idx_obj.img_idx)
@@ -83,11 +82,11 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     console.log(likesVar())
     // test //
 
-    updateLikes({variables: {
-            _id: _id,
-            likes: array,
-            currentUserData: userMatchingData
-        }})
+    //updateLikes({variables: {
+            //_id: _id,
+            //likes: array,
+            //currentUserData: userMatchingData
+        //}})
 
     if (_.find(card.likes, (likeObj) => {return likeObj._id == _id})){
     const matchedUser = sanitizeCard(card)

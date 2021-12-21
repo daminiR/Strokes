@@ -24,6 +24,7 @@ export const AuthNavigator = () => {
   const [allUsers, setAllUsers] = useState(null)
   //const{data: potentialMatches} = useQuery(GET_POTENTIAL_MATCHES, {
   const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
         const all_users = data.queryProssibleMatches
         setAllUsers(all_users)
@@ -40,6 +41,7 @@ export const AuthNavigator = () => {
         setIsApolloConected(true);
         setIsUseOnMongoDb(true);
         setData(data)
+        queryProssibleMatches({variables: {_id: currentUser.uid}})
         if (loadingSigning) setLoadingSiginig(false);
       }
       //onError: ({graphQLErrors, networkError}) => {
@@ -66,7 +68,6 @@ export const AuthNavigator = () => {
       setCurrentUser(currentUser);
       if (currentUser) {
         getSquashProfile({variables: {id: currentUser.uid}});
-        queryProssibleMatches({variables: {_id: currentUser.uid}})
         setLoadingUser(false)
       }
       else{

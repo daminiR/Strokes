@@ -40,7 +40,6 @@ const dislikeIconStyle= {
 
 export const FilterContext = createContext(null)
 const Test = ({matches}) => {
-  console.log("check value all the time ///////////////", matches)
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
