@@ -24,6 +24,7 @@ const Matches = () => {
     setLoading(true)
     // setting likes from query results of people who like current user
     const user = currentUserData.squash
+      // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
     const totalLikes = _.concat(user?.likedByUSers)
     setTotalLikesFromUsers(totalLikes)
     setLoading(false)
@@ -51,7 +52,7 @@ const Matches = () => {
   return (
     <View style={styles.containerMatches}>
       <View style={styles.top}>
-        <Text style={styles.title}>Matches</Text>
+        <Text style={styles.title}>Likes</Text>
       </View>
       <View>
         {!loading && (

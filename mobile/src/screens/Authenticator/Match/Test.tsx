@@ -39,8 +39,8 @@ const dislikeIconStyle= {
   }
 
 export const FilterContext = createContext(null)
-const Test = () => {
-  const {matches, loadingMatches} = useContext(MatchesProfileContext);
+const Test = ({matches}) => {
+  console.log("check value all the time ///////////////", matches)
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
@@ -54,7 +54,7 @@ const Test = () => {
     },
   })
   useEffect(() => {
-      if (matches.length == 0) {
+      if (matches?.length == 0) {
         setEndingText('No more matches left!');
       } else {
         setEndingText(null);
@@ -79,62 +79,61 @@ const Test = () => {
     <>
       <MatchCard matched={matched} setMatched={setMatched} />
       <View style={styles.top}>
-        <City/>
-        <Filters/>
+        <City />
+        <Filters />
       </View>
-      <View style={styles.swipeContainer}>
-        {!loadingMatches && matches.length != 0 && (
-          <Swiper
-            cards={matches}
-            ref={(swiper) => {
-              this.swiper = swiper;
-            }}
-            renderCard={(card, index) => renderMatches(card, index)}
-            onSwiped={(cardIndex) => {
-              console.log(cardIndex);
-            }}
-            onSwipedLeft={(index) => {
-              swipeLeftDisliked(
-                currentUser.uid,
-                matches[index],
-                updateDislikes,
-              );
-            }}
-            onSwipedRight={(index) => {
-              swipeRightLiked(
-                userData.squash,
-                currentUser.uid,
-                matches[index],
-                updateLikes,
-                updateMatches,
-                match,
-              );
-            }}
-            //hacky solution to add note at the last deck
-            onSwipedAll={() => setEndingText('No more matches left!')}
-            disableBottomSwipe={true}
-            disableTopSwipe={true}
-            verticalSwipe={false}
-            verticalThreshold={0}
-            horizontalThreshold={W / 2}
-            cardIndex={0}
-            stackAnimationFriction={500}
-            useViewOverflow={true}
-            backgroundColor={'#FFFFFF'}
-            cardVerticalMargin={0}
-            cardHorizontalMargin={20}
-            marginBottom={tabBarSize + 20}
-            cardStyle={styles.swiperCardStyle}
-            containerStyle={styles.swiperContainerCardStyle}
-            stackSize={3}></Swiper>
-
-        )}
-        {endingText && (
-          <View style={styles.center}>
-            <Text style={styles.nameStyle}>{endingText}</Text>
-          </View>
-        )}
-      </View>
+        <View style={styles.swipeContainer}>
+          {matches.length != 0 && (
+            <Swiper
+              cards={matches}
+              ref={(swiper) => {
+                this.swiper = swiper;
+              }}
+              renderCard={(card, index) => renderMatches(card, index)}
+              onSwiped={(cardIndex) => {
+                console.log(cardIndex);
+              }}
+              onSwipedLeft={(index) => {
+                swipeLeftDisliked(
+                  currentUser.uid,
+                  matches[index],
+                  updateDislikes,
+                );
+              }}
+              onSwipedRight={(index) => {
+                swipeRightLiked(
+                  userData.squash,
+                  currentUser.uid,
+                  matches[index],
+                  updateLikes,
+                  updateMatches,
+                  match,
+                );
+              }}
+              //hacky solution to add note at the last deck
+              onSwipedAll={() => setEndingText('No more matches left!')}
+              disableBottomSwipe={true}
+              disableTopSwipe={true}
+              verticalSwipe={false}
+              verticalThreshold={0}
+              horizontalThreshold={W / 2}
+              cardIndex={0}
+              stackAnimationFriction={500}
+              useViewOverflow={true}
+              backgroundColor={'#FFFFFF'}
+              cardVerticalMargin={0}
+              cardHorizontalMargin={20}
+              marginBottom={tabBarSize + 20}
+              cardStyle={styles.swiperCardStyle}
+              containerStyle={styles.swiperContainerCardStyle}
+              stackSize={3}></Swiper>
+          )}
+          {endingText && (
+            <View style={styles.center}>
+              <Text style={styles.nameStyle}>{endingText}</Text>
+            </View>
+          )}
+        </View>
       <View style={styles.bottom}>
         <View style={styles.spaceLikeDislike}>
           <FAB
@@ -143,16 +142,16 @@ const Test = () => {
             disabled={matches.length == 0}
             onPress={() => this.swiper.swipeRight()}
             buttonStyle={styles.likeDislikeFAB}
-            containerStyle={{width:60, height:60}}
+            containerStyle={{width: 60, height: 60}}
           />
           <FAB
             icon={dislikeIconStyle}
-            style={{margin:0, padding: 0}}
+            style={{margin: 0, padding: 0}}
             color="transparent"
             disabled={matches.length == 0}
             onPress={() => this.swiper.swipeLeft()}
             buttonStyle={styles.likeDislikeFAB}
-            containerStyle={{width:60, height:60}}
+            containerStyle={{width: 60, height: 60}}
           />
         </View>
       </View>

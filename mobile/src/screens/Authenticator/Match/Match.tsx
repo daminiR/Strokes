@@ -10,52 +10,38 @@ import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '..
 import {FilterFields} from '../../../localModels/UserSportsList'
 import {cityVar}from '../../../cache'
 
-export const MatchesProfileContext = createContext(null)
+//export const MatchesProfileContext = createContext(null)
 export const FilterContext = createContext(null)
 
 const Patron = ()  => {
-  const didMountRef = useRef(false)
   const [loadingMatches, setLoadingMatches] = useState(true)
-  const [matches, setMatches] = useState(null)
   const [allUsers, setAllUsers] = useState(null)
   const {values: filterValues } = useFormikContext<FilterFields>();
-  const {currentUser, data: currentUserData, userLoading} = useContext(UserContext)
-  // you have to re querry and reget filters everytime filters change -> useEffect
-    //fetchPolicy: "network-only",
-  const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
-    onCompleted: (data) => {
-        setLoadingMatches(true)
-        const all_users = data.queryProssibleMatches
-        setAllUsers(all_users)
-        const patron_list = createPatronList(currentUserData.squash?.location, all_users, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches, filterValues)
-        setMatches(patron_list)
-        setLoadingMatches(false)
-    }
-  });
-  useEffect(() => {
-    queryProssibleMatches({variables: {_id: currentUser.uid}})
-  }, []);
+  const { potentialMatches, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
+  const [matches, setMatches] = useState(null)
   useEffect(() => {
         cityVar(currentUserData?.squash.location.city)
   }, []);
   useEffect(() => {
-    if (didMountRef.current) {
-        setLoadingMatches(true)
-        const patron_list = createPatronList(currentUserData.squash?.location, allUsers, currentUserData.squash?.likes, currentUserData.squash?.dislikes, currentUserData.squash?.matches, filterValues)
-        setMatches(patron_list);
-        setLoadingMatches(false)
-    } else {
-      didMountRef.current = true;
+    if (potentialMatches) {
+      setLoadingMatches(true);
+      const patron_list = createPatronList(
+        currentUserData.squash?.location,
+        potentialMatches,
+        currentUserData.squash?.likes,
+        currentUserData.squash?.dislikes,
+        currentUserData.squash?.matches,
+        filterValues,
+      );
+      setMatches(patron_list);
+      console.log("new patron list",patron_list)
+      setLoadingMatches(false);
     }
   }, [filterValues]);
-  const matchesProfileValue = {matches, loadingMatches};
-  console.log("values o fmatches debug", matchesProfileValue)
   return (
     <>
       {!loadingMatches && (
-        <MatchesProfileContext.Provider value={matchesProfileValue}>
-          <Test/>
-        </MatchesProfileContext.Provider>
+          <Test matches={matches}/>
       )}
     </>
   );

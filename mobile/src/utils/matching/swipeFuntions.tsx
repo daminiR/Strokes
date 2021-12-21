@@ -29,6 +29,7 @@ const renderMatchCard = (card) => {
       )
 }
 const renderMatches =  (card, index) => {
+    console.log("card details///////////////", card, index)
       const image_set_copy = card.image_set
       const min_idx_obj = image_set_copy.reduce((res, obj) => {return (obj.img_idx < res.img_idx)? obj: res})
       const image_set_copy2 = card.image_set.filter(imgObj => imgObj.img_idx != min_idx_obj.img_idx)

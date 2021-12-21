@@ -239,16 +239,25 @@ export default StyleSheet.create({
     height: 350,
     margin: 0,
   },
+  profileLikesContainer: {
+      borderRadius: 8,
+      width: DIMENSION_WIDTH / 2 - 30 ,
+      height: 170,
+      margin: 0
+  },
   imageContainer: {
     flex: 1,
     borderRadius: 8,
     marginTop: 20,
+    width: DIMENSION_WIDTH * 0.9,
     marginVertical: 10,
+    height: 350,
     padding: 10
   },
   lastImageContainer: {
+    flex: 1,
     borderRadius: 8,
-    width: DIMENSION_WIDTH,
+    width: DIMENSION_WIDTH * 0.9,
     height: 350,
     marginVertical: 0,
     marginTop: 20,
@@ -256,7 +265,7 @@ export default StyleSheet.create({
   },
   lastImageContainerProfileView: {
     borderRadius: 8,
-    width: DIMENSION_WIDTH,
+    width: DIMENSION_WIDTH * 0.9,
     height: 350,
     marginTop: 0,
     marginVertical: 20
