@@ -25,7 +25,9 @@ const Matches = () => {
     // setting likes from query results of people who like current user
     const user = currentUserData.squash
       // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
-    const totalLikes = _.concat(user?.likedByUSers)
+    const likesByUsers = user?.likedByUSers
+    const matches = user?.matches
+    const totalLikes = _.differenceBy(likesByUsers, matches, '_id')
     setTotalLikesFromUsers(totalLikes)
     setLoading(false)
     }
@@ -34,6 +36,8 @@ const Matches = () => {
   useEffect(() => {
       getSquashProfile({variables: {id: currentUser.uid}});
   }, [])
+  //useEffect(() => {
+    //}, [currentUserData.squash.matches, currentUserData.squash.likedByUSers])
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (
