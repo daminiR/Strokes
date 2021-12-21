@@ -20,14 +20,17 @@ export const AuthNavigator = () => {
   const [loadingSigning, setLoadingSiginig] = useState(false);
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
+  const [loadingMatches, setLoadingMatches] = useState(true);
   const [data, setData] = useState(true);
   const [allUsers, setAllUsers] = useState(null)
   //const{data: potentialMatches} = useQuery(GET_POTENTIAL_MATCHES, {
   const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
-        const all_users = data.queryProssibleMatches
+      setLoadingMatches(true)
+        const all_users = data.queryProssibleMatches;
         setAllUsers(all_users)
+      setLoadingMatches(false)
     }
   });
   const { data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
@@ -41,7 +44,6 @@ export const AuthNavigator = () => {
         setIsApolloConected(true);
         setIsUseOnMongoDb(true);
         setData(data)
-        queryProssibleMatches({variables: {_id: currentUser.uid}})
         if (loadingSigning) setLoadingSiginig(false);
       }
       //onError: ({graphQLErrors, networkError}) => {
@@ -68,6 +70,7 @@ export const AuthNavigator = () => {
       setCurrentUser(currentUser);
       if (currentUser) {
         getSquashProfile({variables: {id: currentUser.uid}});
+        queryProssibleMatches({variables: {_id: currentUser.uid}})
         setLoadingUser(false)
       }
       else{
@@ -96,7 +99,7 @@ export const AuthNavigator = () => {
   const render2 = () =>{
     if (currentUser && isUserOnmongoDb) {
       //if (isApolloConected){
-          return !loadingSigning && <SignInStack />;
+          return !loadingSigning && !loadingMatches  && <SignInStack />;
       }
       //else{
         //// also remove current user and sign them out from firebase
