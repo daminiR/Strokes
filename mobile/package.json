@@ -52,6 +52,7 @@
     "react-native-elements": "^3.4.2",
     "react-native-emoji": "^1.8.0",
     "react-native-fbsdk": "^3.0.0",
+    "react-native-flash-message": "^0.2.0",
     "react-native-flipper": "^0.115.0",
     "react-native-flipper-apollo-devtools": "^0.0.2",
     "react-native-fs": "^2.18.0",

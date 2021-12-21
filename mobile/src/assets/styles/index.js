@@ -32,6 +32,16 @@ export const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 
 export default StyleSheet.create({
+  // NOTIFICATION MSG STYLES
+  notificationText: {
+    color: LIGHT_GRAY,
+    fontSize: 15,
+    fontFamily: 'OpenSans-Regular',
+    alignSelf: 'center',
+  },
+  notificationStyle: {
+    backgroundColor: SECONDARY_THEME,
+  },
   //CHAT styles
   ChatUserContainer: {
     flex: 1,
