@@ -12,6 +12,7 @@ import {MESSAGE_POSTED} from './graphql/queries/profile'
 import {createPatronList} from './utils/matching/patron_list'
 import { GET_POTENTIAL_MATCHES} from './graphql/queries/profile'
 
+import { useApolloClient} from '@apollo/client'
 export const UserContext = createContext(null);
 export const AuthNavigator = () => {
   const [currentUser, setCurrentUser ] = useState(null)
@@ -23,6 +24,7 @@ export const AuthNavigator = () => {
   const [loadingMatches, setLoadingMatches] = useState(true);
   const [data, setData] = useState(true);
   const [allUsers, setAllUsers] = useState(null)
+  const [CacheVal, setCacheVal] = useState(null)
   //const{data: potentialMatches} = useQuery(GET_POTENTIAL_MATCHES, {
   const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
@@ -66,15 +68,23 @@ export const AuthNavigator = () => {
     })
   });
 
+  const client = useApolloClient();
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
       if (currentUser) {
+        if (!CacheVal) {
+          const {squash: cachedUser} = client.readQuery({
+            query: READ_SQUASH,
+            variables: {id: currentUser.uid},
+          });
+          console.log('cached', cachedUser.matches);
+          setCacheVal(cachedUser.matches);
+        }
         getSquashProfile({variables: {id: currentUser.uid}});
-        queryProssibleMatches({variables: {_id: currentUser.uid}})
-        setLoadingUser(false)
-      }
-      else{
-       setLoadingUser(false)
+        queryProssibleMatches({variables: {_id: currentUser.uid}});
+        setLoadingUser(false);
+      } else {
+        setLoadingUser(false);
       }
   }
   useEffect(() => {
@@ -95,7 +105,8 @@ export const AuthNavigator = () => {
     isProfileComplete: isProfileComplete,
     setProfileState: setProfileState,
     potentialMatches: allUsers,
-    setPotentialMatches: setAllUsers
+    setPotentialMatches: setAllUsers,
+    cachedVal: CacheVal
   };
   const render2 = () =>{
     if (currentUser && isUserOnmongoDb) {

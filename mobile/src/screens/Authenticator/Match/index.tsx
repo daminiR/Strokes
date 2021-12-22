@@ -24,22 +24,26 @@ const Match =()  => {
   const [allUsers, setAllUsers] = useState(null)
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   const [loadingFormik, setLoadingFormik] = useState(true);
-  const {data: currentUserData, userLoading, currentUser} = useContext(UserContext)
+  const {data: currentUserData, userLoading, cachedVal, currentUser} = useContext(UserContext)
   const client = useApolloClient();
   useEffect(() => {
     // you have to add new alerts
-    const {squash: cachedUser} = client.readQuery({
-    query: READ_SQUASH,
-    variables: {id: currentUser.uid},
-  });
-    console.log("cached", cachedUser.matches)
+    console.log("cached", cachedVal)
     console.log("not cached", currentUserData.squash.matches)
-    showMessage({
-      message: 'New matches!',
-      type: 'info',
-      titleStyle:styles.notificationText,
-      style: styles.notificationStyle
+    const cachedIDs = _.map(cachedVal, cachedObj => {
+      return cachedObj._id
+    })
+    const matchedIDs = _.map(currentUserData.squash.matches, (matchObj) => {
+      return matchObj._id;
     });
+    if (!_.isEqual(cachedIDs, matchedIDs)) {
+      showMessage({
+        message: 'New matches!',
+        type: 'info',
+        titleStyle: styles.notificationText,
+        style: styles.notificationStyle,
+      });
+    }
   }, [currentUserData.squash.matches]);
   useEffect(() => {
     if (!userLoading){
