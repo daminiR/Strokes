@@ -20,6 +20,7 @@ import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtool
 import { WebSocketLink } from '@apollo/client/link/ws'
 
 //TODO: async funtion persist check later
+
 const App = () =>
 {
   const [client, setClient] = useState();
