@@ -79,7 +79,7 @@ export const AuthNavigator = () => {
             variables: {id: currentUser.uid},
           });
           console.log('cached', cachedUser.matches);
-          setCacheVal(cachedUser.matches);
+          setCacheVal(cachedUser);
         }
         getSquashProfile({variables: {id: currentUser.uid}});
         queryProssibleMatches({variables: {_id: currentUser.uid}});
@@ -107,7 +107,7 @@ export const AuthNavigator = () => {
     setProfileState: setProfileState,
     potentialMatches: allUsers,
     setPotentialMatches: setAllUsers,
-    cachedVal: CacheVal,
+    cachedUser: CacheVal,
     offlinMatches:offlineMatches,
     setOfflineMatches:setOfflineMatches
   };

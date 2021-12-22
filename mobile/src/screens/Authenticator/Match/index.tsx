@@ -14,6 +14,7 @@ import {View, Alert, Button} from 'react-native'
 import FlashMessage from "react-native-flash-message";
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { GET_POTENTIAL_MATCHES, READ_SQUASH} from '../../../graphql/queries/profile'
+import {calculateOfflineMatches} from '../../../utils/matching/dataManipulation'
 
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
 export const FilterSportContext = createContext(null);
@@ -24,16 +25,18 @@ const Match =()  => {
   const [allUsers, setAllUsers] = useState(null)
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   const [loadingFormik, setLoadingFormik] = useState(true);
-  const {data: currentUserData, userLoading, cachedVal, currentUser} = useContext(UserContext)
+  const {data: currentUserData, userLoading, cachedUser, currentUser} = useContext(UserContext)
   const client = useApolloClient();
   useEffect(() => {
     // you have to add new alerts
-    console.log("cached", cachedVal)
-    console.log("not cached", currentUserData.squash.matches)
-    const cachedIDs = _.map(cachedVal, cachedObj => {
+    const cachedMatches =  calculateOfflineMatches(cachedUser)
+    const totalMatches =  calculateOfflineMatches(currentUserData.squash)
+    console.log("cached", cachedMatches)
+    console.log("not cached", totalMatches)
+    const cachedIDs = _.map(cachedMatches, cachedObj => {
       return cachedObj._id
     })
-    const matchedIDs = _.map(currentUserData.squash.matches, (matchObj) => {
+    const matchedIDs = _.map(totalMatches, (matchObj) => {
       return matchObj._id;
     });
     if (!_.isEqual(cachedIDs, matchedIDs)) {
