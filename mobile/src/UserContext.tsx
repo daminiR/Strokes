@@ -24,6 +24,7 @@ export const AuthNavigator = () => {
   const [loadingMatches, setLoadingMatches] = useState(true);
   const [data, setData] = useState(true);
   const [allUsers, setAllUsers] = useState(null)
+  const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
   //const{data: potentialMatches} = useQuery(GET_POTENTIAL_MATCHES, {
   const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
@@ -106,7 +107,9 @@ export const AuthNavigator = () => {
     setProfileState: setProfileState,
     potentialMatches: allUsers,
     setPotentialMatches: setAllUsers,
-    cachedVal: CacheVal
+    cachedVal: CacheVal,
+    offlinMatches:offlineMatches,
+    setOfflineMatches:setOfflineMatches
   };
   const render2 = () =>{
     if (currentUser && isUserOnmongoDb) {

@@ -360,6 +360,15 @@ export const resolvers = {
       });
       return displayData;
     },
+    updateUserProfileTestSamples: async (parents, { _id1, _id2 }, context, info) => {
+        const doc = await Squash.updateMany(
+          { _id: [_id1, _id2]},
+          { $pull: { matches: {}, likes: {}, likedByUSers: {}} },
+          { new: true }
+        );
+        console.log("tetsing", doc)
+      return doc;
+    },
     createSquashTestSamples: async (
       root,
       {

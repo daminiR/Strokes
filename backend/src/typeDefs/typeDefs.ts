@@ -206,6 +206,10 @@ export const typeDefs = gql`
       image_set: [DataInput!]!
     ): Squash!
 
+    updateUserProfileTestSamples(
+      _id1: String!
+      _id2: String!
+    ): Squash
     deleteSquash(_id: String): Squash!
 
     testMut(name: Int!):Int
