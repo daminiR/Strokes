@@ -26,8 +26,11 @@ const Matches = ({navigation}) => {
     const user = currentUserData.squash
       // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
     const likesByUsers = user?.likedByUSers
-    const matches = user?.matches
-    const totalLikes = _.differenceBy(likesByUsers, matches, '_id')
+    const likes =  user.likes
+    const likedByUSers =  user.likedByUSers
+    const totalMatches = _.intersectionBy(likes, likedByUSers, '_id')
+    //const matches = user?.matches
+    const totalLikes = _.differenceBy(likesByUsers, totalMatches, '_id')
     setTotalLikesFromUsers(totalLikes)
     setLoading(false)
     }
