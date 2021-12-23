@@ -34,17 +34,19 @@ const GooglePlacesInput = ({isSignUp}) => {
     console.log("what is happening")
   }
   return (
-    <GooglePlacesAutocomplete
-      ref={ref}
-      placeholder='Search'
-      onPress={() => _onPressLocation()}
-      query={{
-        key: API_KEY,
-        language: 'en',
-        components: 'country:us',
-        types:'(cities)'
-      }}
-    />
+    <ScrollView>
+      <GooglePlacesAutocomplete
+        ref={ref}
+        placeholder="Search"
+        onPress={() => _onPressLocation()}
+        query={{
+          key: API_KEY,
+          language: 'en',
+          components: 'country:us',
+          types: '(cities)',
+        }}
+      />
+    </ScrollView>
   );
 };
 
