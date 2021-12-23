@@ -55,6 +55,7 @@ return authorize
         gender: values.gender,
         sports: values.sports,
         description: values.description
+        //location: values.location
       },
     });
   };

@@ -163,19 +163,26 @@ export const signUpSlides = [
   {
     key: '6',
     type: 'Description Input',
-    title: 'Description',
-    InputLabel: 'Description',
+    title: 'Description Number',
+    inputLabel: 'Description',
     backgroundColor: '#59b2ab',
   },
   {
     key: '7',
+    type: 'Neighborhood Input',
+    title: 'Neighborhood',
+    InputLabel: 'Neighborhood',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '8',
     type: 'Image Input',
     title: 'Image',
     InputLabel: 'Image',
     backgroundColor: '#59b2ab',
   },
   {
-    key: '8',
+    key: '9',
     type: 'Confirmation Code',
     title: 'Confirmation Code',
     inputLabel: 'Confirmation Code',
@@ -183,3 +190,4 @@ export const signUpSlides = [
   },
 ];
 
+export const TOTAL_SIGNUP_SLIDES = signUpSlides.length
