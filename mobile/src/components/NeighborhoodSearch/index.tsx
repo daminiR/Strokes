@@ -34,7 +34,6 @@ const GooglePlacesInput = ({isSignUp}) => {
     console.log("what is happening")
   }
   return (
-    <ScrollView>
       <GooglePlacesAutocomplete
         ref={ref}
         placeholder="Search"
@@ -46,7 +45,6 @@ const GooglePlacesInput = ({isSignUp}) => {
           types: '(cities)',
         }}
       />
-    </ScrollView>
   );
 };
 
