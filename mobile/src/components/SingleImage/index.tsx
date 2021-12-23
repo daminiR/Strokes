@@ -76,7 +76,6 @@ const SingleImage = ({img_idx}) => {
       }
       setDisplayImage(null)
       setLoading(false)
-      console.log("/////////////////////////////////// removed HHH", displayObj)
   }
   const _singleUpload = async (): Promise<void> => {
       setLoading(true);
@@ -96,28 +95,22 @@ const SingleImage = ({img_idx}) => {
       type: 'material-community',
       size: 30,
     };
-    let imageVal = {}
-    //var uri = {displayImage}
-    //var placeHolder = require('../../assets/camera-enhance.svg')
-    if (displayImage) {
-      imageVal = {uri: displayImage}
-    }
-    else {
-    imageVal = require('../../assets/camera-enhance.svg')
-    }
+    const renderPLaceHolderCamera = () => {
+      return (
+        <Icon
+          reverse
+          name="camera-enhance"
+          type="material-community"
+          color={SECONDARY_THEME}
+        />
+      );
+    };
     return (
       <>
         <Avatar
           size={120}
-          renderPlaceholderContent={
-            <Icon
-              reverse
-              name="camera-enhance"
-              type="material-community"
-              color={SECONDARY_THEME}
-            />
-          }
-          source={{uri: displayImage}}
+          renderPlaceholderContent={renderPLaceHolderCamera()}
+          source={displayImage ? {uri: displayImage} : undefined}
           overlayContainerStyle={styles.imageIndividualContainer}
           onPress={!displayImage ? () => _singleUpload() : null }
           activeOpacity={0.7}
@@ -125,7 +118,9 @@ const SingleImage = ({img_idx}) => {
             padding: 0,
             marginLeft: 0,
             marginTop: 0,
-          }}>
+          }}
+          placeholderStyle={{ backgroundColor: 'transparent' }}
+        >
           <Avatar.Accessory {...cancelProps} />
         </Avatar>
       </>

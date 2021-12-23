@@ -13,7 +13,7 @@ import { useFormikContext} from 'formik';
 import {Button, Overlay, CheckBox, Text} from 'react-native-elements'
 
 
- const GameLevelChoose = ({removeSport, sport, getData, setIsDisplayInput,setGameLevelInput, setDynamicStyle, isVisible, setIsVisible}) => {
+ const GameLevelChoose = ({removeSport, sport, getData, setIsDisplayInput,setGameLevelInput, setDynamicStyle, isVisible, setIsVisible, isSignUp}) => {
   const [gameLevel, setGameLevel] = useState(null);
   const _onPressGameLevel = (gameLevel) => {
     setGameLevel(gameLevel)
@@ -64,13 +64,15 @@ import {Button, Overlay, CheckBox, Text} from 'react-native-elements'
           onPress={() => _onPressGameLevel('2')}
         />
         <View style={styles.helloButtons}>
-          <Button
-            title="Remove Sport"
-            titleStyle={styles.buttonText}
-            onPress={() => _onPressRemoveSport()}
-            style={styles.buttonIndStyle}
-            buttonStyle={styles.buttonStyle}
-          />
+          {!isSignUp && (
+            <Button
+              title="Remove Sport"
+              titleStyle={styles.buttonText}
+              onPress={() => _onPressRemoveSport()}
+              style={styles.buttonIndStyle}
+              buttonStyle={styles.buttonStyle}
+            />
+          )}
         </View>
       </View>
     </Overlay>
@@ -89,8 +91,23 @@ const undoSportSelect = (newSport, setTempSports, temptSports) => {
       setTempSports(filterSports)
       //setFieldValue('sports', filterSports)
 }
-const ChooseSportsChips = () => {
-  const {setDisplayInput} = useContext(DoneCancelContext)
+const ChooseSportsChips = ({isSignUp}) => {
+  let setDisplayInput = null;
+  let _onPressDoneInput = null
+  let _onPressCancelInput = null
+  if (isSignUp) {
+    setDisplayInput = useContext(DoneCancelContext);
+     _onPressDoneInput = () => {
+      setFieldValue('sports', temptSports);
+      EditInputVar({inputType: '', displayInput: false});
+      setDisplayInput(false);
+    };
+     _onPressCancelInput = () => {
+      EditInputVar({inputType: '', displayInput: false});
+      setDisplayInput(false);
+    };
+  }
+
   const {setFieldValue, values: formikValues} = useFormikContext<EditFields>();
   const [temptSports, setTempSports] = useState(formikValues.sports)
   const getData = (newSport, isSelected, game_level) => {
@@ -132,22 +149,15 @@ const ChooseSportsChips = () => {
   const _removeSport = (sport) => {
     removeSportSelect( sport, setTempSports, temptSports)
   }
-const _onPressDoneInput = () => {
-    setFieldValue('sports', temptSports);
-    EditInputVar({inputType:'', displayInput: false})
-    setDisplayInput(false);
-}
-const _onPressCancelInput = () => {
-    EditInputVar({inputType: '', displayInput: false})
-    setDisplayInput(false);
-}
   const renderFormikSports = () => {
     return (
       <>
-        <View style={styles.top}>
-          <Cancel _onPressCancel={_onPressCancelInput} />
-          <Done _onPressDone={_onPressDoneInput} />
-        </View>
+        {!isSignUp && (
+          <View style={styles.top}>
+            <Cancel _onPressCancel={_onPressCancelInput} />
+            <Done _onPressDone={_onPressDoneInput} />
+          </View>
+        )}
         <Card containerStyle={styles.CardStyle}>
           <Card.Title> List of Acitivities</Card.Title>
           <Card.Divider />

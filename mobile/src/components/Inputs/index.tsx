@@ -75,7 +75,6 @@ const ImageInput = ({_submit, isSignUp}) => {
       </View>
     )}
   const EmailInput = ({isSignUp=true, _signIn=null, getData=null}) => {
-    console.log("does it go throu twice")
     const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
     const [email, setEmail] = useState(values.email)
     useEffect(() => {
@@ -127,11 +126,11 @@ const ImageInput = ({_submit, isSignUp}) => {
         />
     </View>
     )}
-  const SportsInput = () => {
+  const SportsInput = ({isSignUp}) => {
   const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
     return (
       <View style={styles.sportsContainer}>
-        <ChooseSportsChips/>
+        <ChooseSportsChips isSignUp={isSignUp}/>
       </View>
     );
   };

@@ -153,7 +153,7 @@ const Slider =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <SportsInput />
+                  <SportsInput isSignUp={true}/>
                 </>
               )
               break
@@ -163,9 +163,11 @@ const Slider =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <ImageInput isSignUp={true} _submit={_submit} />
+                  <View style={{alignSelf:'center'}}>
+                    <ImageInput isSignUp={true} _submit={_submit} />
+                  </View>
                 </>
-              )
+              );
               break
             case 'Description Input':
               return (
@@ -203,6 +205,7 @@ const Slider =  () => {
         showNextButton={showNextButton}
         renderNextButton={renderNext}
         renderPrevButton={renderPrev}
+        dotClickEnabled={false}
         ref={(ref) => (this.slider = ref!)}
       />
   )
