@@ -126,6 +126,7 @@ const advanced = {
          sport={sport}
          getData={getData}
          removeSport={removeSport}
+         isSignUp={true}
        />
        {gameLevelInput ? renderColored() : renderNormal()}
      </>
