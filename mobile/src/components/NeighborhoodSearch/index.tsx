@@ -15,24 +15,29 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import {API_KEY} from './API_KEY'
 import {ScrollView } from 'react-native'
 
-const GooglePlacesInput = ({}) => {
+const GooglePlacesInput = ({isSignUp}) => {
   const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const ref = useRef(null);
+  console.log(values)
   useEffect(() => {
-    const GooglePlacesProps = ref.current
-    GooglePlacesProps?.setAddressText(values.location.city);
+    const GooglePlacesProps = ref.current;
+    if (!isSignUp) {
+      GooglePlacesProps?.setAddressText(values.location.city);
+    }
   }, []);
+  const _onPressLocation = () => {
+        // 'details' is provided when fetchDetails = true
+        //console.log("location value", values.location)
+        //ref.current?.setAddressText(data.description);
+        //const newLocation = {'city': data.terms[0].value, 'country': data.terms[2].value, 'state': data.terms[1].value}
+        //setValues({... values, 'location': newLocation})
+    console.log("what is happening")
+  }
   return (
     <GooglePlacesAutocomplete
       ref={ref}
       placeholder='Search'
-      onPress={(data, details = null) => {
-        // 'details' is provided when fetchDetails = true
-        console.log("location value", values.location)
-        ref.current?.setAddressText(data.description);
-        const newLocation = {'city': data.terms[0].value, 'country': data.terms[2].value, 'state': data.terms[1].value}
-        setValues({... values, 'location': newLocation})
-      }}
+      onPress={() => _onPressLocation()}
       query={{
         key: API_KEY,
         language: 'en',
@@ -43,10 +48,10 @@ const GooglePlacesInput = ({}) => {
   );
 };
 
-const NeighborhoodSearch = () => {
+const NeighborhoodSearch = (isSignUp) => {
   return (
     <View style={{flex:1}}>
-      <GooglePlacesInput/>
+      <GooglePlacesInput isSignUp={isSignUp}/>
     </View>
   );
   }

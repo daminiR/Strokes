@@ -40,7 +40,7 @@ const EditAccountInput = ({inputType= null, signOut}) => {
   );
 };
 
-const EditInput = ({inputType= null, signOut = null}) => {
+const EditInput = ({inputType= null, signOut = null, isSignUp}) => {
   const renderInput = () => {
     switch (inputType) {
       case 'Name Input':
@@ -56,7 +56,7 @@ const EditInput = ({inputType= null, signOut = null}) => {
         return <NeighborhoodSearch />;
         break;
       case 'Sports Input':
-        return <SportsInput/>;
+        return <SportsInput isSignUp={false}/>;
         break;
       case 'Description Input':
         return <DescriptionInput />;

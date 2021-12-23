@@ -3,12 +3,12 @@ import {useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
 import {useNavigation} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
-import {signUpSlides, intitialFormikSignUp} from '../../../constants'
+import {signUpSlides, intitialFormikSignUp, TOTAL_SIGNUP_SLIDES} from '../../../constants'
 import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel, NextButton, PrevButton} from '../../../components'
+import {NeighborhoodSearch, ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel, NextButton, PrevButton} from '../../../components'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
 import {View} from 'react-native'
@@ -45,11 +45,11 @@ const Slider =  () => {
   });
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
-    if (index == 8){
+    if (index == TOTAL_SIGNUP_SLIDES - 1){
       setLastSlide(true)
       setShowNextButton(false)
     }
-    else if (index == 7){
+    else if (index == TOTAL_SIGNUP_SLIDES - 2){
       setShowNextButton(false)
     }
     else {
@@ -65,7 +65,7 @@ const Slider =  () => {
   const _submit = ( value ) => {
     registerOnFirebase(values.phoneNumber, values.email)
       .then((confirmation: any) => {
-        this.slider.goToSlide(8);
+        this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
         setConfirmationFunc(confirmation)
       })
       .catch((err) => {
@@ -176,6 +176,16 @@ const Slider =  () => {
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
                   <DescriptionInput />
+                </>
+              )
+              break
+            case 'Neighborhood Input':
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <NeighborhoodSearch isSignUp={true}/>
                 </>
               )
               break
