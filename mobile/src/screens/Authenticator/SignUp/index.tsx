@@ -11,7 +11,7 @@ import { ProfileFields} from '../../../localModels/UserSportsList'
 import {NeighborhoodSearch, ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel, NextButton, PrevButton} from '../../../components'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
-import {View} from 'react-native'
+import {SafeAreaView, View} from 'react-native'
 import styles from '../../../assets/styles'
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
@@ -205,25 +205,24 @@ const Slider =  () => {
           }
   };
   return (
-                <>
-                  <View style={styles.cancel}>
-                    <Cancel _onPressCancel={_onPressCancel} />
-                  </View>
-                  <NeighborhoodSearch isSignUp={true}/>
-                </>
-  )
+    <>
+      <AppIntroSlider
+        renderItem={renderInputForm}
+        data={signUpSlides}
+        scrollEnabled={false}
+        showPrevButton={true}
+        onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
+        onDone={() => {
+          _confirmSignInGC();
+        }}
+        showNextButton={showNextButton}
+        renderNextButton={renderNext}
+        renderPrevButton={renderPrev}
+        dotClickEnabled={false}
+        keyboardShouldPersistTaps="always"
+        ref={(ref) => (this.slider = ref!)}
+      />
+    </>
+  );
 }
-      //<AppIntroSlider
-        //renderItem={renderInputForm}
-        //data={signUpSlides}
-        //scrollEnabled={false}
-        //showPrevButton={true}
-        //onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-        //onDone={() => {_confirmSignInGC()}}
-        //showNextButton={showNextButton}
-        //renderNextButton={renderNext}
-        //renderPrevButton={renderPrev}
-        //dotClickEnabled={false}
-        //ref={(ref) => (this.slider = ref!)}
-      ///>
 export { SignUp }
