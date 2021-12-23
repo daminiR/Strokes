@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState, ReactElement } from 'react'
 import storage from '@react-native-firebase/storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack'
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {
@@ -54,6 +55,7 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     await auth()
       .signOut()
       .then((res) => {
+        AsyncStorage.clear()
         console.log('Succesful signout');
       })
       .catch((err) => {

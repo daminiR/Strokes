@@ -117,17 +117,19 @@ const advanced = {
    };
    return (
      <>
-       <GameLevelChoose
-         setDynamicStyle={setDynamicStyle}
-         isVisible={gameLevelVisible}
-         setIsVisible={setGameLevelVisible}
-         setGameLevelInput={setGameLevelInput}
-         setIsDisplayInput={setIsDisplayInput}
-         sport={sport}
-         getData={getData}
-         removeSport={removeSport}
-         isSignUp={true}
-       />
+       {!isDisplayInput && (
+         <GameLevelChoose
+           setDynamicStyle={setDynamicStyle}
+           isVisible={gameLevelVisible}
+           setIsVisible={setGameLevelVisible}
+           setGameLevelInput={setGameLevelInput}
+           sport={sport}
+           getData={getData}
+           removeSport={removeSport}
+           isSignUp={true}
+         />
+       )}
+
        {gameLevelInput ? renderColored() : renderNormal()}
      </>
    );

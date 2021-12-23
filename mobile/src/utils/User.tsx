@@ -54,8 +54,8 @@ return authorize
         age: Number(values.age),
         gender: values.gender,
         sports: values.sports,
-        description: values.description
-        //location: values.location
+        description: values.description,
+        location: values.location
       },
     });
   };
