@@ -205,19 +205,25 @@ const Slider =  () => {
           }
   };
   return (
-      <AppIntroSlider
-        renderItem={renderInputForm}
-        data={signUpSlides}
-        scrollEnabled={false}
-        showPrevButton={true}
-        onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-        onDone={() => {_confirmSignInGC()}}
-        showNextButton={showNextButton}
-        renderNextButton={renderNext}
-        renderPrevButton={renderPrev}
-        dotClickEnabled={false}
-        ref={(ref) => (this.slider = ref!)}
-      />
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <NeighborhoodSearch isSignUp={true}/>
+                </>
   )
 }
+      //<AppIntroSlider
+        //renderItem={renderInputForm}
+        //data={signUpSlides}
+        //scrollEnabled={false}
+        //showPrevButton={true}
+        //onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
+        //onDone={() => {_confirmSignInGC()}}
+        //showNextButton={showNextButton}
+        //renderNextButton={renderNext}
+        //renderPrevButton={renderPrev}
+        //dotClickEnabled={false}
+        //ref={(ref) => (this.slider = ref!)}
+      ///>
 export { SignUp }
