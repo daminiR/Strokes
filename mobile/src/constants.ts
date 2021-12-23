@@ -82,15 +82,15 @@ export const settingsFlatList = [
  export const intitialFormikSignUp = {
    email: 'daminrrijhwani@gmail.com',
    //phoneNumber: '+12025550173',
-   phoneNumber: '+12025550148',
-   first_name: 'daminiR',
-   last_name: 'Rijhwani',
-   age: '23',
+   phoneNumber: '+12025550193',
+   first_name: 'finalV1',
+   last_name: 'finalv2LastName',
+   age: '28',
    gender: 'Female',
    sports:null,
    image_set:null,
-   confirmationCode: '222333',
-   description: 'hello',
+   confirmationCode: '232323',
+   description: 'hello i am good',
    location: null
  }
 export const signInSlides = [
