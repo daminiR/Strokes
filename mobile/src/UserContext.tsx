@@ -74,12 +74,16 @@ export const AuthNavigator = () => {
       setCurrentUser(currentUser);
       if (currentUser) {
         if (!CacheVal) {
-          const {squash: cachedUser} = client.readQuery({
+          // dta can be null for the first time users during sign up
+          const data = client.readQuery({
             query: READ_SQUASH,
             variables: {id: currentUser.uid},
           });
-          console.log('cached', cachedUser.matches);
-          setCacheVal(cachedUser);
+          if (data?.squash) {
+            const cachedUser = data.squash
+            console.log('cached', cachedUser.matches);
+            setCacheVal(cachedUser);
+          }
         }
         getSquashProfile({variables: {id: currentUser.uid}});
         queryProssibleMatches({variables: {_id: currentUser.uid}});
