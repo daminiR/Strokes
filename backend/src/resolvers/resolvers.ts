@@ -360,10 +360,22 @@ export const resolvers = {
       });
       return displayData;
     },
+    ////////////////////////////////// JMETER TESTS ////////////////////////////////
+    updateGameLevelsToStrings: async (parents, context, info) => {
+        //const doc = await Squash.updateMany(
+          //{ _id: ["aoshwaakxrywljjshsgxuvytfzlm"]},
+          //{ $set: {"sports.$[].game_level":  '1'}},
+          //{ new: true }
+        //);
+        console.log("tetsing")
+      //return doc;
+    },
     updateUserProfileTestSamples: async (parents, { _id1, _id2 }, context, info) => {
+
         const doc = await Squash.updateMany(
-          { _id: [_id1, _id2]},
-          { $pull: { matches: {}, likes: {}, likedByUSers: {}} },
+          {},
+          //{ $pull: { matches: {}, likes: {}, likedByUSers: {}} },
+          { $set: {"sports.$[].game_level": _.random(0,2).toString()}},
           { new: true }
         );
         console.log("tetsing", doc)
@@ -414,7 +426,7 @@ export const resolvers = {
         gender,
         age,
         sports,
-        lcoation,
+        location,
         description,
       }
     ) => {

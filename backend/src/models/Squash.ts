@@ -6,7 +6,7 @@ const GENDERS = ["Male", "Female"]
 const COUNTRY = ["US"]
 const SPORTS = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
 //const LEVELS = ["beginer", "intermediate", "expert"]
-const LEVELS = [0, 1, 3]
+const LEVELS = ['0', '1', '2']
 
 const imageArrayMaxLimit = val => {
   return (Array.isArray(val) && val.length <= 6)
@@ -64,7 +64,7 @@ var squashSchema = new Schema({
   sports: {
     type: [
       {
-        game_level: {type: Number, enum: LEVELS},
+        game_level: {type: String, enum: LEVELS},
         sport: { type: String, enum: SPORTS },
       },
     ],

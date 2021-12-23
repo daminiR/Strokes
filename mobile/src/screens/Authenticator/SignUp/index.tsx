@@ -1,6 +1,7 @@
 import React, { useContext, useState, ReactElement } from 'react'
 import {useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
+import auth from '@react-native-firebase/auth'
 import {useNavigation} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
 import {signUpSlides, intitialFormikSignUp, TOTAL_SIGNUP_SLIDES} from '../../../constants'
@@ -81,6 +82,7 @@ const Slider =  () => {
             console.log("values before submit",values)
             console.log(userCredential.additionalUserInfo)
             registerOnMongoDb(values, userCredential.user.uid, createSquash2).then(() => {
+            //setInitialFilters()
             console.log('logged in');
             setIsUseOnMongoDb(true)
         })

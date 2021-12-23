@@ -27,7 +27,7 @@ export const patronCard = (card) => {
 }
 
 const filterByFieldsByUser = (patron_list, filters) => {
-    //TODO: to maintain structure cange gamelevel backend to match filter gamelevel style
+  //TODO: to maintain structure cange gamelevel backend to match filter gamelevel style --> done!
     const filterBySport = _.find(filters.sportFilters, sportObj => {return sportObj.filterSelected == true}).sport
     console.log("sport in retrive ",filterBySport)
     console.log("filterbysport",filterBySport)
@@ -38,17 +38,17 @@ const filterByFieldsByUser = (patron_list, filters) => {
         switch (key) {
           case 'gameLevel0': {
             if (value == true) {
-              return 0;
+              return "0";
             }
           }
           case 'gameLevel1': {
             if (value == true) {
-              return 1;
+              return "1";
             }
           }
           case 'gameLevel2': {
             if (value == true) {
-              return 2;
+              return "2";
             }
           }
         }
@@ -76,8 +76,14 @@ const filterByCity = (currentUseLocation, patron_list) => {
     const newPatronList = _.filter(patron_list, _.iteratee({"location":{"city": currentUseLocation.city, "state": currentUseLocation.state}}))
     return newPatronList
 }
-const createPatronList = (currentUseLocation, allUsers, likes, dislikes, matches, filters) => {
+//const createPatronList = (currentUseLocation, allUsers, likes, dislikes, matches, filters) => {
+const createPatronList = (currentUser, allUsers, filters) => {
+    console.log("in patron lsit",currentUser)
+    const currentUseLocation = currentUser.location
     const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
+    const likes = currentUser?.likes ? currentUser.likes : []
+    const matches = currentUser?.matches ? currentUser.likes : []
+    const dislikes = currentUser?.dislikes ? currentUser.likes : []
     const exclude = _.concat(likes, dislikes, matches)
     const patron_list = _.differenceBy(activeUsers, exclude, '_id')
     const newPatronList = filterByCity(currentUseLocation, patron_list)

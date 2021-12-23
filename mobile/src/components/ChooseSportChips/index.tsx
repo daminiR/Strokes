@@ -11,9 +11,10 @@ import { EditFields} from '../../localModels/UserSportsList'
 import _ from 'lodash'
 import { useFormikContext} from 'formik';
 import {Button, Overlay, CheckBox, Text} from 'react-native-elements'
+import { ProfileFields} from '../../localModels/UserSportsList'
 
 
- const GameLevelChoose = ({removeSport, sport, getData, setIsDisplayInput,setGameLevelInput, setDynamicStyle, isVisible, setIsVisible, isSignUp}) => {
+ const GameLevelChoose = ({removeSport, sport, getData,setGameLevelInput, setDynamicStyle, isVisible, setIsVisible, isSignUp}) => {
   const [gameLevel, setGameLevel] = useState(null);
   const _onPressGameLevel = (gameLevel) => {
     setGameLevel(gameLevel)
@@ -30,7 +31,7 @@ import {Button, Overlay, CheckBox, Text} from 'react-native-elements'
     // visual changes//
     if (gameLevel) {
       getData(sport, true, gameLevel);
-      setIsDisplayInput(true)
+      //setIsDisplayInput(true)
       setGameLevelInput(gameLevel)
       setIsVisible(false)
     }
@@ -95,7 +96,7 @@ const ChooseSportsChips = ({isSignUp}) => {
   let setDisplayInput = null;
   let _onPressDoneInput = null
   let _onPressCancelInput = null
-  if (isSignUp) {
+  if (!isSignUp) {
     setDisplayInput = useContext(DoneCancelContext);
      _onPressDoneInput = () => {
       setFieldValue('sports', temptSports);
@@ -108,7 +109,7 @@ const ChooseSportsChips = ({isSignUp}) => {
     };
   }
 
-  const {setFieldValue, values: formikValues} = useFormikContext<EditFields>();
+  const {setFieldValue, values: formikValues} = useFormikContext<EditFields | ProfileFields>();
   const [temptSports, setTempSports] = useState(formikValues.sports)
   const getData = (newSport, isSelected, game_level) => {
     // need new logic here
@@ -127,14 +128,18 @@ const ChooseSportsChips = ({isSignUp}) => {
             return sportObj;
           }
         });
+        console.log("new_vals 1",new_values)
         setTempSports(new_values)
       } else {
         newSportObj = [{sport: newSport, game_level: game_level}];
         if (temptSports != null) {
-          new_values = temptSports.concat(newSportObj);
+        new_values = temptSports.concat(newSportObj);
+        console.log("new_vals 2",new_values)
         setTempSports(new_values)
         } else {
+        new_values = newSportObj;
         setTempSports(new_values)
+        console.log("new_vals 3",new_values)
         }
       }
     }
@@ -144,6 +149,10 @@ const ChooseSportsChips = ({isSignUp}) => {
       else{
         undoSportSelect(newSport, setTempSports, temptSports)
       }
+    }
+    if (isSignUp){
+      console.log("are we null here",temptSports)
+      setFieldValue('sports', temptSports)
     }
   }
   const _removeSport = (sport) => {

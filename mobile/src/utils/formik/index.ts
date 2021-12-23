@@ -50,6 +50,8 @@ const createInitialFilterFormik = async (sports) => {
   const ageRange = await _retriveAgeRangeFilter()
   const sportFilter = await _retriveSportFilter()
   const gameLevelFilter = await _retriveGameLevel()
+
+  console.log("cached", sportFilter)
   const defailtSportFilter = _.map(sports, (sportObj, key) => {
     if (sportFilter){
     if (sportObj.sport == sportFilter.sport) {
@@ -57,7 +59,6 @@ const createInitialFilterFormik = async (sports) => {
     } else {
       return {sport: sportObj.sport, filterSelected: false};
     }
-
     }
     else{
     if (key == '0') {

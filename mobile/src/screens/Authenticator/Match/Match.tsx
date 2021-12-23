@@ -26,11 +26,8 @@ const Patron = ()  => {
     if (potentialMatches) {
       setLoadingMatches(true);
       const patron_list = createPatronList(
-        currentUserData.squash?.location,
+        currentUserData?.squash,
         potentialMatches,
-        currentUserData.squash?.likes,
-        currentUserData.squash?.dislikes,
-        currentUserData.squash?.matches,
         filterValues,
       );
       setMatches(patron_list);

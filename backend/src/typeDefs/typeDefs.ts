@@ -15,7 +15,7 @@ import {gql} from 'apollo-server-express';
 `;
  const SquashNodeType = `
     sport: String!,
-    game_level: Int!,
+    game_level: String!,
 `
   const DataType = `
     img_idx: Int!,
@@ -210,6 +210,7 @@ export const typeDefs = gql`
       _id1: String!
       _id2: String!
     ): Squash
+    updateGameLevelsToStrings: String
     deleteSquash(_id: String): Squash!
 
     testMut(name: Int!):Int

@@ -25,19 +25,18 @@ const GooglePlacesInput = ({isSignUp}) => {
       GooglePlacesProps?.setAddressText(values.location.city);
     }
   }, []);
-  const _onPressLocation = () => {
-        // 'details' is provided when fetchDetails = true
-        //console.log("location value", values.location)
-        //ref.current?.setAddressText(data.description);
-        //const newLocation = {'city': data.terms[0].value, 'country': data.terms[2].value, 'state': data.terms[1].value}
-        //setValues({... values, 'location': newLocation})
-    console.log("what is happening")
+  const _onPressLocation = (data, details=null) => {
+//         'details' is provided when fetchDetails = true
+        console.log("location value", values.location)
+        ref.current?.setAddressText(data.description);
+        const newLocation = {'city': data.terms[0].value, 'country': data.terms[2].value, 'state': data.terms[1].value}
+        setValues({... values, 'location': newLocation})
   }
   return (
       <GooglePlacesAutocomplete
         ref={ref}
         placeholder="Search"
-        onPress={() => _onPressLocation()}
+        onPress={(data, details=null) => _onPressLocation(data, details)}
         query={{
           key: API_KEY,
           language: 'en',

@@ -36,9 +36,9 @@ const App = () =>
         trigger: 'write',
       });
       await newPersistor.restore();
-      setPersistor(newPersistor);
-      newPersistor.pause()
-      newPersistor.purge()
+      //setPersistor(newPersistor);
+      //newPersistor.pause()
+      //newPersistor.purge()
       const uploadLink = createUploadLink({
       uri: uri_upload,
       });
@@ -97,8 +97,8 @@ const App = () =>
       //}
     //}
   //};
-  client.resetStore()
-  client.resetStore()
+  //client.resetStore()
+  //client.resetStore()
   //just to reset cache for debugging
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}
