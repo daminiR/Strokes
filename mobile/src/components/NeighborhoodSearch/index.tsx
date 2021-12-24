@@ -14,23 +14,39 @@ import { EditFields, ProfileFields, SignIn} from '../../localModels/UserSportsLi
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import {API_KEY} from './API_KEY'
 import {ScrollView } from 'react-native'
+import {DoneCancelContext} from '../../screens/Authenticator/Profile/index'
 
-const GooglePlacesInput = ({isSignUp}) => {
-  const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+const GooglePlacesInput = ({isSignUp = false}) => {
+  console.log("what is signy value", isSignUp)
+  const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+  var setDisplayInput = null
+  var setTempInputValues = null
+  var tempInputValues= null
+  if (!isSignUp){
+    var {setDisplayInput, setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+  }
   const ref = useRef(null);
   console.log(values)
   useEffect(() => {
     const GooglePlacesProps = ref.current;
-    if (!isSignUp) {
       GooglePlacesProps?.setAddressText(values.location.city);
-    }
   }, []);
   const _onPressLocation = (data, details=null) => {
 //         'details' is provided when fetchDetails = true
         console.log("location value", values.location)
         ref.current?.setAddressText(data.description);
-        const newLocation = {'city': data.terms[0].value, 'country': data.terms[2].value, 'state': data.terms[1].value}
+        const newLocation = {
+          city: data.terms[0].value,
+          country: data.terms[2].value,
+          state: data.terms[1].value,
+        };
+        if (isSignUp) {
+          console.log("do we hit this", isSignUp)
         setValues({... values, 'location': newLocation})
+        }
+        else {
+        setTempInputValues((prevState) => {return {...prevState, 'location' : newLocation}})
+        }
   }
   return (
       <GooglePlacesAutocomplete
@@ -47,7 +63,7 @@ const GooglePlacesInput = ({isSignUp}) => {
   );
 };
 
-const NeighborhoodSearch = (isSignUp) => {
+const NeighborhoodSearch = ({isSignUp}) => {
   return (
     <View style={{flex:1}}>
       <GooglePlacesInput isSignUp={isSignUp}/>

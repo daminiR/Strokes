@@ -53,7 +53,7 @@ const EditInput = ({inputType= null, signOut = null, isSignUp}) => {
         return <GenderInput />;
         break;
       case 'Neighborhood Input':
-        return <NeighborhoodSearch />;
+        return <NeighborhoodSearch isSignUp={false}/>;
         break;
       case 'Sports Input':
         return <SportsInput isSignUp={false}/>;
