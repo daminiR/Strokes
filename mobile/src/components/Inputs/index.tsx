@@ -37,14 +37,18 @@ const ImageInput = ({_submit, isSignUp}) => {
           radioObj.selected = false
           return radioObj
     }
-  const GenderInput = ({isSignUp = false}) => {
+  const GenderInput = ({isSignUp}) => {
   const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const [radioButtons, setRadioButtons] = useState(_.map(genderRadioObject, (radioObj) => refreshGenderObj(radioObj)))
   const [loadRadioButtons, setLoadRadioButtons] = useState(true)
   const [check1, setCheck1] = useState(false)
   const [check2, setCheck2] = useState(false)
 
-  const {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+    var setTempInputValues = null;
+    var tempInputValues = null;
+   if (!isSignUp){
+    var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+   }
   const genders = [
     {title: "Female", checkFunc: setCheck1, checked: check1},
     {title: "Male", checkFunc: setCheck2, checked: check2}
@@ -96,12 +100,16 @@ const ImageInput = ({_submit, isSignUp}) => {
         )}
       </View>
     )}
-  const NameInput = ({isSignUp=false}) => {
+  const NameInput = ({isSignUp}) => {
     const {values, handleChange, handleSubmit} = useFormikContext<
       ProfileFields | EditFields
     >();
    const [loadingTempValues, setLoadingTempValues] = useState(true);
-    const {setDisplayInput, setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+    var setTempInputValues = null;
+    var tempInputValues = null;
+   if (!isSignUp){
+    var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+   }
     useEffect(() => {
       if (!isSignUp ){
         setLoadingTempValues(true)
@@ -179,10 +187,14 @@ const ImageInput = ({_submit, isSignUp}) => {
         />
       </View>
     )}
-  const BirthdayInput = ({isSignUp = false}) => {
+  const BirthdayInput = ({isSignUp}) => {
     const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
    const [loadingTempValues, setLoadingTempValues] = useState(true);
-    const {setDisplayInput, setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+    var setTempInputValues = null;
+    var tempInputValues = null;
+   if (!isSignUp){
+    var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+   }
     useEffect(() => {
       if (!isSignUp){
         console.log("age value", values.age)
@@ -218,25 +230,48 @@ const ImageInput = ({_submit, isSignUp}) => {
       </View>
     );
   };
-const DescriptionInput = () => {
+const DescriptionInput = ({isSignUp}) => {
   const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+    var setTempInputValues = null;
+    var tempInputValues = null;
+   if (!isSignUp){
+    var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+   }
+   const [loadingTempValues, setLoadingTempValues] = useState(true);
+    useEffect(() => {
+      if (!isSignUp ){
+        setLoadingTempValues(true)
+        setTempInputValues((prevState) => {return {...prevState, 'description' : values.description}})
+        setLoadingTempValues(false)
+      }
+    }, [])
     return (
-      <Card containerStyle={styles.CardStyle}>
-        <Card.Title> Description </Card.Title>
-        <Card.Divider />
-        <View style={styles.sportChipSet}>
-          <Input
-            multiline={true}
-            inputContainerStyle={{borderBottomWidth: 0}}
-            placeholder="Descriptionn"
-            label="Description"
-            leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-            onChangeText={handleChange('description')}
-            maxLength={300}
-            value={values.description}
-          />
-        </View>
-      </Card>
+      <>
+        {!loadingTempValues && (
+          <Card containerStyle={styles.CardStyle}>
+            <Card.Title> Description </Card.Title>
+            <Card.Divider />
+            <View style={styles.sportChipSet}>
+              <Input
+                multiline={true}
+                inputContainerStyle={{borderBottomWidth: 0}}
+                placeholder="Descriptionn"
+                label="Description"
+                leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+                maxLength={300}
+                onChangeText={
+                  isSignUp
+                    ? () => handleChange('description')
+                    : (text) => setTempInputValues({description: text})
+                }
+                value={
+                  isSignUp ? values.description : tempInputValues.description
+                }
+              />
+            </View>
+          </Card>
+        )}
+      </>
     );
   };
 

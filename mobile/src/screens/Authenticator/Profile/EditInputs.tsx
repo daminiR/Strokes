@@ -44,22 +44,22 @@ const EditInput = ({inputType= null, signOut = null, isSignUp}) => {
   const renderInput = () => {
     switch (inputType) {
       case 'Name Input':
-        return <NameInput />;
+        return <NameInput isSignUp={isSignUp}/>;
         break;
       case 'Birthday Input':
-        return <BirthdayInput />;
+        return <BirthdayInput isSignUp={isSignUp}/>;
         break;
       case 'Gender Input':
-        return <GenderInput />;
+        return <GenderInput isSignUp={isSignUp}/>;
         break;
       case 'Neighborhood Input':
-        return <NeighborhoodSearch isSignUp={false}/>;
+        return <NeighborhoodSearch isSignUp={isSignUp}/>;
         break;
       case 'Sports Input':
-        return <SportsInput isSignUp={false}/>;
+        return <SportsInput isSignUp={isSignUp}/>;
         break;
       case 'Description Input':
-        return <DescriptionInput />;
+        return <DescriptionInput isSignUp={isSignUp}/>;
         break;
     }
   }
