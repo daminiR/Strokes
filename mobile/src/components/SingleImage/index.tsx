@@ -6,9 +6,9 @@ import { _check_single } from '../../utils/Upload'
 import styles, {SECONDARY_THEME} from '../../assets/styles/'
 import { EditFields, SignIn} from '../../localModels/UserSportsList'
 import { useFormikContext} from 'formik';
+import _ from 'lodash';
 
 const SingleImage = ({img_idx}) => {
-  //const didMountRef = useRef(false)
   const [Image, setImage] = React.useState(null)
   const [loading, setLoading] = React.useState(null)
   const {setFieldValue, values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
@@ -51,19 +51,19 @@ const SingleImage = ({img_idx}) => {
         }
       }
     }
+    console.log("locals to add",formikValues.add_local_images)
   }, [Image])
   const _removeImage = async (): Promise<void> => {
       setLoading(true)
       setImage(null)
-
       const displayValues = formikValues.image_set
       if (displayValues != null){
       const new_values = displayValues.filter(imgObj => imgObj.img_idx != img_idx)
       setFieldValue('image_set', new_values)
       }
       else{
-        // this here means this i the only image it cannot be deleted
-      console.error("image connot be deleted")
+        // this here means there is  only one image and it cannot be deleted
+      console.error("image connot be deleted, only one image left")
       }
       if (displayImage.startsWith('https')) {
         const remove_uploaded_images = formikValues.remove_uploaded_images;
@@ -71,9 +71,20 @@ const SingleImage = ({img_idx}) => {
           const new_values = remove_uploaded_images.concat(displayObj);
           setFieldValue('remove_uploaded_images', new_values);
         } else {
-          setFieldValue('remove_uploaded_images', displayObj);
+          const new_values = displayObj
+          setFieldValue('remove_uploaded_images', new_values);
         }
       }
+      else {
+        // remove image from locals!!
+        const currentLocals = formikValues.add_local_images
+        if (currentLocals != null) {
+          // filter out
+          _.remove(currentLocals, (localImage) => localImage.img_idx == img_idx)
+          setFieldValue('add_local_images', currentLocals);
+       }
+      }
+      console.log(formikValues.remove_uploaded_images)
       setDisplayImage(null)
       setLoading(false)
   }
