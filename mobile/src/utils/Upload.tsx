@@ -51,12 +51,15 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     console.log("filevalue,",RNFile)
     uploadFile({variables: {file: RNFile}});
  }
-  const _onPressSignOut = async () : Promise<void> => {
+  const _onPressSignOut = async (setDisplayInput) : Promise<void> => {
     await auth()
       .signOut()
       .then((res) => {
         AsyncStorage.clear()
+        setDisplayInput(false)
         console.log('Succesful signout');
+
+
       })
       .catch((err) => {
         console.log(err.code);
