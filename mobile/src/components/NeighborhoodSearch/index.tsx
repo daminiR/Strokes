@@ -29,7 +29,7 @@ const GooglePlacesInput = ({isSignUp = false}) => {
   console.log(values)
   useEffect(() => {
     const GooglePlacesProps = ref.current;
-      GooglePlacesProps?.setAddressText(values.location.city);
+      !isSignUp && GooglePlacesProps?.setAddressText(values?.location?.city);
   }, []);
   const _onPressLocation = (data, details=null) => {
 //         'details' is provided when fetchDetails = true
