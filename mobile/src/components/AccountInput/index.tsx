@@ -65,7 +65,6 @@ const AccountDetails = ({signOut}) => {
         break
     }
   }
-
   return (
     // either put done/cancel here or in parent modal
     <View style={{flex: 1}}>
@@ -81,7 +80,9 @@ const AccountDetails = ({signOut}) => {
       <Button
         title="Sign Out"
         buttonStyle={styles.buttonStyle}
-        onPress={() => signOut()}
+        onPress={() => {
+          signOut(setDisplayInput)
+        }}
       />
         <Modal
           animationType="slide"

@@ -88,6 +88,7 @@ const _onPressDoneProfile = () => {
   // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
     if (formikChanged) {
       const RNLocalFiles = convertImagesToFormat(formikValues.add_local_images, currentUser.uid)
+      ///// debug images
       updateUserProfile({
         variables: {
           _id: currentUser.uid,
