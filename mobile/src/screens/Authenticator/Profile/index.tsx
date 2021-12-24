@@ -117,6 +117,7 @@ const _onPressCancelProfile = () => {
 }
 const _onPressDoneInput = () => {
     setValues({... formikValues,
+              'location': tempInputValues.location ? tempInputValues.location : formikValues.location,
               'gender': tempInputValues.gender ? tempInputValues.gender : formikValues.gender,
               'age': tempInputValues.age ? tempInputValues.age : formikValues.age,
               'first_name': tempInputValues.first_name ? tempInputValues.first_name : formikValues.first_name,
