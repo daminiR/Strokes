@@ -171,7 +171,7 @@ export const signUpSlides = [
     key: '7',
     type: 'Neighborhood Input',
     title: 'Neighborhood',
-    InputLabel: 'Neighborhood',
+    InputLabel: 'Description',
     backgroundColor: '#59b2ab',
   },
   {

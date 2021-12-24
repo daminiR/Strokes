@@ -1,9 +1,11 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import { useFormikContext} from 'formik';
+import { EditInputVar} from '../../cache'
+import { Cancel, Done, } from '..'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { genderRadioObject } from '../../constants'
 import auth from '@react-native-firebase/auth'
-import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
+import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge, CheckBox} from 'react-native-elements'
 import { View} from 'react-native'
 import styles from '../../assets/styles/'
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
@@ -11,6 +13,8 @@ import AppIntroSlider from 'react-native-app-intro-slider'
 import {Pictures} from '../../components'
 import {ChooseSportsChips} from '../../components'
 import { EditFields, ProfileFields, SignIn} from '../../localModels/UserSportsList'
+import {DoneCancelContext} from '../../screens/Authenticator/Profile/index'
+import _ from 'lodash'
 
 const ImageInput = ({_submit, isSignUp}) => {
   const { values, setValues, handleChange, handleSubmit } = useFormikContext<SignType>();
@@ -29,52 +33,114 @@ const ImageInput = ({_submit, isSignUp}) => {
         </View>
       </>
     );}
-  const GenderInput = () => {
+  const refreshGenderObj = (radioObj) => {
+          radioObj.selected = false
+          return radioObj
+    }
+  const GenderInput = ({isSignUp = false}) => {
   const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
-  const [radioButtons, setRadioButtons] = useState(genderRadioObject)
+  const [radioButtons, setRadioButtons] = useState(_.map(genderRadioObject, (radioObj) => refreshGenderObj(radioObj)))
   const [loadRadioButtons, setLoadRadioButtons] = useState(true)
+  const [check1, setCheck1] = useState(false)
+  const [check2, setCheck2] = useState(false)
+
+  const {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+  const genders = [
+    {title: "Female", checkFunc: setCheck1, checked: check1},
+    {title: "Male", checkFunc: setCheck2, checked: check2}
+  ]
   useEffect(() => {
       setLoadRadioButtons(true)
-        const gender = values.gender
-        radioButtons.find((genderObj) => (genderObj.value == gender)).selected = true
-        setRadioButtons(radioButtons)
+      const gender = values.gender
+      if (!isSignUp){
+          setTempInputValues((prevState) => {return {...prevState, 'gender' : gender}})
+      }
+        _.find(genders, genderObj => genderObj.title == gender).checkFunc(true)
       setLoadRadioButtons(false)
     }, [])
-   const onPressRadioButton = (radioButtonsArray: RadioButtonProps[]) => {
-        const gender = radioButtons.find((genderObj) => genderObj.selected == true).value
-        setRadioButtons(radioButtonsArray)
-        setValues({... values, 'gender': gender})
-        console.log(gender)
+   const onPressRadioButton = (gender, genderFunc) => {
+     _.map(genders, genderObj => genderObj.checkFunc(false))
+     genderFunc(true)
+     setTempInputValues((prevState) => {return {...prevState, 'gender' : gender}})
     }
     return (
       <View style={styles.ageContainer}>
         <Text>Gender</Text>
-          { !loadRadioButtons && <RadioGroup radioButtons={radioButtons}
-        onPress={onPressRadioButton}
-          />}
-      </View>
-    );}
-  const NameInput = () => {
-    const { values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
-    return (
-      <View style={styles.nameContainer}>
-        <Input
-          placeholder="FirstName"
-          label="First Name"
-          leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-          onChangeText={handleChange('first_name')}
-          value={values.first_name}
+        {genders.map(({title, checkFunc, checked}, i) => (
+        <CheckBox
+          key={i}
+          title={title}
+          center
+          checkedIcon={
+            <Icon
+              name="radio-button-checked"
+              type="material"
+              color="green"
+              size={25}
+              iconStyle={{marginRight: 10}}
+            />
+          }
+          uncheckedIcon={
+            <Icon
+              name="radio-button-unchecked"
+              type="material"
+              color="grey"
+              size={25}
+              iconStyle={{marginRight: 10}}
+            />
+          }
+          checked={checked}
+          onPress={() => onPressRadioButton(title, checkFunc)}
         />
-        <Input
-          placeholder="Last Name"
-          label="Last Name"
-          leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-          onChangeText={handleChange('last_name')}
-          value={values.last_name}
-        />
+        )
+        )}
       </View>
     )}
-  const EmailInput = ({isSignUp=true, _signIn=null, getData=null}) => {
+  const NameInput = ({isSignUp=false}) => {
+    const {values, handleChange, handleSubmit} = useFormikContext<
+      ProfileFields | EditFields
+    >();
+   const [loadingTempValues, setLoadingTempValues] = useState(true);
+    const {setDisplayInput, setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+    useEffect(() => {
+      if (!isSignUp ){
+        setLoadingTempValues(true)
+        setTempInputValues((prevState) => {return {...prevState, 'first_name' : values.first_name, 'last_name' : values.last_name}})
+        setLoadingTempValues(false)
+      }
+    }, [])
+    return (
+      <>
+        {!loadingTempValues && (
+          <View style={styles.nameContainer}>
+            <Input
+              placeholder="FirstName"
+              label="First Name"
+              leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+              onChangeText={
+                isSignUp
+                  ? () => handleChange('first_name')
+                  : (text) => setTempInputValues({first_name: text})
+              }
+              value={isSignUp ? values.first_name : tempInputValues.first_name}
+            />
+            <Input
+              placeholder="Last Name"
+              label="Last Name"
+              leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+              onChangeText={
+                isSignUp
+                  ? () => handleChange('last_name')
+                  : (text) => setTempInputValues({last_name: text})
+              }
+              value={isSignUp ? values.last_name : tempInputValues.last_name}
+            />
+          </View>
+        )}
+      </>
+    );
+  }
+  const EmailInput = ({isSignUp, _signIn=null, getData=null}) => {
     const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
     const [email, setEmail] = useState(values.email)
     useEffect(() => {
@@ -113,19 +179,37 @@ const ImageInput = ({_submit, isSignUp}) => {
         />
       </View>
     )}
-  const BirthdayInput = () => {
-    const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+  const BirthdayInput = ({isSignUp = false}) => {
+    const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+   const [loadingTempValues, setLoadingTempValues] = useState(true);
+    const {setDisplayInput, setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+    useEffect(() => {
+      if (!isSignUp){
+        console.log("age value", values.age)
+        setLoadingTempValues(true)
+        setTempInputValues((prevState) => {return {...prevState, 'age' : values.age}})
+        setLoadingTempValues(false)
+      }
+    }, [])
     return (
-      <View style={styles.ageContainer}>
-        <Input
-          placeholder="Age"
-          label="Age"
-          leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-          onChangeText={handleChange('age')}
-          value={values.age}
-        />
-    </View>
-    )}
+      <>
+        {!loadingTempValues && (
+          <View style={styles.ageContainer}>
+            <Input
+              placeholder="Age"
+              label="Age"
+              leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+              onChangeText={
+                isSignUp
+                  ? () => handleChange('age')
+                  : (text) => setTempInputValues({age: text})
+              }
+              value={isSignUp ? values.age.toString() : tempInputValues.age.toString()}
+            />
+          </View>
+        )}
+      </>
+    );}
   const SportsInput = ({isSignUp}) => {
   const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
     return (

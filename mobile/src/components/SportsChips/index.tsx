@@ -23,7 +23,7 @@ const advanced = {
                  end: {x: 0.65, y: 0},
 }
 
- const SportChips = ({sport, removeSport=null, gameLevel = null, isSelected = false, isDisplay, getData=null}) => {
+ const SportChips = ({sport, removeSport=null, gameLevel = null, isSelected = false, isDisplay, getData=null, isSignUp}) => {
    const [dynamicStyle, setDynamicStyle] = useState(styles.ChipButton);
    const [loadingGameStyle, setLoadingGameStyle] = useState(true);
    const [gameLevelStyle, setGameLevelStyle] = useState(null);
@@ -126,7 +126,7 @@ const advanced = {
            sport={sport}
            getData={getData}
            removeSport={removeSport}
-           isSignUp={true}
+           isSignUp={isSignUp}
          />
        )}
 
