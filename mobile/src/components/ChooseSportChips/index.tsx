@@ -93,21 +93,9 @@ const undoSportSelect = (newSport, setTempSports, temptSports) => {
       //setFieldValue('sports', filterSports)
 }
 const ChooseSportsChips = ({isSignUp}) => {
-  let setDisplayInput = null;
+  var setDisplayInput = null;
   let _onPressDoneInput = null
   let _onPressCancelInput = null
-  if (!isSignUp) {
-    setDisplayInput = useContext(DoneCancelContext);
-     _onPressDoneInput = () => {
-      setFieldValue('sports', temptSports);
-      EditInputVar({inputType: '', displayInput: false});
-      setDisplayInput(false);
-    };
-     _onPressCancelInput = () => {
-      EditInputVar({inputType: '', displayInput: false});
-      setDisplayInput(false);
-    };
-  }
 
   const {setFieldValue, values: formikValues} = useFormikContext<EditFields | ProfileFields>();
   const [temptSports, setTempSports] = useState(formikValues.sports)
@@ -158,6 +146,19 @@ const ChooseSportsChips = ({isSignUp}) => {
   const _removeSport = (sport) => {
     removeSportSelect( sport, setTempSports, temptSports)
   }
+  if (!isSignUp) {
+    var {setDisplayInput} = useContext(DoneCancelContext);
+
+     _onPressDoneInput = () => {
+      setFieldValue('sports', temptSports);
+      EditInputVar({inputType: '', displayInput: false});
+      setDisplayInput(false);
+    };
+     _onPressCancelInput = () => {
+      EditInputVar({inputType: '', displayInput: false});
+      setDisplayInput(false);
+    };
+  }
   const renderFormikSports = () => {
     return (
       <>
@@ -177,6 +178,7 @@ const ChooseSportsChips = ({isSignUp}) => {
                   key={i}
                   sport={sport}
                   isDisplay={false}
+                  isSignUp={isSignUp}
                   gameLevel={_.find(temptSports, [
                     'sport',
                     sport,

@@ -42,7 +42,8 @@ type ProfileT = {
 const EditProfile = ({}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [inputType, setInputType] = useState();
-  const {values: formikValues,handleReset} = useFormikContext<EditFields>();
+  const {setValues, values: formikValues,handleReset} = useFormikContext<EditFields>();
+  const [tempInputValues, setTempInputValues] = useState(null);
   const {currentUser, setData} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
@@ -115,6 +116,11 @@ const _onPressCancelProfile = () => {
     setIsVisible(false);
 }
 const _onPressDoneInput = () => {
+    setValues({... formikValues,
+              'gender': tempInputValues.gender ? tempInputValues.gender : formikValues.gender,
+              'age': tempInputValues.age ? tempInputValues.age : formikValues.age,
+              'first_name': tempInputValues.first_name ? tempInputValues.first_name : formikValues.first_name,
+              'last_name': tempInputValues.last_name ? tempInputValues.last_name : formikValues.last_name})
     EditInputVar({inputType:'', displayInput: false})
     setDisplayInput(false);
 }
@@ -126,7 +132,19 @@ const _editDisplay2 = (display) => {
     setIsVisible(display)
 }
 
-const doneCancelValues = {setDisplayInput}
+//const _getData = (data, inputType) => {
+    //switch (inputType) {
+      //case 'Name Input':
+        //setPhoneNumber(data)
+        //break
+    //}
+
+//}
+const doneCancelValues = {
+  setDisplayInput: setDisplayInput,
+  tempInputValues: tempInputValues,
+  setTempInputValues: setTempInputValues,
+};
     return (
       <>
         <ProfileSettings
@@ -159,8 +177,12 @@ const doneCancelValues = {setDisplayInput}
               setIsVisible(!displayInput);
             }}>
             <View style={{flex: 1}}>
+              <View style={styles.top}>
+                <Cancel _onPressCancel={_onPressCancelInput} />
+                <Done _onPressDone={_onPressDoneInput} />
+              </View>
               <DoneCancelContext.Provider value={doneCancelValues}>
-                <EditInput inputType={inputType} />
+                <EditInput inputType={inputType} isSignUp={false}/>
               </DoneCancelContext.Provider>
             </View>
           </Modal>
@@ -170,10 +192,6 @@ const doneCancelValues = {setDisplayInput}
 
 
 }
-              //<View style={styles.top}>
-                //<Cancel _onPressCancel={_onPressCancelInput} />
-                //<Done _onPressDone={_onPressDoneInput} />
-              //</View>
 const Profile = (): ReactElement => {
   // TODO: very hacky way to stop useEffect from firt render => need more elegant sol
   const [loadingFormikValues, setLoadingFormikValues] = useState(true)
