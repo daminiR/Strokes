@@ -115,7 +115,7 @@ const Slider =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <EmailInput />
+                  <EmailInput isSignUp={true}/>
                 </>
               )
               break
@@ -125,7 +125,7 @@ const Slider =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <NameInput />
+                  <NameInput isSignUp={true}/>
                 </>
               )
               break
@@ -135,7 +135,7 @@ const Slider =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <BirthdayInput />
+                  <BirthdayInput isSignUp={true}/>
                 </>
               )
               break
@@ -145,7 +145,7 @@ const Slider =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <GenderInput />
+                  <GenderInput isSignUp={true}/>
                 </>
               )
               break
@@ -177,7 +177,7 @@ const Slider =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <DescriptionInput />
+                  <DescriptionInput isSignUp={true}/>
                 </>
               )
               break

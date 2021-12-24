@@ -41,9 +41,8 @@ const ImageInput = ({_submit, isSignUp}) => {
   const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const [radioButtons, setRadioButtons] = useState(_.map(genderRadioObject, (radioObj) => refreshGenderObj(radioObj)))
   const [loadRadioButtons, setLoadRadioButtons] = useState(true)
-  const [check1, setCheck1] = useState(false)
-  const [check2, setCheck2] = useState(false)
-
+  const [check1, setCheck1] = useState(false);
+  const [check2, setCheck2] = useState(false);
     var setTempInputValues = null;
     var tempInputValues = null;
    if (!isSignUp){
@@ -65,7 +64,11 @@ const ImageInput = ({_submit, isSignUp}) => {
    const onPressRadioButton = (gender, genderFunc) => {
      _.map(genders, genderObj => genderObj.checkFunc(false))
      genderFunc(true)
-     setTempInputValues((prevState) => {return {...prevState, 'gender' : gender}})
+     isSignUp?
+        setValues({... values, 'gender': gender})
+       : setTempInputValues((prevState) => {
+           return {...prevState, gender: gender};
+         });
     }
     return (
       <View style={styles.ageContainer}>
@@ -111,11 +114,11 @@ const ImageInput = ({_submit, isSignUp}) => {
     var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
    }
     useEffect(() => {
-      if (!isSignUp ){
         setLoadingTempValues(true)
+      if (!isSignUp ){
         setTempInputValues((prevState) => {return {...prevState, 'first_name' : values.first_name, 'last_name' : values.last_name}})
-        setLoadingTempValues(false)
       }
+        setLoadingTempValues(false)
     }, [])
     return (
       <>
@@ -127,7 +130,7 @@ const ImageInput = ({_submit, isSignUp}) => {
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
               onChangeText={
                 isSignUp
-                  ? () => handleChange('first_name')
+                  ? handleChange('first_name')
                   : (text) => setTempInputValues({first_name: text})
               }
               value={isSignUp ? values.first_name : tempInputValues.first_name}
@@ -138,7 +141,7 @@ const ImageInput = ({_submit, isSignUp}) => {
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
               onChangeText={
                 isSignUp
-                  ? () => handleChange('last_name')
+                  ? handleChange('last_name')
                   : (text) => setTempInputValues({last_name: text})
               }
               value={isSignUp ? values.last_name : tempInputValues.last_name}
@@ -196,12 +199,12 @@ const ImageInput = ({_submit, isSignUp}) => {
     var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
    }
     useEffect(() => {
+        setLoadingTempValues(true)
       if (!isSignUp){
         console.log("age value", values.age)
-        setLoadingTempValues(true)
         setTempInputValues((prevState) => {return {...prevState, 'age' : values.age}})
-        setLoadingTempValues(false)
       }
+        setLoadingTempValues(false)
     }, [])
     return (
       <>
@@ -213,7 +216,7 @@ const ImageInput = ({_submit, isSignUp}) => {
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
               onChangeText={
                 isSignUp
-                  ? () => handleChange('age')
+                  ? handleChange('age')
                   : (text) => setTempInputValues({age: text})
               }
               value={isSignUp ? values.age.toString() : tempInputValues.age.toString()}
@@ -239,11 +242,11 @@ const DescriptionInput = ({isSignUp}) => {
    }
    const [loadingTempValues, setLoadingTempValues] = useState(true);
     useEffect(() => {
-      if (!isSignUp ){
         setLoadingTempValues(true)
+      if (!isSignUp ){
         setTempInputValues((prevState) => {return {...prevState, 'description' : values.description}})
-        setLoadingTempValues(false)
       }
+        setLoadingTempValues(false)
     }, [])
     return (
       <>
@@ -261,7 +264,7 @@ const DescriptionInput = ({isSignUp}) => {
                 maxLength={300}
                 onChangeText={
                   isSignUp
-                    ? () => handleChange('description')
+                    ? handleChange('description')
                     : (text) => setTempInputValues({description: text})
                 }
                 value={
