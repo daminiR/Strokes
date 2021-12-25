@@ -7,7 +7,7 @@ import { ProfileFields} from '../../localModels/UserSportsList'
 import { formatCode} from '../../../common/index'
 
 const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {
-  const {values, errors, touched, handleBlur, handleChange} = useFormikContext<ProfileFields>();
+  const {values, setFieldValue, errors, touched, handleBlur, handleChange} = useFormikContext<ProfileFields>();
   const didMountRef = useRef(false)
   const [delayed, setDelayed] = useState(false);
   useEffect(() => {
@@ -32,33 +32,41 @@ const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {
     setDisplayInputValue(formattedPhoneNumber);
   }
   const _onDoneEditing = () => {
-   //setFieldValue( 'phoneNumber', sanitizePhone(inputValue))
+   setFieldValue( 'confirmationCode', inputValue)
   }
   return (
     <>
-    <View style={styles.confirmationContainer}>
-    <View style={styles.emailInput}>
-      <Input
-        placeholder="Confirmation Code"
-        label="Confirmation Code"
-        leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-        //onChangeText={handleChange('confirmationCode')}
-        onChangeText={(text) => {
-            handleInput(text);
-          }}
-        //value={values.confirmationCode}
-        value={inputValue}
-        onBlur={handleBlur('confirmationCode')}
-        keyboardType={'phone-pad'}
-      />
-    </View>
+      <View style={styles.confirmationCodeContainer}>
+        <View style={styles.emailInput}>
+          <Input
+            placeholder="Confirmation Code"
+            label="Confirmation Code"
+            leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+            //onChangeText={handleChange('confirmationCode')}
+            onEndEditing={() => _onDoneEditing()}
+            onChangeText={(text) => {
+              handleInput(text);
+            }}
+            //value={values.confirmationCode}
+            value={inputValue}
+            onBlur={handleBlur('confirmationCode')}
+            keyboardType={'phone-pad'}
+          />
+        </View>
         {errors.confirmationCode && touched.confirmationCode ? (
-          <Text>{errors.confirmationCode}</Text>
+          <Text style={{alignSelf: 'center'}}>{errors.confirmationCode}</Text>
         ) : null}
-      {delayed && <Button title="Resend" buttonStyle={styles.buttonStyle} titleStyle={styles.buttonText}/>}
-       <Button buttonStyle={styles.buttonStyle} titleStyle={styles.buttonText} onPress={() => _confirmSignInGC(values.confirmationCode)} title="Confirm" />
-    </View>
+      <View style={styles.helloButtons}>
+        <Button
+          buttonStyle={styles.buttonStyle}
+          titleStyle={styles.buttonText}
+          onPress={() => _confirmSignInGC(values.confirmationCode)}
+          title="Confirm"
+        />
+      </View>
+      </View>
     </>
   );
 }
+      //{delayed && <Button title="Resend" buttonStyle={styles.buttonStyle} titleStyle={styles.buttonText}/>}
 export { ConfirmationCode }

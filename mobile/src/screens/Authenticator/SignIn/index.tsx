@@ -36,7 +36,7 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
 }
 
 export const Slider =  ({changeEmail}) => {
-  const {values, errors, touched} = useFormikContext<ProfileFields>();
+  const {validateField, setTouched, values, errors, touched, setFieldTouched} = useFormikContext<ProfileFields>();
   const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -46,13 +46,8 @@ export const Slider =  ({changeEmail}) => {
 
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
-    console.log("format for phone number",  values.phoneNumber)
-    console.log(index)
-    if (index == 1){
+    if (index == 2){
       setLastSlide(true)
-      setShowNextButton(false)
-    }
-    else if (index == 2){
       setShowNextButton(false)
     }
     else {
@@ -77,15 +72,14 @@ export const Slider =  ({changeEmail}) => {
   };
 
   const _onPrev = () => {
-    errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1)
+    errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
   };
   const _onNext = () => {
     const index = this.slider.state.activeIndex
-    //console.log("next")
-    //console.log(index)
-    //const field = _.find(signInSlides, ['key', index.toString()]).inputLabel
-    //!errors[field] && touched[field] &&
-    this.slider.goToSlide(index + 1)
+    const field = _.find(signInSlides, ['key', index.toString()]).inputLabel
+    setFieldTouched(field)
+    !errors[field] && touched[field] &&
+    this.slider.goToSlide(index + 1, true)
   };
 const _confirmSignInGC = () => {
     confirmationFunc
@@ -118,18 +112,6 @@ const _confirmSignInGC = () => {
                 </>
               );
               break
-            case 'Email Input':
-              return (
-                <>
-                  <View style={styles.cancel}>
-                    <Cancel _onPressCancel={_onPressCancel} />
-                  </View>
-                  <EmailInput isSignUp={false} _signIn={_signIn} />
-                </>
-              );
-              break
-              return <PhoneInput />;
-              break;
             case 'Confirmation Code':
               return (
                 <>
@@ -155,6 +137,7 @@ const _confirmSignInGC = () => {
         onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
         onDone={() => {_confirmSignInGC()}}
         showNextButton={showNextButton}
+        showDoneButton={false}
         renderNextButton={renderNext}
         renderPrevButton={renderPrev}
         onNext={() => _onNext()}

@@ -13,7 +13,9 @@ import {NeighborhoodSearch, ConfirmationCode, PhoneInput, GenderInput, EmailInpu
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
 import {SafeAreaView, View} from 'react-native'
+import  _ from 'lodash'
 import styles from '../../../assets/styles'
+import  { signUpSchema} from '../../../../common'
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
@@ -25,6 +27,7 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
   const [confirmationCode, setConfirmationCode] = useState(0)
   return (
     <Formik
+      validationSchema={signUpSchema}
       initialValues={intitialFormikSignUp}
       onSubmit={(values) => console.log(values)}>
       <Slider/>
@@ -32,7 +35,7 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
   );
 }
 const Slider =  () => {
-  const {values} = useFormikContext<ProfileFields>();
+  const {values, errors, setFieldTouched, touched} = useFormikContext<ProfileFields>();
   const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -94,6 +97,17 @@ const Slider =  () => {
         });
 
   }
+  const _onPrev = () => {
+    errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
+  };
+  const _onNext = () => {
+    //console.log("erros", errors)
+    //const index = this.slider.state.activeIndex
+    //const field = _.find(signUpSlides, ['key', index.toString()]).inputLabel
+    //setFieldTouched(field)
+    //!errors[field] && touched[field] &&
+    this.slider.goToSlide(index + 1, true)
+  };
   const _onPressCancel = () => {
     navigation.navigate('HELLO');
   }
@@ -222,6 +236,8 @@ const Slider =  () => {
         renderPrevButton={renderPrev}
         dotClickEnabled={false}
         keyboardShouldPersistTaps="always"
+        onNext={() => _onNext()}
+        onPrev={() => _onPrev()}
         ref={(ref) => (this.slider = ref!)}
       />
     </>

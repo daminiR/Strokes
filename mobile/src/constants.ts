@@ -21,7 +21,7 @@ export const Dolbak = Platform.OS === 'ios' ? 'The Dolbak' : 'TheDolbak-Brush'
 //export const Narrow = '3270Narrow'
 
 // age range default
-export const defaultAgeRange = { minAge: 21, maxAge: 118 }
+export const defaultAgeRange = { minAge: 18, maxAge: 118 }
 export const defaultGameLevel = {gameLevel0: true, gameLevel1: false, gameLevel2: false}
 // sports type and level information
 export const sportsList = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
@@ -74,7 +74,6 @@ export const settingsFlatList = [
 
 // Sign Up Slide Labels
  export const iniitialSignInForm = {
-   email: '',
    phoneNumber: '',
    confirmationCode: ''
  }
@@ -104,13 +103,6 @@ export const signInSlides = [
   },
   {
     key: '1',
-    type: 'Email Input',
-    title: 'Email',
-    InputLabel: 'email',
-    backgroundColor: '#59b2ab',
-  },
-  {
-    key: '2',
     type: 'Confirmation Code',
     title: 'Confirmation Code',
     inputLabel: 'confirmationCode',
