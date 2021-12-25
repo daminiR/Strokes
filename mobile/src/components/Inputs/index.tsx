@@ -178,7 +178,12 @@ const ImageInput = ({_submit, isSignUp}) => {
 
 
   const PhoneInput = () => {
-    const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
+    const { values, handleBlur, submitForm, handleChange, errors, touched} = useFormikContext<ProfileFields | SignIn>();
+    useEffect(() => {
+        console.log("what")
+        console.log(touched)
+    }, [errors])
+
     return (
       <View style={styles.phoneNumberContainer}>
         <Input
@@ -186,8 +191,11 @@ const ImageInput = ({_submit, isSignUp}) => {
           label="Phone Number"
           leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
           onChangeText={handleChange('phoneNumber')}
+          keyboardType={'phone-pad'}
+          onBlur={handleBlur('phoneNumber')}
           value={values.phoneNumber}
         />
+          {errors.phoneNumber && touched.phoneNumber ? (<Text>{errors.phoneNumber}</Text>) : null}
       </View>
     )}
   const BirthdayInput = ({isSignUp}) => {

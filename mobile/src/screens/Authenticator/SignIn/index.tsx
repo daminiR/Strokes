@@ -13,6 +13,7 @@ import { UserContext } from '../../../UserContext'
 import {useNavigation} from '@react-navigation/native';
 import {View} from 'react-native'
 import styles from '../../../assets/styles'
+import  { signInSchema } from '../../../../common'
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
 type SignInT = {
@@ -21,12 +22,18 @@ type SignInT = {
 const SignIn = ({ navigation }: SignInT): ReactElement => {
   return (
     <Formik
+      validationSchema={signInSchema}
       initialValues={iniitialSignInForm}
       onSubmit={(values) => console.log(values)}>
+         { ({errors,touched}) => {
+             console.log(errors)
+             return (
       <Slider changeEmail={false}/>
+         )}}
     </Formik>
   );
 }
+
 export const Slider =  ({changeEmail}) => {
   const {values} = useFormikContext<ProfileFields>();
   const {setIsUseOnMongoDb} = useContext(UserContext)
@@ -38,6 +45,7 @@ export const Slider =  ({changeEmail}) => {
 
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
+    console.log("format for phone number", typeof values.phoneNumber)
     console.log(index)
     if (index == 1){
       setLastSlide(true)
