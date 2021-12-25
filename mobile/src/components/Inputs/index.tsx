@@ -10,10 +10,11 @@ import { View} from 'react-native'
 import styles from '../../assets/styles/'
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import {Pictures} from '../../components'
+import {Pictures, CodeInput} from '../../components'
 import {ChooseSportsChips} from '../../components'
 import { EditFields, ProfileFields, SignIn} from '../../localModels/UserSportsList'
 import {DoneCancelContext} from '../../screens/Authenticator/Profile/index'
+import {sanitizePhone, formatPhoneNumber} from '../../../common/index'
 import _ from 'lodash'
 
 const ImageInput = ({_submit, isSignUp}) => {
@@ -152,7 +153,7 @@ const ImageInput = ({_submit, isSignUp}) => {
     );
   }
   const EmailInput = ({isSignUp, _signIn=null, getData=null}) => {
-    const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
+    const { handleBlur, values, errors, touched, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
     const [email, setEmail] = useState(values.email)
     useEffect(() => {
       if (getData){
@@ -161,43 +162,68 @@ const ImageInput = ({_submit, isSignUp}) => {
     }, [email])
     return (
       <>
-      <View style={styles.emailContainer}>
-        <Input
-          placeholder="Email"
-          label="Email"
-          leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-          onChangeText={getData? setEmail : handleChange('email')}
-          value={getData ? email : values.email}
-        />
-        <View style={styles.buttonIndStyle}>
-        {!isSignUp && _signIn && <Button buttonStyle={styles.buttonStyle} onPress={() => _signIn()} titleStyle={styles.buttonText} title="Submit"/>}
+        <View style={styles.emailContainer}>
+          <Input
+            placeholder="Email"
+            label="Email"
+            leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+            onChangeText={getData ? setEmail : handleChange('email')}
+            value={getData ? email : values.email}
+            onBlur={handleBlur('email')}
+          />
+          <View style={styles.buttonIndStyle}>
+            {errors.email && touched.email ? (
+              <Text>{errors.email}</Text>
+            ) : null}
+            {!isSignUp && _signIn && (
+              <Button
+                buttonStyle={styles.buttonStyle}
+                onPress={() => _signIn()}
+                titleStyle={styles.buttonText}
+                title="Submit"
+              />
+            )}
+          </View>
         </View>
-    </View>
       </>
-    )}
+    );}
 
 
   const PhoneInput = () => {
-    const { values, handleBlur, submitForm, handleChange, errors, touched} = useFormikContext<ProfileFields | SignIn>();
+    const { values, handleBlur, setFieldValue, submitForm, handleChange, errors, touched} = useFormikContext<ProfileFields | SignIn>();
     useEffect(() => {
-        console.log("what")
         console.log(touched)
     }, [errors])
-
+    const [inputValue, setDisplayInputValue] = useState("")
+    const handleInput = (text) => {
+      const tempText = text
+    // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
+    const formattedPhoneNumber = formatPhoneNumber(tempText);
+    // we'll set the input value using our setInputValue
+    setDisplayInputValue(formattedPhoneNumber);
+  }
+  const _onDoneEditing = () => {
+   setFieldValue( 'phoneNumber', sanitizePhone(inputValue))
+  }
     return (
       <View style={styles.phoneNumberContainer}>
         <Input
           placeholder="Phone Number"
           label="Phone Number"
           leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-          onChangeText={handleChange('phoneNumber')}
+          onEndEditing={() => _onDoneEditing()}
+          onChangeText={(text) => {
+            handleInput(text);
+          }}
           keyboardType={'phone-pad'}
           onBlur={handleBlur('phoneNumber')}
-          value={values.phoneNumber}
+          value={inputValue}
         />
-          {errors.phoneNumber && touched.phoneNumber ? (<Text>{errors.phoneNumber}</Text>) : null}
+        {errors.phoneNumber && touched.phoneNumber ? (
+          <Text>{errors.phoneNumber}</Text>
+        ) : null}
       </View>
-    )}
+    );}
   const BirthdayInput = ({isSignUp}) => {
     const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
    const [loadingTempValues, setLoadingTempValues] = useState(true);
