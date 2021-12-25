@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {View} from 'react-native'
 import styles from '../../../assets/styles'
 import  { signInSchema } from '../../../../common'
+import  _ from 'lodash'
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
 type SignInT = {
@@ -35,7 +36,7 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
 }
 
 export const Slider =  ({changeEmail}) => {
-  const {values} = useFormikContext<ProfileFields>();
+  const {values, errors, touched} = useFormikContext<ProfileFields>();
   const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -45,7 +46,7 @@ export const Slider =  ({changeEmail}) => {
 
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
-    console.log("format for phone number", typeof values.phoneNumber)
+    console.log("format for phone number",  values.phoneNumber)
     console.log(index)
     if (index == 1){
       setLastSlide(true)
@@ -75,6 +76,17 @@ export const Slider =  ({changeEmail}) => {
     return <PrevButton />;
   };
 
+  const _onPrev = () => {
+    errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1)
+  };
+  const _onNext = () => {
+    const index = this.slider.state.activeIndex
+    //console.log("next")
+    //console.log(index)
+    //const field = _.find(signInSlides, ['key', index.toString()]).inputLabel
+    //!errors[field] && touched[field] &&
+    this.slider.goToSlide(index + 1)
+  };
 const _confirmSignInGC = () => {
     confirmationFunc
       .confirm(values.confirmationCode)
@@ -145,6 +157,8 @@ const _confirmSignInGC = () => {
         showNextButton={showNextButton}
         renderNextButton={renderNext}
         renderPrevButton={renderPrev}
+        onNext={() => _onNext()}
+        onPrev={() => _onPrev()}
         ref={(ref) => (this.slider = ref!)}
       />
   )

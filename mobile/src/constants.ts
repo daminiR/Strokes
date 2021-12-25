@@ -13,6 +13,7 @@ export const dimGray = '#707070'
 export const lightGray = '#D1CDCD'
 
 export const tabBarSize = DIMENSION_HEIGHT * 0.08
+export const CODE_LENGTH = 6
 
 //export const KLMN = Platform.OS === 'ios' ? 'KLMN-Flash-Pix' : 'KLMN_Flash_Pix'
 export const Dolbak = Platform.OS === 'ios' ? 'The Dolbak' : 'TheDolbak-Brush'
@@ -73,9 +74,9 @@ export const settingsFlatList = [
 
 // Sign Up Slide Labels
  export const iniitialSignInForm = {
-   email: 'daminrrijhwani@gmail.com',
-   phoneNumber: '+12025550173',
-   confirmationCode: '000000'
+   email: '',
+   phoneNumber: '',
+   confirmationCode: ''
  }
 
 // initialValuesFormik
@@ -98,21 +99,21 @@ export const signInSlides = [
     key: '0',
     type: 'Phone Input',
     title: 'Phone Number',
-    inputLabel: 'Phone Number',
+    inputLabel: 'phoneNumber',
     backgroundColor: '#59b2ab',
   },
   {
     key: '1',
     type: 'Email Input',
     title: 'Email',
-    InputLabel: 'Email',
+    InputLabel: 'email',
     backgroundColor: '#59b2ab',
   },
   {
-    key: '7',
+    key: '2',
     type: 'Confirmation Code',
     title: 'Confirmation Code',
-    inputLabel: 'Confirmation Code',
+    inputLabel: 'confirmationCode',
     backgroundColor: '#59b2ab',
   },
 ];

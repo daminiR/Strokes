@@ -1,12 +1,13 @@
 import React, {useRef, useEffect, useState } from 'react'
-import {Input, Button} from 'react-native-elements'
+import {Input, Button, Text} from 'react-native-elements'
 import { useFormikContext} from 'formik';
 import { View} from 'react-native'
 import styles from '../../assets/styles/'
 import { ProfileFields} from '../../localModels/UserSportsList'
+import { formatCode} from '../../../common/index'
 
 const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {
-  const {values, handleChange} = useFormikContext<ProfileFields>();
+  const {values, errors, touched, handleBlur, handleChange} = useFormikContext<ProfileFields>();
   const didMountRef = useRef(false)
   const [delayed, setDelayed] = useState(false);
   useEffect(() => {
@@ -22,18 +23,38 @@ const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {
       didMountRef.current = true;
     }
   }, [isLastSlide]);
+  const [inputValue, setDisplayInputValue] = useState("")
+  const handleInput = (text) => {
+      const tempText = text
+    // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
+    const formattedPhoneNumber = formatCode(tempText);
+    // we'll set the input value using our setInputValue
+    setDisplayInputValue(formattedPhoneNumber);
+  }
+  const _onDoneEditing = () => {
+   //setFieldValue( 'phoneNumber', sanitizePhone(inputValue))
+  }
   return (
     <>
     <View style={styles.confirmationContainer}>
     <View style={styles.emailInput}>
       <Input
-        placeholder="ConfirmationCode"
+        placeholder="Confirmation Code"
         label="Confirmation Code"
         leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-        onChangeText={handleChange('confirmationCode')}
-        value={values.confirmationCode}
+        //onChangeText={handleChange('confirmationCode')}
+        onChangeText={(text) => {
+            handleInput(text);
+          }}
+        //value={values.confirmationCode}
+        value={inputValue}
+        onBlur={handleBlur('confirmationCode')}
+        keyboardType={'phone-pad'}
       />
     </View>
+        {errors.confirmationCode && touched.confirmationCode ? (
+          <Text>{errors.confirmationCode}</Text>
+        ) : null}
       {delayed && <Button title="Resend" buttonStyle={styles.buttonStyle} titleStyle={styles.buttonText}/>}
        <Button buttonStyle={styles.buttonStyle} titleStyle={styles.buttonText} onPress={() => _confirmSignInGC(values.confirmationCode)} title="Confirm" />
     </View>
