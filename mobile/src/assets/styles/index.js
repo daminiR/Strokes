@@ -47,6 +47,19 @@ export default StyleSheet.create({
     flex: 1,
     alignSelf: 'center'
   },
+  // email signing style
+
+
+  confirmationCodeContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  authEmailOverlay: {
+    flex: 1,
+    width: DIMENSION_WIDTH * .8,
+    height: DIMENSION_HEIGHT * 0.5
+  },
+
   // Auth email overlay
 
   authEmailOverlay: {

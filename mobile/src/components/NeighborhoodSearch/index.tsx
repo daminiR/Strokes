@@ -17,7 +17,6 @@ import {ScrollView } from 'react-native'
 import {DoneCancelContext} from '../../screens/Authenticator/Profile/index'
 
 const GooglePlacesInput = ({isSignUp = false}) => {
-  console.log("what is signy value", isSignUp)
   const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
   var setDisplayInput = null
   var setTempInputValues = null

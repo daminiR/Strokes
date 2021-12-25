@@ -39,7 +39,7 @@ const ImageInput = ({_submit, isSignUp}) => {
           return radioObj
     }
   const GenderInput = ({isSignUp}) => {
-  const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+  const { setValues, errors, touched, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const [radioButtons, setRadioButtons] = useState(_.map(genderRadioObject, (radioObj) => refreshGenderObj(radioObj)))
   const [loadRadioButtons, setLoadRadioButtons] = useState(true)
   const [check1, setCheck1] = useState(false);
@@ -102,10 +102,13 @@ const ImageInput = ({_submit, isSignUp}) => {
         />
         )
         )}
+            {errors.gender && touched.gender ? (
+              <Text>{errors.gender}</Text>
+            ) : null}
       </View>
     )}
   const NameInput = ({isSignUp}) => {
-    const {values, handleChange, handleSubmit} = useFormikContext<
+    const {values, handleBlur, errors, touched, handleChange, handleSubmit} = useFormikContext<
       ProfileFields | EditFields
     >();
    const [loadingTempValues, setLoadingTempValues] = useState(true);
@@ -121,6 +124,28 @@ const ImageInput = ({_submit, isSignUp}) => {
       }
         setLoadingTempValues(false)
     }, [])
+    var val1 = null
+    var val2 = null
+    var val3 = null
+    const renderError = () => {
+      if (errors.first_name && touched.first_name){
+          console.log("in name", errors.first_name)
+          val1 = <Text>{errors.first_name}</Text>
+      }
+      if (errors.last_name && touched.last_name){
+         val2 =  <Text>{errors.last_name}</Text>
+      }
+      else{
+         val3 = null
+      }
+      return (
+        <>
+          {val1}
+          {val2}
+          {val3}
+        </>
+      )
+    }
     return (
       <>
         {!loadingTempValues && (
@@ -129,6 +154,7 @@ const ImageInput = ({_submit, isSignUp}) => {
               placeholder="FirstName"
               label="First Name"
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+              onBlur={handleBlur('first_name')}
               onChangeText={
                 isSignUp
                   ? handleChange('first_name')
@@ -140,6 +166,7 @@ const ImageInput = ({_submit, isSignUp}) => {
               placeholder="Last Name"
               label="Last Name"
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+              onBlur={handleBlur('last_name')}
               onChangeText={
                 isSignUp
                   ? handleChange('last_name')
@@ -147,6 +174,7 @@ const ImageInput = ({_submit, isSignUp}) => {
               }
               value={isSignUp ? values.last_name : tempInputValues.last_name}
             />
+            {renderError()}
           </View>
         )}
       </>
@@ -225,7 +253,7 @@ const ImageInput = ({_submit, isSignUp}) => {
       </View>
     );}
   const BirthdayInput = ({isSignUp}) => {
-    const { values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+    const { handleBlur, errors, touched, values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
    const [loadingTempValues, setLoadingTempValues] = useState(true);
     var setTempInputValues = null;
     var tempInputValues = null;
@@ -245,6 +273,8 @@ const ImageInput = ({_submit, isSignUp}) => {
         {!loadingTempValues && (
           <View style={styles.ageContainer}>
             <Input
+              onBlur={handleBlur('last_name')}
+              keyboardType={'phone-pad'}
               placeholder="Age"
               label="Age"
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
@@ -253,8 +283,15 @@ const ImageInput = ({_submit, isSignUp}) => {
                   ? handleChange('age')
                   : (text) => setTempInputValues({age: text})
               }
-              value={isSignUp ? values.age.toString() : tempInputValues.age.toString()}
+              value={
+                isSignUp
+                  ? values.age.toString()
+                  : tempInputValues.age.toString()
+              }
             />
+            {errors.age && touched.age ? (
+              <Text>{errors.age}</Text>
+            ) : null}
           </View>
         )}
       </>
