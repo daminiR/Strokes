@@ -91,7 +91,7 @@ export const settingsFlatList = [
    image_set:[],
    confirmationCode: '232323',
    description: 'hello i am good',
-   location: null
+   location: {}
  }
 export const signInSlides = [
   {

@@ -17,7 +17,7 @@ import {ScrollView } from 'react-native'
 import {DoneCancelContext} from '../../screens/Authenticator/Profile/index'
 
 const GooglePlacesInput = ({isSignUp = false}) => {
-  const { handleBlur, errors, touched, setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+  const { handleBlur, errors, setFieldTouched, touched, setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
   const [locationSelected, setLocationSelected] = useState(false)
   var setDisplayInput = null
   var setTempInputValues = null
@@ -32,20 +32,21 @@ const GooglePlacesInput = ({isSignUp = false}) => {
   }, []);
   const _onPressLocation = (data, details=null) => {
 //         'details' is provided when fetchDetails = true
+        setFieldTouched('location')
         console.log("location value", values.location)
         console.log("location value", data)
         ref.current?.setAddressText(data.description);
-        const newLocation = {
+        const tempLocation = {
           city: data.terms[0].value,
           country: data.terms[2].value,
           state: data.terms[1].value,
         };
         if (isSignUp) {
           console.log("do we hit this", isSignUp)
-        setValues({... values, 'location': newLocation})
+        setValues({... values, 'location': tempLocation})
         }
         else {
-        setTempInputValues((prevState) => {return {...prevState, 'location' : newLocation}})
+        setTempInputValues((prevState) => {return {...prevState, 'location' : tempLocation}})
         }
   }
   return (
@@ -73,11 +74,15 @@ const GooglePlacesInput = ({isSignUp = false}) => {
 };
 
 const NeighborhoodSearch = ({isSignUp}) => {
+  const { errors, touched} = useFormikContext<ProfileFields | EditFields>();
   return (
     <View style={{flex:1}}>
       <GooglePlacesInput isSignUp={isSignUp}/>
     </View>
   );
   }
+            //{errors.location && touched.location? (
+              //<Text style={{alignSelf:'center'}}>{errors.location}</Text>
+            //) : null}
 
 export {NeighborhoodSearch};

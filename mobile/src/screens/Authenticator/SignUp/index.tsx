@@ -12,11 +12,16 @@ import { ProfileFields} from '../../../localModels/UserSportsList'
 import {NeighborhoodSearch, ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel, NextButton, PrevButton} from '../../../components'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
-import {SafeAreaView, View} from 'react-native'
+import {TouchableWithoutFeedback, Keyboard, View} from 'react-native'
 import  _ from 'lodash'
 import styles from '../../../assets/styles'
 import  { signUpSchema} from '../../../../common'
 
+const DismissKeyboard = ({ children}) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+)
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
   navigation: SignUpScreenNavigationProp
@@ -38,6 +43,7 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
 }
 const Slider =  () => {
   const {values, errors, setFieldValue, setFieldTouched, touched} = useFormikContext<ProfileFields>();
+  const [newLocation, setNewLocation] = useState(null)
   const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -70,9 +76,10 @@ const Slider =  () => {
   };
   const _submit = ( value ) => {
     setFieldTouched('image_set')
-    console.log("errors", errors.image_set)
+    console.log("errors", errors)
     console.log(values.image_set)
 
+    !errors && console.log("no errors before submit!")
     //registerOnFirebase(values.phoneNumber, values.email)
       //.then((confirmation: any) => {
         //this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
@@ -107,15 +114,15 @@ const Slider =  () => {
     errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
   };
   const _onNext = () => {
-    console.log("erros sports", errors.sports)
-    console.log("erros age", errors.age)
-    console.log("values sports", values.sports)
+    console.log("erros location", errors.gender)
+    console.log("erros location", errors.location)
     const index = this.slider.state.activeIndex
     console.log(index)
     const field = _.find(signUpSlides, ['key', index.toString()]).inputLabel
     console.log(field)
-    setFieldTouched(field)
-    !errors[field] && touched[field] &&
+    //setFieldTouched(field)
+    !errors[field] &&
+    touched[field] &&
     this.slider.goToSlide(index + 1, true)
   };
   const _onPressCancel = () => {

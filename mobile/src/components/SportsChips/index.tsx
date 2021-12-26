@@ -1,10 +1,12 @@
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
+import { useFormikContext} from 'formik';
 import React, { useRef, useEffect, useContext, useState, ReactElement } from 'react'
 import {View, ScrollView, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../../assets/styles'
 import LinearGradient from 'react-native-linear-gradient'
 import {GameLevelChoose} from '../ChooseSportChips/'
+import { EditFields, ProfileFields} from '../../localModels/UserSportsList'
 
 const intermediate = {
                  colors: ['#ff7f02', 'white', 'white', 'white'],
@@ -30,6 +32,7 @@ const advanced = {
    const [gameLevelVisible, setGameLevelVisible] = useState(false)
    const [gameLevelInput, setGameLevelInput] = useState(gameLevel)
    const [isDisplayInput, setIsDisplayInput] = useState(isDisplay)
+   const {setFieldTouched, touched} = useFormikContext<ProfileFields | EditFields>();
    useEffect(() => {
      setGameLevelInput(gameLevel)
    }, [gameLevel]);
@@ -78,7 +81,12 @@ const advanced = {
                }}
                buttonStyle={dynamicStyle}
                containerStyle={styles.singleChip}
-               onPress={() => setGameLevelVisible(true)}
+               onPress={() => {
+
+               if(!touched.sports) {
+                 setFieldTouched('sports')
+               }
+               setGameLevelVisible(true)}}
                disabled={isDisplayInput}
                disabledTitleStyle={styles.chipText}
                disabledStyle={styles.ChipButton}
@@ -106,12 +114,16 @@ const advanced = {
            }}
            buttonStyle={dynamicStyle}
            containerStyle={styles.singleChip}
-           onPress={() => setGameLevelVisible(true)}
+           onPress={() => {
+             if (!touched.sports) {
+               setFieldTouched('sports');
+             }
+             setGameLevelVisible(true);
+           }}
            disabled={isDisplayInput}
            disabledTitleStyle={styles.chipText}
            disabledStyle={gameLevelStyle}
          />
-
        </>
      );
    };

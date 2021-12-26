@@ -82,7 +82,22 @@ const signUpSchema = yup.object().shape({
     .min(10, 'description cannot be less than 10 character long')
     .max(300, 'last name cannot be more than 300 character long')
     .required('description is required'),
-  location: yup.object().required(),
+  location: yup
+  .object().shape({
+        city: yup
+        .string()
+        .required(),
+        state: yup
+        .string()
+        .required(),
+        //TODO: add enum for states and country
+        //.oneOf(['0', '1', '2']),
+        country: yup
+        .string()
+        .required(),
+        //.oneOf(['0', '1', '2']),
+      })
+      .required(),
 });
 
 const sanitizePhone = (text) => {
