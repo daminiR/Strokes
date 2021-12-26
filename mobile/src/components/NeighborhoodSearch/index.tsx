@@ -49,6 +49,15 @@ const GooglePlacesInput = ({isSignUp = false}) => {
         setTempInputValues((prevState) => {return {...prevState, 'location' : tempLocation}})
         }
   }
+  //const _onFail = () => {
+    //console.log("onFail")
+  //}
+  //const _onNotFound = () => {
+    //console.log("onNotFound")
+  //}
+  //const _onTimeOut = () => {
+    //console.log("onFail")
+  //}
   return (
     <>
       <GooglePlacesAutocomplete
@@ -58,6 +67,9 @@ const GooglePlacesInput = ({isSignUp = false}) => {
         placeholder="Search"
         enablePoweredByContainer={false}
         minLength={4}
+        //onFail={_onFail()}
+        //onNotFound={_onNotFound()}
+        //onTimeout={_onTimeOut()}
         onPress={(data, details=null) => _onPressLocation(data, details)}
         query={{
           key: API_KEY,
