@@ -86,7 +86,7 @@ export const settingsFlatList = [
    first_name: 'finalV',
    last_name: 'finalvLastName',
    age: '28',
-   gender: 'Female',
+   gender: null,
    sports:[],
    image_set:[],
    confirmationCode: '232323',

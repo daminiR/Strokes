@@ -67,9 +67,9 @@ const ImageInput = ({_submit, isSignUp}) => {
       setLoadRadioButtons(true)
       const gender = values.gender
       if (!isSignUp){
-          setTempInputValues((prevState) => {return {...prevState, 'gender' : gender}})
+          gender && setTempInputValues((prevState) => {return {...prevState, 'gender' : gender}})
       }
-        _.find(genders, genderObj => genderObj.title == gender).checkFunc(true)
+        gender && _.find(genders, genderObj => genderObj.title == gender).checkFunc(true)
       setLoadRadioButtons(false)
     }, [])
    const onPressRadioButton = (gender, genderFunc) => {

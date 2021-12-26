@@ -1,4 +1,4 @@
-import React, { useContext, useState, ReactElement } from 'react'
+import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import {useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
 import auth from '@react-native-firebase/auth'
@@ -17,11 +17,6 @@ import  _ from 'lodash'
 import styles from '../../../assets/styles'
 import  { signUpSchema} from '../../../../common'
 
-const DismissKeyboard = ({ children}) => (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    {children}
-  </TouchableWithoutFeedback>
-)
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
   navigation: SignUpScreenNavigationProp
@@ -55,6 +50,35 @@ const Slider =  () => {
     onCompleted: (data) => {
     },
   });
+    const [isKeyboardShown, setIsKeyboardShown] = useState(undefined);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setIsKeyboardShown(true);
+      console.log("shown")
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setIsKeyboardShown(false);
+      console.log("not shown")
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+  useEffect(() => {
+    if (isKeyboardShown) {
+
+
+
+    }
+    else{
+
+
+    }
+  }, [isKeyboardShown]);
+
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
     if (index == TOTAL_SIGNUP_SLIDES - 1){
@@ -75,11 +99,7 @@ const Slider =  () => {
     return <PrevButton />;
   };
   const _submit = ( value ) => {
-    setFieldTouched('image_set')
-    console.log("errors", errors)
-    console.log(values.image_set)
-
-    !errors && console.log("no errors before submit!")
+    _.isEmpty(errors) && console.log("no errors before submit!")
     //registerOnFirebase(values.phoneNumber, values.email)
       //.then((confirmation: any) => {
         //this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
@@ -243,12 +263,12 @@ const Slider =  () => {
         renderItem={renderInputForm}
         data={signUpSlides}
         scrollEnabled={false}
-        showPrevButton={true}
+        showPrevButton={true && !isKeyboardShown}
         onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
         onDone={() => {
           _confirmSignInGC();
         }}
-        showNextButton={showNextButton}
+        showNextButton={showNextButton && !isKeyboardShown}
         renderNextButton={renderNext}
         renderPrevButton={renderPrev}
         dotClickEnabled={false}
