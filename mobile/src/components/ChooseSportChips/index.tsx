@@ -81,14 +81,14 @@ import { ProfileFields} from '../../localModels/UserSportsList'
 const removeSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports) => {
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
-      setTempSports(filterSports)
-      isSignUp && setFieldValue('sports', filterSports)
+      setTempSports(filterSports);
+      isSignUp && setFieldValue('sports', filterSports);
 }
 const undoSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports) => {
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
-      setTempSports(filterSports)
-      isSignUp && setFieldValue('sports', filterSports)
+      setTempSports(filterSports);
+      isSignUp && setFieldValue('sports', filterSports);
 }
 const ChooseSportsChips = ({isSignUp}) => {
   var setDisplayInput = null;
@@ -114,7 +114,7 @@ const ChooseSportsChips = ({isSignUp}) => {
             return sportObj;
           }
         });
-        console.log("new_vals 1",new_values)
+        console.log('new_vals 1', new_values);
         setTempSports(new_values)
         isSignUp && setFieldValue('sports', new_values)
       }
@@ -127,8 +127,8 @@ const ChooseSportsChips = ({isSignUp}) => {
         isSignUp && setFieldValue('sports', new_values)
         } else {
         new_values = newSportObj;
-        setTempSports(new_values)
         console.log("new_vals 3",new_values)
+        setTempSports(new_values)
         isSignUp && setFieldValue('sports', new_values)
         }
       }

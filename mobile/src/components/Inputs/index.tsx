@@ -6,7 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { genderRadioObject } from '../../constants'
 import auth from '@react-native-firebase/auth'
 import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge, CheckBox} from 'react-native-elements'
-import { View} from 'react-native'
+import { View, TouchableWithoutFeedback, Keyboard} from 'react-native'
 import styles from '../../assets/styles/'
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
 import AppIntroSlider from 'react-native-app-intro-slider'
@@ -16,6 +16,13 @@ import { EditFields, ProfileFields, SignIn} from '../../localModels/UserSportsLi
 import {DoneCancelContext} from '../../screens/Authenticator/Profile/index'
 import {sanitizePhone, formatPhoneNumber} from '../../../common/index'
 import _ from 'lodash'
+
+
+const DismissKeyboard = ({ children}) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+)
 
 const ImageInput = ({_submit, isSignUp}) => {
   const { values, errors, touched,  setValues, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
@@ -42,7 +49,7 @@ const ImageInput = ({_submit, isSignUp}) => {
           return radioObj
     }
   const GenderInput = ({isSignUp}) => {
-  const { setValues, errors, touched, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+  const { setValues, setFieldTouched, errors, touched, values, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
   const [radioButtons, setRadioButtons] = useState(_.map(genderRadioObject, (radioObj) => refreshGenderObj(radioObj)))
   const [loadRadioButtons, setLoadRadioButtons] = useState(true)
   const [check1, setCheck1] = useState(false);
@@ -66,6 +73,7 @@ const ImageInput = ({_submit, isSignUp}) => {
       setLoadRadioButtons(false)
     }, [])
    const onPressRadioButton = (gender, genderFunc) => {
+      setFieldTouched('gender')
      _.map(genders, genderObj => genderObj.checkFunc(false))
      genderFunc(true)
      isSignUp?
@@ -152,6 +160,7 @@ const ImageInput = ({_submit, isSignUp}) => {
     return (
       <>
         {!loadingTempValues && (
+      <DismissKeyboard>
           <View style={styles.nameContainer}>
             <Input
               placeholder="FirstName"
@@ -179,6 +188,7 @@ const ImageInput = ({_submit, isSignUp}) => {
             />
             {renderError()}
           </View>
+      </DismissKeyboard>
         )}
       </>
     );
@@ -193,6 +203,7 @@ const ImageInput = ({_submit, isSignUp}) => {
     }, [email])
     return (
       <>
+      <DismissKeyboard>
         <View style={styles.emailContainer}>
           <Input
             placeholder="Email"
@@ -216,6 +227,7 @@ const ImageInput = ({_submit, isSignUp}) => {
             )}
           </View>
         </View>
+      </DismissKeyboard>
       </>
     );}
 
@@ -237,6 +249,8 @@ const ImageInput = ({_submit, isSignUp}) => {
    setFieldValue( 'phoneNumber', sanitizePhone(inputValue))
   }
     return (
+      <>
+      <DismissKeyboard>
       <View style={styles.phoneNumberContainer}>
         <Input
           placeholder="Phone Number"
@@ -254,9 +268,12 @@ const ImageInput = ({_submit, isSignUp}) => {
           <Text>{errors.phoneNumber}</Text>
         ) : null}
       </View>
+      </DismissKeyboard>
+      </>
     );}
   const BirthdayInput = ({isSignUp}) => {
     const { handleBlur, errors, touched, values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+
    const [loadingTempValues, setLoadingTempValues] = useState(true);
     var setTempInputValues = null;
     var tempInputValues = null;
@@ -274,6 +291,7 @@ const ImageInput = ({_submit, isSignUp}) => {
     return (
       <>
         {!loadingTempValues && (
+      <DismissKeyboard>
           <View style={styles.ageContainer}>
             <Input
               onBlur={handleBlur('age')}
@@ -296,6 +314,7 @@ const ImageInput = ({_submit, isSignUp}) => {
               <Text style={{alignSelf:'center'}}>{errors.age}</Text>
             ) : null}
           </View>
+      </DismissKeyboard>
         )}
       </>
     );}
@@ -304,7 +323,7 @@ const ImageInput = ({_submit, isSignUp}) => {
     return (
       <View style={styles.sportsContainer}>
         <ChooseSportsChips isSignUp={isSignUp}/>
-            {errors.sports && touched.sports ? (
+            {errors.sports ? (
               <Text style={{alignSelf:'center'}}>{errors.sports}</Text>
             ) : null}
       </View>
@@ -327,6 +346,8 @@ const DescriptionInput = ({isSignUp}) => {
     }, [])
     return (
       <>
+      <DismissKeyboard>
+        <View style={{flex:1}}>
         {!loadingTempValues && (
           <Card containerStyle={styles.CardStyle}>
             <Card.Title> Description </Card.Title>
@@ -355,6 +376,8 @@ const DescriptionInput = ({isSignUp}) => {
         {errors.description && touched.description ? (
           <Text style={{alignSelf: 'center'}}>{errors.description}</Text>
         ) : null}
+        </View>
+      </DismissKeyboard>
       </>
     );
   };
