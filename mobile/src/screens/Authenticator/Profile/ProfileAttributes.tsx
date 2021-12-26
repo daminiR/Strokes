@@ -17,7 +17,7 @@ const ProfileAttirbutes = () => {
   const navigation = useNavigation()
   // update first name on profile screen
   useEffect(() => {
-    if (!userLoading) {
+    if (userData?.squash) {
       const user = userData.squash;
       // first name
       const first_name_ind_to_update = settingsFlatList.findIndex(

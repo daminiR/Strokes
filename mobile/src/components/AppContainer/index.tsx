@@ -62,16 +62,7 @@ const AppContainer = memo<AppContainerT>(
             <Loading />
           ) : (
             <>
-              {!flatList ? (
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                  <View style={sub}>{children}</View>
-                  <Space height={60} />
-                </ScrollView>
-              ) : (
-                <>
-                  <View style={sub}>{children}</View>
-                </>
-              )}
+              {children}
             </>
           )}
         </>

@@ -9,13 +9,14 @@ import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {NeighborhoodSearch, ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel, NextButton, PrevButton} from '../../../components'
+import {NeighborhoodSearch, ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel, NextButton, PrevButton, AppContainer} from '../../../components'
 import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
 import { UserContext} from '../../../UserContext'
-import {TouchableWithoutFeedback, Keyboard, View} from 'react-native'
+import {Text, TouchableWithoutFeedback, Keyboard, View,StyleSheet} from 'react-native'
 import  _ from 'lodash'
 import styles from '../../../assets/styles'
 import  { signUpSchema} from '../../../../common'
+import  AnimatedLoader from 'react-native-animated-loader'
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
@@ -42,6 +43,7 @@ const Slider =  () => {
   const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
+  const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [index, setIndex] = useState(0)
   const [showNextButton, setShowNextButton] = useState(true)
   const navigation = useNavigation()
@@ -99,19 +101,20 @@ const Slider =  () => {
     return <PrevButton />;
   };
   const _submit = ( value ) => {
-    _.isEmpty(errors) && console.log("no errors before submit!")
-    //registerOnFirebase(values.phoneNumber, values.email)
-      //.then((confirmation: any) => {
-        //this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
-        //setConfirmationFunc(confirmation)
-      //})
-      //.catch((err) => {
-        //console.log(err);
-      //});
+    _.isEmpty(errors)
+    && registerOnFirebase(values.phoneNumber, values.email)
+      .then((confirmation: any) => {
+        this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
+        setConfirmationFunc(confirmation)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   const _confirmSignInGC = () => {
     // promise in parralell
+    setLoadingSubmit(true)
       confirmationFunc
         .confirm(values.confirmationCode)
         .then((userCredential) => {
@@ -121,11 +124,13 @@ const Slider =  () => {
             //setInitialFilters()
             console.log('logged in');
             setIsUseOnMongoDb(true)
+            setLoadingSubmit(false)
         })
         .catch(async (err) => {
             // else delete user as if not created
             //await auth().currentUser.delete()
           console.log(err);
+          setLoadingSubmit(false)
         });
         });
 
@@ -257,27 +262,31 @@ const Slider =  () => {
               break
           }
   };
+const [visible, setVisible] = useState(false);
   return (
     <>
-      <AppIntroSlider
-        renderItem={renderInputForm}
-        data={signUpSlides}
-        scrollEnabled={false}
-        showPrevButton={true && !isKeyboardShown}
-        onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-        onDone={() => {
-          _confirmSignInGC();
-        }}
-        showNextButton={showNextButton && !isKeyboardShown}
-        renderNextButton={renderNext}
-        renderPrevButton={renderPrev}
-        dotClickEnabled={false}
-        keyboardShouldPersistTaps="always"
-        onNext={() => _onNext()}
-        onPrev={() => _onPrev()}
-        ref={(ref) => (this.slider = ref!)}
-      />
+        <AppIntroSlider
+          renderItem={renderInputForm}
+          data={signUpSlides}
+          scrollEnabled={false}
+          showPrevButton={true && !isKeyboardShown}
+          showDoneButton={false}
+          onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
+          onDone={() => {
+            _confirmSignInGC();
+          }}
+          showNextButton={showNextButton && !isKeyboardShown}
+          renderNextButton={renderNext}
+          renderPrevButton={renderPrev}
+          dotClickEnabled={false}
+          keyboardShouldPersistTaps="always"
+          onNext={() => _onNext()}
+          onPrev={() => _onPrev()}
+          ref={(ref) => (this.slider = ref!)}
+        />
     </>
   );
 }
+      //<AppContainer loading={loadingSubmit}>
+      //</AppContainer>
 export { SignUp }
