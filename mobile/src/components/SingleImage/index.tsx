@@ -51,7 +51,6 @@ const SingleImage = ({img_idx}) => {
         }
       }
     }
-    console.log("locals to add",formikValues.add_local_images)
   }, [Image])
   const _removeImage = async (): Promise<void> => {
       setLoading(true)

@@ -65,7 +65,6 @@ import { ProfileFields} from '../../localModels/UserSportsList'
           onPress={() => _onPressGameLevel('2')}
         />
         <View style={styles.helloButtons}>
-          {!isSignUp && (
             <Button
               title="Remove Sport"
               titleStyle={styles.buttonText}
@@ -73,24 +72,23 @@ import { ProfileFields} from '../../localModels/UserSportsList'
               style={styles.buttonIndStyle}
               buttonStyle={styles.buttonStyle}
             />
-          )}
         </View>
       </View>
     </Overlay>
   );
 }
 
-const removeSportSelect = (newSport, setTempSports, temptSports) => {
+const removeSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports) => {
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
       setTempSports(filterSports)
-      //setFieldValue('sports', filterSports)
+      isSignUp && setFieldValue('sports', filterSports)
 }
-const undoSportSelect = (newSport, setTempSports, temptSports) => {
+const undoSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports) => {
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
       setTempSports(filterSports)
-      //setFieldValue('sports', filterSports)
+      isSignUp && setFieldValue('sports', filterSports)
 }
 const ChooseSportsChips = ({isSignUp}) => {
   var setDisplayInput = null;
@@ -118,16 +116,20 @@ const ChooseSportsChips = ({isSignUp}) => {
         });
         console.log("new_vals 1",new_values)
         setTempSports(new_values)
-      } else {
+        isSignUp && setFieldValue('sports', new_values)
+      }
+      else {
         newSportObj = [{sport: newSport, game_level: game_level}];
         if (temptSports != null) {
         new_values = temptSports.concat(newSportObj);
         console.log("new_vals 2",new_values)
         setTempSports(new_values)
+        isSignUp && setFieldValue('sports', new_values)
         } else {
         new_values = newSportObj;
         setTempSports(new_values)
         console.log("new_vals 3",new_values)
+        isSignUp && setFieldValue('sports', new_values)
         }
       }
     }
@@ -135,20 +137,15 @@ const ChooseSportsChips = ({isSignUp}) => {
       if (sportObjTemp){
       }
       else{
-        undoSportSelect(newSport, setTempSports, temptSports)
+        undoSportSelect(isSignUp, setFieldValue, newSport, setTempSports, temptSports)
       }
-    }
-    if (isSignUp){
-      console.log("are we null here",temptSports)
-      setFieldValue('sports', temptSports)
     }
   }
   const _removeSport = (sport) => {
-    removeSportSelect( sport, setTempSports, temptSports)
+    removeSportSelect( isSignUp, setFieldValue, sport, setTempSports, temptSports)
   }
   if (!isSignUp) {
     var {setDisplayInput} = useContext(DoneCancelContext);
-
      _onPressDoneInput = () => {
       setFieldValue('sports', temptSports);
       EditInputVar({inputType: '', displayInput: false});

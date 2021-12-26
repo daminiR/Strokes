@@ -29,13 +29,15 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
     <Formik
       validationSchema={signUpSchema}
       initialValues={intitialFormikSignUp}
-      onSubmit={(values) => console.log(values)}>
+      onSubmit={(values) =>
+
+      console.log()}>
       <Slider/>
     </Formik>
   );
 }
 const Slider =  () => {
-  const {values, errors, setFieldTouched, touched} = useFormikContext<ProfileFields>();
+  const {values, errors, setFieldValue, setFieldTouched, touched} = useFormikContext<ProfileFields>();
   const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -67,14 +69,18 @@ const Slider =  () => {
     return <PrevButton />;
   };
   const _submit = ( value ) => {
-    registerOnFirebase(values.phoneNumber, values.email)
-      .then((confirmation: any) => {
-        this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
-        setConfirmationFunc(confirmation)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setFieldTouched('image_set')
+    console.log("errors", errors.image_set)
+    console.log(values.image_set)
+
+    //registerOnFirebase(values.phoneNumber, values.email)
+      //.then((confirmation: any) => {
+        //this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
+        //setConfirmationFunc(confirmation)
+      //})
+      //.catch((err) => {
+        //console.log(err);
+      //});
   }
 
   const _confirmSignInGC = () => {
@@ -101,11 +107,15 @@ const Slider =  () => {
     errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
   };
   const _onNext = () => {
-    //console.log("erros", errors)
-    //const index = this.slider.state.activeIndex
-    //const field = _.find(signUpSlides, ['key', index.toString()]).inputLabel
-    //setFieldTouched(field)
-    //!errors[field] && touched[field] &&
+    console.log("erros sports", errors.sports)
+    console.log("erros age", errors.age)
+    console.log("values sports", values.sports)
+    const index = this.slider.state.activeIndex
+    console.log(index)
+    const field = _.find(signUpSlides, ['key', index.toString()]).inputLabel
+    console.log(field)
+    setFieldTouched(field)
+    !errors[field] && touched[field] &&
     this.slider.goToSlide(index + 1, true)
   };
   const _onPressCancel = () => {
