@@ -17,7 +17,8 @@ import {ScrollView } from 'react-native'
 import {DoneCancelContext} from '../../screens/Authenticator/Profile/index'
 
 const GooglePlacesInput = ({isSignUp = false}) => {
-  const { setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+  const { handleBlur, errors, touched, setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+  const [locationSelected, setLocationSelected] = useState(false)
   var setDisplayInput = null
   var setTempInputValues = null
   var tempInputValues= null
@@ -25,7 +26,6 @@ const GooglePlacesInput = ({isSignUp = false}) => {
     var {setDisplayInput, setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
   }
   const ref = useRef(null);
-  console.log(values)
   useEffect(() => {
     const GooglePlacesProps = ref.current;
       !isSignUp && GooglePlacesProps?.setAddressText(values?.location?.city);
@@ -33,6 +33,7 @@ const GooglePlacesInput = ({isSignUp = false}) => {
   const _onPressLocation = (data, details=null) => {
 //         'details' is provided when fetchDetails = true
         console.log("location value", values.location)
+        console.log("location value", data)
         ref.current?.setAddressText(data.description);
         const newLocation = {
           city: data.terms[0].value,
@@ -48,9 +49,14 @@ const GooglePlacesInput = ({isSignUp = false}) => {
         }
   }
   return (
+    <>
       <GooglePlacesAutocomplete
         ref={ref}
+        //blur={() => handleBlur('location')}
+        autoFillOnNotFound={true}
         placeholder="Search"
+        enablePoweredByContainer={false}
+        minLength={4}
         onPress={(data, details=null) => _onPressLocation(data, details)}
         query={{
           key: API_KEY,
@@ -59,6 +65,10 @@ const GooglePlacesInput = ({isSignUp = false}) => {
           types: '(cities)',
         }}
       />
+        {errors.location && touched.location ? (
+          <Text style={{alignSelf: 'center'}}>{errors.description}</Text>
+        ) : null}
+    </>
   );
 };
 

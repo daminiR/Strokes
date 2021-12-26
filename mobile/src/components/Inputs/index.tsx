@@ -18,12 +18,15 @@ import {sanitizePhone, formatPhoneNumber} from '../../../common/index'
 import _ from 'lodash'
 
 const ImageInput = ({_submit, isSignUp}) => {
-  const { values, setValues, handleChange, handleSubmit } = useFormikContext<SignType>();
+  const { values, errors, touched,  setValues, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
     return (
       <>
       <View style={styles.imageContainer}>
         <Pictures />
         <View style={styles.buttonIndStyle}>
+            {errors.image_set ? (
+              <Text style={{alignSelf:'center'}}>{errors.image_set}</Text>
+            ) : null}
           <Button
             buttonStyle={styles.buttonStyle}
             titleStyle={styles.buttonText}
@@ -273,7 +276,7 @@ const ImageInput = ({_submit, isSignUp}) => {
         {!loadingTempValues && (
           <View style={styles.ageContainer}>
             <Input
-              onBlur={handleBlur('last_name')}
+              onBlur={handleBlur('age')}
               keyboardType={'phone-pad'}
               placeholder="Age"
               label="Age"
@@ -290,22 +293,25 @@ const ImageInput = ({_submit, isSignUp}) => {
               }
             />
             {errors.age && touched.age ? (
-              <Text>{errors.age}</Text>
+              <Text style={{alignSelf:'center'}}>{errors.age}</Text>
             ) : null}
           </View>
         )}
       </>
     );}
   const SportsInput = ({isSignUp}) => {
-  const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
+  const { values, setValues, errors, touched, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields>();
     return (
       <View style={styles.sportsContainer}>
         <ChooseSportsChips isSignUp={isSignUp}/>
+            {errors.sports && touched.sports ? (
+              <Text style={{alignSelf:'center'}}>{errors.sports}</Text>
+            ) : null}
       </View>
     );
   };
 const DescriptionInput = ({isSignUp}) => {
-  const { values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
+  const { handleBlur, errors, touched, values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
     var setTempInputValues = null;
     var tempInputValues = null;
    if (!isSignUp){
@@ -327,6 +333,7 @@ const DescriptionInput = ({isSignUp}) => {
             <Card.Divider />
             <View style={styles.sportChipSet}>
               <Input
+                onBlur={handleBlur('description')}
                 multiline={true}
                 inputContainerStyle={{borderBottomWidth: 0}}
                 placeholder="Descriptionn"
@@ -345,6 +352,9 @@ const DescriptionInput = ({isSignUp}) => {
             </View>
           </Card>
         )}
+        {errors.description && touched.description ? (
+          <Text style={{alignSelf: 'center'}}>{errors.description}</Text>
+        ) : null}
       </>
     );
   };
