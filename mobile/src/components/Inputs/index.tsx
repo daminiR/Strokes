@@ -8,7 +8,7 @@ import {Pictures} from '../Pictures'
 import {ChooseSportsChips} from '@components'
 import { EditFields, ProfileFields, SignIn} from '../../localModels/UserSportsList'
 import {DoneCancelContext} from '../../Contexts'
-//import {sanitizePhone, formatPhoneNumber} from '../../../common/index'
+import {sanitizePhone, formatPhoneNumber} from '../../../common/index'
 import _ from 'lodash'
 
 
