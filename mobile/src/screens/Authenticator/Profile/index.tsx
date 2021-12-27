@@ -26,10 +26,7 @@ import { cityVar, EditInputVar} from '../../../cache'
 import {convertImagesToFormat } from '../../../utils/User'
 import {createInitialValuesFormik } from '../../../utils/formik'
 import {Done, Cancel} from '../../../components'
-
-
-export const ProfileContext = createContext(null)
-export const DoneCancelContext = createContext(null)
+import {DoneCancelContext, ProfileContext} from '../../../Contexts'
 
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
 export type ProfileScreenRouteProp = RouteProp<RootStackSignInParamList, 'PROFILE'>;

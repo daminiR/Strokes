@@ -2,7 +2,8 @@ import React, { useContext, useState, useCallback, useEffect } from 'react'
 import {View, Modal} from 'react-native';
 import styles from '../../assets/styles/'
 import {GET_ACCOUNT_DETAIL_INPUT_TYPE} from '../../graphql/queries/profile'
-import {Cancel, Done} from '../'
+import {Cancel} from '../Cancel'
+import {Done} from '../Done'
 import {Button, ListItem} from 'react-native-elements';
 import { EditAccounDetailInputVar} from '../../cache'
 import {AccountList} from '../../constants'

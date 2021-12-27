@@ -265,6 +265,7 @@ const Slider =  () => {
 const [visible, setVisible] = useState(false);
   return (
     <>
+      <AppContainer loading={loadingSubmit}>
         <AppIntroSlider
           renderItem={renderInputForm}
           data={signUpSlides}
@@ -284,9 +285,8 @@ const [visible, setVisible] = useState(false);
           onPrev={() => _onPrev()}
           ref={(ref) => (this.slider = ref!)}
         />
+      </AppContainer>
     </>
   );
 }
-      //<AppContainer loading={loadingSubmit}>
-      //</AppContainer>
 export { SignUp }

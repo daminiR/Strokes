@@ -1,19 +1,7 @@
-import {Button,withBadge, Icon, Avatar, Badge } from 'react-native-elements'
-import React, { useRef, useContext, useEffect, useState, ReactElement } from 'react'
-import {UserContext} from '../../UserContext'
-import {ProfileContext} from './index'
-import {UPLOAD_FILE, DELETE_IMAGE} from '../../../graphql/mutations/profile'
-import {READ_SQUASH} from '../../../graphql/queries/profile'
-import { ProfileSettingsInput } from "./profileSettingInput"
-import {View, ScrollView, StyleSheet } from 'react-native'
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import { generateRNFile } from '../../../utils/Upload'
-import { _check_single } from '../../../utils/Upload'
+import React, {useState } from 'react'
+import {View } from 'react-native'
 import styles from '../../assets/styles/'
-import { useQuery, useMutation, useLazyQuery} from '@apollo/client'
-import { SingleImage} from '../../components'
-import { ProfileFields, EditFields, SignIn} from '../../../localModels/UserSportsList'
-import { useFormikContext} from 'formik';
+import { SingleImage} from '../SingleImage'
 
 const Pictures =() => {
   const [loadPictures, setLoadPictures] = useState(false)

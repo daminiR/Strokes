@@ -1,8 +1,7 @@
-import React, { useContext, useState, ReactElement } from 'react'
+import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { Email, Hello, SignIn, ConfirmSignUp} from '../screens/Authenticator'
-import { UserContext } from '../UserContext'
-import {ProfileImages, ProfileComplete, ProfileSport,SignUp,  ProfileGender, ProfileName, ProfileBirthday} from '../screens/Authenticator'
+import { Hello, SignIn} from '../screens/Authenticator'
+import {SignUp} from '../screens/Authenticator'
 import { NavigationContainer } from '@react-navigation/native'
 
 const Stack = createStackNavigator()

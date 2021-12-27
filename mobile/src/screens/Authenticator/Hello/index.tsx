@@ -1,10 +1,8 @@
-import React, { useContext, ReactElement } from 'react'
+import React, {ReactElement } from 'react'
 import { Button} from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack'
-import { Space} from '../../../components'
 import { RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import  styles  from '../../../assets/styles'
-import { UserContext } from '../../../UserContext'
 import { Text, View} from 'react-native'
 export type HelloTScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'HELLO'>
 
@@ -12,7 +10,6 @@ export type HelloT = {
   navigation: HelloTScreenNavigationProp
 }
 const Hello = ({ navigation }: HelloT): ReactElement => {
-  const {currentUser} = useContext(UserContext)
   const _onPressSignIn = () => {
     navigation.navigate('SIGN_IN');
   };

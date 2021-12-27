@@ -4,12 +4,10 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { RouteProp } from '@react-navigation/native'
 import * as Yup from 'yup'
 import { AppContainer, Button, Space, TextError, Input } from '../../../components'
+//import AppContainer from '@components2'
 import { goBack } from '../../../constants'
-import { RootStackParamList } from '../../../AppNavigator'
 import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import { UserContext } from '../../../UserContext'
-import { Text} from 'react-native'
-import {registerOnMongoDb} from '../../../utils/User'
 
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'CONFIRM_SIGN_UP'>
 type ProfileScreenRouteProp = RouteProp<RootStackSignOutParamList, 'CONFIRM_SIGN_UP'>

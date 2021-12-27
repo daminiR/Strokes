@@ -1,11 +1,9 @@
-import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
+import {Chip } from 'react-native-elements'
 import { useFormikContext} from 'formik';
-import React, { useRef, useEffect, useContext, useState, ReactElement } from 'react'
-import {View, ScrollView, StyleSheet} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, {useEffect,useState} from 'react'
 import styles from '../../assets/styles'
 import LinearGradient from 'react-native-linear-gradient'
-import {GameLevelChoose} from '../ChooseSportChips/'
+import {GameLevelChoose} from '../GameLevelChoose/'
 import { EditFields, ProfileFields} from '../../localModels/UserSportsList'
 
 const intermediate = {

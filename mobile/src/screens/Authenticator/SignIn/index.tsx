@@ -1,15 +1,16 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
-import {useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
 import {signInSlides, iniitialSignInForm} from '../../../constants'
 import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import { ProfileFields} from '../../../localModels/UserSportsList'
-import {Cancel, PhoneInput, EmailInput, PrevButton, NextButton} from '../../../components'
-import { ConfirmationCode } from '../../../components'
+import {Cancel} from '../../../components/Cancel'
+import {PhoneInput} from '../../../components/Inputs'
+import {PrevButton} from '../../../components/PrevButton'
+import {NextButton} from '../../../components/NextButton'
+import { ConfirmationCode } from '../../../components/ConfirmationCode'
 import { registerOnFirebase} from '../../../utils/User'
-import { UserContext } from '../../../UserContext'
 import {useNavigation} from '@react-navigation/native';
 import {View} from 'react-native'
 import styles from '../../../assets/styles'
@@ -37,7 +38,6 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
 
 export const Slider =  ({changeEmail}) => {
   const {validateField, setTouched, values, errors, touched, setFieldTouched} = useFormikContext<ProfileFields>();
-  const {setIsUseOnMongoDb} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const navigation = useNavigation()
@@ -90,7 +90,7 @@ const _confirmSignInGC = () => {
           //setAuthOverlay(true)
           //console.log("changeemail here")
         //}
-        setIsUseOnMongoDb(true);
+        //setIsUseOnMongoDb(true);
       })
       .catch(async (err) => {
         //await auth().currentUser.delete()
