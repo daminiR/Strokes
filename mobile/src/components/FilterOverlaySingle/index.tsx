@@ -3,7 +3,8 @@ import React, { createContext, useEffect, useState } from 'react'
 import {FilterChip} from '../FilterChip'
 import { View, Text } from 'react-native';
 import {Overlay, CheckBox, Card} from 'react-native-elements'
-import { Cancel, Done, } from '..'
+import { Cancel, } from '../Cancel'
+import {  Done, } from '../Done/'
 import _ from 'lodash'
 import {FilterFields} from '../../localModels/UserSportsList'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../utils/AsyncStorage/retriveData'
@@ -11,9 +12,9 @@ import {defaultAgeRange} from '../../constants'
 import { useFormikContext} from 'formik'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import {_storeAgeRangeFilter, _storeGameLevelFilter, _storeSportFilter} from '../../utils/AsyncStorage/storeData'
+import {FilterSportContext} from '../../Contexts'
 
   //// TODO : this needs to update every time user changes list of activities
-export const FilterSportContext = createContext(null);
 const FilterOverlaySingle = ({filter, setFilter}) => {
   const {setValues, values: filterValues } = useFormikContext<FilterFields>();
   const [multiSliderValue, setMultiSliderValue] = useState(defaultAgeRange);

@@ -1,82 +1,18 @@
 import {Card} from 'react-native-elements'
-import React, {useContext, useState, useEffect} from 'react'
-import {DoneCancelContext} from '../../screens/Authenticator/Profile/index'
+import React, {useContext, useState} from 'react'
+import {DoneCancelContext} from '../../Contexts'
 import {View} from 'react-native';
 import { EditInputVar} from '../../cache'
 import {sportsList} from '../../constants';
 import styles from '../../assets/styles'
 import {SportChips} from '../SportsChips'
-import { Cancel, Done, } from '..'
+import { Cancel, } from '../Cancel'
+import {  Done, } from '../Done/'
 import { EditFields} from '../../localModels/UserSportsList'
 import _ from 'lodash'
 import { useFormikContext} from 'formik';
-import {Button, Overlay, CheckBox, Text} from 'react-native-elements'
 import { ProfileFields} from '../../localModels/UserSportsList'
 
-
- const GameLevelChoose = ({removeSport, sport, getData,setGameLevelInput, setDynamicStyle, isVisible, setIsVisible, isSignUp}) => {
-  const [gameLevel, setGameLevel] = useState(null);
-  const _onPressGameLevel = (gameLevel) => {
-    setGameLevel(gameLevel)
-  };
-  const _onCancel = () => {
-    //getData(sport, false, gameLevel);
-    // visual changes//
-    setGameLevel(null)
-    setDynamicStyle(styles.ChipButton);
-    setIsVisible(false)
-    // visual changes//
-  };
-  const _onDone = () => {
-    // visual changes//
-    if (gameLevel) {
-      getData(sport, true, gameLevel);
-      //setIsDisplayInput(true)
-      setGameLevelInput(gameLevel)
-      setIsVisible(false)
-    }
-    // visual changes//
-  };
-  const _onPressRemoveSport = () => {
-    removeSport(sport)
-    setIsVisible(false)
-  }
-  return (
-    <Overlay isVisible={isVisible}>
-      <View style={styles.top}>
-        <Cancel _onPressCancel={_onCancel} />
-        <Done _onPressDone={_onDone} />
-      </View>
-      <View style={{marginTop: 20}}>
-        <Text style={styles.filtersText}>Filter level for:</Text>
-        <CheckBox
-          title="Beginner"
-          checked={gameLevel === '0' ? true : false}
-          onPress={() => _onPressGameLevel('0')}
-        />
-        <CheckBox
-          title="Intermediate"
-          checked={gameLevel === '1' ? true : false}
-          onPress={() => _onPressGameLevel('1')}
-        />
-        <CheckBox
-          title="Advanced"
-          checked={gameLevel === '2' ? true : false}
-          onPress={() => _onPressGameLevel('2')}
-        />
-        <View style={styles.helloButtons}>
-            <Button
-              title="Remove Sport"
-              titleStyle={styles.buttonText}
-              onPress={() => _onPressRemoveSport()}
-              style={styles.buttonIndStyle}
-              buttonStyle={styles.buttonStyle}
-            />
-        </View>
-      </View>
-    </Overlay>
-  );
-}
 
 const removeSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports) => {
       const allSports = temptSports
@@ -201,4 +137,4 @@ const ChooseSportsChips = ({isSignUp}) => {
     renderFormikSports()
   )
 };
-export {GameLevelChoose, ChooseSportsChips}
+export {ChooseSportsChips}

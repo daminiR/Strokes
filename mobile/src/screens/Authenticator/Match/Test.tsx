@@ -4,11 +4,9 @@ import {UserContext} from '../../../UserContext'
 import {FAB} from 'react-native-elements'
 import Swiper from 'react-native-deck-swiper'
 import { City } from '../../../components/City/City';
-import { MatchCard } from '../../../components/';
-import { Filters } from '../../../components/Filters/Filters';
+import { MatchCard, Filters} from '../../../components/';
 import styles from '../../../assets/styles/'
 import {READ_SQUASH} from '../../../graphql/queries/profile'
-import {MatchesProfileContext} from './Match'
 import {renderMatches, swipeRightLiked, swipeLeftDisliked} from '../../../utils/matching/swipeFuntions'
 import { useLazyQuery, useMutation} from '@apollo/client'
 import {UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '../../../graphql/mutations/profile'

@@ -2,22 +2,15 @@ import React, {createContext, useRef, useEffect, useState} from "react";
 import auth from '@react-native-firebase/auth'
 import SignInStack from './navigation/SignInStack'
 import SignOutStack from './navigation/SignOutStack'
-import SportAppStack from './navigation/SportsAppStack'
-import { ApolloErrorScreen, Hello }  from './screens/Authenticator/'
-import {isProfileCompleteVar} from './cache'
-import {useReactiveVar} from '@apollo/client'
-import { GET_PROFILE_STATUS, READ_SQUASH, GET_SELECTED_SQUASH, READ_SQUASHES } from './graphql/queries/profile'
-import { useQuery, useSubscription, useMutation, useLazyQuery} from '@apollo/client'
+import { READ_SQUASH } from './graphql/queries/profile'
+import { useSubscription, useLazyQuery} from '@apollo/client'
 import {MESSAGE_POSTED} from './graphql/queries/profile'
-import {createPatronList} from './utils/matching/patron_list'
 import { GET_POTENTIAL_MATCHES} from './graphql/queries/profile'
-
 import { useApolloClient} from '@apollo/client'
 export const UserContext = createContext(null);
 export const AuthNavigator = () => {
   const [currentUser, setCurrentUser ] = useState(null)
   const [isProfileComplete, setProfileState ] = useState(false)
-  const [isApolloConected, setIsApolloConected ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(false);
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
@@ -26,7 +19,6 @@ export const AuthNavigator = () => {
   const [allUsers, setAllUsers] = useState(null)
   const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
-  //const{data: potentialMatches} = useQuery(GET_POTENTIAL_MATCHES, {
   const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
@@ -44,25 +36,16 @@ export const AuthNavigator = () => {
       console.log("data", data)
       if (data) {
         setProfileState(true);
-        setIsApolloConected(true);
         setIsUseOnMongoDb(true);
         setData(data)
         if (loadingSigning) setLoadingSiginig(false);
       }
-      //onError: ({graphQLErrors, networkError}) => {
-          //if(networkError){
-            //setIsUseOnMongoDb(false);
-          //}
-      //}
     },
     onError: (({graphQLErrors, networkError}) => {
       console.log("errors")
       if (networkError){
         setIsUseOnMongoDb(false);
-        setIsApolloConected(false)
         console.log(networkError)
-        // go to appoloeError page
-        // logout user from firebase priority high! TODO: this needs to happen to every querry that takes place! actually dont need to do this -> this needs thinking
       }
         console.log(graphQLErrors)
 
@@ -117,14 +100,8 @@ export const AuthNavigator = () => {
   };
   const render2 = () =>{
     if (currentUser && isUserOnmongoDb) {
-      //if (isApolloConected){
           return !loadingSigning && !loadingMatches  && <SignInStack />;
       }
-      //else{
-        //// also remove current user and sign them out from firebase
-      //return !loadingApollo && <ApolloErrorScreen isApolloConected={isApolloConected} />;
-      //}
-    //}
     else {
       return !loadingUser &&  <SignOutStack />;
     }

@@ -9,7 +9,6 @@ import {
   FlatList
 } from 'react-native';
 import {Message} from '../../../components/Message/Message';
-import {Icon} from '../../../components/Icon/Icon';
 import {useNavigation} from '@react-navigation/native';
 import _ from 'lodash'
 import {calculateOfflineMatches} from '../../../utils/matching/dataManipulation'

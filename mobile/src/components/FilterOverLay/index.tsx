@@ -3,17 +3,13 @@ import React, { useRef, useEffect,useContext, useState } from 'react'
 import { View} from 'react-native';
 import {Overlay} from 'react-native-elements'
 import {UserContext} from '../../UserContext'
-import { Cancel, Done, } from '../../components'
-import FilterSportsChips from '../../components/FilterSportsChips'
+import { Cancel, } from '../Cancel'
+import {  Done, } from '../Done/'
+import {FilterSportsChips} from '../FilterSportsChips'
 import _ from 'lodash'
-import {FilterFields} from '../../localModels/UserSportsList'
 import GameLevelCheckBox from '../../components/GameLevelCheckBox'
 import AgeSliderFilter from '../../components/AgeSliderFilter'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../utils/AsyncStorage/retriveData'
-import {defaultAgeRange, defaultGameLevel} from '../../constants'
-import { useFormikContext, Formik, ErrorMessage} from 'formik'
-import {FilterSchema} from '../../validationSchemas/FilterSchema'
-import {createInitialFilterFormik} from '../../utils/formik/index'
 
   //// TODO : this needs to update every time user changes list of activities
 const FilterOverlay = ({filter, setFilter}) => {

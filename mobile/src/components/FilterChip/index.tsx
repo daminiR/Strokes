@@ -1,7 +1,7 @@
 import {Chip} from 'react-native-elements'
 import React, { useEffect, useContext } from 'react'
 import styles from '../../assets/styles'
-import {FilterSportContext} from '../FilterOverlaySingle'
+import {FilterSportContext} from '../../Contexts'
 import _ from 'lodash'
 import {_storeSportFilter} from '../../utils/AsyncStorage/storeData'
 
