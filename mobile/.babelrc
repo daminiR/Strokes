@@ -17,7 +17,7 @@
         // That located inside src folder.
         // Note: You can make a lot of aliases in here
         "alias": {
-          "@components2": "./src/components/*"
+          "@components": "./src/components/index.ts",
         }
       }
     ]
