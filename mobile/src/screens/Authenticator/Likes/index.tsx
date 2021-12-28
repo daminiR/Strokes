@@ -1,10 +1,10 @@
 import React from 'react'
 import { View} from 'react-native'
-import {Matches} from './Matches'
+import {Matches} from '@screens'
 import {StackNavigationProp } from '@react-navigation/stack'
-import { RootStackParamList } from '../../../AppNavigator'
+import { RootStackSignInParamList } from '@NavStack'
 
-type LikeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LIKES'>
+type LikeScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'LIKES'>
 export type LikeScreenRouteProp = RouteProp<RootStackSignInParamList, 'LIKES'>;
 type LikesT = {
   navigation: LikeScreenNavigationProp

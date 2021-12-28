@@ -3,11 +3,10 @@ import { Formik } from 'formik'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RouteProp } from '@react-navigation/native'
 import * as Yup from 'yup'
-import { AppContainer, Button, Space, TextError, Input } from '../../../components'
-//import AppContainer from '@components2'
-import { goBack } from '../../../constants'
-import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
-import { UserContext } from '../../../UserContext'
+import { AppContainer, Button, Space, TextError, Input } from '@components'
+import { goBack } from '@constants'
+import {  RootStackSignOutParamList } from '@navigation'
+import { UserContext } from '@UserContext'
 
 type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'CONFIRM_SIGN_UP'>
 type ProfileScreenRouteProp = RouteProp<RootStackSignOutParamList, 'CONFIRM_SIGN_UP'>

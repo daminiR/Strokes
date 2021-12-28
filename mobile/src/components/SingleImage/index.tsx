@@ -1,17 +1,16 @@
 import { Icon, Avatar } from 'react-native-elements'
 import React, {useEffect, useState, ReactElement } from 'react'
 import {launchImageLibrary} from 'react-native-image-picker';
-import { generateRNFile } from '../../utils/Upload'
-import { _check_single } from '../../utils/Upload'
-import styles, {SECONDARY_THEME} from '../../assets/styles/'
-import { EditFields, SignIn} from '../../localModels/UserSportsList'
+import { _check_single} from '@utils'
+import  {styles, SECONDARY_THEME} from '@styles'
 import { useFormikContext} from 'formik';
 import _ from 'lodash';
+import {EditFields, ProfileFields} from '@localModels';
 
 const SingleImage = ({img_idx}) => {
   const [Image, setImage] = React.useState(null)
   const [loading, setLoading] = React.useState(null)
-  const {setFieldValue, values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields>();
+  const {setFieldValue, values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields | ProfileFields>();
   const [displayImage, setDisplayImage] = React.useState(null)
   const [displayObj, setDisplayObj] = React.useState(null)
   const [disablePress, setDisablePress] = useState(false)

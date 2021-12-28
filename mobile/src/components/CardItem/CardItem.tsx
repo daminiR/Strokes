@@ -1,8 +1,8 @@
 import React from 'react';
-import styles from '../../assets/styles';
-import {TouchableWithoutFeedback, ImageBackground, ScrollView, View, Image, Dimensions} from 'react-native';
+import { styles } from '@styles';
+import {TouchableWithoutFeedback, ScrollView, View, Image, Dimensions} from 'react-native';
 import {Text} from 'react-native-elements'
-import {SportChips} from '../SportsChips'
+import {SportChips} from '@components'
 
 
 const CardItem = ({

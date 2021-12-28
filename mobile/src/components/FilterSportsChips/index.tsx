@@ -1,9 +1,9 @@
 import {Card} from 'react-native-elements'
 import React from 'react'
 import {View} from 'react-native';
-import styles from '../../assets/styles'
-import {FilterChip} from '../FilterChip'
-import { FilterFields } from '../../localModels/UserSportsList'
+import {styles} from '@styles'
+import {FilterChip} from '@components'
+import { FilterFields } from '@localModels'
 import { useFormikContext} from 'formik';
 import _ from 'lodash'
 

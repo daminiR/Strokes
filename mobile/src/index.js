@@ -1,20 +1,13 @@
 import React, { useEffect, useState, ReactElement } from 'react'
 import { Text} from 'react-native'
-import { ApolloErrorScreen, Hello }  from './screens/Authenticator'
 import { cache, persist} from './cache'
 import {AuthNavigator} from './UserContext'
 import { from ,createHttpLink, ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
-import { ApolloLink } from 'apollo-link'
-import firebase from '@react-native-firebase/storage'
-import { HttpLink } from 'apollo-link-http'
-import { onError } from "apollo-link-error"
 import { FormProvider } from './Contexts/FormContext'
-import {makeVar, NormalizedCacheObject, split} from '@apollo/client'
+import {split} from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities';
 import {CachePersistor, persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {onErrorLink} from './globalGraphqlErrors'
-import {isProfileCompleteVar} from './cache'
 import  { createUploadLink } from 'apollo-upload-client';
 import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { WebSocketLink } from '@apollo/client/link/ws'

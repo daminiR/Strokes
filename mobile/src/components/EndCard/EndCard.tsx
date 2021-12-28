@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../assets/styles';
+import {styles} from '@styles'
 import {ScrollView, Text, View} from 'react-native';
 
 

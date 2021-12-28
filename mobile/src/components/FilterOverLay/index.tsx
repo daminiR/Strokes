@@ -1,15 +1,11 @@
-import styles from '../../assets/styles';
+import {styles} from '@styles'
 import React, { useRef, useEffect,useContext, useState } from 'react'
 import { View} from 'react-native';
 import {Overlay} from 'react-native-elements'
-import {UserContext} from '../../UserContext'
-import { Cancel, } from '../Cancel'
-import {  Done, } from '../Done/'
-import {FilterSportsChips} from '../FilterSportsChips'
+import {UserContext} from '@UserContext'
+import {  Done, Cancel, FilterSportsChips} from '@components'
 import _ from 'lodash'
-import GameLevelCheckBox from '../../components/GameLevelCheckBox'
-import AgeSliderFilter from '../../components/AgeSliderFilter'
-import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../utils/AsyncStorage/retriveData'
+import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '@localStore'
 
   //// TODO : this needs to update every time user changes list of activities
 const FilterOverlay = ({filter, setFilter}) => {

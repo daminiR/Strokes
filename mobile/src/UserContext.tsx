@@ -1,11 +1,10 @@
 import React, {createContext, useRef, useEffect, useState} from "react";
 import auth from '@react-native-firebase/auth'
-import SignInStack from './navigation/SignInStack'
-import SignOutStack from './navigation/SignOutStack'
-import { READ_SQUASH } from './graphql/queries/profile'
+import { SignOutStack, MatchStackScreen} from '@NavStack'
+import { READ_SQUASH } from './graphql/queries'
 import { useSubscription, useLazyQuery} from '@apollo/client'
-import {MESSAGE_POSTED} from './graphql/queries/profile'
-import { GET_POTENTIAL_MATCHES} from './graphql/queries/profile'
+import {MESSAGE_POSTED} from './graphql/queries'
+import { GET_POTENTIAL_MATCHES} from './graphql/queries'
 import { useApolloClient} from '@apollo/client'
 export const UserContext = createContext(null);
 export const AuthNavigator = () => {
@@ -100,7 +99,7 @@ export const AuthNavigator = () => {
   };
   const render2 = () =>{
     if (currentUser && isUserOnmongoDb) {
-          return !loadingSigning && !loadingMatches  && <SignInStack />;
+          return !loadingSigning && !loadingMatches  && <MatchStackScreen />;
       }
     else {
       return !loadingUser &&  <SignOutStack />;

@@ -1,11 +1,11 @@
 import {Card, Text, Icon} from 'react-native-elements'
 import React from 'react'
 import {View} from 'react-native';
-import styles from '../../assets/styles'
-import { EditFields} from '../../localModels/UserSportsList'
+import {styles} from '@styles'
+import { EditFields} from '@localModels'
 import { useFormikContext} from 'formik';
 import {_editDescription} from '../../utils/navigation'
-import {EditPencil} from '../../components'
+import {EditPencil} from '@components'
 
 const Description = () => {
   const {values: formikValues} = useFormikContext<EditFields>();

@@ -1,10 +1,9 @@
 import {Card} from 'react-native-elements'
 import React, { useState} from 'react'
 import {View} from 'react-native';
-import styles from '../../assets/styles'
+import {styles} from '@styles'
 import _ from 'lodash'
-import { Cancel, } from '../Cancel'
-import {  Done, } from '../Done/'
+import { Cancel, Done} from '@components'
 import {Button, Overlay, CheckBox, Text} from 'react-native-elements'
 
  const GameLevelChoose = ({removeSport, sport, getData,setGameLevelInput, setDynamicStyle, isVisible, setIsVisible, isSignUp}) => {

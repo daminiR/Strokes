@@ -1,12 +1,12 @@
-import styles from '../../assets/styles';
+import {styles} from '@styles'
 import React, { useEffect, useState } from 'react'
 import { View, Text } from 'react-native';
 import {CheckBox} from 'react-native-elements'
 import _ from 'lodash'
 import { useFormikContext} from 'formik';
-import {FilterFields} from '../../localModels/UserSportsList'
+import {FilterFields} from '@localModels'
 import { useImperativeHandle, forwardRef } from 'react'
-import {_storeGameLevelFilter} from '../../utils/AsyncStorage/storeData'
+import {_storeGameLevelFilter} from '@localStore'
 
 const GameLevelCheckBox =  (props, ref) => {
   useImperativeHandle(ref, () => ({

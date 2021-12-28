@@ -1,9 +1,9 @@
 import React, {ReactElement } from 'react'
 import { Button} from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackSignOutParamList } from '../../../navigation/SignOutStack'
-import  styles  from '../../../assets/styles'
-import { Text, View} from 'react-native'
+import { RootStackSignOutParamList } from '@navigationStack'
+import  {styles}  from '@styles'
+import { View} from 'react-native'
 export type HelloTScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'HELLO'>
 
 export type HelloT = {

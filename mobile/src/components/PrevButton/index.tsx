@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {Icon} from 'react-native-elements';
-import styles from '../../assets/styles'
+import {styles} from '@styles'
 
 const PrevButton = () => {
   return (

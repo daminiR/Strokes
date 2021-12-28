@@ -1,9 +1,9 @@
-import styles, {SECONDARY_THEME, DIMENSION_HEIGHT} from '../../assets/styles';
+import {styles, SECONDARY_THEME, DIMENSION_HEIGHT} from '@styles';
 import React, {useState} from 'react';
 import {TouchableOpacity } from 'react-native';
 import {Icon } from 'react-native-elements';
 import _ from 'lodash'
-import {FilterOverlaySingle} from '../FilterOverlaySingle'
+import {FilterOverlaySingle} from '@components'
 
 
 const Filters = () => {

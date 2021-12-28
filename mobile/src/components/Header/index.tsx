@@ -3,7 +3,7 @@ import { Platform, TouchableOpacity, View, StyleSheet, GestureResponderEvent } f
 import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { useTheme } from '@react-navigation/native'
 import Fontisto from 'react-native-vector-icons/Fontisto'
-import { primary, secondary, W } from '../../constants'
+import { primary, secondary, W } from '@constants'
 
 const styles = StyleSheet.create({
   container: {

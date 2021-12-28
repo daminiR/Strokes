@@ -1,17 +1,16 @@
 import React, { useEffect, useContext, useState } from 'react'
-import styles from '../../../assets/styles';
-import {UserContext} from '../../../UserContext'
+import {styles } from '@styles';
+import {UserContext} from '@UserContext'
 import {
   Text,
   TouchableOpacity,
-  ImageBackground,
   View,
   FlatList
 } from 'react-native';
-import {Message} from '../../../components/Message/Message';
+import {Message} from '@components';
 import {useNavigation} from '@react-navigation/native';
 import _ from 'lodash'
-import {calculateOfflineMatches} from '../../../utils/matching/dataManipulation'
+import {calculateOfflineMatches} from '@utils'
 
 const renderMessage = (item, navigation, currentUserID) => {
     const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0)

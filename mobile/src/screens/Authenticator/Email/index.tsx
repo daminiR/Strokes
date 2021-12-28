@@ -2,11 +2,11 @@ import React, { useContext, useState, ReactElement } from 'react'
 import { Formik } from 'formik'
 import { StackNavigationProp } from '@react-navigation/stack'
 import * as Yup from 'yup'
-import { AppContainer, Button, Space, TextError, Input } from '../../../components'
-import { onScreen, goBack } from '../../../constants'
-import {UserContext} from '../../../UserContext'
+import { AppContainer, Button, Space, TextError, Input } from '@components'
+import { onScreen, goBack } from '@constants'
+import {UserContext} from '@UserContext'
 import {Text} from 'react-native'
-import {RootStackSignOutParamList } from '../../../navigation/SignOutStack'
+import {RootStackSignOutParamList } from '@navigationStack'
 // add error checking and validation checking soon??
 //type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'EMAIL'>
 type EmailScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'EMAIL'>

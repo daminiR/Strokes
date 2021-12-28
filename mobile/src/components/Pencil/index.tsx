@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react'
 import { Icon } from 'react-native-elements'
-import styles from '../../assets/styles'
+import {styles} from '@styles'
 
 
 const EditPencil = ({_edit}) => {

@@ -1,32 +1,19 @@
 import React, { useRef, createContext, useEffect, useContext, useState, ReactElement } from 'react'
 import {StackNavigationProp } from '@react-navigation/stack'
 import auth from '@react-native-firebase/auth'
-import {
-  TouchableOpacity,
-  View,
-  Modal,
-  StyleSheet,
-  Text,
-} from 'react-native';
-import styles from '../../../assets/styles/'
+import {View, Modal} from 'react-native';
+import {styles} from '@styles'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { RootStackParamList } from '../../../AppNavigator'
-import {UserContext} from '../../../UserContext'
+import {UserContext} from '@UserContext'
 import { useFormikContext, Formik} from 'formik';
 import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
-import {GET_INPUT_TYPE, READ_SQUASH} from '../../../graphql/queries/profile'
-import {UPDATE_USER_PROFILE} from '../../../graphql/mutations/profile'
-import {ProfileView} from './ProfileView'
-import {PictureWall} from './picturesWall'
-import { EditFields} from '../../../localModels/UserSportsList'
-import {ProfileSettings} from './profileSettings'
-import {_onPressSignOut} from '../../../utils/Upload'
-import { EditInput } from './EditInputs'
-import { cityVar, EditInputVar} from '../../../cache'
-import {convertImagesToFormat } from '../../../utils/User'
-import {createInitialValuesFormik } from '../../../utils/formik'
-import {Done, Cancel} from '../../../components'
-import {DoneCancelContext, ProfileContext} from '../../../Contexts'
+import {GET_INPUT_TYPE, READ_SQUASH, UPDATE_USER_PROFILE} from '@graphQL'
+import {ProfileSettings, ProfileView, EditInput, PictureWall, Done, Cancel} from '@components'
+import { EditFields} from '@localModels'
+import { cityVar, EditInputVar} from '@cache'
+import {convertImagesToFormat, createInitialValuesFormik, _onPressSignOut} from '@utils'
+import {DoneCancelContext} from '@Contexts'
 
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
 export type ProfileScreenRouteProp = RouteProp<RootStackSignInParamList, 'PROFILE'>;

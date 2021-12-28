@@ -1,6 +1,6 @@
 import React, {useState, ReactElement } from 'react'
-import styles from '../../../assets/styles'
-import { AppContainer, Space } from '../../../components'
+import {styles } from '@styles'
+import { AppContainer, Space } from '@components'
 import { Text } from 'react-native'
 import { Button, Overlay } from 'react-native-elements';
 import Emoji from 'react-native-emoji'

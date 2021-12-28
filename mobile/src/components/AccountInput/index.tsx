@@ -1,16 +1,14 @@
-import React, { useContext, useState, useCallback, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import {View, Modal} from 'react-native';
-import styles from '../../assets/styles/'
-import {GET_ACCOUNT_DETAIL_INPUT_TYPE} from '../../graphql/queries/profile'
-import {Cancel} from '../Cancel'
-import {Done} from '../Done'
+import {styles} from '@styles'
+import {GET_ACCOUNT_DETAIL_INPUT_TYPE} from '@graphQL'
+import {Cancel, Done, EditAccountDetailsInput} from '@components'
 import {Button, ListItem} from 'react-native-elements';
-import { EditAccounDetailInputVar} from '../../cache'
-import {AccountList} from '../../constants'
+import { EditAccounDetailInputVar} from '@cache'
+import {AccountList} from '@constants'
 import { useFormikContext} from 'formik';
-import { EditFields} from '../../localModels/UserSportsList'
-import {UserContext} from '../../UserContext'
-import { EditAccountDetailsInput} from '../../screens/Authenticator/Profile/EditInputs'
+import { EditFields} from '@localModels'
+import {UserContext} from '@UserContext'
 import { useQuery } from '@apollo/client'
 
 const AccountDetails = ({signOut}) => {
