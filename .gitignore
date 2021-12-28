@@ -16,7 +16,6 @@ android/app/google-services.json
 ios/sports_app/GoogleService-Info.plist
 ios/sports_app-Bridging-Header.h
 ios/File.swift
-assets/
 # OSX
 #
 .DS_Store
