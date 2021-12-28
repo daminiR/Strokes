@@ -1,10 +1,10 @@
 import {Chip } from 'react-native-elements'
 import { useFormikContext} from 'formik';
 import React, {useEffect,useState} from 'react'
-import styles from '../../assets/styles'
+import {styles} from '@styles'
 import LinearGradient from 'react-native-linear-gradient'
-import {GameLevelChoose} from '../GameLevelChoose/'
-import { EditFields, ProfileFields} from '../../localModels/UserSportsList'
+import {GameLevelChoose} from '@components'
+import { EditFields, ProfileFields} from '@localModels'
 
 const intermediate = {
                  colors: ['#ff7f02', 'white', 'white', 'white'],

@@ -1,13 +1,12 @@
-import styles from '../../assets/styles';
-import React, { useRef, useEffect, createContext,useContext, useState, ReactElement } from 'react'
+import React, {useEffect, useState } from 'react'
 import {Text, View} from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
-import { defaultAgeRange } from '../../constants'
+import { defaultAgeRange } from '@constants'
 import _ from 'lodash'
-import { useFormikContext, Formik} from 'formik';
-import {FilterFields} from '../../localModels/UserSportsList'
+import { useFormikContext} from 'formik';
+import {FilterFields} from '@localModels'
 import { useImperativeHandle, forwardRef } from 'react'
-import {_storeAgeRangeFilter} from '../../utils/AsyncStorage/storeData'
+import {_storeAgeRangeFilter} from '@localStore'
 
 const AgeSliderFilter = (props, ref) => {
 useImperativeHandle(ref, () => ({

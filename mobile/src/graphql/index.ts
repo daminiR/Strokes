@@ -1,1 +1,2 @@
-export * from './mutations/profile'
+export * from './mutations'
+export * from './queries'

@@ -1,20 +1,16 @@
-import React, { useEffect, useRef, useContext,createContext, useState } from 'react'
+import React, { useEffect, useContext,createContext, useState } from 'react'
 import {StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../../AppNavigator'
-import {UserContext} from '../../../UserContext'
+import {UserContext} from '@UserContext'
 import { Formik} from 'formik'
 import _ from 'lodash'
-import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../../utils/AsyncStorage/retriveData'
-import {createInitialFilterFormik} from '../../../utils/formik/index'
-import {Patron} from './Match'
-import {createPatronList} from '../../../utils/matching/patron_list'
-import { useQuery, useApolloClient} from '@apollo/client'
-import styles from '../../../assets/styles/'
-import {View, Alert, Button} from 'react-native'
+import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '@localStore'
+import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} from '@utils'
+import {Patron} from '@screens'
+import {useApolloClient} from '@apollo/client'
+import {styles} from '@styles'
 import FlashMessage from "react-native-flash-message";
 import { showMessage, hideMessage } from "react-native-flash-message";
-import { GET_POTENTIAL_MATCHES, READ_SQUASH} from '../../../graphql/queries/profile'
-import {calculateOfflineMatches} from '../../../utils/matching/dataManipulation'
 
 type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
 export const FilterSportContext = createContext(null);

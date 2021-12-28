@@ -1,9 +1,9 @@
 import {Chip} from 'react-native-elements'
 import React, { useEffect, useContext } from 'react'
-import styles from '../../assets/styles'
-import {FilterSportContext} from '../../Contexts'
+import {styles} from '@styles'
+import {FilterSportContext} from '@Contexts'
 import _ from 'lodash'
-import {_storeSportFilter} from '../../utils/AsyncStorage/storeData'
+import {_storeSportFilter} from '@localStore'
 
 const FilterChip = (props) => {
   const sport = props.sport;

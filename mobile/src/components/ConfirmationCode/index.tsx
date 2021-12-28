@@ -2,9 +2,9 @@ import React, {useRef, useEffect, useState } from 'react'
 import {Input, Button, Text} from 'react-native-elements'
 import { useFormikContext} from 'formik';
 import { View} from 'react-native'
-import styles from '../../assets/styles/'
-import { ProfileFields} from '../../localModels/UserSportsList'
-import { formatCode} from '../../../common/index'
+import {styles} from '@styles'
+import { ProfileFields} from '@localModels'
+import { formatCode} from '@validation'
 
 const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {
   const {values, setFieldValue, errors, touched, handleBlur, handleChange} = useFormikContext<ProfileFields>();

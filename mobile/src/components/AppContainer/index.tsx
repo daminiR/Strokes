@@ -1,10 +1,9 @@
 import React, { memo } from 'react'
-import { StyleSheet, View, ScrollView, GestureResponderEvent } from 'react-native'
+import { StyleSheet, View, GestureResponderEvent } from 'react-native'
 import StatusBarAlert from 'react-native-statusbar-alert'
 import { useTheme } from '@react-navigation/native'
-import { Space } from '../Space'
-import { Loading } from '../Loading'
-import { black, white } from '../../constants'
+import { Loading } from '@components'
+import { black, white } from '@constants'
 
 const styles = StyleSheet.create({
   container: {

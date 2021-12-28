@@ -1,17 +1,14 @@
 import {Card} from 'react-native-elements'
 import React, {useContext, useState} from 'react'
-import {DoneCancelContext} from '../../Contexts'
+import {DoneCancelContext} from '@Contexts'
 import {View} from 'react-native';
-import { EditInputVar} from '../../cache'
-import {sportsList} from '../../constants';
-import styles from '../../assets/styles'
-import {SportChips} from '../SportsChips'
-import { Cancel, } from '../Cancel'
-import {  Done, } from '../Done/'
-import { EditFields} from '../../localModels/UserSportsList'
+import { EditInputVar} from '@cache'
+import {sportsList} from '@constants';
+import { styles } from '@styles'
+import {  Done, Cancel, SportChips} from '@components'
+import { EditFields, ProfileFields} from '@localModels'
 import _ from 'lodash'
 import { useFormikContext} from 'formik';
-import { ProfileFields} from '../../localModels/UserSportsList'
 
 
 const removeSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports) => {

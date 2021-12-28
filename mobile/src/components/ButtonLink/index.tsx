@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { StyleSheet, StyleProp, ViewStyle, TextStyle, TouchableOpacity } from 'react-native'
-import { Txt } from '../Txt'
+import { Txt } from '@components'
 
 const styles = StyleSheet.create({
   container: {

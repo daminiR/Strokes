@@ -1,18 +1,15 @@
-import styles from '../../assets/styles';
-import React, { createContext, useEffect, useState } from 'react'
-import {FilterChip} from '../FilterChip'
+import {styles} from '@styles'
+import React, {useEffect, useState } from 'react'
 import { View, Text } from 'react-native';
 import {Overlay, CheckBox, Card} from 'react-native-elements'
-import { Cancel, } from '../Cancel'
-import {  Done, } from '../Done/'
+import { Cancel, FilterChip, Done} from '@components'
 import _ from 'lodash'
-import {FilterFields} from '../../localModels/UserSportsList'
-import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../utils/AsyncStorage/retriveData'
-import {defaultAgeRange} from '../../constants'
+import {FilterFields} from '@localModels'
+import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter, _storeAgeRangeFilter, _storeGameLevelFilter, _storeSportFilter} from '@localStore'
+import {defaultAgeRange} from '@constants'
 import { useFormikContext} from 'formik'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
-import {_storeAgeRangeFilter, _storeGameLevelFilter, _storeSportFilter} from '../../utils/AsyncStorage/storeData'
-import {FilterSportContext} from '../../Contexts'
+import {FilterSportContext} from '@Contexts'
 
   //// TODO : this needs to update every time user changes list of activities
 const FilterOverlaySingle = ({filter, setFilter}) => {

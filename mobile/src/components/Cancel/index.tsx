@@ -1,6 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, Text} from 'react-native';
-import styles from '../../assets/styles/'
+import { styles } from '@styles'
 
 const Cancel = ({_onPressCancel=null}) => {
   return (

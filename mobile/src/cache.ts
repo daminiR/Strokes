@@ -3,7 +3,7 @@ import { from ,createHttpLink, ReactiveVar, ApolloClient, ApolloProvider, InMemo
 import { makeVar} from '@apollo/client'
 import {persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {SportsList, InputT, NameT, PotentialMatchT} from './localModels/UserSportsList'
+import {SportsList, InputT, NameT, PotentialMatchT} from '@localModels'
 
 const sportInitialValue: SportsList = [];
 export const sportsItemsVar:ReactiveVar<SportsList> = makeVar<SportsList>(sportInitialValue)

@@ -5,6 +5,27 @@ const GENDER = ["Female", "Male"]
 const phoneRegExp = /^[0-9]+$/
 const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const imageURLRegex = /https?:\/\//
+
+const FilterSchema = yup.object().shape({
+   ageRange: yup.object().shape({
+     minAge: yup.number().required(),
+     maxAge: yup.number().required(),
+   }),
+   sportFilter: yup.array(
+     yup.object({
+       sport: yup.string().required(),
+       filterSelected: yup.boolean().required(),
+     }).required(),
+   ),
+   gameLevels: yup.object().shape({
+     gameLevel0: yup.boolean().required(),
+     gameLevel1: yup.boolean().required(),
+     gameLevel2: yup.boolean().required(),
+   })
+   .test('at-least-one-required', 'you check atleast one', value => !!(value.gameLevel0 || value.gameLevel1 || value.gameLevel2)),
+ });
+
+
 const signInSchema = yup.object().shape({
     phoneNumber: yup
     .string()
@@ -141,6 +162,6 @@ const sanitizePhone = (text) => {
     6
   )}-${phoneNumber.slice(6, 10)}`;
 }
-export {signUpSchema, sanitizePhone, signInSchema, formatPhoneNumber, formatCode}
+export {FilterSchema, signUpSchema, sanitizePhone, signInSchema, formatPhoneNumber, formatCode}
 
 

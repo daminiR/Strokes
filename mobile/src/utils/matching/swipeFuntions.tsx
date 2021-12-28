@@ -1,8 +1,8 @@
 import { dislikesVar, likesVar} from '../../cache'
 import React from 'react'
-import {MAX_LIKES, MAX_DISLIKES} from '../../constants'
+import {MAX_DISLIKES, MAX_LIKES} from '@constants'
 import _ from 'lodash'
-import {PotentialMatchType, Sport, ImageSetT} from '../../localModels/UserSportsList'
+import {PotentialMatchType, Sport, ImageSetT} from '@localModels'
 import { Card } from 'react-native-card-stack-swiper';
 import {CardItem} from '../../components/CardItem/CardItem';
 import {TouchableOpacity} from 'react-native';

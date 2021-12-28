@@ -1,20 +1,16 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import { useFormikContext, Formik} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
-import {signInSlides, iniitialSignInForm} from '../../../constants'
-import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
+import {signInSlides, iniitialSignInForm} from '@constants'
+import {  RootStackSignOutParamList } from '@navigationStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import { ProfileFields} from '../../../localModels/UserSportsList'
-import {Cancel} from '../../../components/Cancel'
-import {PhoneInput} from '../../../components/Inputs'
-import {PrevButton} from '../../../components/PrevButton'
-import {NextButton} from '../../../components/NextButton'
-import { ConfirmationCode } from '../../../components/ConfirmationCode'
-import { registerOnFirebase} from '../../../utils/User'
+import { ProfileFields} from '@localModels'
+import {ConfirmationCode, Cancel, PhoneInput, NextButton} from '@components'
+import { registerOnFirebase} from '@utils'
 import {useNavigation} from '@react-navigation/native';
 import {View} from 'react-native'
-import styles from '../../../assets/styles'
-import  { signInSchema } from '../../../../common'
+import {styles }from '@styles'
+import  { signInSchema } from '@validation'
 import  _ from 'lodash'
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>

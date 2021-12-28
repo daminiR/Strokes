@@ -1,22 +1,35 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import {useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
-import auth from '@react-native-firebase/auth'
 import {useNavigation} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
-import {signUpSlides, intitialFormikSignUp, TOTAL_SIGNUP_SLIDES} from '../../../constants'
-import {  RootStackSignOutParamList } from '../../../navigation/SignOutStack'
+import {signUpSlides, intitialFormikSignUp, TOTAL_SIGNUP_SLIDES} from '@constants'
+import {  RootStackSignOutParamList } from 'src/navigation'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import { ADD_PROFILE2 } from '../../../graphql/mutations/profile'
-import { ProfileFields} from '../../../localModels/UserSportsList'
-import {NeighborhoodSearch, ConfirmationCode, PhoneInput, GenderInput, EmailInput, BirthdayInput, NameInput, DescriptionInput, ImageInput, SportsInput, Cancel, NextButton, PrevButton, AppContainer} from '../../../components'
-import { registerOnFirebase, registerOnMongoDb} from '../../../utils/User'
-import { UserContext} from '../../../UserContext'
-import {Text, TouchableWithoutFeedback, Keyboard, View,StyleSheet} from 'react-native'
+import { ADD_PROFILE2 } from '@graphQL'
+import {ProfileFields} from '@localModels';
+import {
+  NeighborhoodSearch,
+  ConfirmationCode,
+  PhoneInput,
+  GenderInput,
+  EmailInput,
+  BirthdayInput,
+  NameInput,
+  DescriptionInput,
+  ImageInput,
+  SportsInput,
+  Cancel,
+  NextButton,
+  PrevButton,
+  AppContainer,
+} from '@components';
+import { registerOnFirebase, registerOnMongoDb} from '@utils'
+import { UserContext} from '@UserContext'
+import {Keyboard, View} from 'react-native'
 import  _ from 'lodash'
-import styles from '../../../assets/styles'
-import  { signUpSchema} from '../../../../common'
-import  AnimatedLoader from 'react-native-animated-loader'
+import { styles } from '@styles'
+import  { signUpSchema} from '@validation'
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {

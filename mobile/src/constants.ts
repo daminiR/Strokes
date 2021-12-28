@@ -1,7 +1,6 @@
 import { Dimensions, Platform } from 'react-native'
-import {DIMENSION_HEIGHT} from './assets/styles'
-import { RadioButtonProps } from 'react-native-radio-buttons-group'
-import { _email, _phone_number, _neighborhood, _gender, _age, _first_name} from './utils/navigation'
+import {DIMENSION_HEIGHT} from '@styles'
+import { _email, _phone_number, _neighborhood, _gender, _age, _first_name} from './InputsVar'
 
 export const primary = '#50E3C2'
 export const secondary = '#ff06f4'

@@ -1,12 +1,11 @@
 import React, { useRef, useEffect, useContext, useState, ReactElement } from 'react'
 import { useFormikContext} from 'formik';
-import {Theme, Text, Chip, Card, Input, Button,withBadge, ListItem, Icon, Avatar, Badge } from 'react-native-elements'
+import {Text} from 'react-native-elements'
 import { View} from 'react-native'
-import styles from '../../assets/styles'
-import { EditFields, ProfileFields, SignIn} from '../../localModels/UserSportsList'
+import { EditFields, ProfileFields} from '@localModels'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import {API_KEY} from './API_KEY'
-import {DoneCancelContext} from '../../Contexts'
+import {DoneCancelContext} from '@Contexts'
 
 const GooglePlacesInput = ({isSignUp = false}) => {
   const { handleBlur, errors, setFieldTouched, touched, setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();

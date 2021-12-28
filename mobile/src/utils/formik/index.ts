@@ -1,17 +1,6 @@
-import styles from '../../assets/styles';
-import React, { useRef, useEffect,useContext, useState } from 'react'
-import { View} from 'react-native';
-import {Overlay} from 'react-native-elements'
-import {UserContext} from '../../UserContext'
-import { Cancel, Done, } from '../../components'
-import FilterSportsChips from '../../components/FilterSportsChips'
 import _ from 'lodash'
-import {FilterFields} from '../../localModels/UserSportsList'
-import GameLevelCheckBox from '../../components/GameLevelCheckBox'
-import AgeSliderFilter from '../../components/AgeSliderFilter'
-import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '../../utils/AsyncStorage/retriveData'
-import {defaultAgeRange, defaultGameLevel} from '../../constants'
-import { useFormikContext, Formik, ErrorMessage} from 'formik'
+import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '@localStore'
+import {defaultAgeRange, defaultGameLevel} from '@constants'
 
 const createInitialValuesFormik = (userData, phoneNumber, email) => {
     if (userData){

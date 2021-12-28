@@ -2,7 +2,6 @@ import React, { memo } from 'react'
 import { Text, StyleSheet, View } from 'react-native'
 import Spinner, { SpinnerType } from 'react-native-spinkit'
 import  AnimatedLoader from 'react-native-animated-loader'
-import { secondary } from '../../constants'
 
 const styles = StyleSheet.create({
   activityIndicator: {

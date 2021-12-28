@@ -1,8 +1,8 @@
 import {difference, union} from 'lodash'
 import {sanitizeCard} from './swipeFuntions'
 import _ from 'lodash'
-import {PatronListType, Sport, ImageSetT} from '../../localModels/UserSportsList'
-import { sportsList, defaultGameLevel, defaultAgeRange} from '../../constants'
+import {PatronListType, Sport, ImageSetT} from '@localModels'
+import { sportsList, defaultGameLevel, defaultAgeRange} from '@constants'
 
 export const patronCard = (card) => {
     let sports  = _.map(card.sports, (sportObj) => {
