@@ -26,6 +26,7 @@ const SingleImage = ({img_idx}) => {
       } else {
         // localimage is gettign set => add to uplaod images formik
         setDisplayImage(Image.assets[0].uri);
+        console.log("what are the images in uri")
         const imageObj = [
           {
             imageURL: Image.assets[0].uri,

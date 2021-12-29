@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'
 import  RNFetchBlob  from 'rn-fetch-blob'
 import * as mime from 'react-native-mime-types'
+import { ReactNativeFile, File } from 'apollo-upload-client'
+
 
 export  const generateRNFile =  (uri, name) => {
     console.log(uri)

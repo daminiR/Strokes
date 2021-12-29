@@ -6,7 +6,7 @@ import { Formik} from 'formik'
 import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '@localStore'
 import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} from '@utils'
-import {Patron} from '@screens'
+import {Patron} from '@components'
 import {useApolloClient} from '@apollo/client'
 import {styles} from '@styles'
 import FlashMessage from "react-native-flash-message";
