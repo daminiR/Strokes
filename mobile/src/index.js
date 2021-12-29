@@ -23,7 +23,7 @@ const App = () =>
   const uri_ws = process.env.React_App_WSlinkRemote
   useEffect(() => {
       //LogBox.ignoreLogs(['Warning: ...']);
-      LogBox.ignoreAllLogs();
+      //LogBox.ignoreAllLogs();
     async function init() {
       console.log('getting fired up');
       let newPersistor = new CachePersistor({
