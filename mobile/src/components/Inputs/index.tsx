@@ -243,25 +243,25 @@ const ImageInput = ({_submit, isSignUp}) => {
   }
     return (
       <>
-      <DismissKeyboard>
-      <View style={styles.phoneNumberContainer}>
-        <Input
-          placeholder="Phone Number"
-          label="Phone Number"
-          leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-          onEndEditing={() => _onDoneEditing()}
-          onChangeText={(text) => {
-            handleInput(text);
-          }}
-          keyboardType={'phone-pad'}
-          onBlur={handleBlur('phoneNumber')}
-          value={inputValue}
-        />
-        {errors.phoneNumber && touched.phoneNumber ? (
-          <Text>{errors.phoneNumber}</Text>
-        ) : null}
-      </View>
-      </DismissKeyboard>
+        <DismissKeyboard>
+          <View style={styles.phoneNumberContainer}>
+            <Input
+              placeholder="Phone Number"
+              label="Phone Number"
+              leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+              onEndEditing={() => _onDoneEditing()}
+              onChangeText={(text) => {
+                handleInput(text);
+              }}
+              keyboardType={'phone-pad'}
+              onBlur={handleBlur('phoneNumber')}
+              value={inputValue}
+            />
+            {errors.phoneNumber && touched.phoneNumber ? (
+              <Text>{errors.phoneNumber}</Text>
+            ) : null}
+          </View>
+        </DismissKeyboard>
       </>
     );}
   const BirthdayInput = ({isSignUp}) => {

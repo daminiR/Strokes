@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 import {generateRNFile} from '../Upload'
 import auth from '@react-native-firebase/auth'
 
-const registerOnFirebase = async (phoneNumber, email) => {
+const registerOnFirebase = async (phoneNumber) => {
 const authorize = new Promise(async (resolve, reject) => {
     await auth()
       .signInWithPhoneNumber(phoneNumber)

@@ -7,7 +7,8 @@ import AppIntroSlider from 'react-native-app-intro-slider'
 import { ProfileFields} from '@localModels'
 import {ConfirmationCode, Cancel, PhoneInput, NextButton} from '@components'
 import { registerOnFirebase} from '@utils'
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native'
+import {Button} from 'react-native-elements'
 import {View} from 'react-native'
 import {styles }from '@styles'
 import  { signInSchema } from '@validation'
@@ -50,8 +51,8 @@ export const Slider =  ({changeEmail}) => {
       setShowNextButton(true)
     }
   }
-  const _signIn = ( value ) => {
-    registerOnFirebase(values.phoneNumber, values.email)
+  const _signIn = () => {
+    registerOnFirebase(values.phoneNumber)
       .then((confirmation: any) => {
         this.slider.goToSlide(2);
         setConfirmationFunc(confirmation)
@@ -63,21 +64,26 @@ export const Slider =  ({changeEmail}) => {
   const renderNext = () => {
     return <NextButton />;
   };
-  const renderPrev = () => {
-    return <PrevButton />;
-  };
 
   const _onPrev = () => {
     errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
   };
   const _onNext = () => {
-    const index = this.slider.state.activeIndex
-    const field = _.find(signInSlides, ['key', index.toString()]).inputLabel
-    setFieldTouched(field)
-    !errors[field] && touched[field] &&
-    this.slider.goToSlide(index + 1, true)
+    const index = this.slider.state.activeIndex;
+    const field = _.find(signInSlides, ['key', index.toString()]).inputLabel;
+    setFieldTouched(field);
+
+    if (index == 0) {
+      _signIn();
+    } else {
+      !errors[field] &&
+        touched[field] &&
+        this.slider.goToSlide(index + 1, true);
+    }
   };
 const _confirmSignInGC = () => {
+  //console.log("confirmation func", confirmationFunc)
+
     confirmationFunc
       .confirm(values.confirmationCode)
       .then((userCredential) => {
@@ -135,9 +141,7 @@ const _confirmSignInGC = () => {
         showNextButton={showNextButton}
         showDoneButton={false}
         renderNextButton={renderNext}
-        renderPrevButton={renderPrev}
         onNext={() => _onNext()}
-        onPrev={() => _onPrev()}
         ref={(ref) => (this.slider = ref!)}
       />
   )

@@ -41,6 +41,7 @@ const ProfileSettingsInput = () => {
             sportsList.map((sport, i) => {
               return (
                 <SportChips
+                  isSignUp={false}
                   key={i}
                   sport={sport.sport}
                   gameLevel={sport.game_level.toString()}
