@@ -6,7 +6,7 @@ import { ProfileScreenNavigationProp} from '../../screens/Authenticator/Profile/
 import {styles} from '@styles'
 import { useFormikContext} from 'formik';
 import { EditFields} from '@localModels'
-import {_editSports, _editDescription} from '@utils'
+import {_editSports, _editDescription} from '../../InputsVar'
 
 type ProfileT = {
   navigation: ProfileScreenNavigationProp

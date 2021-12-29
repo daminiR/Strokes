@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import  { createUploadLink } from 'apollo-upload-client';
 import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { WebSocketLink } from '@apollo/client/link/ws'
+import { LogBox } from 'react-native'
 
 //TODO: async funtion persist check later
 
@@ -18,9 +19,11 @@ const App = () =>
 {
   const [client, setClient] = useState();
   const [persistor, setPersistor] = useState();
-  const uri_upload = process.env.React_App_UPLOAD_URI
-  const uri_ws = process.env.React_App_WSLINK_local;
+  const uri_upload = process.env.React_App_UriUploadRemote
+  const uri_ws = process.env.React_App_WSlinkRemote
   useEffect(() => {
+      //LogBox.ignoreLogs(['Warning: ...']);
+      LogBox.ignoreAllLogs();
     async function init() {
       console.log('getting fired up');
       let newPersistor = new CachePersistor({
@@ -32,12 +35,16 @@ const App = () =>
       //setPersistor(newPersistor);
       //newPersistor.pause()
       //newPersistor.purge()
+        console.log("uri", uri_upload)
+        console.log("uri",uri_ws)
       const uploadLink = createUploadLink({
       uri: uri_upload,
+      //uri: "http://169.254.63.0:4000/graphql"
+        //uri: 'http://192.168.1.12:4000/graphql',
       });
       const wsLink = new WebSocketLink({
-        //uri: 'ws://10.0.2.2:4000/graphql',
-        uri: uri_ws,
+        //uri: 'ws://192.168.1.12:4000/graphql',
+      uri: uri_ws,
         options: {
           reconnect: true,
         },
@@ -96,6 +103,7 @@ const App = () =>
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}
   //return renderInitial();
+    //only in androik
   enableFlipperApolloDevtools(client)
   return (
           <ApolloProvider client={client}>

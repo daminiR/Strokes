@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../../../MyLibrary">
-   </FileRef>
-   <FileRef
       location = "group:sports_app.xcodeproj">
    </FileRef>
    <FileRef

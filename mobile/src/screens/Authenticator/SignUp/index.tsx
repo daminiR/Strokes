@@ -123,6 +123,7 @@ const Slider =  () => {
       .catch((err) => {
         console.log(err);
       });
+    !_.isEmpty(errors) && console.log(errors)
   }
 
   const _confirmSignInGC = () => {
