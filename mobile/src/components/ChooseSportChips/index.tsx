@@ -11,16 +11,18 @@ import _ from 'lodash'
 import { useFormikContext} from 'formik';
 
 
-const removeSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports) => {
+const removeSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports, setTempSports2) => {
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
       setTempSports(filterSports);
+      setTempSports2(filterSports);
       isSignUp && setFieldValue('sports', filterSports);
 }
-const undoSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports) => {
+const undoSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports, setTempSports2) => {
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
       setTempSports(filterSports);
+      setTempSports2(filterSports);
       isSignUp && setFieldValue('sports', filterSports);
 }
 const ChooseSportsChips = ({isSignUp}) => {
@@ -28,6 +30,10 @@ const ChooseSportsChips = ({isSignUp}) => {
   let _onPressDoneInput = null
   let _onPressCancelInput = null
 
+    var setTempSports2 = null;
+   if (!isSignUp){
+    var {setTempSports2} = useContext(DoneCancelContext);
+   }
   const {setFieldValue, values: formikValues} = useFormikContext<EditFields | ProfileFields>();
   const [temptSports, setTempSports] = useState(formikValues.sports)
   const getData = (newSport, isSelected, game_level) => {
@@ -49,6 +55,7 @@ const ChooseSportsChips = ({isSignUp}) => {
         });
         console.log('new_vals 1', new_values);
         setTempSports(new_values)
+        setTempSports2(new_values)
         isSignUp && setFieldValue('sports', new_values)
       }
       else {
@@ -57,11 +64,13 @@ const ChooseSportsChips = ({isSignUp}) => {
         new_values = temptSports.concat(newSportObj);
         console.log("new_vals 2",new_values)
         setTempSports(new_values)
+        setTempSports2(new_values)
         isSignUp && setFieldValue('sports', new_values)
         } else {
         new_values = newSportObj;
         console.log("new_vals 3",new_values)
         setTempSports(new_values)
+        setTempSports2(new_values)
         isSignUp && setFieldValue('sports', new_values)
         }
       }
@@ -70,12 +79,12 @@ const ChooseSportsChips = ({isSignUp}) => {
       if (sportObjTemp){
       }
       else{
-        undoSportSelect(isSignUp, setFieldValue, newSport, setTempSports, temptSports)
+        undoSportSelect(isSignUp, setFieldValue, newSport, setTempSports, temptSports, setTempSports2)
       }
     }
   }
   const _removeSport = (sport) => {
-    removeSportSelect( isSignUp, setFieldValue, sport, setTempSports, temptSports)
+    removeSportSelect( isSignUp, setFieldValue, sport, setTempSports, temptSports, setTempSports2)
   }
   if (!isSignUp) {
     var {setDisplayInput} = useContext(DoneCancelContext);

@@ -223,7 +223,6 @@ export const styles =  StyleSheet.create({
 
   phoneNumberContainer: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
   },
@@ -252,7 +251,7 @@ export const styles =  StyleSheet.create({
   },
   sportsContainer: {
     flex: 1,
-    alignItems: 'center',
+    //alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
   },

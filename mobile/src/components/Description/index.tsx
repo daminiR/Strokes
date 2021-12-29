@@ -4,7 +4,7 @@ import {View} from 'react-native';
 import {styles} from '@styles'
 import { EditFields} from '@localModels'
 import { useFormikContext} from 'formik';
-import {_editDescription} from '../../utils/navigation'
+import {_editDescription} from '../../InputsVar'
 import {EditPencil} from '@components'
 
 const Description = () => {

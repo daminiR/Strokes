@@ -1,6 +1,6 @@
 import React from 'react'
 import { View} from 'react-native'
-import {Matches} from '@screens'
+import {Matches} from '@components'
 import {StackNavigationProp } from '@react-navigation/stack'
 import { RootStackSignInParamList } from '@NavStack'
 

@@ -100,6 +100,7 @@ const _onPressCancelProfile = () => {
     setFormikChanged(false)
     setIsVisible(false);
 }
+  const [temptSports2, setTempSports2] = useState(formikValues.sports)
 const _onPressDoneInput = () => {
     setValues({... formikValues,
               'description': tempInputValues.description ? tempInputValues.description : formikValues.description,
@@ -108,6 +109,7 @@ const _onPressDoneInput = () => {
               'age': tempInputValues.age ? tempInputValues.age : formikValues.age,
               'first_name': tempInputValues.first_name ? tempInputValues.first_name : formikValues.first_name,
               'last_name': tempInputValues.last_name ? tempInputValues.last_name : formikValues.last_name})
+              //'sports': temptSports2 ? temptSports2 : formikValues.sports})
     EditInputVar({inputType:'', displayInput: false})
     setDisplayInput(false);
 }
@@ -131,7 +133,11 @@ const doneCancelValues = {
   setDisplayInput: setDisplayInput,
   tempInputValues: tempInputValues,
   setTempInputValues: setTempInputValues,
+  setTempSports2: setTempSports2
 };
+  useEffect(() => {
+    console.log(" input tyep", inputType)
+    }, [inputType])
     return (
       <>
         <ProfileSettings
@@ -164,12 +170,14 @@ const doneCancelValues = {
               setIsVisible(!displayInput);
             }}>
             <View style={{flex: 1}}>
-              <View style={styles.top}>
-                <Cancel _onPressCancel={_onPressCancelInput} />
-                <Done _onPressDone={_onPressDoneInput} />
-              </View>
+              {inputType != 'Sports Input' ? (
+                <View style={styles.top}>
+                  <Cancel _onPressCancel={_onPressCancelInput} />
+                  <Done _onPressDone={_onPressDoneInput} />
+                </View>
+              ) : null}
               <DoneCancelContext.Provider value={doneCancelValues}>
-                <EditInput inputType={inputType} isSignUp={false}/>
+                <EditInput inputType={inputType} isSignUp={false} />
               </DoneCancelContext.Provider>
             </View>
           </Modal>

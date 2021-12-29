@@ -7,7 +7,8 @@ import { EditFields} from '@localModels'
 import {Image, Modal, ScrollView, Text, View} from 'react-native';
 import { Cancel, Done, EditPencil, ConfirmationCode, EditAccountInput} from '@components';
 import auth from '@react-native-firebase/auth'
-import {_editAccount, registerOnFirebase} from '@utils'
+import {registerOnFirebase} from '@utils'
+import {_editAccount} from '../../InputsVar'
 import { useQuery} from '@apollo/client'
 import {EditAccountInputVar} from '@cache'
 import { useFormikContext, Formik} from 'formik';
