@@ -1,21 +1,22 @@
 import React, { useRef, createContext, useEffect, useContext, useState, ReactElement } from 'react'
-import {StackNavigationProp } from '@react-navigation/stack'
+import {StackNavigationProp, RouteProp} from '@react-navigation/stack'
 import auth from '@react-native-firebase/auth'
 import {View, Modal} from 'react-native';
 import {styles} from '@styles'
-import ScrollableTabView from 'react-native-scrollable-tab-view'
-import { RootStackParamList } from '../../../AppNavigator'
+import { RootStackSignInParamList, ProfileInputEdits} from '@NavStack'
 import {UserContext} from '@UserContext'
 import { useFormikContext, Formik} from 'formik';
 import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
 import {GET_INPUT_TYPE, READ_SQUASH, UPDATE_USER_PROFILE} from '@graphQL'
-import {ProfileSettings, ProfileView, EditInput, PictureWall, Done, Cancel} from '@components'
+import {ProfileSettings, EditInput, Done, Cancel} from '@components'
 import { EditFields} from '@localModels'
 import { cityVar, EditInputVar} from '@cache'
 import {convertImagesToFormat, createInitialValuesFormik, _onPressSignOut} from '@utils'
 import {DoneCancelContext} from '@Contexts'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+const Tab  = createBottomTabNavigator()
 
-export type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PROFILE'>
+export type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'PROFILE'>
 export type ProfileScreenRouteProp = RouteProp<RootStackSignInParamList, 'PROFILE'>;
 
 type ProfileT = {
@@ -155,13 +156,7 @@ const doneCancelValues = {
             <Cancel _onPressCancel={_onPressCancelProfile} />
             <Done _onPressDone={_onPressDoneProfile} />
           </View>
-          <ScrollableTabView
-            style={styles.topTabStyle}
-            tabBarTextStyle={styles.topTabText}
-            tabBarUnderlineStyle={styles.topTabUnderLineStyle}>
-            <PictureWall tabLabel="Edit Profile" />
-            <ProfileView tabLabel="View Profile" />
-          </ScrollableTabView>
+            <ProfileInputEdits/>
           <Modal
             animationType="slide"
             transparent={false}
@@ -187,6 +182,13 @@ const doneCancelValues = {
 
 
 }
+          //<ScrollableTabView
+            //style={styles.topTabStyle}
+            //tabBarTextStyle={styles.topTabText}
+            //tabBarUnderlineStyle={styles.topTabUnderLineStyle}>
+            //<ProfileView tabLabel="View Profile" />
+            //<PictureWall tabLabel="Edit Profile" />
+          //</ScrollableTabView>
 const Profile = (): ReactElement => {
   // TODO: very hacky way to stop useEffect from firt render => need more elegant sol
   const [loadingFormikValues, setLoadingFormikValues] = useState(true)

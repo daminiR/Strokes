@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Platform} from "react-native";
 import {StatusBar} from 'react-native';
 
 export const PRIMARY_COLOR = "#7444C0";
@@ -62,11 +62,11 @@ export const styles =  StyleSheet.create({
 
   // Auth email overlay
 
-  authEmailOverlay: {
-    flex: 1,
-    width: DIMENSION_WIDTH * .8,
-    height: DIMENSION_HEIGHT * 0.5
-  },
+  //authEmailOverlay: {
+    //flex: 1,
+    //width: DIMENSION_WIDTH * .8,
+    //height: DIMENSION_HEIGHT * 0.5
+  //},
   // BUTTON STYLE
   buttonText: {
     color: 'white',

@@ -99,7 +99,7 @@ export const AuthNavigator = () => {
   };
   const render2 = () =>{
     if (currentUser && isUserOnmongoDb) {
-          return !loadingSigning && !loadingMatches  && <MatchStackScreen />;
+          return !loadingSigning && !loadingMatches  && <MatchStackScreen/>;
       }
     else {
       return !loadingUser &&  <SignOutStack />;
