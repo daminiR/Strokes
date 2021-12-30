@@ -29,7 +29,7 @@ const renderMessage = (item, navigation, currentUserID) => {
   )
 }
 
-const Messages = () => {
+const MessagesList = () => {
   const { setOfflineMatches, currentUser, data: currentUserData} = useContext(UserContext)
   const [loading, setLoading] = useState(true)
   const [matches, setMatches] = useState(null)
@@ -60,4 +60,4 @@ const Messages = () => {
       </View>
   );
 };
-export {Messages};
+export {MessagesList};

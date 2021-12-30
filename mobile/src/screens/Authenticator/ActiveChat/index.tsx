@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Bubble, GiftedChat } from 'react-native-gifted-chat'
-import { RootStackSignOutParamList } from '@navigationStack'
+import { RootStackSignInParamList } from '@NavStack'
 import {GET_MESSAGES, MESSAGE_POSTED, POST_MESSAGE} from '@graphQL'
 import { useQuery, useMutation, useSubscription} from '@apollo/client'
 import { StackNavigationProp } from '@react-navigation/stack'
@@ -9,7 +9,7 @@ import _ from 'lodash'
 import {LIGHT_GRAY, CHAT_TEXT_COLOR_USER} from '@styles'
 import {createMessageObject} from '@utils'
 
-export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'ACTIVE_CHAT'>
+export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'ACTIVE_CHAT'>
 export type ActiveChatT = {
   navigation: ActiveChatTScreenNavigationProp
 }

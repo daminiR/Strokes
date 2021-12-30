@@ -1,9 +1,8 @@
 import React, {  useState, ReactElement } from 'react'
 import {  StackNavigationProp } from '@react-navigation/stack'
-import { AppContainer } from '../../../components'
-import { RootStackParamList } from '../../../AppNavigator'
-import {Messages} from './Messages'
-type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'CHAT'>
+import { AppContainer, MessagesList} from '@components'
+import { RootStackSignInParamList } from '@NavStack'
+type MatchScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'CHAT'>
 
 type ChatT = {
   navigation: MatchScreenNavigationProp
@@ -11,7 +10,7 @@ type ChatT = {
 const Chat  = ({ navigation }: ChatT ): ReactElement => {
   return (
     <>
-      <Messages/>
+      <MessagesList/>
     </>
   );
 }
