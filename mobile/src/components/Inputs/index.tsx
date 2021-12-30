@@ -163,7 +163,9 @@ const ImageInput = ({_submit, isSignUp}) => {
               onChangeText={
                 isSignUp
                   ? handleChange('first_name')
-                  : (text) => setTempInputValues({first_name: text})
+                  : (text) => {
+                    console.log("first name",text)
+                    setTempInputValues((prevState) => {return {...prevState, 'first_name' : text}})}
               }
               value={isSignUp ? values.first_name : tempInputValues.first_name}
             />
@@ -175,7 +177,9 @@ const ImageInput = ({_submit, isSignUp}) => {
               onChangeText={
                 isSignUp
                   ? handleChange('last_name')
-                  : (text) => setTempInputValues({last_name: text})
+                  : (text) => {
+                    console.log("lat name", tempInputValues.last_name)
+                    setTempInputValues((prevState) => {return {...prevState, 'last_name' : text}})}
               }
               value={isSignUp ? values.last_name : tempInputValues.last_name}
             />
@@ -295,8 +299,8 @@ const ImageInput = ({_submit, isSignUp}) => {
               onChangeText={
                 isSignUp
                   ? handleChange('age')
-                  : (text) => setTempInputValues({age: text})
-              }
+                  : (text) =>
+                    setTempInputValues((prevState) => {return {...prevState, 'age' : text}})}
               value={
                 isSignUp
                   ? values.age.toString()
@@ -357,8 +361,8 @@ const DescriptionInput = ({isSignUp}) => {
                 onChangeText={
                   isSignUp
                     ? handleChange('description')
-                    : (text) => setTempInputValues({description: text})
-                }
+                    : (text) =>
+                    setTempInputValues((prevState) => {return {...prevState, 'description' : text}})}
                 value={
                   isSignUp ? values.description : tempInputValues.description
                 }
