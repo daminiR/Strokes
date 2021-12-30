@@ -13,6 +13,7 @@ export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignI
 export type ActiveChatT = {
   navigation: ActiveChatTScreenNavigationProp
 }
+import { HeaderBackButton } from '@react-navigation/elements'
 const ActiveChat = ({ route, navigation}) => {
   const [postMessage2] = useMutation(POST_MESSAGE)
   const [messages, setMessages] = useState([]);
@@ -27,8 +28,21 @@ const ActiveChat = ({ route, navigation}) => {
       },
     },
   );
+  //useEffect(() => {
+    //navigation.setOptions({title: matchedUserName})
+  //}, [])
   useEffect(() => {
-    navigation.setOptions({title: matchedUserName})
+    navigation.setOptions({headerShown:true,
+        headerLeft: (props) => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => {
+                navigation.goBack()
+              }}
+            />
+          ),
+
+    })
   }, [])
   useEffect(() => {
   if (postedMessages){

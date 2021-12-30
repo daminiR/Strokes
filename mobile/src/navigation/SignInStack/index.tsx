@@ -1,10 +1,11 @@
 import React from 'react'
-import { createStackNavigator } from '@react-navigation/stack'
+import {createStackNavigator } from '@react-navigation/stack'
 import {ActiveChat, Profile, Chat, Match, Likes} from '@screens'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {tabBarSize} from '@constants'
 import {Icon} from 'react-native-elements'
+import { HeaderBackButton } from '@react-navigation/elements'
 
 const ProfileStack = createStackNavigator()
 const ChatStack = createStackNavigator()
@@ -12,10 +13,27 @@ const Tab  = createBottomTabNavigator()
 
  const returnSportListOptions = ({navigation, route}) => ({
  });
+
 const screenOptionStyle = {
-  headerBackTitle: "",
-  tabBarStyle: [{height: 30}]
-};
+  //headerBackTitle: "",
+  //tabBarStyle: [{height: 30}]
+  //{
+  "tabBarActiveTintColor": "#0091EA",
+  "tabBarInactiveTintColor": "gray",
+  "tabBarShowLabel": false,
+  "tabBarLabelStyle": {
+    "color": "#242424",
+    "fontFamily": "OpenSans-Regular",
+    "fontSize": 16
+  },
+  "tabBarStyle": [
+    {
+      "display": "flex"
+    },
+    null
+  ]
+}
+
 export type RootStackSignInParamList = {
   PROFILE: {data: number}
   EDIT_SPORTS: undefined
@@ -36,11 +54,22 @@ export type RootStackSignInParamList = {
     </ProfileStack.Navigator>
   );
 }
+const trialOptions = {
+  headerShown: true,
+  headerLeft: (props) => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => {
+              }}
+            />
+          ),
+
+}
  const ChatStackScreen = () => {
   return (
     <ChatStack.Navigator>
       <ProfileStack.Screen options={{headerShown:false}} name="CHAT" component={Chat} />
-      <ProfileStack.Screen  options={{headerShown:true}} name="ACTIVE_CHAT" component={ActiveChat} />
+      <ProfileStack.Screen  options={{headerShown:false }} name="ACTIVE_CHAT" component={ActiveChat} />
     </ChatStack.Navigator>
   );
 }
@@ -82,7 +111,7 @@ const customTabBarStyle = {
          tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
         })}
-        tabBarOptions={customTabBarStyle}
+        //tabBarOptions={customTabBarStyle}
         initialRouteName="Match">
         <Tab.Screen name="Profile" component={ProfileStackScreen} />
         <Tab.Screen name="Match" component={Match} />
