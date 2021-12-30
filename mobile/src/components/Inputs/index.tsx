@@ -12,7 +12,8 @@ import _ from 'lodash'
 
 
 const DismissKeyboard = ({ children}) => (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+  //<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+  <TouchableWithoutFeedback>
     {children}
   </TouchableWithoutFeedback>
 )

@@ -36,8 +36,9 @@ const MessagesList = () => {
   const [title, setTitle] = useState(null)
   const navigation = useNavigation()
   useEffect(() => {
-    setLoading(true)
+    if(currentUserData.squash.matches){
     const user = currentUserData.squash
+    setLoading(true)
     const totalMatches = calculateOfflineMatches(user)
     // if in likedBy USe and in likes but not in matches then add to matches else load matches
     setTitle(title)
@@ -45,6 +46,8 @@ const MessagesList = () => {
     setMatches(totalMatches)
     setOfflineMatches(totalMatches)
     setLoading(false)
+
+    }
   }, [currentUserData.squash.matches])
 
   return (
@@ -52,7 +55,7 @@ const MessagesList = () => {
           <View style={styles.top}>
             <Text style={styles.title}>Messages</Text>
           </View>
-        { !loading && <FlatList
+        { !loading && !_.isEmpty(matches) && <FlatList
             data={matches}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => renderMessage(item, navigation, currentUser.uid)}

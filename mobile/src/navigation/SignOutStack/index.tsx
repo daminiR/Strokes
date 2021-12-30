@@ -14,7 +14,7 @@ export type RootStackSignOutParamList = {
 export  const SignOutStack = () =>  {
   return (
     <NavigationContainer>
-      <Stack.Navigator headerMode="none" initialRouteName="HELLO">
+      <Stack.Navigator initialRouteName="HELLO">
       <Stack.Screen name="SIGNUP" component={SignUp} />
       <Stack.Screen name="HELLO" component={Hello} />
       <Stack.Screen name="SIGN_IN" component={SignIn} />
