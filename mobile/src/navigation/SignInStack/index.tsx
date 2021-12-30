@@ -21,6 +21,7 @@ export type RootStackSignInParamList = {
   EDIT_SPORTS: undefined
   EDIT_DESCRIPTION: undefined
   CHAT: undefined
+  ACTIVE_CHAT: undefined
   MATCH: undefined
   FIRST_NAME: undefined
   AGE: undefined
