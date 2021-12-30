@@ -1,9 +1,5 @@
 import React from 'react'
-import { createStackNavigator } from '@react-navigation/stack'
-import {ActiveChat, Profile, Chat, Match, Likes} from '@screens'
 import {PictureWall, ProfileView} from '@components'
-import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator  } from '@react-navigation/material-top-tabs';
 import {tabBarSize} from '@constants'
 import {Icon} from 'react-native-elements'
@@ -32,10 +28,10 @@ const customTabBarStyle = {
             let iconName;
             switch (route.name) {
               case 'Profile Edit':
-                iconName = focused ? 'home' : 'home';
+                iconName = focused ? 'person-outline' : 'person-outline';
                 break;
               case 'Profile View':
-                iconName = focused ? 'person-outline' : 'person-outline';
+                iconName = focused ? 'visibility' : 'visibility';
                 break;
             }
             // You can return any component that you like here!
