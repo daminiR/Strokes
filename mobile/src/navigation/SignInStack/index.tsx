@@ -75,9 +75,8 @@ const trialOptions = {
 }
 const customTabBarStyle = {
   showLabel: false,
-  activeTintColor: '#0091EA',
   inactiveTintColor: 'gray',
-  style: {backgroundColor: '#2b1d08', height: tabBarSize},
+  style: {backgroundColor: '#2b1d08', height: tabBarSize, alignItems: 'center', paddingTop: 15},
   labelStyle: {
     color: '#242424',
     fontFamily: 'OpenSans-Regular',
@@ -89,7 +88,7 @@ const customTabBarStyle = {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ focused, size }) => {
             let iconName;
             switch (route.name) {
               case 'Match':
@@ -108,10 +107,11 @@ const customTabBarStyle = {
             // You can return any component that you like here!
             return <Icon name={iconName} type='material' size={size} color={'#ff7f02'} />;
           },
-         tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
+          tabBarStyle:customTabBarStyle.style,
+          tabBarLabelStyle: customTabBarStyle.labelStyle
+
         })}
-        //tabBarOptions={customTabBarStyle}
         initialRouteName="Match">
         <Tab.Screen name="Profile" component={ProfileStackScreen} />
         <Tab.Screen name="Match" component={Match} />
