@@ -76,7 +76,7 @@ const trialOptions = {
 const customTabBarStyle = {
   showLabel: false,
   inactiveTintColor: 'gray',
-  style: {backgroundColor: '#2b1d08', height: tabBarSize, alignItems: 'center', paddingTop: 15},
+  style: {backgroundColor: '#2b1d08', height: tabBarSize, alignItems: 'center'},
   labelStyle: {
     color: '#242424',
     fontFamily: 'OpenSans-Regular',
