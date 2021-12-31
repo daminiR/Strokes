@@ -10,6 +10,7 @@ import _ from 'lodash'
 import {LIGHT_GRAY, CHAT_TEXT_COLOR_USER} from '@styles'
 import {createMessageObject} from '@utils'
 import {ChatUserSettingsList} from '@constants'
+import {AppContainer} from '@components'
 
 export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'ACTIVE_CHAT'>
 export type ActiveChatT = {
@@ -37,8 +38,8 @@ const ChatUserSettings = ({displayInput, setDisplayInput, deleteButton}) => {
       <View style={{flex: 1}}>
         {ChatUserSettingsList.map((item, i) => (
           <ListItem
-            disabled={item.buttonPress ? false : true }
-            onPress={() => deleteChatUser && deleteChatUser()}
+            disabled={deleteButton ? false : true }
+            onPress={() => deleteButton && deleteButton()}
             key={i}
             bottomDivider>
             <ListItem.Content>
@@ -63,6 +64,7 @@ const ChatUserSettings = ({displayInput, setDisplayInput, deleteButton}) => {
 import { HeaderBackButton } from '@react-navigation/elements'
 const ActiveChat = ({ route, navigation}) => {
   const [postMessage2] = useMutation(POST_MESSAGE)
+  const [loadingDeleteChat, setLoadinDeleteChat] = useState(false);
   const [messages, setMessages] = useState([]);
   const [displayInput, setDisplayInput] = useState(false);
   const {currentUserID, matchID, matchedUserProfileImage, matchedUserName} = route.params
@@ -81,10 +83,14 @@ const ActiveChat = ({ route, navigation}) => {
     },
   );
   const _onPressDelete = ()=> {
+    setLoadinDeleteChat(true)
     deleteChatUser({variables: {
       _idUser: currentUserID,
-       _idChatUser:matchedUserName
+       _idChatUser:matchID
     }})
+    setDisplayInput(false)
+    navigation.goBack()
+    setLoadinDeleteChat(true)
   }
   useEffect(() => {
     navigation.setOptions({
@@ -168,15 +174,21 @@ const ActiveChat = ({ route, navigation}) => {
 
   return (
     <>
-      <GiftedChat
-        messages={messages}
-        onSend={(messages) => onSend(messages)}
-        renderBubble={(props) => renderBubble(props)}
-        user={{
-          _id: 1,
-        }}
-      />
-    <ChatUserSettings deleteButton={_onPressDelete} setDisplayInput={setDisplayInput} displayInput={displayInput}/>
+      <AppContainer loading={loadingDeleteChat}>
+        <GiftedChat
+          messages={messages}
+          onSend={(messages) => onSend(messages)}
+          renderBubble={(props) => renderBubble(props)}
+          user={{
+            _id: 1,
+          }}
+        />
+        <ChatUserSettings
+          deleteButton={_onPressDelete}
+          setDisplayInput={setDisplayInput}
+          displayInput={displayInput}
+        />
+      </AppContainer>
     </>
   );
 }

@@ -87,8 +87,9 @@ const customTabBarStyle = {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, size }) => {
+        screenOptions={
+          ({route}) => ({
+          tabBarIcon: ({focused, size}) => {
             let iconName;
             switch (route.name) {
               case 'Match':
@@ -98,19 +99,28 @@ const customTabBarStyle = {
                 iconName = focused ? 'person-outline' : 'person-outline';
                 break;
               case 'Chat':
-                iconName = focused ? 'chat-bubble-outline' : 'chat-bubble-outline';
+                iconName = focused
+                  ? 'chat-bubble-outline'
+                  : 'chat-bubble-outline';
                 break;
               case 'Likes':
                 iconName = focused ? 'favorite-border' : 'favorite-border';
                 break;
             }
             // You can return any component that you like here!
-            return <Icon name={iconName} type='material' size={size} color={'#ff7f02'} />;
+            return (
+              <Icon
+                name={iconName}
+                type="material"
+                size={size}
+                color={'#ff7f02'}
+              />
+            );
           },
+          headerShown: false,
           tabBarInactiveTintColor: 'gray',
-          tabBarStyle:customTabBarStyle.style,
-          tabBarLabelStyle: customTabBarStyle.labelStyle
-
+          tabBarStyle: customTabBarStyle.style,
+          tabBarLabelStyle: customTabBarStyle.labelStyle,
         })}
         initialRouteName="Match">
         <Tab.Screen name="Profile" component={ProfileStackScreen} />

@@ -22,7 +22,7 @@ const UPLOAD_FILE = gql`
 `;
 const DELETE_CHAT_USER = gql`
   mutation deleteChatUser($_idUser: String, $_idChatUser: String) {
-    uploadFile(_idUser: _idUser, _idChatUser: $_idChatUser)
+    deleteChatUser(_idUser: $_idUser, _idChatUser: $_idChatUser)
   }
 `;
 const ADD_PROFILE2 = gql`
