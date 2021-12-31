@@ -17,7 +17,6 @@ const GET_MESSAGES = gql`
       sender,
       receiver,
       text,
-      createdtAt
     }
   }
 `

@@ -510,6 +510,10 @@ export const resolvers = {
           //const filter = {'_id': [_idUser, _idChatUser]},
       // remove _ids from matches, likedByUSers, likes
           //{ $pull: { matches: {}, likes: {}, likedByUSers: {}} },
+      console.log("_idUser", _idUser)
+      console.log("_idChatUser", _idChatUser)
+        console.log("valid2")
+      if (!_.isEqual(_idUser,_idChatUser)){
         const filter = [_idUser, _idChatUser]
         const Users = await Squash.find(
           {'_id': [_idUser, _idChatUser]},
@@ -549,7 +553,6 @@ export const resolvers = {
             matchObj[_idChatUser] = _.concat(userObj.dislikes, potentialDisLike)
           }
         })
-
         console.log("test docs in delete", matchObj)
         const doc = await Squash.findOneAndUpdate(
           {'_id': _idUser},
@@ -577,9 +580,40 @@ export const resolvers = {
           },
           { new: true }
         );
+        // Finally delete all chat history
+        try {
+          const allMessages = await Message.deleteMany({
+            $or: [
+              {
+                $and: [
+                  {
+                    receiver: _idUser,
+                  },
+                  {
+                    sender: _idChatUser,
+                  },
+                ],
+              },
+              {
+                $and: [
+                  {
+                    receiver: _idChatUser,
+                  },
+                  {
+                    sender: _idUser,
+                  },
+                ],
+              },
+            ],
+          });
+        }
+        catch (e) {
+          console.log(e)
+        }
         //TODO: you can later test the doc output for total number of modifications should be 6 , 3 from each document
         //once done removing (don;t show user the matched user again) =>  add to dislike user set
         console.log("test docs in delete", doc)
+      }
         return "done"
     },
     deleteSquash: async (root, args) => {
