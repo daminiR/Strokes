@@ -117,16 +117,15 @@ const customTabBarStyle = {
               />
             );
           },
-          headerShown: false,
           tabBarInactiveTintColor: 'gray',
           tabBarStyle: customTabBarStyle.style,
           tabBarLabelStyle: customTabBarStyle.labelStyle,
         })}
         initialRouteName="Match">
-        <Tab.Screen name="Profile" component={ProfileStackScreen} />
-        <Tab.Screen name="Match" component={Match} />
-        <Tab.Screen name="Chat" component={ChatStackScreen} />
-        <Tab.Screen name="Likes" component={Likes} />
+        <Tab.Screen options= {{headerShown: false}} name="Profile" component={ProfileStackScreen} />
+        <Tab.Screen options= {{headerShown: false}} name="Match" component={Match} />
+        <Tab.Screen options= {{headerShown: false}} name="Chat" component={ChatStackScreen} />
+        <Tab.Screen options= {{headerShown: false}} name="Likes" component={Likes} />
       </Tab.Navigator>
     </NavigationContainer>
   );
