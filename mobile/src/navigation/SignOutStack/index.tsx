@@ -14,11 +14,15 @@ export type RootStackSignOutParamList = {
 export  const SignOutStack = () =>  {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HELLO">
-      <Stack.Screen name="SIGNUP" component={SignUp} />
-      <Stack.Screen name="HELLO" component={Hello} />
-      <Stack.Screen name="SIGN_IN" component={SignIn} />
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName="HELLO">
+        <Stack.Screen name="SIGNUP" component={SignUp} />
+        <Stack.Screen name="HELLO" component={Hello} />
+        <Stack.Screen name="SIGN_IN" component={SignIn} />
       </Stack.Navigator>
     </NavigationContainer>
-  )
+  );
 }
