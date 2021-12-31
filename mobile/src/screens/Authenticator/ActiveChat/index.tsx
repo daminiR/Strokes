@@ -4,19 +4,67 @@ import { RootStackSignInParamList } from '@NavStack'
 import {GET_MESSAGES, MESSAGE_POSTED, POST_MESSAGE} from '@graphQL'
 import { useQuery, useMutation, useSubscription} from '@apollo/client'
 import { StackNavigationProp } from '@react-navigation/stack'
-import {View} from 'react-native'
+import {View, StyleSheet} from 'react-native'
+import {Icon, BottomSheet, ListItem, Text, Button} from 'react-native-elements'
 import _ from 'lodash'
 import {LIGHT_GRAY, CHAT_TEXT_COLOR_USER} from '@styles'
 import {createMessageObject} from '@utils'
+import {ChatUserSettingsList} from '@constants'
 
 export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'ACTIVE_CHAT'>
 export type ActiveChatT = {
   navigation: ActiveChatTScreenNavigationProp
 }
+
+  const styles =  StyleSheet.create({
+  modal: {
+        height: 100,
+    backgroundColor: "white",
+    padding: 22,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 4,
+    borderColor: "rgba(0, 0, 0, 0.1)"
+  }
+  })
+
+const ChatUserSettings = ({displayInput, setDisplayInput}) => {
+  const _onPressCancel = ()=> {
+    setDisplayInput(false)
+  }
+  return (
+    <BottomSheet isVisible={displayInput}>
+      <View style={{flex: 1}}>
+        {ChatUserSettingsList.map((item, i) => (
+          <ListItem
+            disabled={item.buttonPress ? false : true }
+            onPress={() => item.buttonPress && item.buttonPress()}
+            key={i}
+            bottomDivider>
+            <ListItem.Content>
+              <ListItem.Title>{item.title}</ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+          </ListItem>
+        ))}
+      </View>
+          <Button
+            title="Cancel"
+            titleStyle={styles.buttonText}
+            onPress={() => _onPressCancel()}
+            style={styles.buttonIndStyle}
+            buttonStyle={styles.buttonStyle}
+          />
+
+    </BottomSheet>
+  );
+}
+
 import { HeaderBackButton } from '@react-navigation/elements'
 const ActiveChat = ({ route, navigation}) => {
   const [postMessage2] = useMutation(POST_MESSAGE)
   const [messages, setMessages] = useState([]);
+  const [displayInput, setDisplayInput] = useState(false);
   const {currentUserID, matchID, matchedUserProfileImage, matchedUserName} = route.params
   const {data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
   const {data: messagesData, loading: loadingMessages} = useQuery(GET_MESSAGES,
@@ -28,9 +76,20 @@ const ActiveChat = ({ route, navigation}) => {
       },
     },
   );
-  //useEffect(() => {
-    //navigation.setOptions({title: matchedUserName})
-  //}, [])
+  useEffect(() => {
+    navigation.setOptions({
+      title: matchedUserName,
+      headerRight: () => (
+        <View style={{flex: 1, justifyContent:'center', padding: 20}}>
+        <Icon
+          name="more-horiz"
+          type="material"
+          onPress={() => setDisplayInput(true)}
+        />
+        </View>
+      ),
+    });
+  }, [])
   useEffect(() => {
     navigation.setOptions({headerShown:true,
         headerLeft: (props) => (
@@ -97,7 +156,7 @@ const ActiveChat = ({ route, navigation}) => {
   }
 
   return (
-    <View style={{flex: 1}}>
+    <>
       <GiftedChat
         messages={messages}
         onSend={(messages) => onSend(messages)}
@@ -106,7 +165,8 @@ const ActiveChat = ({ route, navigation}) => {
           _id: 1,
         }}
       />
-    </View>
+    <ChatUserSettings setDisplayInput={setDisplayInput} displayInput={displayInput}/>
+    </>
   );
 }
 export {ActiveChat}

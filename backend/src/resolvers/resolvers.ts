@@ -487,6 +487,28 @@ export const resolvers = {
     console.log("Updated user profile new profile", doc);
     return doc
     },
+    deleteChatUser: async (root, {_idUser, _idChatUser}) => {
+          //const filter = {'_id': [_idUser, _idChatUser]},
+      // remove _ids from matches, likedByUSers, likes
+          //{ $pull: { matches: {}, likes: {}, likedByUSers: {}} },
+        const filter = [_idUser, _idChatUser]
+        const doc = await Squash.updateMany(
+          {'_id': [_idUser, _idChatUser]},
+          //{$pull:
+           //{
+             //"matches": {"_id": {$in: filter}},
+             //"likes": {"_id": {$in: filter}},
+             //"likedByUSers": {"_id": {$in: filter}},
+          //},
+          //{ $push: { dislikes:  }},
+          { new: true }
+        );
+        //TODO: you can later test the doc output for total number of modifications should be 6 , 3 from each document
+        // once done removing (don;t show user the matched user again) =>  add to dislike user set
+
+        console.log("test docs in delete", doc)
+        return "done"
+    },
     deleteSquash: async (root, args) => {
       const squash = await Squash.findById({ id: args });
       if (squash) {

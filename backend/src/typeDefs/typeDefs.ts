@@ -213,6 +213,7 @@ export const typeDefs = gql`
     updateGameLevelsToStrings: String
     deleteSquash(_id: String): Squash!
 
+    deleteChatUser(_idUser: String, _idChatUser: String): String
     testMut(name: Int!):Int
   }
 `;
