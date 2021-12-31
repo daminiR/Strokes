@@ -86,11 +86,13 @@ var squashSchema = new Schema({
   },
   image_set: {
     type:
+    [
       {
         img_idx: { type: Number },
         imageURL: { type: String },
         filePath: { type: String },
-      },
+      }
+    ],
     required: true,
     validate: [
       {

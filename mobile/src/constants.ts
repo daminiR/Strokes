@@ -70,6 +70,9 @@ export const settingsFlatList = [
   {title: 'gender', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _gender},
   {title: 'Neighborhood', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _neighborhood},
 ]
+export const ChatUserSettingsList = [
+  {title: 'Delete User', icon: 'av-timer'},
+]
 
 // Sign Up Slide Labels
  export const iniitialSignInForm = {

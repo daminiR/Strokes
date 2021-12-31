@@ -2,7 +2,7 @@
 import 'dotenv/config'
 import  express from 'express';
 import { ApolloServer, gql }  from 'apollo-server-express';
-import  mongoose from 'mongoose';
+import  mongoose, {ConnectOptions} from 'mongoose';
 import { resolvers } from './resolvers/resolvers'
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
@@ -75,7 +75,7 @@ const startServer = async () => {
   await mongoose.connect(uri!, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  });
+  } as ConnectOptions);
   //////////////////////////////////////////////
   httpServer.listen({ port: 4000 }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)

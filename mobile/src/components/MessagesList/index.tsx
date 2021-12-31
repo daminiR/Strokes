@@ -11,22 +11,25 @@ import {Message} from '@components';
 import {useNavigation} from '@react-navigation/native';
 import _ from 'lodash'
 import {calculateOfflineMatches} from '@utils'
+import {Avatar, Divider, ListItem, Button} from 'react-native-elements'
 
 const renderMessage = (item, navigation, currentUserID) => {
-    const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0)
+    const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0).imageURL
     const title = item.first_name;
     const _onPressActiveChat = () => {
       navigation.navigate('ACTIVE_CHAT', {currentUserID: currentUserID, matchID: item._id, matchedUserProfileImage: profileImage, matchedUserName: item.first_name});
   };
   return (
-        <TouchableOpacity onPress={()=>_onPressActiveChat()}>
-                <Message
-                  image={profileImage}
-                  name={title}
-                  //lastMessage={"display last messgae here"}
-                />
-        </TouchableOpacity>
-  )
+    <ListItem
+      onPress={() => _onPressActiveChat()}
+      bottomDivider
+    >
+      <Avatar rounded source={{uri: profileImage}} />
+      <ListItem.Content>
+        <ListItem.Title>{title}</ListItem.Title>
+      </ListItem.Content>
+    </ListItem>
+  );
 }
 
 const MessagesList = () => {
