@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Bubble, GiftedChat } from 'react-native-gifted-chat'
 import { RootStackSignInParamList } from '@NavStack'
-import {GET_MESSAGES, MESSAGE_POSTED, POST_MESSAGE} from '@graphQL'
+import {DELETE_CHAT_USER,GET_MESSAGES, MESSAGE_POSTED, POST_MESSAGE} from '@graphQL'
 import { useQuery, useMutation, useSubscription} from '@apollo/client'
 import { StackNavigationProp } from '@react-navigation/stack'
 import {View, StyleSheet} from 'react-native'
@@ -28,7 +28,7 @@ export type ActiveChatT = {
   }
   })
 
-const ChatUserSettings = ({displayInput, setDisplayInput}) => {
+const ChatUserSettings = ({displayInput, setDisplayInput, deleteButton}) => {
   const _onPressCancel = ()=> {
     setDisplayInput(false)
   }
@@ -38,7 +38,7 @@ const ChatUserSettings = ({displayInput, setDisplayInput}) => {
         {ChatUserSettingsList.map((item, i) => (
           <ListItem
             disabled={item.buttonPress ? false : true }
-            onPress={() => item.buttonPress && item.buttonPress()}
+            onPress={() => deleteChatUser && deleteChatUser()}
             key={i}
             bottomDivider>
             <ListItem.Content>
@@ -67,6 +67,10 @@ const ActiveChat = ({ route, navigation}) => {
   const [displayInput, setDisplayInput] = useState(false);
   const {currentUserID, matchID, matchedUserProfileImage, matchedUserName} = route.params
   const {data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
+  const [deleteChatUser] = useMutation(DELETE_CHAT_USER, {
+    onCompleted: () => {
+    },
+  })
   const {data: messagesData, loading: loadingMessages} = useQuery(GET_MESSAGES,
   {
     fetchPolicy: "network-only",
@@ -76,6 +80,12 @@ const ActiveChat = ({ route, navigation}) => {
       },
     },
   );
+  const _onPressDelete = ()=> {
+    deleteChatUser({variables: {
+      _idUser: currentUserID,
+       _idChatUser:matchedUserName
+    }})
+  }
   useEffect(() => {
     navigation.setOptions({
       title: matchedUserName,
@@ -124,6 +134,7 @@ const ActiveChat = ({ route, navigation}) => {
     }
   }, [loadingMessages])
 
+
   const onSend = (messages = []) => {
     //console.log("this is a messgae", messages)
     // TODO: hacky fix for now for messages
@@ -165,7 +176,7 @@ const ActiveChat = ({ route, navigation}) => {
           _id: 1,
         }}
       />
-    <ChatUserSettings setDisplayInput={setDisplayInput} displayInput={displayInput}/>
+    <ChatUserSettings deleteButton={_onPressDelete} setDisplayInput={setDisplayInput} displayInput={displayInput}/>
     </>
   );
 }

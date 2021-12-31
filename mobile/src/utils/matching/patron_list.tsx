@@ -76,14 +76,14 @@ const filterByCity = (currentUseLocation, patron_list) => {
     const newPatronList = _.filter(patron_list, _.iteratee({"location":{"city": currentUseLocation.city, "state": currentUseLocation.state}}))
     return newPatronList
 }
-//const createPatronList = (currentUseLocation, allUsers, likes, dislikes, matches, filters) => {
 const createPatronList = (currentUser, allUsers, filters) => {
     console.log("in patron lsit",currentUser)
     const currentUseLocation = currentUser.location
     const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
     const likes = currentUser?.likes ? currentUser.likes : []
     const matches = currentUser?.matches ? currentUser.likes : []
-    const dislikes = currentUser?.dislikes ? currentUser.likes : []
+    const dislikes = currentUser?.dislikes ? currentUser.dislikes : []
+    console.log("what", dislikes)
     const exclude = _.concat(likes, dislikes, matches)
     const patron_list = _.differenceBy(activeUsers, exclude, '_id')
     const newPatronList = filterByCity(currentUseLocation, patron_list)

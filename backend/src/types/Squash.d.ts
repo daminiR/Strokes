@@ -14,6 +14,11 @@ export interface LocationT {
   state: string;
   country: string;
 }
+export interface FilterT {
+  ageRange: string;
+  sport: string;
+  filterLevel: string;
+}
 
 export interface PotentialMatchType {
     first_name: string

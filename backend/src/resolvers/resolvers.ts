@@ -12,10 +12,29 @@ import {format} from 'util'
 import axios from 'axios'
 import { ObjectId } from 'mongodb'
 import { typeDefs }  from '../typeDefs/typeDefs'
+import { PotentialMatchUserInputType }  from '../typeDefs/typeDefs'
 import _ from 'lodash'
 //import { PubSub } from 'graphql-subscriptions';
 import { pubsub } from '../pubsub'
 //const pubsub = new PubSub()
+export interface Sport {
+  sport: string;
+  game_level: number;
+}
+export interface ImageSetT {
+  imageURL: string;
+  img_idx: number;
+  filePath: string;
+}
+export interface PotentialMatchType {
+    first_name: string
+    _id: string
+    age: number
+    gender: string
+    sports: Sport[],
+    description: string,
+    image_set: ImageSetT[]
+}
 
 interface Data {
   img_idx: number;
@@ -492,41 +511,75 @@ export const resolvers = {
       // remove _ids from matches, likedByUSers, likes
           //{ $pull: { matches: {}, likes: {}, likedByUSers: {}} },
         const filter = [_idUser, _idChatUser]
-        /////
         const Users = await Squash.find(
           {'_id': [_idUser, _idChatUser]},
         );
-
-        const matchedObj = _.map(Users, userObj => {
-
-          let matchObj = {UserMatchObj: {}, ChatUserMatchObj : {}}
-          if (userObj._id == _idUser){
-            matchObj.UserMatchObj = userObj
-
+          //var UserMatchObj = null
+          //var ChatUserObj = null
+          var matchObj = {}
+          _.map(Users, userObj => {
+          console.log(userObj._id)
+          console.log(_idUser)
+          if (_.isEqual(userObj._id, _idUser)){
+            const potentialDisLike  = {
+              '_id': userObj._id,
+              'first_name': userObj.first_name,
+              'age': userObj.age,
+              'gender': userObj.gender,
+              'sports': userObj.sports,
+              'image_set': userObj.image_set,
+              //TODO: some weird issue with description type
+              'description': userObj.description.toString(),
+            }
+            matchObj[_idUser] = _.concat(userObj.dislikes, potentialDisLike)
           }
-          if (userObj._id == _idChatUser){
-            matchObj.ChatUserMatchObj = userObj
+          if (_.isEqual(userObj._id, _idChatUser)){
+            const potentialDisLike  = {
+              '_id': userObj._id,
+              'first_name': userObj.first_name,
+              'age': userObj.age,
+              'gender': userObj.gender,
+              'sports': userObj.sports,
+              'image_set': userObj.image_set,
+              //TODO: some weird issue with description type
+              'description': userObj.description.toString(),
+            }
+            //console.log("whats hapening ", potentialDisLike.description)
+            //matchObj.ChatUserMatchObj = _.pick(userObj, ['_id', 'first_name', 'last_name', 'age', 'gender', 'sports', 'description', 'image_set'])
+            matchObj[_idChatUser] = _.concat(userObj.dislikes, potentialDisLike)
           }
-
         })
 
-        ////
-        //const doc = await Squash.updateMany(
-          //{'_id': [_idUser, _idChatUser]},
-          ////{$pull:
-           ////{
-             ////"matches": {"_id": {$in: filter}},
-             ////"likes": {"_id": {$in: filter}},
-             ////"likedByUSers": {"_id": {$in: filter}},
-          ////},
-          //[{ $set: { dislikes: "$_id"}}],
-          ////{ $pull: { dislikes: {}}},
-          //{ new: true }
-        //);
+        console.log("test docs in delete", matchObj)
+        const doc = await Squash.findOneAndUpdate(
+          {'_id': _idUser},
+          {
+            $pull:
+           {
+             "matches": {"_id": _idChatUser} ,
+             "likes": {"_id": _idChatUser},
+             "likedByUSers": {"_id": _idChatUser},
+          },
+          $set: { dislikes: matchObj[_idChatUser]}
+          },
+          { new: true }
+        );
+        const doc2 = await Squash.findOneAndUpdate(
+          {'_id': _idChatUser},
+          {
+            $pull:
+           {
+             "matches": {"_id": _idUser} ,
+             "likes": {"_id": _idUser},
+             "likedByUSers": {"_id": _idUser},
+          },
+          $set: { dislikes: matchObj[_idUser]}
+          },
+          { new: true }
+        );
         //TODO: you can later test the doc output for total number of modifications should be 6 , 3 from each document
-        // once done removing (don;t show user the matched user again) =>  add to dislike user set
-
-        //console.log("test docs in delete", doc)
+        //once done removing (don;t show user the matched user again) =>  add to dislike user set
+        console.log("test docs in delete", doc)
         return "done"
     },
     deleteSquash: async (root, args) => {

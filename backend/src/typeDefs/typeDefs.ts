@@ -35,7 +35,7 @@ const PotentialMatchUserType = `
     description: String
     image_set: [Data!]!
 `
-const PotentialMatchUserInputType = `
+export const PotentialMatchUserInputType = `
     _id: ID!
     first_name: String!
     age: Int!
