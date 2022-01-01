@@ -96,7 +96,7 @@ const ActiveChat = ({ route, navigation}) => {
     navigation.setOptions({
       title: matchedUserName,
       headerRight: () => (
-        <View style={{flex: 1, justifyContent:'center', padding: 20}}>
+        <View style={{flex: 1, justifyContent:'center', paddingHorizontal: 20}}>
         <Icon
           name="more-horiz"
           type="material"
