@@ -109,6 +109,10 @@ const READ_SQUASH = gql`
       last_name
       age
       gender
+      deleted {
+        isDeleted
+        deletedAt
+      }
       sports {
         sport
         game_level

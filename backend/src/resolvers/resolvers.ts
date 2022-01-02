@@ -10,7 +10,7 @@ import { Stream } from "stream"
 import * as path from 'path';
 import {format} from 'util'
 import axios from 'axios'
-import { ObjectId } from 'mongodb'
+import { ObjectId} from 'mongodb'
 import { typeDefs }  from '../typeDefs/typeDefs'
 import { PotentialMatchUserInputType }  from '../typeDefs/typeDefs'
 import _ from 'lodash'
@@ -644,5 +644,14 @@ export const resolvers = {
         return false;
       }
     },
+    softDeleteUser: async (root, {_id}) => {
+        const doc = await Squash.findOneAndUpdate(
+          { _id: _id },
+          { $set: { deleted: {isDeleted: true, deletedAt: new Date()}} },
+          { new: true }
+        );
+        console.log("user soft deleted");
+        return "Done"
+      }
   },
 };

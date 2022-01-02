@@ -3,7 +3,7 @@ import {View, Modal} from 'react-native';
 import auth from '@react-native-firebase/auth'
 import {styles} from '@styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {GET_ACCOUNT_DETAIL_INPUT_TYPE, DELETE_PROFILE} from '@graphQL'
+import {GET_ACCOUNT_DETAIL_INPUT_TYPE,SOFT_DELETE_PROFILE, DELETE_PROFILE} from '@graphQL'
 import {Cancel, Done, ConfirmationCode, EditAccountDetailsInput} from '@components'
 import {Button, ListItem, Overlay} from 'react-native-elements';
 import { EditAccounDetailInputVar} from '@cache'
@@ -27,6 +27,7 @@ const AccountDetails = ({signOut}) => {
   const [email, setEmail] = useState(null)
   const {handleReset, setValues, values: formikValues } = useFormikContext<EditFields>();
   const [deleteSquash] = useMutation(DELETE_PROFILE);
+  const [softDeleteUser] = useMutation(SOFT_DELETE_PROFILE);
   const {data:InputTypeData } = useQuery(GET_ACCOUNT_DETAIL_INPUT_TYPE);
   // phone email display
   // privacy policy
@@ -60,17 +61,27 @@ const AccountDetails = ({signOut}) => {
     EditAccounDetailInputVar({inputType: '', displayInput: false})
     setDisplayInput(false);
   }
-  const getData = (data, inputType) =>{
+  const getData = (data, inputType) => {
     switch (inputType) {
       case 'Phone Input':
-        setPhoneNumber(data)
-        break
+        setPhoneNumber(data);
+        break;
       case 'Email Input':
-        console.log("in email", data)
-        setEmail(data)
-        break
+        console.log('in email', data);
+        setEmail(data);
+        break;
     }
-  }
+  };
+  const deleteStart = async () => {
+    registerOnFirebase(auth().currentUser.phoneNumber).then((confirmation) => {
+      setConfirmationFunc(confirmation);
+      _confirmationCode();
+    });
+  };
+const softDelete = async() => {
+  softDeleteUser({variables: {_id: userData.squash._id}})
+}
+
 const confirmDelete = async() => {
   const image_set_new = _.map(userData.squash.image_set, obj => {
     return _.omit(obj, ['__typename'])
@@ -123,12 +134,7 @@ const confirmDelete = async() => {
       <Button
         title="Delete Account"
         buttonStyle={styles.buttonStyle}
-        onPress={() => {
-          registerOnFirebase(auth().currentUser.phoneNumber).then((confirmation) => {
-            setConfirmationFunc(confirmation)
-            _confirmationCode();
-          });
-        }}
+        onPress={() => softDelete()}
       />
         <Modal
           animationType="slide"
