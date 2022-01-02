@@ -82,7 +82,7 @@ export const AuthNavigator = () => {
       return unsubscribe
   }, [isUserOnmongoDb])
   useEffect(() => {
-    deleted.isDeleted &&
+    deleted && deleted.isDeleted &&
       console.log("user info must be erase from react native and soft deleted on database")
   }, [deleted])
 
@@ -104,9 +104,9 @@ export const AuthNavigator = () => {
     setOfflineMatches:setOfflineMatches
   };
   const render2 = () =>{
-    console.log(".............",!deleted.isDeleted)
-    //if (currentUser && isUserOnmongoDb && !deleted.isDeleted) {
-    if (currentUser && isUserOnmongoDb) {
+    //console.log(".............",!deleted.isDeleted)
+    if (currentUser && isUserOnmongoDb && (!deleted || !deleted.isDeleted)) {
+    //if (currentUser && isUserOnmongoDb) {
           return !loadingSigning && !loadingMatches  && <MatchStackScreen/>;
       }
     else {
