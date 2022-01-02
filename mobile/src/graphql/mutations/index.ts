@@ -49,6 +49,8 @@ const ADD_PROFILE2 = gql`
       last_name: $last_name
       image_set: $image_set
       description: $description
+      phoneNumber: $phoneNumber
+      email: $email
     ) {
       _id
       first_name

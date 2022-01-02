@@ -33,7 +33,7 @@ return authorize
     await createSquash2({
       variables: {
         phoneNumber: values.phoneNumber,
-        email: values.phoneNumber,
+        email: values.email,
         _id: _id,
         image_set: rnfiles,
         first_name: values.first_name,

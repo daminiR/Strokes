@@ -208,6 +208,8 @@ export const typeDefs = gql`
       likes : [PotentialMatchInput!]
       dislikes : [PotentialMatchInput!]
       likedByUSers: [PotentialMatchInput!]
+      phoneNumber: String
+      email: String
     ): Squash!
 
     createSquashTestSamples(
