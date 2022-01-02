@@ -52,6 +52,6 @@ export interface SquashDocument extends Document {
   deleted : DeleteT
   active : Boolean
   blockedByAdmin : Boolean
+  phoneNumber : String
+  email : String
 }
-
-

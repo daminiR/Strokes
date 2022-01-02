@@ -123,6 +123,8 @@ const READ_SQUASH = gql`
         country
       }
       description
+      phoneNumber
+      email
       image_set {
         img_idx
         imageURL

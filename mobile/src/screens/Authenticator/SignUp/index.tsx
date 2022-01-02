@@ -150,7 +150,8 @@ const Slider =  () => {
 
   }
   const _onPrev = () => {
-    errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
+    const index = this.slider.state.activeIndex
+    this.slider.goToSlide(index - 1, true)
   };
   const _onNext = () => {
     console.log("erros location", errors.gender)

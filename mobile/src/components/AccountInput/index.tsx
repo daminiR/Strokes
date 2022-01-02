@@ -139,7 +139,7 @@ const confirmDelete = async() => {
       <Button
         title="Delete Account"
         buttonStyle={styles.buttonStyle}
-        onPress={() => softDelete()}
+        onPress={() => deleteStart()}
       />
         <Modal
           animationType="slide"

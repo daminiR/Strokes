@@ -65,6 +65,8 @@ const SquashType = `
     dislikes : [PotentialMatch!]
     likedByUSers: [PotentialMatch!]
     deleted: DeletedT
+    phoneNumber: String
+    email: String
   `
 
 const SquashInputType = `
@@ -84,6 +86,8 @@ const SquashInputType = `
     likes : [PotentialMatchInput!]
     dislikes : [PotentialMatchInput!]
     likedByUSers: [PotentialMatchInput!]
+    phoneNumber: String
+    email: String
   `
 
 export const typeDefs = gql`
