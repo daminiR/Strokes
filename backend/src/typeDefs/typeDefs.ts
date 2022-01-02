@@ -13,6 +13,10 @@ import {gql} from 'apollo-server-express';
  receiver: String!,
  text: String!
 `;
+ const DeletedType = `
+ isDeleted: Boolean,
+ deletedAt: String,
+`;
  const SquashNodeType = `
     sport: String!,
     game_level: String!,
@@ -60,6 +64,7 @@ const SquashType = `
     likes : [PotentialMatch!]
     dislikes : [PotentialMatch!]
     likedByUSers: [PotentialMatch!]
+    deleted: DeletedT
   `
 
 const SquashInputType = `
@@ -72,6 +77,7 @@ const SquashInputType = `
     location: LocationInput!
     description: String
     image_set: [DataInput!]!
+    deleted: DeletedInput
     matches : [PotentialMatchInput!]
     blocked_me : [PotentialMatchInput!]
     i_blocked : [PotentialMatchInput!]
@@ -86,6 +92,12 @@ export const typeDefs = gql`
   }
   type Location {
     ${LocationType}
+  }
+  type DeletedT {
+    ${DeletedType}
+  }
+  input DeletedInput {
+    ${DeletedType}
   }
   input LocationInput {
     ${LocationType}

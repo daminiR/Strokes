@@ -3,7 +3,7 @@ import {View, Modal} from 'react-native';
 import auth from '@react-native-firebase/auth'
 import {styles} from '@styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {GET_ACCOUNT_DETAIL_INPUT_TYPE,SOFT_DELETE_PROFILE, DELETE_PROFILE} from '@graphQL'
+import {READ_SQUASH, GET_ACCOUNT_DETAIL_INPUT_TYPE,SOFT_DELETE_PROFILE, DELETE_PROFILE} from '@graphQL'
 import {Cancel, Done, ConfirmationCode, EditAccountDetailsInput} from '@components'
 import {Button, ListItem, Overlay} from 'react-native-elements';
 import { EditAccounDetailInputVar} from '@cache'
@@ -19,7 +19,7 @@ import _  from 'lodash'
 
 const AccountDetails = ({signOut}) => {
   const [inputType, setInputType] = useState();
-  const {currentUser, currentUserData, userData, userLoading} = useContext(UserContext)
+  const {currentUser, currentUserData, userData, userLoading, refetchUserData} = useContext(UserContext)
   const [phoneNumber, setPhoneNumber] = useState(null)
   const [loading, setLoading] = useState(true)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -27,7 +27,12 @@ const AccountDetails = ({signOut}) => {
   const [email, setEmail] = useState(null)
   const {handleReset, setValues, values: formikValues } = useFormikContext<EditFields>();
   const [deleteSquash] = useMutation(DELETE_PROFILE);
-  const [softDeleteUser] = useMutation(SOFT_DELETE_PROFILE);
+  const [softDeleteUser] = useMutation(SOFT_DELETE_PROFILE,{
+    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
+    onCompleted: () => {
+      refetchUserData()
+    },
+  });
   const {data:InputTypeData } = useQuery(GET_ACCOUNT_DETAIL_INPUT_TYPE);
   // phone email display
   // privacy policy
@@ -155,5 +160,4 @@ const confirmDelete = async() => {
     </View>
   );
 }
-
 export {AccountDetails}

@@ -29,7 +29,7 @@ export const AuthNavigator = () => {
     }
   });
   const { data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
-  const [getSquashProfile, {data: userData, loading: userLoading, error}] = useLazyQuery(READ_SQUASH, {
+  const [getSquashProfile, {data: userData, loading: userLoading, error, refetch: refetchUserData}] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
@@ -88,7 +88,7 @@ export const AuthNavigator = () => {
 
   if (loadingSigning) return null
   const value = {
-    setDeleted: setDeleted,
+    refetchUserData: refetchUserData,
     userData: userData,
     setData: setData,
     data: data,
