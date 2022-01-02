@@ -269,8 +269,8 @@ const UPDATE_GENDER = gql`
   }
 `
 const DELETE_PROFILE = gql`
-  mutation DeleteSquash($id: ID!) {
-    deleteSquash(id: $id)
+  mutation DeleteSquash($_id: String!, $image_set: [DataInput!]) {
+    deleteSquash(_id: $_id, image_set: $image_set)
   }
 `
 const UPDATE_PROFILE_COMPLETE = gql`

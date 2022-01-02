@@ -1,24 +1,32 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect} from 'react'
 import {View, Modal} from 'react-native';
+import auth from '@react-native-firebase/auth'
 import {styles} from '@styles'
-import {GET_ACCOUNT_DETAIL_INPUT_TYPE} from '@graphQL'
-import {Cancel, Done, EditAccountDetailsInput} from '@components'
-import {Button, ListItem} from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {GET_ACCOUNT_DETAIL_INPUT_TYPE, DELETE_PROFILE} from '@graphQL'
+import {Cancel, Done, ConfirmationCode, EditAccountDetailsInput} from '@components'
+import {Button, ListItem, Overlay} from 'react-native-elements';
 import { EditAccounDetailInputVar} from '@cache'
 import {AccountList} from '@constants'
+import {_confirmationCode} from '../../InputsVar'
 import { useFormikContext} from 'formik';
 import { EditFields} from '@localModels'
+import {EditAccountInputVar} from '@cache'
 import {UserContext} from '@UserContext'
-import { useQuery } from '@apollo/client'
+import { useQuery, useMutation} from '@apollo/client'
+import { registerOnFirebase} from '@utils'
+import _  from 'lodash'
 
 const AccountDetails = ({signOut}) => {
   const [inputType, setInputType] = useState();
-  const {userData, userLoading} = useContext(UserContext)
+  const {currentUser, currentUserData, userData, userLoading} = useContext(UserContext)
   const [phoneNumber, setPhoneNumber] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [confirmationFunc, setConfirmationFunc] = useState(null)
   const [displayInput, setDisplayInput] = useState(false)
   const [email, setEmail] = useState(null)
   const {handleReset, setValues, values: formikValues } = useFormikContext<EditFields>();
+  const [deleteSquash] = useMutation(DELETE_PROFILE);
   const {data:InputTypeData } = useQuery(GET_ACCOUNT_DETAIL_INPUT_TYPE);
   // phone email display
   // privacy policy
@@ -26,7 +34,6 @@ const AccountDetails = ({signOut}) => {
   // add signout here
   // add delete account here
   useEffect(() => {
-    console.log("inmore details")
     if( InputTypeData.inputAccountDetailItems.displayInput == true){
     setInputType(InputTypeData.inputAccountDetailItems.inputType)
     setDisplayInput(InputTypeData.inputAccountDetailItems.displayInput)
@@ -64,6 +71,36 @@ const AccountDetails = ({signOut}) => {
         break
     }
   }
+const confirmDelete = async() => {
+  const image_set_new = _.map(userData.squash.image_set, obj => {
+    return _.omit(obj, ['__typename'])
+  })
+  console.log("code", formikValues.confirmationCode)
+  console.log("phone", formikValues.phoneNumber)
+  console.log("ficn", confirmationFunc)
+    confirmationFunc && confirmationFunc
+      .confirm(formikValues.confirmationCode)
+      .then((userCredential) => {
+         auth()
+           .currentUser.delete()
+           .then(() => {
+             // delete from mongodb
+             deleteSquash({
+               variables: {_id: userData.squash._id, image_set: image_set_new},
+             });
+             AsyncStorage.clear();
+             console.log('user has been deleted');
+             EditAccountInputVar({inputType: '', displayInput: false});
+             setDisplayInput(false);
+           })
+           .catch((error) => {
+             console.log(error);
+           });
+      })
+      .catch(async (err) => {
+        console.log(err);
+      });
+  };
   return (
     // either put done/cancel here or in parent modal
     <View style={{flex: 1}}>
@@ -83,6 +120,16 @@ const AccountDetails = ({signOut}) => {
           signOut(setDisplayInput)
         }}
       />
+      <Button
+        title="Delete Account"
+        buttonStyle={styles.buttonStyle}
+        onPress={() => {
+          registerOnFirebase(auth().currentUser.phoneNumber).then((confirmation) => {
+            setConfirmationFunc(confirmation)
+            _confirmationCode();
+          });
+        }}
+      />
         <Modal
           animationType="slide"
           transparent={false}
@@ -97,7 +144,7 @@ const AccountDetails = ({signOut}) => {
                 <Done _onPressDone={_onPressDoneInput} />
             </View>
           </View>
-            <EditAccountDetailsInput inputType={inputType} getData={getData}/>
+            <EditAccountDetailsInput inputType={inputType} getData={getData} confirmDelete={confirmDelete}/>
         </Modal>
     </View>
   );

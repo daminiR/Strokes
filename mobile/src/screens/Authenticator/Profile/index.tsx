@@ -11,9 +11,10 @@ import {GET_INPUT_TYPE, READ_SQUASH, UPDATE_USER_PROFILE} from '@graphQL'
 import {ProfileSettings, EditInput, Done, Cancel} from '@components'
 import { EditFields} from '@localModels'
 import { cityVar, EditInputVar} from '@cache'
-import {convertImagesToFormat, createInitialValuesFormik, _onPressSignOut} from '@utils'
+import {convertImagesToFormat, createInitialValuesFormik, _onPressSignOut, deleteUser} from '@utils'
 import {DoneCancelContext} from '@Contexts'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 const Tab  = createBottomTabNavigator()
 
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'PROFILE'>
@@ -122,14 +123,6 @@ const _editDisplay2 = (display) => {
     setIsVisible(display)
 }
 
-//const _getData = (data, inputType) => {
-    //switch (inputType) {
-      //case 'Name Input':
-        //setPhoneNumber(data)
-        //break
-    //}
-
-//}
 const doneCancelValues = {
   setDisplayInput: setDisplayInput,
   tempInputValues: tempInputValues,
@@ -144,6 +137,7 @@ const doneCancelValues = {
         <ProfileSettings
           _editUserInfo={_editDisplay2}
           signOut={_onPressSignOut}
+          deleteAccount={deleteUser}
         />
         <Modal
           animationType="slide"
@@ -179,16 +173,7 @@ const doneCancelValues = {
         </Modal>
       </>
     );
-
-
 }
-          //<ScrollableTabView
-            //style={styles.topTabStyle}
-            //tabBarTextStyle={styles.topTabText}
-            //tabBarUnderlineStyle={styles.topTabUnderLineStyle}>
-            //<ProfileView tabLabel="View Profile" />
-            //<PictureWall tabLabel="Edit Profile" />
-          //</ScrollableTabView>
 const Profile = (): ReactElement => {
   // TODO: very hacky way to stop useEffect from firt render => need more elegant sol
   const [loadingFormikValues, setLoadingFormikValues] = useState(true)

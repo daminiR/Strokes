@@ -101,6 +101,20 @@ const creatGCUpload = (image_set, _id) => {
       )
       return promise
 }
+const deleteAllUserImages = async (image_set) => {
+  // remove from gc AND mongdb
+  await new Promise<void>((resolve, reject) => {
+    try {
+      image_set.map(async (imageObj) => {
+        console.log("imageObj", imageObj.filePath)
+        await deleteFromGC(imageObj.filePath);
+      });
+      resolve();
+    } catch {
+      reject();
+    }
+  });
+};
 const deleteFilesFromGC = async (files_to_del, original_uploaded_image_set) => {
   // remove from gc AND mongdb
   // remove from mongoDb
@@ -616,10 +630,15 @@ export const resolvers = {
       }
         return "done"
     },
-    deleteSquash: async (root, args) => {
-      const squash = await Squash.findById({ id: args });
-      if (squash) {
-        await squash.remove();
+    deleteSquash: async (root, {_id, image_set}) => {
+      console.log("running")
+      const squash = await Squash.findById(_id);
+      if (squash && image_set) {
+          deleteAllUserImages(image_set).then(async () => {
+            await squash.remove().then(() => {
+              console.log("profile deleted and google cloud image deleted");
+            })
+          });
         return true;
       } else {
         return false;

@@ -15,14 +15,14 @@ const removeSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, tem
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
       setTempSports(filterSports);
-      setTempSports2(filterSports);
+      !isSignUp && setTempSports2(filterSports);
       isSignUp && setFieldValue('sports', filterSports);
 }
 const undoSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports, setTempSports2) => {
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
       setTempSports(filterSports);
-      setTempSports2(filterSports);
+      !isSignUp && setTempSports2(filterSports);
       isSignUp && setFieldValue('sports', filterSports);
 }
 const ChooseSportsChips = ({isSignUp}) => {
@@ -55,7 +55,7 @@ const ChooseSportsChips = ({isSignUp}) => {
         });
         console.log('new_vals 1', new_values);
         setTempSports(new_values)
-        setTempSports2(new_values)
+        !isSignUp && setTempSports2(new_values)
         isSignUp && setFieldValue('sports', new_values)
       }
       else {
@@ -64,13 +64,13 @@ const ChooseSportsChips = ({isSignUp}) => {
         new_values = temptSports.concat(newSportObj);
         console.log("new_vals 2",new_values)
         setTempSports(new_values)
-        setTempSports2(new_values)
+        !isSignUp && setTempSports2(new_values)
         isSignUp && setFieldValue('sports', new_values)
         } else {
         new_values = newSportObj;
         console.log("new_vals 3",new_values)
         setTempSports(new_values)
-        setTempSports2(new_values)
+        !isSignUp && setTempSports2(new_values)
         isSignUp && setFieldValue('sports', new_values)
         }
       }

@@ -4,19 +4,12 @@ import { genderRadioObject } from '../../constants'
 import { Text,Card, Input, Button, Icon, CheckBox} from 'react-native-elements'
 import { View, TouchableWithoutFeedback, Keyboard} from 'react-native'
 import {styles} from '@styles'
-import {ChooseSportsChips, Pictures} from '@components'
+import {ChooseSportsChips, Pictures, DismissKeyboard} from '@components'
 import { EditFields, ProfileFields, SignIn} from '@localModels'
 import {DoneCancelContext} from '@Contexts'
 import {sanitizePhone, formatPhoneNumber} from '@validation'
 import _ from 'lodash'
 
-
-const DismissKeyboard = ({ children}) => (
-  //<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-  <TouchableWithoutFeedback>
-    {children}
-  </TouchableWithoutFeedback>
-)
 
 const ImageInput = ({_submit, isSignUp}) => {
   const { values, errors, touched,  setValues, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();

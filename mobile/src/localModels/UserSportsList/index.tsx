@@ -88,7 +88,7 @@ export interface EditFields {
        add_local_images: [{imageURL: string, img_idx: number, filePath:string}],
        original_uploaded_image_set: [{imageURL: string, img_idx: number, filePath:string}],
        confirmationCode: string,
-       description: string
+       description: string,
 }
 export interface SignIn {
        email: string;

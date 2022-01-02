@@ -3,6 +3,7 @@ import auth from '@react-native-firebase/auth'
 import  RNFetchBlob  from 'rn-fetch-blob'
 import * as mime from 'react-native-mime-types'
 import { ReactNativeFile, File } from 'apollo-upload-client'
+import {deleteChatUser} from '@utils'
 
 
 export  const generateRNFile =  (uri, name) => {
@@ -38,4 +39,5 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
         console.log(err.code);
       });
   }
+
 export {_onPressSignOut}
