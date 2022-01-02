@@ -12,6 +12,10 @@ const _email = () => {
       EditAccounDetailInputVar({inputType: 'Email Input', displayInput: true})
       console.log(EditInputVar())
 };
+const _confirmationCode = () => {
+      EditAccounDetailInputVar({inputType: 'Confirmation Code Input', displayInput: true})
+      console.log(EditInputVar())
+};
 const _age = () => {
       EditInputVar({inputType: 'Birthday Input', displayInput: true})
       console.log(EditInputVar())
@@ -33,4 +37,4 @@ const _editDescription = () => {
 const _editAccount = () => {
       EditAccountInputVar({inputType: 'Account Input', displayInput: true})
 }
-export {_email, _phone_number,_editDescription, _editSports, _editAccount, _neighborhood, _gender, _age, _first_name}
+export {_confirmationCode, _email, _phone_number,_editDescription, _editSports, _editAccount, _neighborhood, _gender, _age, _first_name}

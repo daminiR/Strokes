@@ -4,6 +4,7 @@ import { useFormikContext} from 'formik';
 import { View} from 'react-native'
 import {styles} from '@styles'
 import { ProfileFields} from '@localModels'
+import { registerOnFirebase} from '@utils'
 import { formatCode} from '@validation'
 
 const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {

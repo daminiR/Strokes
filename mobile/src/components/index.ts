@@ -1,5 +1,6 @@
 export * from './AppContainer'
 export * from './Button'
+export * from './DismissKeyboard'
 export * from './Space'
 export * from './Txt'
 export * from './Loading'

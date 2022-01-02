@@ -211,8 +211,7 @@ export const typeDefs = gql`
       _id2: String!
     ): Squash
     updateGameLevelsToStrings: String
-    deleteSquash(_id: String): Squash!
-
+    deleteSquash(_id: String, image_set: [DataInput!]): Boolean!
     deleteChatUser(_idUser: String, _idChatUser: String): String
     testMut(name: Int!):Int
   }

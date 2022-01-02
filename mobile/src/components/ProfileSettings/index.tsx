@@ -14,7 +14,7 @@ import {EditAccountInputVar} from '@cache'
 import { useFormikContext, Formik} from 'formik';
 import _ from 'lodash'
 
-const ProfileSettings = ({_editUserInfo, signOut}) => {
+const ProfileSettings = ({_editUserInfo, signOut, deleteAccount}) => {
   const [displayInput, setDisplayInput] = useState(false);
   const [loading, setLoading] = useState(false);
   const [displayImage, setDisplayImage] = useState(null)
@@ -71,16 +71,6 @@ const confirmWithCode = async(code) => {
       });
   }
 
-  const renderAuthenticateOverlay = () => {
-    return (
-      // TODO:set the sports car filters, age, and game level thats all for now
-      <Overlay isVisible={displayAuth}>
-        <View style={styles.authEmailOverlay}>
-          <ConfirmationCode isLastSlide={true} _confirmSignInGC={confirmWithCode}/>
-        </View>
-      </Overlay>
-    );
-    }
   const _onPressDoneInput = async () => {
     if (formikChanged){
       confirmSignIn()
@@ -155,8 +145,7 @@ const confirmWithCode = async(code) => {
               <Cancel _onPressCancel={_onPressCancelInput} />
               <Done _onPressDone={_onPressDoneInput} />
             </View>
-            <EditAccountInput inputType={inputType} signOut={signOut}/>
-            {renderAuthenticateOverlay()}
+            <EditAccountInput inputType={inputType} signOut={signOut} deleteAccount={deleteAccount}/>
           </View>
         </Modal>
       </View>
