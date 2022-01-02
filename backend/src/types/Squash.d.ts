@@ -5,6 +5,10 @@ export interface ImageSetT {
   filePath: string;
 }
 
+export interface DeleteT {
+  isDeleted: boolean;
+  deletedAt: ISODate;
+}
 export interface Sport {
   sport: string;
   game_level: number;
@@ -31,7 +35,6 @@ export interface PotentialMatchType {
 }
 export type PotentialMatchT = PotentialMatchType[]
 export type SportsList = Sport[]
-
 export interface SquashDocument extends Document {
   first_name: string
   last_name: string
@@ -46,6 +49,9 @@ export interface SquashDocument extends Document {
   i_blocked : PotentialMatchT
   likes : PotentialMatchT
   dislikes : PotentialMatchT
+  deleted : DeleteT
+  active : Boolean
+  blockedByAdmin : Boolean
 }
 
 

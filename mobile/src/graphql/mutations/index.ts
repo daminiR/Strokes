@@ -273,6 +273,11 @@ const DELETE_PROFILE = gql`
     deleteSquash(_id: $_id, image_set: $image_set)
   }
 `
+const SOFT_DELETE_PROFILE = gql`
+  mutation softDeleteUser($_id: String!) {
+    softDeleteUser(_id: $_id)
+  }
+`
 const UPDATE_PROFILE_COMPLETE = gql`
   mutation UpdateProfileComplete($id: ID, $isProfileComplete: Boolean!){
       _id
@@ -300,4 +305,5 @@ export {
   UPDATE_MATCHES,
   POST_MESSAGE,
   DELETE_CHAT_USER,
+  SOFT_DELETE_PROFILE,
 };

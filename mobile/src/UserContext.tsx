@@ -11,6 +11,7 @@ export const AuthNavigator = () => {
   const [currentUser, setCurrentUser ] = useState(null)
   const [isProfileComplete, setProfileState ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(false);
+  const [deleted, setDeleted] = useState({isDeleted: false});
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
   const [loadingMatches, setLoadingMatches] = useState(true);
@@ -34,6 +35,7 @@ export const AuthNavigator = () => {
       //TODO: if data doesnt exists input is incorrect => add checks
       console.log("data", data)
       if (data) {
+        setDeleted(data.squash.deleted)
         setProfileState(true);
         setIsUseOnMongoDb(true);
         setData(data)
@@ -47,7 +49,6 @@ export const AuthNavigator = () => {
         console.log(networkError)
       }
         console.log(graphQLErrors)
-
     })
   });
 
@@ -80,9 +81,14 @@ export const AuthNavigator = () => {
       console.log(unsubscribe)
       return unsubscribe
   }, [isUserOnmongoDb])
+  useEffect(() => {
+    deleted.isDeleted &&
+      console.log("user info must be erase from react native and soft deleted on database")
+  }, [deleted])
 
   if (loadingSigning) return null
   const value = {
+    setDeleted: setDeleted,
     userData: userData,
     setData: setData,
     data: data,
@@ -98,6 +104,8 @@ export const AuthNavigator = () => {
     setOfflineMatches:setOfflineMatches
   };
   const render2 = () =>{
+    console.log(".............",!deleted.isDeleted)
+    //if (currentUser && isUserOnmongoDb && !deleted.isDeleted) {
     if (currentUser && isUserOnmongoDb) {
           return !loadingSigning && !loadingMatches  && <MatchStackScreen/>;
       }
