@@ -88,9 +88,9 @@ const softDelete = async() => {
 }
 
 const confirmDelete = async() => {
-  const image_set_new = _.map(userData.squash.image_set, obj => {
-    return _.omit(obj, ['__typename'])
-  })
+  //const image_set_new = _.map(userData.squash.image_set, obj => {
+    //return _.omit(obj, ['__typename'])
+  //})
   console.log("code", formikValues.confirmationCode)
   console.log("phone", formikValues.phoneNumber)
   console.log("ficn", confirmationFunc)
@@ -101,9 +101,11 @@ const confirmDelete = async() => {
            .currentUser.delete()
            .then(() => {
              // delete from mongodb
-             deleteSquash({
-               variables: {_id: userData.squash._id, image_set: image_set_new},
-             });
+             // soft delete fornow
+              softDeleteUser({variables: {_id: userData.squash._id}})
+             //deleteSquash({
+               //variables: {_id: userData.squash._id, image_set: image_set_new},
+             //});
              AsyncStorage.clear();
              console.log('user has been deleted');
              EditAccountInputVar({inputType: '', displayInput: false});

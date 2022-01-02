@@ -461,6 +461,8 @@ export const resolvers = {
         sports,
         location,
         description,
+        phoneNumber,
+        email,
       }
     ) => {
       const data_set = await creatGCUpload(image_set, _id)
@@ -474,6 +476,8 @@ export const resolvers = {
           location: location,
           sports: sports,
           description: description,
+          phoneNumber: phoneNumber,
+          email: email,
         });
         console.log(doc);
         return doc;

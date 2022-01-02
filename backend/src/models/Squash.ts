@@ -105,6 +105,14 @@ var squashSchema = new Schema({
       },
     ],
   },
+  phoneNumber: {
+    type:String,
+    required: false,
+  },
+  email: {
+    type:String,
+    required: false,
+  },
   likes: {
     type:<PotentialMatchT>{},
     required: false,
