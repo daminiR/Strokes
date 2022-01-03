@@ -150,6 +150,7 @@ var squashSchema = new Schema({
     type:Boolean,
     required: false,
   },
-});
+},
+{timestamps: true})
 const Squash = model<SquashDocument>('Squash', squashSchema)
 export default Squash

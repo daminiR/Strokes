@@ -1,0 +1,22 @@
+  const mongodb = context.services.get("mongodb-atlas");
+  const users = mongodb.db("<dbname>").collection("squashes");
+  const DAYS = 30
+  const HOURS = 5;
+  users.aggregate([
+    {
+      $match: {
+        $expr: {
+          $lt: [
+            "$updatedAt",
+            { $dateSubtract: { startDate: "$$NOW", unit: "day", amount: 5 } },
+          ],
+        },
+      },
+    },
+  ]);
+  //users.aggregate({
+    //updatedAt: {
+      ////$gte: new Date(new Date().getTime() - DAYS * 24 * 60 * 60 * 1000),
+      //$gte: new Date(new Date().getTime() -  HOURS * 60 * 60 * 1000),
+    //},
+  //});

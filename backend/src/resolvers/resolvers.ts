@@ -404,7 +404,6 @@ export const resolvers = {
       //return doc;
     },
     updateUserProfileTestSamples: async (parents, { _id1, _id2 }, context, info) => {
-
         const doc = await Squash.updateMany(
           {},
           //{ $pull: { matches: {}, likes: {}, likedByUSers: {}} },
@@ -441,7 +440,7 @@ export const resolvers = {
           i_blocked: [],
           blocked_me: [],
           likes: [],
-          dislikes: []
+          dislikes: [],
         });
         console.log(doc);
         return doc;
