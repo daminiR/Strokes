@@ -68,7 +68,7 @@ const filterByFieldsByUser = (patron_list, filters) => {
         return isSportInUser && isUserInAgeRange
     }
     const moreFilter = _.filter(patron_list, filterFunctionSport)
-    console.log("aa///////", moreFilter)
+    console.log("aa///////", moreFilter.length)
     return moreFilter
 }
 const filterByCity = (currentUseLocation, patron_list) => {

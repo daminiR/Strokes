@@ -19,7 +19,7 @@ export const AuthNavigator = () => {
   const [allUsers, setAllUsers] = useState(null)
   const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
-  const [queryProssibleMatches] = useLazyQuery(GET_POTENTIAL_MATCHES, {
+  const [queryProssibleMatches, fetchMore] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
       setLoadingMatches(true)
@@ -51,7 +51,6 @@ export const AuthNavigator = () => {
         console.log(graphQLErrors)
     })
   });
-
   const client = useApolloClient();
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
