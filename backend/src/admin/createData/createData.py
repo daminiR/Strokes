@@ -40,7 +40,7 @@ image_set = [
 
 with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData.csv", mode='w') as csv_file:
   dataWriter = csv.writer(csv_file, delimiter=';',quotechar = "'")
-  dataWriter.writerow(['_id', 'first_name', 'last_name', 'genderUser', 'age', 'sports', 'image_set', 'desciption'])
+  dataWriter.writerow(['_id', 'first_name', 'last_name', 'genderUser', 'age', 'sports', 'image_set', 'desciption', 'location'])
   for user in range(numUsers):
      _id = ''.join(random.choice(letters) for i in range(28))
      first_name = ''.join(random.choice(letters) for i in range(8))
@@ -50,11 +50,13 @@ with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData
      age  = random.randint(20, 42)
      # sports = list(random.sample(sportsList, random.randint(2, 6)))
      sports = random.sample(sportsList2, random.randint(2, 6))
-     sportsObj = [{'sport': sport, "game_level": 1} for sport in sports]
+     sportsObj = [{'sport': sport, "game_level": random.choice(["0","1","2"])} for sport in sports]
      sportsObjJSON = json.dumps(sportsObj)
      random_imgs = random.sample(image_set, random.randint(2, 5))
      images = [{"imageURL": image, "img_idx": idx, "filePath": image} for idx, image in enumerate(random_imgs)]
      imagesJSON = json.dumps(images)
+     location = {"city": "Boston", "state": "MA", "country": "US"}
+     locationJSON =json.dumps(location)
      matched = []
      i_blocked = []
      blocked_me = []
@@ -68,7 +70,8 @@ with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData
      print("age", age)
      print("sportsType", sportsObjJSON)
      print("image_set", images)
-     dataWriter.writerow([_id, first_name, last_name, genderUser, age, sportsObjJSON, imagesJSON, description])
+     print("location", location)
+     dataWriter.writerow([_id, first_name, last_name, genderUser, age, sportsObjJSON, imagesJSON, description, locationJSON])
   csv_file.close()
 
 
