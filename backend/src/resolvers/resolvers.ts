@@ -155,8 +155,9 @@ export const resolvers = {
       return squash_val;
     },
     queryProssibleMatches: async (parents, { _id }, context, info) => {
-      const users = await Squash.find({ _id: { $ne: _id } });
-      console.log("All users that are a potential match to current!");
+      //const users = await Squash.find({ _id: { $ne: _id }, limit: 1}).explain();
+      const users = await Squash.find({ age: 28}).explain();
+      console.log("All users that are a potential match to current!", users);
       return users;
     },
     squashes: async (parents, args, context, info) => {

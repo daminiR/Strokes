@@ -22,7 +22,7 @@
   "main": "index.js",
   "scripts": {
     "genData": "node src/admin/createData/createUsers.js",
-    "dev": "nodemon build/index.js",
+    "dev": "nodemon --inspect build/index.js",
     "watch": "tsc -w",
     "tsc": "tsc",
     "start": "ts-node -v src/index.ts"
