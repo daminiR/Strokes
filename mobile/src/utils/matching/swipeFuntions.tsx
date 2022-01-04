@@ -82,6 +82,7 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     console.log(likesVar())
     // test //
 
+
     updateLikes({variables: {
             _id: _id,
             likes: array,
@@ -100,14 +101,14 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
 const swipeLeftDisliked = async (_id, card, updateDislikes) => {
     // push all ids when likes or dislikes and bulk send mutation
     var array = dislikesVar()
-    if (array.length  == MAX_DISLIKES){
+    //if (array.length  == MAX_DISLIKES){
         //update mutation for dislikes
         updateDislikes({variables: {
             _id: _id,
             dislikes: array
         }})
         array = []
-    }
+    //}
     const potentialMatch = sanitizeCard(card)
     array.push(potentialMatch)
     dislikesVar(array)

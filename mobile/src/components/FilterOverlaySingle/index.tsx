@@ -1,19 +1,23 @@
 import {styles} from '@styles'
-import React, {useEffect, useState } from 'react'
+import {UserContext} from '@UserContext'
+import React, {useEffect, useState, useContext} from 'react'
 import { View, Text } from 'react-native';
 import {Overlay, CheckBox, Card} from 'react-native-elements'
 import { Cancel, FilterChip, Done} from '@components'
 import _ from 'lodash'
 import {FilterFields} from '@localModels'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter, _storeAgeRangeFilter, _storeGameLevelFilter, _storeSportFilter} from '@localStore'
-import {defaultAgeRange} from '@constants'
+import {defaultAgeRange, SWIPIES_PER_DAY_LIMIT} from '@constants'
 import { useFormikContext} from 'formik'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import {FilterSportContext} from '@Contexts'
+import {byGameLevel} from '@utils'
 
   //// TODO : this needs to update every time user changes list of activities
 const FilterOverlaySingle = ({filter, setFilter}) => {
+  console.log("filter ber .....................")
   const {setValues, values: filterValues } = useFormikContext<FilterFields>();
+  console.log("filterValues",)
   const [multiSliderValue, setMultiSliderValue] = useState(defaultAgeRange);
 
   const [allUserSportsFilter, setAllUserSportsFilter] = useState(filterValues.sportFilters);
@@ -21,6 +25,7 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
   const [gameLevel1, setGameLevel1] = useState(false);
   const [gameLevel2, setGameLevel2] = useState(false);
   const [gameLevel0, setGameLevel0] = useState(false);
+  const {userData, queryProssibleMatches, potentialMatches, currentUser, data: currentUserData, userLoading, setPotentialMatches} = useContext(UserContext)
 
   const value = {
     allUserSportsFilter: allUserSportsFilter,
@@ -50,9 +55,24 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
     setValues({... filterValues, 'ageRange': multiSliderValue, 'gameLevels': gameLevelObj, 'sportFilters': allUserSportsFilter});
     _storeAgeRangeFilter(multiSliderValue)
     const sportFilter = _.find(allUserSportsFilter, ['filterSelected', true])
-    console.log("new sotrage sports", sportFilter )
     _storeSportFilter(sportFilter)
     _storeGameLevelFilter(gameLevelObj);
+    console.log("new sotrage sports", sportFilter, gameLevelObj, multiSliderValue)
+        const dislikes = userData.squash.dislikes ? userData.squash.dislikes.length : 0;
+        const likes = userData.squash.likes ? userData.squash.likes.length : 0;
+        console.log(likes)
+        const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
+        queryProssibleMatches({
+          variables: {
+            _id: currentUser.uid,
+            offset: 0,
+            limit: limit,
+            location: userData.squash.location,
+            sport: sportFilter.sport,
+            game_levels: byGameLevel(gameLevelObj),
+            ageRange: multiSliderValue
+          },
+        });
     setFilter(false)
   };
 

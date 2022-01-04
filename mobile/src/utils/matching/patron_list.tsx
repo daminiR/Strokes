@@ -26,14 +26,8 @@ export const patronCard = (card) => {
     return potentialMatch
 }
 
-const filterByFieldsByUser = (patron_list, filters) => {
-  //TODO: to maintain structure cange gamelevel backend to match filter gamelevel style --> done!
-    const filterBySport = _.find(filters.sportFilters, sportObj => {return sportObj.filterSelected == true}).sport
-    console.log("sport in retrive ",filterBySport)
-    console.log("filterbysport",filterBySport)
-    const filterByAge = filters.ageRange
-    console.log("filter by age",filterByAge)
-    const filterByGameLevel = Object.entries(filters.gameLevels).map(
+export const byGameLevel = (gameLevels) =>{
+    var filterByGameLevel = Object.entries(gameLevels).map(
       ([key, value]) => {
         switch (key) {
           case 'gameLevel0': {
@@ -52,8 +46,19 @@ const filterByFieldsByUser = (patron_list, filters) => {
             }
           }
         }
-      },
-    );
+      }
+    )
+  filterByGameLevel = _.filter(filterByGameLevel, filterObj => filterObj != null)
+  return  filterByGameLevel
+}
+const filterByFieldsByUser = (patron_list, filters) => {
+  //TODO: to maintain structure cange gamelevel backend to match filter gamelevel style --> done!
+    const filterBySport = _.find(filters.sportFilters, sportObj => {return sportObj.filterSelected == true}).sport
+    console.log("sport in retrive ",filterBySport)
+    console.log("filterbysport",filterBySport)
+    const filterByAge = filters.ageRange
+    console.log("filter by age",filterByAge)
+    const filterByGameLevel = byGameLevel(filters.gameLevels)
     const filterFunctionSport = (matchObj) => {
         const isSportInUser = _.some(matchObj.sports, (sportObj) => {
             if (filterBySport == null) {
@@ -77,17 +82,18 @@ const filterByCity = (currentUseLocation, patron_list) => {
     return newPatronList
 }
 const createPatronList = (currentUser, allUsers, filters) => {
-    console.log("in patron lsit",currentUser)
-    const currentUseLocation = currentUser.location
+  //unbounded arrays will be filtered in mongodb
+    //const currentUseLocation = currentUser.location
     const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
     const likes = currentUser?.likes ? currentUser.likes : []
-    const matches = currentUser?.matches ? currentUser.likes : []
+    //const matches = currentUser?.matches ? currentUser.likes : []
     const dislikes = currentUser?.dislikes ? currentUser.dislikes : []
-    console.log("what", dislikes)
-    const exclude = _.concat(likes, dislikes, matches)
+    const exclude = _.concat(likes, dislikes)
     const patron_list = _.differenceBy(activeUsers, exclude, '_id')
-    const newPatronList = filterByCity(currentUseLocation, patron_list)
-    const newPatronList2 = filterByFieldsByUser(newPatronList, filters)
-    return newPatronList2
+    //const newPatronList = filterByCity(currentUseLocation, patron_list)
+    //const newPatronList2 = filterByFieldsByUser(newPatronList, filters)
+    //return newPatronList2
+    return patron_list
+    //return allUsers
 }
 export {createPatronList}

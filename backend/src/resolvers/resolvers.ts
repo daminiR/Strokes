@@ -150,14 +150,34 @@ export const resolvers = {
       return messages
     },
     squash: async (parents, args, context, info) => {
-      const squash_val = await Squash.findById(args.id);
+      const squash_val = await Squash.findById(args.id)
       console.log(squash_val);
       return squash_val;
     },
-    queryProssibleMatches: async (parents, { _id }, context, info) => {
-      //const users = await Squash.find({ _id: { $ne: _id }, limit: 1}).explain();
-      const users = await Squash.find({ age: 28}).explain();
-      console.log("All users that are a potential match to current!", users);
+    queryProssibleMatches: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange}, context, info) => {
+      //const users = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);
+      //// it is imperitive all the filter items are indexed!
+      const filter = {
+        $and: [
+          {
+            _id: { $ne: _id },
+          },
+          {
+            location: location,
+          },
+          {
+            active: true,
+          },
+          {
+            sports: { sport: sport, game_level: { $in: { game_levels } } },
+          },
+          {
+            age: {$gt: ageRange.minAge, $lt: ageRange.maxAge}
+          },
+        ],
+      };
+      const users = await Squash.find(filter).skip(offset).limit(limit);
+      console.log("All users that are a potential match to current!", users.length);
       return users;
     },
     squashes: async (parents, args, context, info) => {
@@ -252,13 +272,14 @@ export const resolvers = {
     updateLikes: async (parents, { _id, likes, currentUserData}, context, info) => {
       const doc = await Squash.findOneAndUpdate(
           { _id: _id },
-          { $push: { likes: { $each: likes } } },
-          { new: true }
+          //{ $push: { likes: { $each: likes } } },
+          {$addToSet:{likes:{ $each: likes }}},
+          {new: true}
         );
       const filter = {_id: likes.map(likeObj => {return likeObj._id})}
       console.log("filter object", filter)
       console.log("likes object", likes)
-      const update = { $push: { likedByUSers: currentUserData}}
+      const update = { $addToSet: { likedByUSers: currentUserData}}
       const check_doc = await Squash.updateMany(filter, update)
       console.log("Updated user likes ", likes);
       console.log("doc", doc)
@@ -269,7 +290,7 @@ export const resolvers = {
     updateDislikes: async (parents, { _id, dislikes }, context, info) => {
         const doc = await Squash.findOneAndUpdate(
           { _id: _id },
-          { $push: { dislikes: {$each: dislikes} } },
+          { $addToSet: { dislikes: {$each: dislikes} } },
           { new: true }
         );
         console.log("Updated user dislikes ", dislikes);
@@ -442,6 +463,7 @@ export const resolvers = {
           blocked_me: [],
           likes: [],
           dislikes: [],
+          active: true,
         });
         console.log(doc);
         return doc;
@@ -478,6 +500,7 @@ export const resolvers = {
           description: description,
           phoneNumber: phoneNumber,
           email: email,
+          active: true
         });
         console.log(doc);
         return doc;

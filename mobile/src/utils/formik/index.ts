@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '@localStore'
 import {defaultAgeRange, defaultGameLevel} from '@constants'
+import {SportFilters} from '@localModels'
 
 const createInitialValuesFormik = (userData, phoneNumber, email) => {
     if (userData){
@@ -44,16 +45,16 @@ const createInitialFilterFormik = async (sports) => {
   const defailtSportFilter = _.map(sports, (sportObj, key) => {
     if (sportFilter){
     if (sportObj.sport == sportFilter.sport) {
-      return sportFilter;
+      return sportFilter as SportFilters;
     } else {
-      return {sport: sportObj.sport, filterSelected: false};
+      return {sport: sportObj.sport, filterSelected: false} as SportFilters;
     }
     }
     else{
     if (key == '0') {
-      return {sport: sportObj.sport, filterSelected: true};
+      return {sport: sportObj.sport, filterSelected: true} as SportFilters;
     } else {
-      return {sport: sportObj.sport, filterSelected: false};
+      return {sport: sportObj.sport, filterSelected: false} as SportFilters;
     }
     }
   })

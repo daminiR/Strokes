@@ -10,6 +10,7 @@ export const white = '#ffffff'
 export const black = '#17191A'
 export const dimGray = '#707070'
 export const lightGray = '#D1CDCD'
+export const SWIPIES_PER_DAY_LIMIT = 10
 
 export const tabBarSize = DIMENSION_HEIGHT * 0.08
 export const CODE_LENGTH = 6
