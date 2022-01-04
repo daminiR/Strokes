@@ -53,7 +53,6 @@ const EditProfile = ({}) => {
       }
     }
   })
-
   const didMountRef = useRef(false)
   useEffect(() => {
     if( InputTypeData.inputItems.displayInput == true){

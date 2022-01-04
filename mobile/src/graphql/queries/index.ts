@@ -31,8 +31,8 @@ const MESSAGE_POSTED = gql`
 }`
 
 const GET_POTENTIAL_MATCHES = gql`
-  query QueryProssibleMatches ($_id: String!){
-    queryProssibleMatches (_id: $_id ){
+  query QueryProssibleMatches ($_id: String!, $offset: Int, $limit: Int){
+    queryProssibleMatches (_id: $_id offset: $offset, limit:$limit){
       location {
         city
         state

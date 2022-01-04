@@ -30,6 +30,10 @@ import {gql} from 'apollo-server-express';
     img_idx: Int!,
     file: FileUpload!
 `
+  const ageRange = `
+    minAge: Int!,
+    maxAge: Int!
+`
 const PotentialMatchUserType = `
     _id: ID!
     first_name: String!
@@ -97,6 +101,9 @@ export const typeDefs = gql`
   type Location {
     ${LocationType}
   }
+  input AgeRangeInput {
+    ${ageRange}
+  }
   type DeletedT {
     ${DeletedType}
   }
@@ -113,7 +120,7 @@ export const typeDefs = gql`
     squash(id: String!): Squash!
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
-    queryProssibleMatches(_id: String!): [Squash!]
+    queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevels:[String!]!, ageRange: AgeRangeInput}): [Squash!]
   }
   input SquashNodeInput {
     ${SquashNodeType}

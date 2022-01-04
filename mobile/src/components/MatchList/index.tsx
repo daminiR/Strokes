@@ -41,6 +41,7 @@ const MatchList = ({matches}) => {
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
   const {currentUser , userData, setData} = useContext(UserContext)
+  const [matchesState, setMatchesState] = useState(matches)
   const [matched, setMatched] = useState(false)
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
@@ -50,12 +51,13 @@ const MatchList = ({matches}) => {
     },
   })
   useEffect(() => {
-      if (matches?.length == 0) {
+    console.log("what is th ematch state", matchesState)
+      if (matchesState?.length == 0) {
         setEndingText('No more matches left!');
       } else {
         setEndingText(null);
       }
-  }, [matches])
+  }, [matchesState])
   const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
     variables: {id: currentUser.uid},
     //fetchPolicy:"cache-and-network",
@@ -71,6 +73,58 @@ const MatchList = ({matches}) => {
   const match = (matchVal) => {
     setMatched(matchVal)
   }
+  const renderMoreMatches = () => {
+    return (
+      <>
+        {matchesState.length != 0 && (
+          <Swiper
+            cards={matchesState}
+            key={matchesState.length}
+            ref={(swiper) => {
+              this.swiper = swiper;
+            }}
+            renderCard={(card, index) => renderMatches(card, index)}
+            onSwiped={(cardIndex) => {
+              console.log(cardIndex);
+            }}
+            onSwipedLeft={(index) => {
+              swipeLeftDisliked(
+                currentUser.uid,
+                matchesState[index],
+                updateDislikes,
+              );
+            }}
+            onSwipedRight={(index) => {
+              swipeRightLiked(
+                userData.squash,
+                currentUser.uid,
+                matchesState[index],
+                updateLikes,
+                updateMatches,
+                match,
+              );
+            }}
+            //hacky solution to add note at the last deck
+            onSwipedAll={() => setEndingText('No more matches left!')}
+            disableBottomSwipe={true}
+            disableTopSwipe={true}
+            verticalSwipe={false}
+            verticalThreshold={0}
+            horizontalThreshold={W / 2}
+            cardIndex={0}
+            stackAnimationFriction={500}
+            useViewOverflow={true}
+            backgroundColor={'#FFFFFF'}
+            cardVerticalMargin={0}
+            cardHorizontalMargin={20}
+            marginBottom={tabBarSize + 20}
+            cardStyle={styles.swiperCardStyle}
+            containerStyle={styles.swiperContainerCardStyle}
+            stackSize={3}></Swiper>
+        )}
+      </>
+    );
+  };
   return (
     <>
       <MatchCard matched={matched} setMatched={setMatched} />
@@ -79,51 +133,7 @@ const MatchList = ({matches}) => {
         <Filters />
       </View>
         <View style={styles.swipeContainer}>
-          {matches.length != 0 && (
-            <Swiper
-              cards={matches}
-              ref={(swiper) => {
-                this.swiper = swiper;
-              }}
-              renderCard={(card, index) => renderMatches(card, index)}
-              onSwiped={(cardIndex) => {
-                console.log(cardIndex);
-              }}
-              onSwipedLeft={(index) => {
-                swipeLeftDisliked(
-                  currentUser.uid,
-                  matches[index],
-                  updateDislikes,
-                );
-              }}
-              onSwipedRight={(index) => {
-                swipeRightLiked(
-                  userData.squash,
-                  currentUser.uid,
-                  matches[index],
-                  updateLikes,
-                  updateMatches,
-                  match,
-                );
-              }}
-              //hacky solution to add note at the last deck
-              onSwipedAll={() => setEndingText('No more matches left!')}
-              disableBottomSwipe={true}
-              disableTopSwipe={true}
-              verticalSwipe={false}
-              verticalThreshold={0}
-              horizontalThreshold={W / 2}
-              cardIndex={0}
-              stackAnimationFriction={500}
-              useViewOverflow={true}
-              backgroundColor={'#FFFFFF'}
-              cardVerticalMargin={0}
-              cardHorizontalMargin={20}
-              marginBottom={tabBarSize + 20}
-              cardStyle={styles.swiperCardStyle}
-              containerStyle={styles.swiperContainerCardStyle}
-              stackSize={3}></Swiper>
-          )}
+          {matchesState && renderMoreMatches()}
           {endingText && (
             <View style={styles.center}>
               <Text style={styles.nameStyle}>{endingText}</Text>
@@ -135,7 +145,7 @@ const MatchList = ({matches}) => {
           <FAB
             icon={likeIconStyle}
             color="transparent"
-            disabled={matches.length == 0}
+            disabled={matchesState.length == 0}
             onPress={() => this.swiper.swipeRight()}
             buttonStyle={styles.likeDislikeFAB}
             containerStyle={{width: 60, height: 60}}
@@ -144,7 +154,7 @@ const MatchList = ({matches}) => {
             icon={dislikeIconStyle}
             style={{margin: 0, padding: 0}}
             color="transparent"
-            disabled={matches.length == 0}
+            disabled={matchesState.length == 0}
             onPress={() => this.swiper.swipeLeft()}
             buttonStyle={styles.likeDislikeFAB}
             containerStyle={{width: 60, height: 60}}

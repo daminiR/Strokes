@@ -19,6 +19,7 @@ const App = () =>
 {
   const [client, setClient] = useState();
   const [persistor, setPersistor] = useState();
+  const [loadingClient, setLoadingClient] = useState(true);
   const uri_upload = process.env.React_App_UriUploadRemote
   const uri_ws = process.env.React_App_WSlinkRemote
   useEffect(() => {
@@ -75,28 +76,24 @@ const App = () =>
     }
     init();
   }, []);
+  const renderAuth = () => {
+    return <AuthNavigator />;
+  };
     if (!client) {
     console.log(' still no clinet');
     return <Text>Initializing app...</Text>;
     }
+    if (client) {
+      console.log('clinet found');
+      return (
+        <ApolloProvider client={client}>
+          <FormProvider>
+            {renderAuth()}
+          </FormProvider>
+        </ApolloProvider>
+      );
+    }
 
-  //const renderInitial = () => {
-    //if (ready) {
-      //if (client) {
-        //console.log(client)
-        //console.log('client loaded?');
-        //return (
-          //<ApolloProvider client={client}>
-            //<FormProvider>
-              //<AuthNavigator />
-            //</FormProvider>
-          //</ApolloProvider>
-        //);
-      //} else {
-        //return <ApolloErrorScreen isApolloConected={false} />;
-      //}
-    //}
-  //};
   //client.resetStore()
   //client.resetStore()
   //just to reset cache for debugging
@@ -104,13 +101,13 @@ const App = () =>
   //{ready && <AuthNavigator/>}
   //return renderInitial();
     //only in androik
-  enableFlipperApolloDevtools(client)
-  return (
-          <ApolloProvider client={client}>
-            <FormProvider>
-              <AuthNavigator />
-            </FormProvider>
-          </ApolloProvider>
-  );
+  //enableFlipperApolloDevtools(client)
+  //return (
+    //<ApolloProvider client={client}>
+      //<FormProvider>
+        //{<AuthNavigator />}
+      //</FormProvider>
+    //</ApolloProvider>
+  //);
 }
 export default App

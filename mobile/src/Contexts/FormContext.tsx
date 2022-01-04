@@ -3,7 +3,6 @@ interface Props {
     children: any
 }
 
-
 const FormStateContext = React.createContext()
 const FormDispatchContext  = React.createContext()
 const initialState = {
