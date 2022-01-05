@@ -1,19 +1,22 @@
 import {styles, SECONDARY_THEME, DIMENSION_HEIGHT} from '@styles';
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {TouchableOpacity } from 'react-native';
 import {Icon } from 'react-native-elements';
 import _ from 'lodash'
 import {FilterOverlaySingle} from '@components'
+import {UserContext} from '@UserContext'
 
 
 const Filters = () => {
   const [filter, setFilter] = useState(false);
+  const {data: currentUserData, potentialMatches, initialValuesFormik: filterValues, userLoading, cachedUser, currentUser, userData} = useContext(UserContext)
   const _onFilter = () => {
     setFilter(true);
   };
+  useEffect(() => {
+    console.log("did user data sport values chnages", userData.squash.sport)
+    }, [userData.squash.sport])
 
-        //<Text style={styles.filtersText}>Filters
-        //</Text>
   return (
     <>
       <FilterOverlaySingle filter={filter} setFilter={setFilter} />

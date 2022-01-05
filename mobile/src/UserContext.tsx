@@ -58,6 +58,7 @@ export const AuthNavigator = () => {
         console.log(likes)
         const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
         console.log('whats the limit', limit);
+        console.log(initialValues)
         const sport = _.find(initialValues.sportFilters, sportObj => {return sportObj.filterSelected ==  true}).sport
         byGameLevel(initialValues.gameLevels),
         queryProssibleMatches({

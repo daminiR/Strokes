@@ -30,7 +30,7 @@ const EditProfile = ({}) => {
   const [inputType, setInputType] = useState();
   const {setValues, values: formikValues,handleReset} = useFormikContext<EditFields>();
   const [tempInputValues, setTempInputValues] = useState(null);
-  const {currentUser, setData} = useContext(UserContext)
+  const {currentUser, setData, refetchUserData} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
@@ -38,6 +38,8 @@ const EditProfile = ({}) => {
     onCompleted: (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
       getSquashProfile({variables: {id: currentUser.uid}});
+      //
+
     },
   });
   const [displayInput, setDisplayInput] = useState(false);

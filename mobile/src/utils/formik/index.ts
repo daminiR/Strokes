@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '@localStore'
+import {_retriveGameLevel,_storeSportFilter, _retriveAgeRangeFilter, _retriveSportFilter} from '@localStore'
 import {defaultAgeRange, defaultGameLevel} from '@constants'
 import {SportFilters} from '@localModels'
 
@@ -41,24 +41,42 @@ const createInitialFilterFormik = async (sports) => {
   const sportFilter = await _retriveSportFilter()
   const gameLevelFilter = await _retriveGameLevel()
 
-  console.log("cached", sportFilter)
-  const defailtSportFilter = _.map(sports, (sportObj, key) => {
-    if (sportFilter){
-    if (sportObj.sport == sportFilter.sport) {
-      return sportFilter as SportFilters;
-    } else {
-      return {sport: sportObj.sport, filterSelected: false} as SportFilters;
-    }
-    }
-    else{
-    if (key == '0') {
-      return {sport: sportObj.sport, filterSelected: true} as SportFilters;
-    } else {
-      return {sport: sportObj.sport, filterSelected: false} as SportFilters;
-    }
-    }
-  })
+  console.log(sportFilter)
+  console.log(sports)
+  // cached values is not in current sports remove it and chosse any one in the sports filer
+  var defailtSportFilter  = null
+  if (!_.includes(sports, sportFilter.sport)) {
 
+   defailtSportFilter = _.map(sports, (sportObj, key) => {
+     if (key == '0') {
+      const new_cached = {sport: sportObj.sport, filterSelected: true} as SportFilters;
+      _storeSportFilter(new_cached)
+      return new_cached
+     } else {
+       return {sport: sportObj.sport, filterSelected: false} as SportFilters;
+     }
+   })
+  }
+  else{
+    defailtSportFilter = _.map(sports, (sportObj, key) => {
+      console.log(sportObj);
+      if (sportFilter) {
+        // is sport filter exists and in sports filter
+        if (sportObj.sport == sportFilter.sport) {
+          return sportFilter as SportFilters;
+        } else {
+          return {sport: sportObj.sport, filterSelected: false} as SportFilters;
+        }
+        // is sport filter exists but filter values are changed in profile
+      } else {
+        if (key == '0') {
+          return {sport: sportObj.sport, filterSelected: true} as SportFilters;
+        } else {
+          return {sport: sportObj.sport, filterSelected: false} as SportFilters;
+        }
+      }
+    });
+  }
   return {
     ageRange: ageRange ? ageRange : defaultAgeRange,
     sportFilters: defailtSportFilter,

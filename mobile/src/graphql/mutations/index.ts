@@ -85,8 +85,6 @@ const UPDATE_USER_PROFILE = gql`
     $gender: String!
     $add_local_images: [ImageData]
     $remove_uploaded_images: [DataInput]
-    $phoneNumber: String
-    $email: String
     $original_uploaded_image_set: [DataInput!]!
     $sports: [SquashNodeInput!]!
     $location: LocationInput!
@@ -121,8 +119,6 @@ const UPDATE_USER_PROFILE = gql`
         game_level
       }
       description
-      phoneNumber
-      email
       image_set {
         img_idx
         imageURL
