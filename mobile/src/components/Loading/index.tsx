@@ -1,7 +1,8 @@
 import React, { memo } from 'react'
 import { Text, StyleSheet, View } from 'react-native'
 import Spinner, { SpinnerType } from 'react-native-spinkit'
-//import  AnimatedLoader from 'react-native-animated-loader'
+import  AnimatedLoader from 'react-native-animated-loader'
+import { secondary } from '../../constants'
 
 const styles = StyleSheet.create({
   activityIndicator: {
@@ -26,18 +27,18 @@ const Loading = memo<LoadingT>(({ size, animating, type }) => {
   return (
     <View style={activityIndicator}>
       {!animating &&
+      <AnimatedLoader
+        visible={true}
+        overlayColor="rgba(255,255,255,0.75)"
+        animationStyle={styles2.lottie}
+        source={require('../../assets/images/loading/lf30_editor_c1eqkx20.json')}
+        speed={0.9}>
           <Text> Loading ...</Text>
+        </AnimatedLoader>
       }
     </View>
   );
 })
-      //<AnimatedLoader
-        //visible={true}
-        //overlayColor="rgba(255,255,255,0.75)"
-        //animationStyle={styles2.lottie}
-        //source={require('../../assets/images/loading/lf30_editor_c1eqkx20.json')}
-        //speed={0.86}>
-        //</AnimatedLoader>
 const styles2 = StyleSheet.create({
   lottie: {
     width: 100,

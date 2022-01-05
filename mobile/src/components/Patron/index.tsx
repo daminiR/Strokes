@@ -1,14 +1,11 @@
 import React, { useEffect, useContext,createContext, useRef, useState } from 'react'
 import {UserContext} from '@UserContext'
-import {MatchList} from '@components'
+import {MatchList, AppContainer} from '@components'
 import { useFormikContext} from 'formik'
 import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter, createPatronList} from '@utils'
 import {FilterFields} from '@localModels'
-import { useSubscription, useQuery, useLazyQuery} from '@apollo/client'
-import { GET_POTENTIAL_MATCHES} from '@graphQL'
 import {cityVar}from '@cache'
-import {FAB}from 'react-native-elements'
 
 //export const FilterContext = createContext(null)
 const addmoreData= {
@@ -43,9 +40,13 @@ const Patron = ()  => {
     //setOffsetVar((offset) => offset + 10);
   //};
   useEffect(() => {
+    console.log("]]]]]]]]]]]]]]]]]]]]", potentialMatches)
+
+  }, [potentialMatches]);
+  useEffect(() => {
+    setLoadingMatches(true);
     if (potentialMatches) {
       console.log("beforeeeeeeeeeeee",potentialMatches)
-      setLoadingMatches(true);
       const patron_list = createPatronList(
         userData?.squash,
         potentialMatches,
@@ -58,11 +59,13 @@ const Patron = ()  => {
   }, [potentialMatches]);
   return (
     <>
+      <AppContainer loading={loadingMatches}>
       {!loadingMatches && (
         <>
           <MatchList matches={matches}/>
         </>
       )}
+      </AppContainer>
     </>
   );
 }

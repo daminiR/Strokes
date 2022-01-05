@@ -91,9 +91,10 @@ const createPatronList = (currentUser, allUsers, filters) => {
     const exclude = _.concat(likes, dislikes)
     const patron_list = _.differenceBy(activeUsers, exclude, '_id')
     //const newPatronList = filterByCity(currentUseLocation, patron_list)
-    //const newPatronList2 = filterByFieldsByUser(newPatronList, filters)
-    //return newPatronList2
-    return patron_list
+    const newPatronList2 = filterByFieldsByUser(patron_list  , filters)
+    console.log("patrin list")
+    return newPatronList2
+    //return patron_list
     //return allUsers
 }
 export {createPatronList}

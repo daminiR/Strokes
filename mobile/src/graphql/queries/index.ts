@@ -31,8 +31,8 @@ const MESSAGE_POSTED = gql`
 }`
 
 const GET_POTENTIAL_MATCHES = gql`
-  query QueryProssibleMatches ($_id: String!, $offset: Int, $limit: Int){
-    queryProssibleMatches (_id: $_id offset: $offset, limit:$limit){
+  query QueryProssibleMatches ($_id: String!, $offset: Int, $limit: Int, $location: LocationInput!, $sport: String!, $game_levels: [String!]!, $ageRange: AgeRangeInput){
+    queryProssibleMatches (_id: $_id offset: $offset, limit:$limit, location: $location, game_levels:$game_levels, sport: $sport, ageRange: $ageRange){
       location {
         city
         state
