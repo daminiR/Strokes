@@ -157,22 +157,27 @@ export const resolvers = {
     queryProssibleMatches: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange}, context, info) => {
       //const users = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);
       //// it is imperitive all the filter items are indexed!
+      const minAge = ageRange.minAge;
+      const maxAge = ageRange.maxAge;
       const filter = {
         $and: [
           {
             _id: { $ne: _id },
           },
           {
-            location: location,
+            "location.city": location.city,
           },
           {
             active: true,
           },
           {
-            sports: { sport: sport, game_level: { $in: { game_levels } } },
+            //sports: { sport: sport, game_level: { $in: game_levels  } },
+            sports: {
+              $elemMatch: { sport: sport, game_level: { $in: ["2", "0"] } },
+            },
           },
           {
-            age: {$gt: ageRange.minAge, $lt: ageRange.maxAge}
+            age: { $gt: minAge, $lt: maxAge },
           },
         ],
       };

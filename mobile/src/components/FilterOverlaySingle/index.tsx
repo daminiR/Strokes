@@ -67,7 +67,7 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
             _id: currentUser.uid,
             offset: 0,
             limit: limit,
-            location: userData.squash.location,
+            location: _.omit(userData.squash.location, ['__typename']),
             sport: sportFilter.sport,
             game_levels: byGameLevel(gameLevelObj),
             ageRange: multiSliderValue

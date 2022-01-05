@@ -65,7 +65,7 @@ export const AuthNavigator = () => {
             _id: currentUser.uid,
             offset: 0,
             limit: limit,
-            location: data.squash.location,
+            location: _.omit(data.squash.location, ['__typename']),
             sport: sport,
             game_levels: byGameLevel(initialValues.gameLevels),
             ageRange: initialValues.ageRange

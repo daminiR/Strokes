@@ -23,7 +23,7 @@ export const MatchesProfileContext = createContext(null)
 const Match =()  => {
   console.log("Match how many querries are running")
   const [allUsers, setAllUsers] = useState(null)
-  const {data: currentUserData, initialValuesFormik: filterValues, userLoading, cachedUser, currentUser, userData} = useContext(UserContext)
+  const {data: currentUserData, potentialMatches, initialValuesFormik: filterValues, userLoading, cachedUser, currentUser, userData} = useContext(UserContext)
   const renderPatron = () => {
     return <Patron/>
   }

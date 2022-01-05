@@ -41,7 +41,7 @@ const MatchList = ({matches}) => {
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
   const {currentUser , userData, setData} = useContext(UserContext)
-  const [matchesState, setMatchesState] = useState(matches)
+  //const [matchesState, setMatchesState] = useState(matches)
   const [matched, setMatched] = useState(false)
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
@@ -51,13 +51,13 @@ const MatchList = ({matches}) => {
     },
   })
   useEffect(() => {
-    console.log("what is th ematch state", matchesState)
-      if (matchesState?.length == 0) {
+    console.log("what is th ematch state", matches)
+      if (matches?.length == 0) {
         setEndingText('No more matches left!');
       } else {
         setEndingText(null);
       }
-  }, [matchesState])
+  }, [matches])
   const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
     variables: {id: currentUser.uid},
     //fetchPolicy:"cache-and-network",
@@ -76,10 +76,10 @@ const MatchList = ({matches}) => {
   const renderMoreMatches = () => {
     return (
       <>
-        {matchesState.length != 0 && (
+        {matches.length != 0 && (
           <Swiper
-            cards={matchesState}
-            key={matchesState.length}
+            cards={matches}
+            key={matches.length}
             ref={(swiper) => {
               this.swiper = swiper;
             }}
@@ -90,7 +90,7 @@ const MatchList = ({matches}) => {
             onSwipedLeft={(index) => {
               swipeLeftDisliked(
                 currentUser.uid,
-                matchesState[index],
+                matches[index],
                 updateDislikes,
               );
             }}
@@ -98,7 +98,7 @@ const MatchList = ({matches}) => {
               swipeRightLiked(
                 userData.squash,
                 currentUser.uid,
-                matchesState[index],
+                matches[index],
                 updateLikes,
                 updateMatches,
                 match,
@@ -133,7 +133,7 @@ const MatchList = ({matches}) => {
         <Filters />
       </View>
         <View style={styles.swipeContainer}>
-          {matchesState && renderMoreMatches()}
+          {matches && renderMoreMatches()}
           {endingText && (
             <View style={styles.center}>
               <Text style={styles.nameStyle}>{endingText}</Text>
@@ -145,7 +145,7 @@ const MatchList = ({matches}) => {
           <FAB
             icon={likeIconStyle}
             color="transparent"
-            disabled={matchesState.length == 0}
+            disabled={matches.length == 0}
             onPress={() => this.swiper.swipeRight()}
             buttonStyle={styles.likeDislikeFAB}
             containerStyle={{width: 60, height: 60}}
@@ -154,7 +154,7 @@ const MatchList = ({matches}) => {
             icon={dislikeIconStyle}
             style={{margin: 0, padding: 0}}
             color="transparent"
-            disabled={matchesState.length == 0}
+            disabled={matches.length == 0}
             onPress={() => this.swiper.swipeLeft()}
             buttonStyle={styles.likeDislikeFAB}
             containerStyle={{width: 60, height: 60}}

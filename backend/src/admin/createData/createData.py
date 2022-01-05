@@ -14,7 +14,7 @@ sportsList2 = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball"
 sportsList = [{"Squash", 0},
               {"Tennis", 0},
               {"Soccer", 0},
-              {"badminton", 0},
+              {"badminton", 1},
               {"Hockey",0},
               {"Volleyball",0 },
               {"Basketball",0 },
@@ -75,7 +75,7 @@ with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData
      last_name = ''.join(random.choice(letters) for i in range(8))
      description = ''.join(random.choice(letters) for i in range(50))
      genderUser = random.choice(gender)
-     age  = random.randint(20, 42)
+     age  = random.randint(18, 118)
      # sports = list(random.sample(sportsList, random.randint(2, 6)))
      sports = random.sample(sportsList2, random.randint(2, 6))
      sportsObj = [{'sport': sport, "game_level": random.choice(["0","1","2"])} for sport in sports]
