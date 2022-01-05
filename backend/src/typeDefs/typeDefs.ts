@@ -120,7 +120,7 @@ export const typeDefs = gql`
     squash(id: String!): Squash!
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
-    queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
+    queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevels:[String!]!, ageRange: ageRangeInput}): [Squash!]
   }
   input SquashNodeInput {
     ${SquashNodeType}

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext,createContext, useState } from 'react'
 import {StackNavigationProp } from '@react-navigation/stack'
-import { RootStackParamList } from '../../../AppNavigator'
+import { RootStackSignInParamList } from '@NavStack'
 import {UserContext} from '@UserContext'
 import { Formik} from 'formik'
 import _ from 'lodash'
@@ -15,15 +15,23 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import {FilterFields} from "@localModels"
 
 
-type MatchScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MATCH'>
+type MatchScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'MATCH'>
 export const FilterSportContext = createContext(null);
 export const MatchesProfileContext = createContext(null)
 
 
 const Match =()  => {
   console.log("Match how many querries are running")
-  const [allUsers, setAllUsers] = useState(null)
-  const {data: currentUserData, potentialMatches, initialValuesFormik: filterValues, userLoading, cachedUser, currentUser, userData} = useContext(UserContext)
+  const [allUsers, setAllUsers] = useState(null);
+  const {
+    data: currentUserData,
+    potentialMatches,
+    initialValuesFormik: filterValues,
+    userLoading,
+    cachedUser,
+    currentUser,
+    userData,
+  } = useContext(UserContext);
   const renderPatron = () => {
     return <Patron/>
   }

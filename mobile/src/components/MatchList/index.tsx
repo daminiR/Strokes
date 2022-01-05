@@ -44,7 +44,7 @@ const MatchList = ({matches}) => {
   //const [matchesState, setMatchesState] = useState(matches)
   const [matched, setMatched] = useState(false)
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
-    //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
+    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     awaitRefetchQueries: true,
     onCompleted: () => {
       getSquashProfile({variables: {id: currentUser.uid}});
