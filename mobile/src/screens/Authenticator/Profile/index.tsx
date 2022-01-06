@@ -30,7 +30,7 @@ const EditProfile = ({}) => {
   const [inputType, setInputType] = useState();
   const {setValues, values: formikValues,handleReset} = useFormikContext<EditFields>();
   const [tempInputValues, setTempInputValues] = useState(null);
-  const {currentUser, setData, refetchUserData} = useContext(UserContext)
+  const {getSquashProfile, currentUser, setData, refetchUserData} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
@@ -44,17 +44,17 @@ const EditProfile = ({}) => {
   });
   const [displayInput, setDisplayInput] = useState(false);
   const [formikChanged, setFormikChanged] = useState(false);
-  const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
-    variables: {id: currentUser.uid},
-    //fetchPolicy:"cache-and-network",
-    fetchPolicy: "network-only",
-    onCompleted: (data) => {
-      //TODO: if data doesnt exists input is incorrect => add checks
-      if (data) {
-        setData(data)
-      }
-    }
-  })
+  //const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
+    //variables: {id: currentUser.uid},
+    ////fetchPolicy:"cache-and-network",
+    //fetchPolicy: "network-only",
+    //onCompleted: (data) => {
+      ////TODO: if data doesnt exists input is incorrect => add checks
+      //if (data) {
+        //setData(data)
+      //}
+    //}
+  //})
   const didMountRef = useRef(false)
   useEffect(() => {
     if( InputTypeData.inputItems.displayInput == true){

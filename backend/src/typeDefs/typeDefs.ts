@@ -120,7 +120,7 @@ export const typeDefs = gql`
     squash(id: String!): Squash!
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
-    queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevels:[String!]!, ageRange: ageRangeInput}): [Squash!]
+    queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
   }
   input SquashNodeInput {
     ${SquashNodeType}
@@ -240,5 +240,6 @@ export const typeDefs = gql`
     softDeleteUser(_id: String): String
     deleteChatUser(_idUser: String, _idChatUser: String): String
     testMut(name: Int!):Int
+    updateLikesTestSamples(_id: String!, likes: [PotentialMatchInput!]): Squash
   }
 `;

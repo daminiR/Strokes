@@ -13,9 +13,6 @@ const Filters = () => {
   const _onFilter = () => {
     setFilter(true);
   };
-  useEffect(() => {
-    console.log("did user data sport values chnages", userData.squash.sport)
-    }, [userData.squash.sport])
 
   return (
     <>

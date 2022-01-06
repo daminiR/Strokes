@@ -7,7 +7,7 @@ import json
   # sports: [{game_level: number, sport: string}]
   # image_set: [{img_idx: number, imageURL: string, filePath: string}]
 letters = string.ascii_lowercase
-numUsers = 200
+numUsers = 1000
 gender = ["Male", "Female"]
 
 sportsList2 = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]

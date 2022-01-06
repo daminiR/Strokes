@@ -37,6 +37,7 @@ const createInitialValuesFormik = (userData, phoneNumber, email) => {
     }
 }
 const createInitialFilterFormik = async (sports) => {
+  console.log("does sports actually change here!!!!!!!!!!!!!!", sports)
   const ageRange = await _retriveAgeRangeFilter()
   const sportFilter = await _retriveSportFilter()
   const gameLevelFilter = await _retriveGameLevel()
