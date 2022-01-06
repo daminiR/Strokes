@@ -3,7 +3,7 @@ import  {styles, DIMENSION_HEIGHT} from '@styles';
 
 import { View, Text} from 'react-native';
 import {Icon} from 'react-native-elements';
-import  {cityVar} from '../../cache'
+import  {cityVar} from '@cache'
 const City = () => {
   const [city, setCity] = useState(null)
   useEffect(() => {

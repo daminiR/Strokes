@@ -9,6 +9,7 @@ import { READ_SQUASH } from './graphql/queries'
 import { useSubscription, useQuery, useLazyQuery} from '@apollo/client'
 import {MESSAGE_POSTED} from './graphql/queries'
 import {SWIPIES_PER_DAY_LIMIT} from '@constants'
+import  {cityVar} from '@cache'
 import { GET_POTENTIAL_MATCHES} from './graphql/queries'
 import { useApolloClient} from '@apollo/client'
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -23,7 +24,7 @@ export const AuthNavigator = () => {
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
   const [loadingMatches, setLoadingMatches] = useState(true);
-  const [data, setData] = useState(true);
+  const [data, setData] = useState(null);
   const [allUsers, setAllUsers] = useState(null)
   const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
@@ -48,31 +49,31 @@ export const AuthNavigator = () => {
         setDeleted(data.squash.deleted)
         setProfileState(true);
         setData(data)
-        const initialValues = await createInitialFilterFormik(userData.squash.sports)
-        //.then((initialValues) => {
-          //console.log("sucess")
-        setInitialValuesFormik(initialValues);
-        const dislikes = data.squash.dislikes ? data.squash.dislikes.length : 0;
-        console.log(dislikes)
-        const likes = data.squash.likes ? data.squash.likes.length : 0;
-        console.log(likes)
-        const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
-        console.log('whats the limit', limit);
-        console.log(initialValues)
-        const sport = _.find(initialValues.sportFilters, sportObj => {return sportObj.filterSelected ==  true}).sport
-        byGameLevel(initialValues.gameLevels),
-        queryProssibleMatches({
-          variables: {
-            _id: currentUser.uid,
-            offset: 0,
-            limit: limit,
-            location: _.omit(data.squash.location, ['__typename']),
-            sport: sport,
-            game_levels: byGameLevel(initialValues.gameLevels),
-            ageRange: initialValues.ageRange
-          },
-        });
-        if (loadingSigning) setLoadingSiginig(false);
+        //const initialValues = await createInitialFilterFormik(userData.squash.sports)
+        ////.then((initialValues) => {
+          ////console.log("sucess")
+        //setInitialValuesFormik(initialValues);
+        //const dislikes = data.squash.dislikes ? data.squash.dislikes.length : 0;
+        //console.log(dislikes)
+        //const likes = data.squash.likes ? data.squash.likes.length : 0;
+        //console.log(likes)
+        //const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
+        //console.log('whats the limit', limit);
+        //console.log(initialValues)
+        //const sport = _.find(initialValues.sportFilters, sportObj => {return sportObj.filterSelected ==  true}).sport
+        //byGameLevel(initialValues.gameLevels),
+        //queryProssibleMatches({
+          //variables: {
+            //_id: currentUser.uid,
+            //offset: 0,
+            //limit: limit,
+            //location: _.omit(data.squash.location, ['__typename']),
+            //sport: sport,
+            //game_levels: byGameLevel(initialValues.gameLevels),
+            //ageRange: initialValues.ageRange
+          //},
+        //});
+        //if (loadingSigning) setLoadingSiginig(false);
       }
     },
     onError: (({graphQLErrors, networkError}) => {
@@ -83,6 +84,46 @@ export const AuthNavigator = () => {
         console.log(graphQLErrors)
     })
   });
+  useEffect(() => {
+    if (data?.squash) {
+      console.log("in ne usereffct squash vall")
+      createInitialFilterFormik(userData.squash.sports)
+        .then((initialValues) => {
+          setInitialValuesFormik(initialValues);
+          const dislikes = data.squash.dislikes
+            ? data.squash.dislikes.length
+            : 0;
+          console.log(dislikes);
+          const likes = data.squash.likes ? data.squash.likes.length : 0;
+          console.log(likes);
+          const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
+          console.log('whats the limit', limit);
+          console.log(initialValues);
+          const sport = _.find(initialValues.sportFilters, (sportObj) => {
+            return sportObj.filterSelected == true;
+          }).sport;
+          byGameLevel(initialValues.gameLevels),
+            queryProssibleMatches({
+              variables: {
+                _id: currentUser.uid,
+                offset: 0,
+                limit: limit,
+                location: _.omit(data.squash.location, ['__typename']),
+                sport: sport,
+                game_levels: byGameLevel(initialValues.gameLevels),
+                ageRange: initialValues.ageRange,
+              },
+            });
+          if (loadingSigning) setLoadingSiginig(false);
+        })
+        .catch(() => {
+          if (loadingSigning) setLoadingSiginig(false);
+        });
+      //.then((initialValues) => {
+      //console.log("sucess")
+          if (loadingSigning) setLoadingSiginig(false);
+    }
+  }, [data, data?.squash.sport, cityVar()]);
   const client = useApolloClient();
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
@@ -142,6 +183,7 @@ export const AuthNavigator = () => {
 
   if (loadingSigning) return null
   const value = {
+    getSquashProfile: getSquashProfile,
     refetchUserData: refetchUserData,
     userData: userData,
     setData: setData,

@@ -23,8 +23,9 @@ export const MatchesProfileContext = createContext(null)
 const Match =()  => {
   console.log("Match how many querries are running")
   const [allUsers, setAllUsers] = useState(null);
+  const [loadingData, setLoadingData] = useState(true);
   const {
-    data: currentUserData,
+    data,
     potentialMatches,
     initialValuesFormik: filterValues,
     userLoading,
@@ -32,22 +33,33 @@ const Match =()  => {
     currentUser,
     userData,
   } = useContext(UserContext);
+  useEffect(() => {
+    setLoadingData(true);
+    console.log("did we hit match/ before patron")
+    if (data) setLoadingData(false);
+  }, [data.squash])
+  useEffect(() => {
+    console.log("does filter vlaues change!!!!!!!", filterValues)
+
+  }, [data.squash])
+
   const renderPatron = () => {
-    return <Patron/>
-  }
+    return <Patron />;
+  };
+  console.log("value of user after profile update", userData)
   return (
     <>
       {filterValues && (
         <View style={{flex:1}}>
           <FlashMessage position="top" />
           <Formik
-            //enableReinitialize={true}
+            enableReinitialize={true}
             initialValues={filterValues}
             //validationSchema={FilterSchema}
             onSubmit={(values) =>
               console.log('if it works it submits', values)
             }>
-            {renderPatron()}
+            { !loadingData  && renderPatron()}
           </Formik>
         </View>
       )}

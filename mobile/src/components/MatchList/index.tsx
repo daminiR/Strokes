@@ -40,8 +40,9 @@ const MatchList = ({matches}) => {
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const [endingText, setEndingText] = useState(null)
-  const {currentUser , userData, setData} = useContext(UserContext)
-  //const [matchesState, setMatchesState] = useState(matches)
+  const {currentUser , data, userData, setData, userLoading} = useContext(UserContext)
+  console.log("user data vals here userData", userData)
+  const [loadingFilters, setLoadingFilters] = useState(true)
   const [matched, setMatched] = useState(false)
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
@@ -51,7 +52,11 @@ const MatchList = ({matches}) => {
     },
   })
   useEffect(() => {
-    console.log("what is th ematch state", matches)
+    setLoadingFilters(true)
+    console.log("mus have hit")
+    setLoadingFilters(false)
+  }, [data.squash.sports])
+  useEffect(() => {
       if (matches?.length == 0) {
         setEndingText('No more matches left!');
       } else {
@@ -130,7 +135,7 @@ const MatchList = ({matches}) => {
       <MatchCard matched={matched} setMatched={setMatched} />
       <View style={styles.top}>
         <City />
-        <Filters />
+        {!loadingFilters && <Filters />}
       </View>
         <View style={styles.swipeContainer}>
           {matches && renderMoreMatches()}

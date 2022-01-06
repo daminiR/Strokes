@@ -40,10 +40,6 @@ const Patron = ()  => {
     //setOffsetVar((offset) => offset + 10);
   //};
   useEffect(() => {
-    console.log("]]]]]]]]]]]]]]]]]]]]", potentialMatches)
-
-  }, [potentialMatches]);
-  useEffect(() => {
     setLoadingMatches(true);
     if (potentialMatches) {
       console.log("beforeeeeeeeeeeee",potentialMatches)

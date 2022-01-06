@@ -430,6 +430,24 @@ export const resolvers = {
         console.log("tetsing")
       //return doc;
     },
+    updateLikesTestSamples: async (parents, { _id, likes}, context, info) => {
+      const doc = await Squash.findOneAndUpdate(
+          { _id: _id },
+          //{ $push: { likes: { $each: likes } } },
+          {$addToSet:{likes:{ $each: likes }}},
+          {new: true}
+        );
+      //const filter = {_id: likes.map(likeObj => {return likeObj._id})}
+      //console.log("filter object", filter)
+      //console.log("likes object", likes)
+      //const update = { $addToSet: { likedByUSers: currentUserData}}
+      //const check_doc = await Squash.updateMany(filter, update)
+      //console.log("Updated user likes ", likes);
+      //console.log("doc", doc)
+      //console.log()
+      //console.log("check for liekdUPdate", check_doc)
+      return doc;
+    },
     updateUserProfileTestSamples: async (parents, { _id1, _id2 }, context, info) => {
         const doc = await Squash.updateMany(
           {},
