@@ -1,5 +1,6 @@
 import React, {createContext, useRef, useEffect, useState} from "react";
 import auth from '@react-native-firebase/auth'
+import { Formik} from 'formik'
 import {byGameLevel} from '@utils'
 import {styles} from '@styles'
 import _ from 'lodash'
@@ -61,44 +62,6 @@ export const AuthNavigator = () => {
         console.log(graphQLErrors)
     })
   });
-  //useEffect(() => {
-    //if (data?.squash && didMountRef.current) {
-      //createInitialFilterFormik(data.squash.sports)
-        //.then((initialValues) => {
-          //setInitialValuesFormik(initialValues);
-          //const dislikes = data.squash.dislikes
-            //? data.squash.dislikes.length
-            //: 0;
-          //console.log(dislikes);
-          //const likes = data.squash.likes ? data.squash.likes.length : 0;
-          //console.log(likes);
-          //const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
-          //console.log('whats the limit', limit);
-          //console.log(initialValues);
-          //const sport = _.find(initialValues.sportFilters, (sportObj) => {
-            //return sportObj.filterSelected == true;
-          //}).sport;
-          //byGameLevel(initialValues.gameLevels),
-            //queryProssibleMatches({
-              //variables: {
-                //_id: currentUser.uid,
-                //offset: 0,
-                //limit: limit,
-                //location: _.omit(data.squash.location, ['__typename']),
-                //sport: sport,
-                //game_levels: byGameLevel(initialValues.gameLevels),
-                //ageRange: initialValues.ageRange,
-              //},
-            //});
-          //if (loadingSigning) setLoadingSiginig(false);
-          //setUserDataDidMount(true);
-        //})
-        //.catch(() => {
-          //if (loadingSigning) setLoadingSiginig(false);
-        //});
-      //if (loadingSigning) setLoadingSiginig(false);
-    //}
-  //}, [cityVar()]);
   useEffect(() => {
     if (!didMountRef.current) {
       if (userData?.squash) {
@@ -235,7 +198,20 @@ export const AuthNavigator = () => {
   }
   return (
     <UserContext.Provider value={value}>
+      { initialValuesFormik &&
+      <Formik
+            enableReinitialize={true}
+            initialValues={initialValuesFormik}
+            //validationSchema={FilterSchema}
+            onSubmit={(values) =>
+              console.log('if it works it submits', values)
+            }>
       {render2()}
+          </Formik>
+
+
+
+      }
     </UserContext.Provider>
   )
 }

@@ -3,14 +3,15 @@ import {StackNavigationProp, RouteProp} from '@react-navigation/stack'
 import auth from '@react-native-firebase/auth'
 import {View, Modal} from 'react-native';
 import {styles} from '@styles'
+import {SWIPIES_PER_DAY_LIMIT} from '@constants'
 import { RootStackSignInParamList, ProfileInputEdits} from '@NavStack'
 import {UserContext} from '@UserContext'
 import { useFormikContext, Formik} from 'formik';
 import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
 import {GET_INPUT_TYPE, READ_SQUASH, UPDATE_USER_PROFILE} from '@graphQL'
 import {ProfileSettings, EditInput, Done, Cancel} from '@components'
-import { EditFields} from '@localModels'
-import { cityVar, EditInputVar} from '@cache'
+import { EditFields, FilterFields} from '@localModels'
+import { isCityChangedVar, cityVar, EditInputVar} from '@cache'
 import {convertImagesToFormat, createInitialValuesFormik, _onPressSignOut, deleteUser} from '@utils'
 import {DoneCancelContext} from '@Contexts'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -26,32 +27,22 @@ type ProfileT = {
 }
 const EditProfile = ({}) => {
   const [isVisible, setIsVisible] = useState(false);
+  const {
+    setValues: setFilterVals,
+    values: filterValues,
+  } = useFormikContext<FilterFields>();
   const [inputType, setInputType] = useState();
   const {setValues, values: formikValues,handleReset} = useFormikContext<EditFields>();
   const [tempInputValues, setTempInputValues] = useState(null);
-  const {getSquashProfile, currentUser, setData, refetchUserData} = useContext(UserContext)
+  const [cityChanged, setCityChanged] = useState(false);
+  const {queryProssibleMatches, currentUser, setData, refetchUserData} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     awaitRefetchQueries: true,
-    onCompleted: (data) => {
-      //TODO: if data doesnt exists input is incorrect => add checks
-      //getSquashProfile({variables: {id: currentUser.uid}});
-    },
   });
   const [displayInput, setDisplayInput] = useState(false);
   const [formikChanged, setFormikChanged] = useState(false);
-  //const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
-    //variables: {id: currentUser.uid},
-    ////fetchPolicy:"cache-and-network",
-    //fetchPolicy: "network-only",
-    //onCompleted: (data) => {
-      ////TODO: if data doesnt exists input is incorrect => add checks
-      //if (data) {
-        //setData(data)
-      //}
-    //}
-  //})
   const didMountRef = useRef(false)
   useEffect(() => {
     if( InputTypeData.inputItems.displayInput == true){
@@ -89,7 +80,10 @@ const _onPressDoneProfile = () => {
         },
       });
       // update firebase auth
-      cityVar(formikValues.location.city)
+      if (cityVar() != formikValues.location.city){
+        cityVar(formikValues.location.city)
+        isCityChangedVar(true)
+      }
       //// as soon as done new data needs to be grabbed and replaced
     }
     setIsVisible(false);

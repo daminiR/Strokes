@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useContext, useState } from 'react'
 import {FilterFields} from '@localModels'
 import {Text, View } from 'react-native';
-import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} from '@utils'
+import {createInitialFilterFormik, createPatronList, calculateOfflineMatches, byGameLevel} from '@utils'
 import _ from 'lodash'
 import {UserContext} from '@UserContext'
 import { useFormikContext} from 'formik'
@@ -12,7 +12,8 @@ import {styles }from '@styles'
 import {renderMatches, swipeRightLiked, swipeLeftDisliked} from '@utils'
 import { useLazyQuery, useMutation} from '@apollo/client'
 import { READ_SQUASH, UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '@graphQL'
-import {W, tabBarSize}  from '@constants'
+import {W, tabBarSize, SWIPIES_PER_DAY_LIMIT}  from '@constants'
+import { isCityChangedVar, filterSportChangedVar} from '@cache'
 
 const likeIconStyle= {
     type: 'material-community',
@@ -45,7 +46,7 @@ const MatchList = ({matches}) => {
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
   const {setValues, setFieldValue, values: filterValues } = useFormikContext<FilterFields>();
   const [endingText, setEndingText] = useState(null)
-  const {currentUser , data, userData, setData, userLoading} = useContext(UserContext)
+  const {currentUser, queryProssibleMatches , data, userData, setData, userLoading} = useContext(UserContext)
   console.log("user data vals here userData", userData)
   const [loadingFilters, setLoadingFilters] = useState(true)
   const [matched, setMatched] = useState(false)
@@ -58,13 +59,41 @@ const MatchList = ({matches}) => {
   })
   useEffect(() => {
     setLoadingFilters(true);
-    createInitialFilterFormik(userData.squash.sports).then(
-      (initialValues) => {
-        setValues(initialValues)
-      }
-    )
+      createInitialFilterFormik(userData.squash.sports).then(
+        (initialValues) => {
+          if (filterSportChangedVar() || isCityChangedVar()) {
+            const vals = initialValues ? initialValues: filterValues
+            initialValues && setValues(initialValues);
+            const dislikes = userData.squash.dislikes
+              ? userData.squash.dislikes.length
+              : 0;
+            const likes = userData.squash.likes
+              ? userData.squash.likes.length
+              : 0;
+            const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
+            // run matches query
+            const sport = _.find(vals.sportFilters, (sportObj) => {
+              return sportObj.filterSelected == true;
+            }).sport;
+            queryProssibleMatches({
+              variables: {
+                _id: currentUser.uid,
+                offset: 0,
+                limit: limit,
+                location: _.omit(userData.squash.location, ['__typename']),
+                sport: sport,
+                game_levels: byGameLevel(vals.gameLevels),
+                ageRange: vals.ageRange,
+              },
+            });
+            filterSportChangedVar(false);
+            isCityChangedVar(false);
+          }
+        },
+      );
     setLoadingFilters(false);
-  }, [userData.squash.sports])
+  }, [userData.squash.sports, isCityChangedVar()]);
+
   useEffect(() => {
       if (matches?.length == 0) {
         setEndingText('No more matches left!');

@@ -2,6 +2,7 @@ import _ from 'lodash'
 import {_retriveGameLevel,_storeSportFilter, _retriveAgeRangeFilter, _retriveSportFilter} from '@localStore'
 import {defaultAgeRange, defaultGameLevel} from '@constants'
 import {SportFilters} from '@localModels'
+import {filterSportChangedVar} from '@cache'
 
 const createInitialValuesFormik = (userData, phoneNumber, email) => {
     if (userData){
@@ -37,7 +38,6 @@ const createInitialValuesFormik = (userData, phoneNumber, email) => {
     }
 }
 const createInitialFilterFormik = async (sports) => {
-  console.log("does sports actually change here!!!!!!!!!!!!!!", sports)
   const ageRange = await _retriveAgeRangeFilter()
   const sportFilter = await _retriveSportFilter()
   const gameLevelFilter = await _retriveGameLevel()
@@ -45,9 +45,11 @@ const createInitialFilterFormik = async (sports) => {
   console.log(sportFilter)
   console.log(sports)
   // cached values is not in current sports remove it and chosse any one in the sports filer
+  const sportsList = _.map(sports, sportObj =>{return sportObj.sport})
   var defailtSportFilter  = null
-  if (!_.includes(sports, sportFilter.sport)) {
-
+  if (!_.includes(sportsList, sportFilter.sport)) {
+    console.log("inside cashe", sports, sportFilter.sport)
+    filterSportChangedVar(true)
    defailtSportFilter = _.map(sports, (sportObj, key) => {
      if (key == '0') {
       const new_cached = {sport: sportObj.sport, filterSelected: true} as SportFilters;
@@ -59,6 +61,7 @@ const createInitialFilterFormik = async (sports) => {
    })
   }
   else{
+    filterSportChangedVar(false)
     defailtSportFilter = _.map(sports, (sportObj, key) => {
       console.log(sportObj);
       if (sportFilter) {

@@ -52,15 +52,7 @@ const Match =()  => {
       {filterValues && (
         <View style={{flex:1}}>
           <FlashMessage position="top" />
-          <Formik
-            enableReinitialize={true}
-            initialValues={filterValues}
-            //validationSchema={FilterSchema}
-            onSubmit={(values) =>
-              console.log('if it works it submits', values)
-            }>
             { !loadingData  && renderPatron()}
-          </Formik>
         </View>
       )}
     </>

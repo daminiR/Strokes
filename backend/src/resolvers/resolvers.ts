@@ -594,7 +594,6 @@ export const resolvers = {
       const removed_image_set = await deleteFilesFromGC(remove_uploaded_images, original_uploaded_image_set);
       const data_set = await creatGCUpload(add_local_images, _id)
       const final_image_set = removed_image_set.concat(data_set)
-      console.log("new array for total delete and add", final_image_set)
       const doc = await Squash.findOneAndUpdate(
           { _id: _id },
           {
@@ -612,7 +611,6 @@ export const resolvers = {
           },
           { new: true }
         );
-    console.log("Updated user profile new profile", doc);
     return doc
     },
     deleteChatUser: async (root, {_idUser, _idChatUser, UserObj, ChatUserObj}) => {
