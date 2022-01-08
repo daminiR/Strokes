@@ -32,12 +32,6 @@ const Patron = ()  => {
   useEffect(() => {
         cityVar(currentUserData?.squash.location.city)
   }, []);
-  //const addMoreData = () => {
-    //queryProssibleMatches({
-      //variables: {_id: currentUser.uid, offset: offsetVar, limit: 3},
-    //});
-    //setOffsetVar((offset) => offset + 10);
-  //};
   useEffect(() => {
     setLoadingMatches(true);
     if (potentialMatches) {

@@ -23,6 +23,8 @@ export const dislikesVar:ReactiveVar<PotentialMatchT> = makeVar<PotentialMatchT>
 
 
 export const cityVar:ReactiveVar<String> = makeVar<String>('')
+export const isCityChangedVar:ReactiveVar<Boolean> = makeVar<Boolean>(false)
+export const filterSportChangedVar:ReactiveVar<Boolean> = makeVar<Boolean>(false)
 
 export const cache = new InMemoryCache({
   typePolicies: {
@@ -76,6 +78,16 @@ export const cache = new InMemoryCache({
         city: {
           read() {
             return cityVar();
+          },
+        },
+        isCityChanged: {
+          read() {
+            return isCityChangedVar();
+          },
+        },
+        isFilterSportChanged: {
+          read() {
+            return filterSportChangedVar();
           },
         },
         fullName: {
