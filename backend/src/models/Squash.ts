@@ -114,15 +114,16 @@ var squashSchema = new Schema({
     required: false,
   },
   likes: {
-    type:<PotentialMatchT>{},
+    type:[String],
+    //type:<PotentialMatchT>{},
     required: false,
   },
   likedByUSers: {
-    type:<PotentialMatchT>{},
+    type:[String],
     required: false,
   },
   dislikes: {
-    type:<PotentialMatchT>{},
+    type:[String],
     required: false,
   },
   i_blocked: {

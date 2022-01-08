@@ -15,9 +15,8 @@ import {byGameLevel} from '@utils'
 
   //// TODO : this needs to update every time user changes list of activities
 const FilterOverlaySingle = ({filter, setFilter}) => {
-  console.log("filter ber .....................")
   const {setValues, values: filterValues } = useFormikContext<FilterFields>();
-  console.log("filterValues",)
+  console.log("filterValues",filterValues)
   const [multiSliderValue, setMultiSliderValue] = useState(defaultAgeRange);
 
   const [allUserSportsFilter, setAllUserSportsFilter] = useState(filterValues.sportFilters);
@@ -42,7 +41,6 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
   }, [filter]);
 
   const _onCancel = () => {
-    console.log("is this working")
     //handleReset()
     setFilter(false)
   };

@@ -53,7 +53,6 @@ export interface PatronListType {
     sports: Sport[],
     description: string
     location: LocationT
-    likes: PotentialMatchType[]
     image_set: ImageSetT[]
 }
 export interface FilterFields {

@@ -24,7 +24,6 @@ type ProfileT = {
   navigation: ProfileScreenNavigationProp
   route: ProfileScreenRouteProp
 }
-
 const EditProfile = ({}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [inputType, setInputType] = useState();
@@ -37,9 +36,7 @@ const EditProfile = ({}) => {
     awaitRefetchQueries: true,
     onCompleted: (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
-      getSquashProfile({variables: {id: currentUser.uid}});
-      //
-
+      //getSquashProfile({variables: {id: currentUser.uid}});
     },
   });
   const [displayInput, setDisplayInput] = useState(false);

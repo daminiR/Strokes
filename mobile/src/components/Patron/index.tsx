@@ -22,7 +22,6 @@ const addmoreData= {
   }
 
 const Patron = ()  => {
-  console.log("Patron how many querries are running")
   const [offsetVar, setOffsetVar] = useState(10)
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [allUsers, setAllUsers] = useState(null)
@@ -42,14 +41,12 @@ const Patron = ()  => {
   useEffect(() => {
     setLoadingMatches(true);
     if (potentialMatches) {
-      console.log("beforeeeeeeeeeeee",potentialMatches)
       const patron_list = createPatronList(
         userData?.squash,
         potentialMatches,
         filterValues,
       );
       setMatches(patron_list);
-      console.log("new patron list",patron_list)
       setLoadingMatches(false);
     }
   }, [potentialMatches]);

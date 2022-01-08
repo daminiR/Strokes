@@ -31,7 +31,7 @@ const MESSAGE_POSTED = gql`
 }`
 
 const GET_POTENTIAL_MATCHES = gql`
-  query QueryProssibleMatches ($_id: String!, $offset: Int, $limit: Int, $location: LocationInput!, $sport: String!, game_level: [String!]!, $ageRange: AgeRangeInput){
+  query QueryProssibleMatches ($_id: String!, $offset: Int, $limit: Int, $location: LocationInput!, $sport: String!, $game_levels: [String!]!, $ageRange: AgeRangeInput){
     queryProssibleMatches (_id: $_id offset: $offset, limit:$limit, location: $location, game_levels:$game_levels, sport: $sport, ageRange: $ageRange){
       location {
         city
@@ -40,7 +40,6 @@ const GET_POTENTIAL_MATCHES = gql`
       }
       _id
       first_name
-      last_name
       age
       gender
       sports {
@@ -56,40 +55,6 @@ const GET_POTENTIAL_MATCHES = gql`
       image_set {
         img_idx
         imageURL
-      }
-      likes
-      {
-      _id
-      first_name
-      age
-      gender
-      sports {
-        sport
-        game_level
-      }
-      description
-      image_set {
-        img_idx
-        imageURL
-        filePath
-      }
-      }
-      dislikes
-      {
-      _id
-      first_name
-      age
-      gender
-      sports {
-        sport
-        game_level
-      }
-      description
-      image_set {
-        img_idx
-        imageURL
-        filePath
-      }
       }
     }
   }
@@ -131,56 +96,8 @@ const READ_SQUASH = gql`
         filePath
       }
       likes
-      {
-      _id
-      first_name
-      age
-      gender
-      sports {
-        sport
-        game_level
-      }
-      description
-      image_set {
-        img_idx
-        imageURL
-        filePath
-      }
-      }
       dislikes
-      {
-      _id
-      first_name
-      age
-      gender
-      sports {
-        sport
-        game_level
-      }
-      description
-      image_set {
-        img_idx
-        imageURL
-        filePath
-      }
-      }
       likedByUSers
-      {
-      _id
-      first_name
-      age
-      gender
-      sports {
-        sport
-        game_level
-      }
-      description
-      image_set {
-        img_idx
-        imageURL
-        filePath
-      }
-      }
       matches
       {
       _id

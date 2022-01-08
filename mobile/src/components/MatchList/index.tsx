@@ -1,6 +1,10 @@
 import React, { createContext, useEffect, useContext, useState } from 'react'
+import {FilterFields} from '@localModels'
 import {Text, View } from 'react-native';
+import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} from '@utils'
+import _ from 'lodash'
 import {UserContext} from '@UserContext'
+import { useFormikContext} from 'formik'
 import {FAB} from 'react-native-elements'
 import Swiper from 'react-native-deck-swiper'
 import { City, MatchCard, Filters} from '@components';
@@ -39,6 +43,7 @@ const dislikeIconStyle= {
 const MatchList = ({matches}) => {
   const [updateLikes] = useMutation(UPDATE_LIKES);
   const [updateDislikes] = useMutation(UPDATE_DISLIKES);
+  const {setValues, setFieldValue, values: filterValues } = useFormikContext<FilterFields>();
   const [endingText, setEndingText] = useState(null)
   const {currentUser , data, userData, setData, userLoading} = useContext(UserContext)
   console.log("user data vals here userData", userData)
@@ -52,10 +57,14 @@ const MatchList = ({matches}) => {
     },
   })
   useEffect(() => {
-    setLoadingFilters(true)
-    console.log("mus have hit")
-    setLoadingFilters(false)
-  }, [data.squash.sports])
+    setLoadingFilters(true);
+    createInitialFilterFormik(userData.squash.sports).then(
+      (initialValues) => {
+        setValues(initialValues)
+      }
+    )
+    setLoadingFilters(false);
+  }, [userData.squash.sports])
   useEffect(() => {
       if (matches?.length == 0) {
         setEndingText('No more matches left!');

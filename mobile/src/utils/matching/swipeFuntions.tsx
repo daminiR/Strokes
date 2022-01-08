@@ -73,13 +73,13 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     // push all ids when likes or dislikes and bulk send mutation
     // if potential match likes current user upsert a match array
     // update mutation for both users
-    const matchUSerLikedIDs = _.find(card.matches, match => { return match._id})
+    //const matchUSerLikedIDs = _.find(card.matches, match => { return match._id})
     const userMatchingData = sanitizeCard(currentUser)
     var array = likesVar()
-    const potentialMatch = sanitizeCard(card)
+    const potentialMatch = card._id
     array.push(potentialMatch)
     likesVar(array)
-    console.log(likesVar())
+    console.log(" array of likes", likesVar())
     // test //
 
 
@@ -89,7 +89,9 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
             currentUserData: userMatchingData
         }})
 
-    if (_.find(card.likes, (likeObj) => {return likeObj._id == _id})){
+    // to slow ith liks condition
+    //if (_.find(card.likes, (likeID) => {return likeID == _id})){
+    if (_.includes(currentUser.likedByUSers, card._id)){
     const matchedUser = sanitizeCard(card)
     setMatched(true)
     updateMatches({variables: {currentUserId: _id,
@@ -109,7 +111,7 @@ const swipeLeftDisliked = async (_id, card, updateDislikes) => {
         }})
         array = []
     //}
-    const potentialMatch = sanitizeCard(card)
+    const potentialMatch = card._id
     array.push(potentialMatch)
     dislikesVar(array)
     console.log(dislikesVar())

@@ -2,6 +2,7 @@ backend/src/activitybook-a598b-782d9db5058e.json
 nodeLinker: node-modules
 #  sample data file
 backend/src/admin/createData/*
+*.csv
 # sensatvie file data
 API_KEY.ts
 .env

@@ -1,0 +1,16 @@
+{
+  "_id": "wLP3M9NMuVb0HZ6YgRflMlZZtZs1",
+  "offset": 0,
+  "limit": 3400,
+  "location": {
+    "city": "Boston",
+    "state": "MA",
+    "country": "US"
+  },
+  "sport": "Squash",
+  "game_levels": ["1", "2", "3"],
+  "ageRange": {
+    "minAge": 29,
+    "maxAge":80
+  }
+}
