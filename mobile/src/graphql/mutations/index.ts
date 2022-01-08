@@ -133,7 +133,7 @@ const UPDATE_USER_SPORTS = gql`
   }
 `;
 const UPDATE_DISLIKES = gql`
-  mutation UpdateDislikes($_id: String!, $dislikes: [PotentialMatchInput!]!) {
+  mutation UpdateDislikes($_id: String!, $dislikes: [String!]!) {
     updateDislikes(_id: $_id, dislikes: $dislikes)
     {
       _id
@@ -187,38 +187,8 @@ const UPDATE_MATCHES = gql`
         imageURL
         filePath
       }
-      likes {
-        _id
-        first_name
-        age
-        gender
-        sports {
-          sport
-          game_level
-        }
-        description
-        image_set {
-          img_idx
-          imageURL
-          filePath
-        }
-      }
-      dislikes {
-        _id
-        first_name
-        age
-        gender
-        sports {
-          sport
-          game_level
-        }
-        description
-        image_set {
-          img_idx
-          imageURL
-          filePath
-        }
-      }
+      likes
+      dislikes
       matches {
         _id
         first_name
@@ -240,7 +210,7 @@ const UPDATE_MATCHES = gql`
 `;
 
 const UPDATE_LIKES = gql`
-  mutation UpdateLikes($_id: String!, $likes: [PotentialMatchInput!]!, $currentUserData: PotentialMatchInput!) {
+  mutation UpdateLikes($_id: String!, $likes: [String!]!, $currentUserData: PotentialMatchInput!) {
     updateLikes(_id: $_id, likes: $likes, currentUserData: $currentUserData){
       _id
       first_name

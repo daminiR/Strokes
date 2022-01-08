@@ -2,7 +2,7 @@ import {difference, union} from 'lodash'
 import {sanitizeCard} from './swipeFuntions'
 import _ from 'lodash'
 import {PatronListType, Sport, ImageSetT} from '@localModels'
-import { sportsList, defaultGameLevel, defaultAgeRange} from '@constants'
+import { sportsList, defaultGameLevel, defaultAgeRange, SWIPIES_PER_DAY_LIMIT} from '@constants'
 
 export const patronCard = (card) => {
     let sports  = _.map(card.sports, (sportObj) => {
@@ -20,7 +20,6 @@ export const patronCard = (card) => {
        "sports": sports,
        "description": card.description,
        "image_set": image_set,
-       "likes": card.likes,
        "location": card.location
    }
     return potentialMatch
@@ -54,10 +53,7 @@ export const byGameLevel = (gameLevels) =>{
 const filterByFieldsByUser = (patron_list, filters) => {
   //TODO: to maintain structure cange gamelevel backend to match filter gamelevel style --> done!
     const filterBySport = _.find(filters.sportFilters, sportObj => {return sportObj.filterSelected == true}).sport
-    console.log("sport in retrive ",filterBySport)
-    console.log("filterbysport",filterBySport)
     const filterByAge = filters.ageRange
-    console.log("filter by age",filterByAge)
     const filterByGameLevel = byGameLevel(filters.gameLevels)
     const filterFunctionSport = (matchObj) => {
         const isSportInUser = _.some(matchObj.sports, (sportObj) => {
@@ -73,7 +69,8 @@ const filterByFieldsByUser = (patron_list, filters) => {
         return isSportInUser && isUserInAgeRange
     }
     const moreFilter = _.filter(patron_list, filterFunctionSport)
-    console.log("aa///////", moreFilter.length)
+    //const toLimit = moreFilter.length - SWIPIES_PER_DAY_LIMIT
+    //return _.drop(moreFilter, toLimit )
     return moreFilter
 }
 const filterByCity = (currentUseLocation, patron_list) => {
@@ -82,19 +79,18 @@ const filterByCity = (currentUseLocation, patron_list) => {
     return newPatronList
 }
 const createPatronList = (currentUser, allUsers, filters) => {
-  //unbounded arrays will be filtered in mongodb
+  //bounded arrays will be filtered in mongodb
+  //unbounded wil not be filtered for performance
     //const currentUseLocation = currentUser.location
-    const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
-    const likes = currentUser?.likes ? currentUser.likes : []
-    //const matches = currentUser?.matches ? currentUser.likes : []
-    const dislikes = currentUser?.dislikes ? currentUser.dislikes : []
-    const exclude = _.concat(likes, dislikes)
-    const patron_list = _.differenceBy(activeUsers, exclude, '_id')
-    //const newPatronList = filterByCity(currentUseLocation, patron_list)
-    const newPatronList2 = filterByFieldsByUser(patron_list  , filters)
-    console.log("patrin list")
-    return newPatronList2
-    //return patron_list
-    //return allUsers
+    //const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
+    //const likes = currentUser?.likes ? currentUser.likes : []
+    ////const matches = currentUser?.matches ? currentUser.likes : []
+    //const dislikes = currentUser?.dislikes ? currentUser.dislikes : []
+    //const exclude = _.concat(likes, dislikes)
+    //const patron_list = _.filter(activeUsers, userObj => !_.includes(exclude, userObj._id))
+    ////const newPatronList2 = filterByFieldsByUser(patron_list  , filters)
+    //const newPatronList2 = _.slice(filterByFieldsByUser(patron_list  , filters), 0, SWIPIES_PER_DAY_LIMIT)
+    //console.log(newPatronList2)
+    return allUsers
 }
 export {createPatronList}

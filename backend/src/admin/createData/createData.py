@@ -7,7 +7,7 @@ import json
   # sports: [{game_level: number, sport: string}]
   # image_set: [{img_idx: number, imageURL: string, filePath: string}]
 letters = string.ascii_lowercase
-numUsers = 1000
+numUsers = 9000
 gender = ["Male", "Female"]
 
 sportsList2 = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
@@ -66,7 +66,7 @@ image_set = [
   "https://cdn.pixabay.com/photo/2021/10/17/08/11/animal-6717147__480.jpg"
 ]
 
-with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData.csv", mode='w') as csv_file:
+with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData2.csv", mode='w') as csv_file:
   dataWriter = csv.writer(csv_file, delimiter=';',quotechar = "'")
   dataWriter.writerow(['_id', 'first_name', 'last_name', 'genderUser', 'age', 'sports', 'image_set', 'desciption', 'location'])
   for user in range(numUsers):

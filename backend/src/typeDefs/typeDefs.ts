@@ -65,9 +65,9 @@ const SquashType = `
     matches : [PotentialMatch!]
     blocked_me : [PotentialMatch!]
     i_blocked : [PotentialMatch!]
-    likes : [PotentialMatch!]
-    dislikes : [PotentialMatch!]
-    likedByUSers: [PotentialMatch!]
+    likes : [String!]
+    dislikes : [String!]
+    likedByUSers: [String!]
     deleted: DeletedT
     phoneNumber: String
     email: String
@@ -87,9 +87,9 @@ const SquashInputType = `
     matches : [PotentialMatchInput!]
     blocked_me : [PotentialMatchInput!]
     i_blocked : [PotentialMatchInput!]
-    likes : [PotentialMatchInput!]
-    dislikes : [PotentialMatchInput!]
-    likedByUSers: [PotentialMatchInput!]
+    likes : [String!]
+    dislikes : [String!]
+    likedByUSers: [String!]
     phoneNumber: String
     email: String
   `
@@ -121,6 +121,8 @@ export const typeDefs = gql`
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
     queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
+
+    matchesNotOptim(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
   }
   input SquashNodeInput {
     ${SquashNodeType}
@@ -179,8 +181,8 @@ export const typeDefs = gql`
 
     updateLocation(check: String): String
 
-    updateLikes(_id: String!, likes: [PotentialMatchInput!], currentUserData: PotentialMatchInput!): Squash
-    updateDislikes(_id: String!, dislikes: [PotentialMatchInput!]): Squash
+    updateLikes(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!): Squash
+    updateDislikes(_id: String!, dislikes: [String!]): Squash
     updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): Squash
 
     postMessage2(sender: String, receiver: String, text: String): ID!
@@ -212,9 +214,9 @@ export const typeDefs = gql`
       matches : [PotentialMatchInput!]
       blocked_me : [PotentialMatchInput!]
       i_blocked : [PotentialMatchInput!]
-      likes : [PotentialMatchInput!]
-      dislikes : [PotentialMatchInput!]
-      likedByUSers: [PotentialMatchInput!]
+      likes : [String!]
+      dislikes : [String!]
+      likedByUSers: [String!]
       phoneNumber: String
       email: String
     ): Squash!
@@ -240,6 +242,6 @@ export const typeDefs = gql`
     softDeleteUser(_id: String): String
     deleteChatUser(_idUser: String, _idChatUser: String): String
     testMut(name: Int!):Int
-    updateLikesTestSamples(_id: String!, likes: [PotentialMatchInput!]): Squash
+    updateLikesTestSamples(_id: String!, likes: [String!]): Squash
   }
 `;

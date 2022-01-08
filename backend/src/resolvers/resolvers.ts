@@ -154,7 +154,8 @@ export const resolvers = {
       console.log(squash_val);
       return squash_val;
     },
-    queryProssibleMatches: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange}, context, info) => {
+    /////////////////////////////////////////////// Jmeter Testing ///////////////////////////////////////
+    matchesNotOptim: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange, dislikes}, context, info) => {
       //const users = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);
       //// it is imperitive all the filter items are indexed!
       const minAge = ageRange.minAge;
@@ -166,6 +167,9 @@ export const resolvers = {
           },
           {
             "location.city": location.city,
+          },
+          {
+            "likes._id": {$ne: _id},
           },
           {
             active: true,
@@ -185,9 +189,48 @@ export const resolvers = {
       console.log("All users that are a potential match to current!", users.length);
       return users;
     },
+    ////////////////////////////////////////////////////////////////
+    queryProssibleMatches: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange}, context, info) => {
+      //const users = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);
+      //// it is imperitive all the filter items are indexed!
+      const minAge = ageRange.minAge;
+      const maxAge = ageRange.maxAge;
+      const filter = {
+        $and: [
+          {
+            _id: { $ne: _id },
+          },
+          {
+            "location.city": location.city,
+          },
+          {
+            active: true,
+          },
+          {
+            sports: {
+              $elemMatch: { sport: sport, game_level: { $in:  game_levels} },
+            },
+          },
+          {
+            age: { $gt: minAge, $lt: maxAge },
+          },
+        ],
+      };
+      const fieldsNeeded = {
+        _id: 1,
+        first_name: 1,
+        age: 1,
+        gender: 1,
+        sports: 1,
+        description: 1,
+        image_set: 1,
+        location: 1,
+      }
+      const users = await Squash.find(filter, fieldsNeeded).skip(offset).limit(limit);
+      return users;
+    },
     squashes: async (parents, args, context, info) => {
       const squashes = await Squash.find({});
-      console.log(squashes);
       return squashes;
     },
     display: async (parents, args, context, info) => {},
@@ -277,14 +320,13 @@ export const resolvers = {
     updateLikes: async (parents, { _id, likes, currentUserData}, context, info) => {
       const doc = await Squash.findOneAndUpdate(
           { _id: _id },
-          //{ $push: { likes: { $each: likes } } },
           {$addToSet:{likes:{ $each: likes }}},
           {new: true}
         );
-      const filter = {_id: likes.map(likeObj => {return likeObj._id})}
+      const filter = {_id: likes}
       console.log("filter object", filter)
       console.log("likes object", likes)
-      const update = { $addToSet: { likedByUSers: currentUserData}}
+      const update = { $addToSet: { likedByUSers: _id}}
       const check_doc = await Squash.updateMany(filter, update)
       console.log("Updated user likes ", likes);
       console.log("doc", doc)
@@ -293,6 +335,7 @@ export const resolvers = {
       return doc;
     },
     updateDislikes: async (parents, { _id, dislikes }, context, info) => {
+      // todo: create dilikedby users list, users that didnt like you so you done need to show these
         const doc = await Squash.findOneAndUpdate(
           { _id: _id },
           { $addToSet: { dislikes: {$each: dislikes} } },
@@ -432,20 +475,22 @@ export const resolvers = {
     },
     updateLikesTestSamples: async (parents, { _id, likes}, context, info) => {
       const doc = await Squash.findOneAndUpdate(
-          { _id: _id },
-          //{ $push: { likes: { $each: likes } } },
-          {$addToSet:{likes:{ $each: likes }}},
-          {new: true}
-        );
-      //const filter = {_id: likes.map(likeObj => {return likeObj._id})}
-      //console.log("filter object", filter)
-      //console.log("likes object", likes)
-      //const update = { $addToSet: { likedByUSers: currentUserData}}
-      //const check_doc = await Squash.updateMany(filter, update)
-      //console.log("Updated user likes ", likes);
-      //console.log("doc", doc)
-      //console.log()
-      //console.log("check for liekdUPdate", check_doc)
+        { _id: _id },
+        { $addToSet: { likes: { $each: likes } } },
+        { new: true }
+      );
+      const currentUserData = {
+        _id: _id,
+        first_name: doc?.first_name,
+        age: doc?.age,
+        gender: doc?.gender,
+        sports: _.omit(doc?.sports, "__typename"),
+        description: doc?.description,
+        image_set: _.omit(doc?.image_set, "__typename"),
+      };
+      const filter = {_id: likes}
+      const update = { $addToSet: { likedByUSers: _id}}
+      await Squash.updateMany(filter, update)
       return doc;
     },
     updateUserProfileTestSamples: async (parents, { _id1, _id2 }, context, info) => {
@@ -625,7 +670,7 @@ export const resolvers = {
            {
              "matches": {"_id": _idChatUser} ,
              "likes": {"_id": _idChatUser},
-             "likedByUSers": {"_id": _idChatUser},
+             "likedByUSers": _idChatUser,
           },
           $set: { dislikes: matchObj[_idChatUser]}
           },
@@ -638,7 +683,7 @@ export const resolvers = {
            {
              "matches": {"_id": _idUser} ,
              "likes": {"_id": _idUser},
-             "likedByUSers": {"_id": _idUser},
+             "likedByUSers": _idUser,
           },
           $set: { dislikes: matchObj[_idUser]}
           },
