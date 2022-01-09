@@ -1,6 +1,7 @@
 import React from 'react'
 import { View} from 'react-native'
 import {Matches} from '@components'
+import {tabBarSize} from '@constants'
 import {StackNavigationProp } from '@react-navigation/stack'
 import { RootStackSignInParamList } from '@NavStack'
 
@@ -13,7 +14,7 @@ type LikesT = {
 const Likes  = ({navigation, route})  => {
   return (
     <>
-      <View>
+      <View style={{marginBottom: tabBarSize}}>
         <Matches navigation={navigation}/>
       </View>
     </>

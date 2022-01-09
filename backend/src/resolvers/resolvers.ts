@@ -324,14 +324,15 @@ export const resolvers = {
           {new: true}
         );
       const filter = {_id: likes}
-      console.log("filter object", filter)
-      console.log("likes object", likes)
-      const update = { $addToSet: { likedByUSers: _id}}
+      const profileImage = _.find(doc?.image_set, imgObj => {imgObj.img_idx == 0})
+      const likedByUser = {
+        first_name: doc?.first_name,
+        _id: _id,
+        age: doc?.age,
+        profileImage: profileImage,
+      };
+      const update = { $addToSet: { likedByUSers: likedByUser}}
       const check_doc = await Squash.updateMany(filter, update)
-      console.log("Updated user likes ", likes);
-      console.log("doc", doc)
-      console.log()
-      console.log("check for liekdUPdate", check_doc)
       return doc;
     },
     updateDislikes: async (parents, { _id, dislikes }, context, info) => {
@@ -479,18 +480,31 @@ export const resolvers = {
         { $addToSet: { likes: { $each: likes } } },
         { new: true }
       );
-      const currentUserData = {
-        _id: _id,
+      const profileImage = _.find(doc?.image_set, imgObj => {imgObj.img_idx == 0})
+      const likedByUser = {
         first_name: doc?.first_name,
+        _id: _id,
         age: doc?.age,
-        gender: doc?.gender,
-        sports: _.omit(doc?.sports, "__typename"),
-        description: doc?.description,
-        image_set: _.omit(doc?.image_set, "__typename"),
+        profileImage: profileImage,
       };
       const filter = {_id: likes}
-      const update = { $addToSet: { likedByUSers: _id}}
+      const update = { $addToSet: { likedByUSers: likedByUser}}
       await Squash.updateMany(filter, update)
+      return doc;
+    },
+    updateLikesCurrentUserTestSamples: async (parents, { _id, likes}, context, info) => {
+      /// function different from the pther updateLikes
+      const likeIDs = _.map(likes, likeObj => {
+        return likeObj._id
+      })
+      const likedDocs = await Squash.updateMany(
+        { _id: {$in : likeIDs} },
+        { $addToSet: { likes:  _id } },
+        { new: true }
+      );
+      const filter = {_id: _id}
+      const update = { $addToSet: { likedByUSers: {$each : likes}}}
+      const doc = await Squash.findOneAndUpdate(filter, update)
       return doc;
     },
     updateUserProfileTestSamples: async (parents, { _id1, _id2 }, context, info) => {

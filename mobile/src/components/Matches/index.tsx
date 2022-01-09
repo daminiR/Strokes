@@ -26,6 +26,7 @@ const Matches = ({navigation}) => {
     const likesByUsers = user?.likedByUSers
     const totalMatches = calculateOfflineMatches(user)
     const totalLikes = _.differenceBy(likesByUsers, totalMatches, '_id')
+    console.log("totalelikes", totalLikes)
     setTotalLikesFromUsers(totalLikes)
     setLoading(false)
     }
@@ -68,7 +69,8 @@ const Matches = ({navigation}) => {
       <View>
         {!loading && (
           <FlatList
-            numColumns={3}
+            numColumns={2}
+            columnWrapperStyle={{justifyContent: 'center'}}
             data={totalLikesFromUsers}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => renderMatchCard(item)}

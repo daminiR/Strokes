@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions, Platform} from "react-native";
 import {StatusBar} from 'react-native';
+import {tabBarSize} from '@constants';
 
 export const PRIMARY_COLOR = "#7444C0";
 export const PRIMARY_THEME = "#ff7f02";
@@ -737,8 +738,6 @@ export const styles =  StyleSheet.create({
     fontFamily: FONT_TEXT_FAM,
     color: DARK_GRAY
   },
-
-
   // Button Styles
   buttonStyle: {
     backgroundColor: PRIMARY_THEME,
@@ -747,7 +746,6 @@ export const styles =  StyleSheet.create({
     height: DIMENSION_HEIGHT * 0.08,
     borderWidth: 2,
   },
-
   // CONTAINER - MATCHES
   tiralNeighbor: {
     justifyContent: 'space-between',
@@ -756,12 +754,23 @@ export const styles =  StyleSheet.create({
   },
   containerMatches: {
     justifyContent: 'space-between',
+    alignContent: 'center',
+    paddingHorizontal: 10,
+    paddingBottom: 60 + 30
+  },
+  LikesFlatListSyle: {
+    alignContent: 'center',
     paddingHorizontal: 10,
   },
-
+  individualMatchCard: {
+    flex: 1,
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    paddingHorizontal: 10,
+  },
   // CONTAINER - MESSAGES
   containerMessages: {
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     flex: 1,
     paddingHorizontal: 10,
   },
