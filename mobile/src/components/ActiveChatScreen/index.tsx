@@ -4,7 +4,6 @@ import { RootStackSignInParamList } from '@NavStack'
 import {DELETE_CHAT_USER,GET_MESSAGES, MESSAGE_POSTED, POST_MESSAGE} from '@graphQL'
 import { useQuery, useMutation, useSubscription} from '@apollo/client'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { useRoute, useNavigation } from '@react-navigation/native'
 import {View, StyleSheet} from 'react-native'
 import {Icon, BottomSheet, ListItem, Text, Button, Avatar} from 'react-native-elements'
 import _ from 'lodash'
@@ -14,25 +13,17 @@ import {createMessageObject} from '@utils'
 import {ChatUserSettingsList} from '@constants'
 import {AppContainer} from '@components'
 
-  const styles2 =  StyleSheet.create({
-  modal: {
-        height: 100,
-    backgroundColor: "white",
-    padding: 22,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)"
-  }
-  })
-
-import { HeaderBackButton } from '@react-navigation/elements'
 const ActiveChatScreen = ({route}) => {
   const [postMessage2] = useMutation(POST_MESSAGE)
   const [loadingDeleteChat, setLoadinDeleteChat] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [displayInput, setDisplayInput] = useState(false);
   const {currentUserID, matchID, matchedUserProfileImage, matchedUserName} = route.params
   const {data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
+  const [deleteChatUser] = useMutation(DELETE_CHAT_USER, {
+    onCompleted: () => {
+    },
+  })
   const {data: messagesData, loading: loadingMessages} = useQuery(GET_MESSAGES,
   {
     fetchPolicy: "network-only",
