@@ -32,7 +32,7 @@ export const DIMENSION_WIDTH = Dimensions.get("window").width;
 export const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 
-export const styles =  StyleSheet.create({
+export const styles = StyleSheet.create({
   // NOTIFICATION MSG STYLES
   notificationText: {
     color: LIGHT_GRAY,
@@ -46,27 +46,26 @@ export const styles =  StyleSheet.create({
   //CHAT styles
   ChatUserContainer: {
     flex: 1,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   // email signing style
 
-
   confirmationCodeContainer: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   authEmailOverlay: {
     flex: 1,
-    width: DIMENSION_WIDTH * .8,
-    height: DIMENSION_HEIGHT * 0.5
+    width: DIMENSION_WIDTH * 0.8,
+    height: DIMENSION_HEIGHT * 0.5,
   },
 
   // Auth email overlay
 
   //authEmailOverlay: {
-    //flex: 1,
-    //width: DIMENSION_WIDTH * .8,
-    //height: DIMENSION_HEIGHT * 0.5
+  //flex: 1,
+  //width: DIMENSION_WIDTH * .8,
+  //height: DIMENSION_HEIGHT * 0.5
   //},
   // BUTTON STYLE
   buttonText: {
@@ -82,7 +81,7 @@ export const styles =  StyleSheet.create({
   helloContainer: {
     backgroundColor: SECONDARY_THEME,
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   helloButtons: {
     padding: 10,
@@ -92,15 +91,15 @@ export const styles =  StyleSheet.create({
   cancel: {
     ...Platform.select({
       ios: {
-    padding: 10,
-    paddingTop: IOS_TOP_BAR,
-    flexDirection: 'row-reverse',
-    justifyContent: 'flex-start'
+        padding: 10,
+        paddingTop: IOS_TOP_BAR,
+        flexDirection: 'row-reverse',
+        justifyContent: 'flex-start',
       },
       android: {
-    padding: 10,
-    flexDirection: 'row-reverse',
-    justifyContent: 'flex-start'
+        padding: 10,
+        flexDirection: 'row-reverse',
+        justifyContent: 'flex-start',
       },
     }),
   },
@@ -127,7 +126,7 @@ export const styles =  StyleSheet.create({
   horizontalImageplaceholder: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   verticalImageplaceholder: {
     //flex: 1,
@@ -263,10 +262,10 @@ export const styles =  StyleSheet.create({
     margin: 0,
   },
   profileLikesContainer: {
-      borderRadius: 8,
-      width: DIMENSION_WIDTH / 2 - 30 ,
-      height: 170,
-      margin: 0
+    borderRadius: 8,
+    width: DIMENSION_WIDTH / 2 - 30,
+    height: 170,
+    margin: 0,
   },
   imageContainer: {
     flex: 1,
@@ -275,7 +274,7 @@ export const styles =  StyleSheet.create({
     width: DIMENSION_WIDTH * 0.9,
     marginVertical: 10,
     height: 350,
-    padding: 10
+    padding: 10,
   },
   lastImageContainer: {
     flex: 1,
@@ -291,7 +290,7 @@ export const styles =  StyleSheet.create({
     width: DIMENSION_WIDTH * 0.9,
     height: 350,
     marginTop: 0,
-    marginVertical: 20
+    marginVertical: 20,
   },
   swiperCardStyle: {
     flex: 1,
@@ -420,6 +419,22 @@ export const styles =  StyleSheet.create({
   matchesTextCardItem: {
     //fontFamily: ICON_FONT,
     color: WHITE,
+  },
+  matchedOverlay: {
+    backgroundColor: SECONDARY_THEME,
+    flex: 0,
+    width: DIMENSION_WIDTH * 0.8,
+    height: DIMENSION_HEIGHT * 0.4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    padding: 0,
+    margin: 0,
+  },
+  matchedText: {
+    fontSize: 30,
+    fontFamily: FONT_TEXT_FAM,
+    color: PRIMARY_THEME,
   },
   firstImageText: {
     fontWeight: 'bold',
@@ -606,6 +621,10 @@ export const styles =  StyleSheet.create({
     marginRight: 20,
     marginVertical: 15,
   },
+  avatarActiveChat: {
+    borderWidth: 2,
+    borderColor: PRIMARY_THEME,
+  },
   message: {
     color: GRAY,
     fontSize: 12,
@@ -718,25 +737,25 @@ export const styles =  StyleSheet.create({
 
   //FAB
   likeDislikeFAB: {
-    padding:0,
-    margin:0,
-    shadowOpacity:0,
+    padding: 0,
+    margin: 0,
+    shadowOpacity: 0,
   },
   // CONTAINER - HOME
   containerHome: {flex: 1, marginHorizontal: 10},
   // TOPTAB
   topTabUnderLineStyle: {
-    backgroundColor:PRIMARY_THEME
+    backgroundColor: PRIMARY_THEME,
   },
 
   topTabStyle: {
-    flex:1,
+    flex: 1,
     height: DIMENSION_HEIGHT * 0.05,
   },
   topTabText: {
     fontSize: 15,
     fontFamily: FONT_TEXT_FAM,
-    color: DARK_GRAY
+    color: DARK_GRAY,
   },
   // Button Styles
   buttonStyle: {
@@ -756,7 +775,7 @@ export const styles =  StyleSheet.create({
     justifyContent: 'space-between',
     alignContent: 'center',
     paddingHorizontal: 10,
-    paddingBottom: 60 + 30
+    paddingBottom: 60 + 30,
   },
   LikesFlatListSyle: {
     alignContent: 'center',

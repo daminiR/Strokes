@@ -14,7 +14,7 @@ import {calculateOfflineMatches} from '@utils'
 import {Avatar, Divider, ListItem, Button} from 'react-native-elements'
 
 const renderMessage = (item, navigation, currentUserID) => {
-    const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0).imageURL
+    const profileImage = item.profileImage.imageURL
     const title = item.first_name;
     const _onPressActiveChat = () => {
       navigation.navigate('ACTIVE_CHAT', {currentUserID: currentUserID, matchID: item._id, matchedUserProfileImage: profileImage, matchedUserName: item.first_name});
@@ -44,6 +44,7 @@ const MessagesList = () => {
     setLoading(true)
     const totalMatches = calculateOfflineMatches(user)
     // if in likedBy USe and in likes but not in matches then add to matches else load matches
+    console.log("list of matched", totalMatches)
     setTitle(title)
     // set total likes to ke local and database likes
     setMatches(totalMatches)

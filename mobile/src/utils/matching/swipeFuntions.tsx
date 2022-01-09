@@ -79,7 +79,6 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     const potentialMatch = card._id
     array.push(potentialMatch)
     likesVar(array)
-    console.log(" array of likes", likesVar())
     // test //
 
 
@@ -90,8 +89,8 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
         }})
 
     // to slow ith liks condition
-    //if (_.find(card.likes, (likeID) => {return likeID == _id})){
-    if (_.includes(currentUser.likedByUSers, card._id)){
+    const likedByIDs = _.map(currentUser.likedByUSers, likedByObj => {return likedByObj._id})
+    if (_.includes(likedByIDs, card._id)){
     const matchedUser = sanitizeCard(card)
     setMatched(true)
     updateMatches({variables: {currentUserId: _id,

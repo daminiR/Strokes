@@ -35,7 +35,7 @@ export type RootStackSignInParamList = {
   return (
     <ChatStack.Navigator>
       <ProfileStack.Screen options={{headerShown:false}} name="CHAT" component={Chat} />
-      <ProfileStack.Screen  options={{headerShown:false }} name="ACTIVE_CHAT" component={ActiveChat} />
+      <ProfileStack.Screen  options={{headerShown:true }} name="ACTIVE_CHAT" component={ActiveChat} />
     </ChatStack.Navigator>
   );
 }

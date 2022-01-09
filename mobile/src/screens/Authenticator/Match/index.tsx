@@ -38,15 +38,9 @@ const Match =()  => {
     console.log("did we hit match/ before patron")
     if (data) setLoadingData(false);
   }, [data.squash])
-  useEffect(() => {
-    console.log("does filter vlaues change!!!!!!!", filterValues)
-
-  }, [data.squash])
-
   const renderPatron = () => {
     return <Patron />;
   };
-  console.log("value of user after profile update", userData)
   return (
     <>
       {filterValues && (
