@@ -43,6 +43,18 @@ const PotentialMatchUserType = `
     description: String
     image_set: [Data!]!
 `
+const LikedByUserType = `
+    _id: ID!
+    first_name: String!
+    age: Int!
+    profileImage: Data
+`
+const LikedByUserInputType = `
+    _id: ID!
+    first_name: String!
+    age: Int!
+    profileImage: DataInput
+`
 export const PotentialMatchUserInputType = `
     _id: ID!
     first_name: String!
@@ -67,7 +79,7 @@ const SquashType = `
     i_blocked : [PotentialMatch!]
     likes : [String!]
     dislikes : [String!]
-    likedByUSers: [String!]
+    likedByUSers: [LikedByUser!]
     deleted: DeletedT
     phoneNumber: String
     email: String
@@ -89,7 +101,7 @@ const SquashInputType = `
     i_blocked : [PotentialMatchInput!]
     likes : [String!]
     dislikes : [String!]
-    likedByUSers: [String!]
+    likedByUSers: [LikedByUserInput!]
     phoneNumber: String
     email: String
   `
@@ -112,6 +124,12 @@ export const typeDefs = gql`
   }
   input LocationInput {
     ${LocationType}
+  }
+  input LikedByUserInput {
+    ${LikedByUserInputType}
+  }
+  type LikedByUser {
+    ${LikedByUserType}
   }
   scalar FileUpload
   type Query {
@@ -243,5 +261,6 @@ export const typeDefs = gql`
     deleteChatUser(_idUser: String, _idChatUser: String): String
     testMut(name: Int!):Int
     updateLikesTestSamples(_id: String!, likes: [String!]): Squash
+    updateLikesCurrentUserTestSamples(_id: String!, likes: [LikedByUserInput!]): Squash
   }
 `;

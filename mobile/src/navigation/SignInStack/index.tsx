@@ -11,29 +11,6 @@ const ProfileStack = createStackNavigator()
 const ChatStack = createStackNavigator()
 const Tab  = createBottomTabNavigator()
 
- const returnSportListOptions = ({navigation, route}) => ({
- });
-
-const screenOptionStyle = {
-  //headerBackTitle: "",
-  //tabBarStyle: [{height: 30}]
-  //{
-  "tabBarActiveTintColor": "#0091EA",
-  "tabBarInactiveTintColor": "gray",
-  "tabBarShowLabel": false,
-  "tabBarLabelStyle": {
-    "color": "#242424",
-    "fontFamily": "OpenSans-Regular",
-    "fontSize": 16
-  },
-  "tabBarStyle": [
-    {
-      "display": "flex"
-    },
-    null
-  ]
-}
-
 export type RootStackSignInParamList = {
   PROFILE: {data: number}
   EDIT_SPORTS: undefined
@@ -54,17 +31,6 @@ export type RootStackSignInParamList = {
     </ProfileStack.Navigator>
   );
 }
-const trialOptions = {
-  headerShown: true,
-  headerLeft: (props) => (
-            <HeaderBackButton
-              {...props}
-              onPress={() => {
-              }}
-            />
-          ),
-
-}
  const ChatStackScreen = () => {
   return (
     <ChatStack.Navigator>
@@ -76,11 +42,11 @@ const trialOptions = {
 const customTabBarStyle = {
   showLabel: false,
   inactiveTintColor: 'gray',
-  style: {backgroundColor: '#2b1d08', height: tabBarSize, alignItems: 'center'},
+  style: {backgroundColor: '#2b1d08', height: 60},
   labelStyle: {
     color: '#242424',
     fontFamily: 'OpenSans-Regular',
-    fontSize: 16,
+    //fontSize: 10,
   },
 };
  const MatchStackScreen = () => {
@@ -112,14 +78,14 @@ const customTabBarStyle = {
               <Icon
                 name={iconName}
                 type="material"
-                size={size}
+                size={20}
                 color={'#ff7f02'}
               />
             );
           },
           tabBarInactiveTintColor: 'gray',
           tabBarStyle: customTabBarStyle.style,
-          tabBarLabelStyle: customTabBarStyle.labelStyle,
+          tabBarShowLabel: false
         })}
         initialRouteName="Match">
         <Tab.Screen options= {{headerShown: false}} name="Profile" component={ProfileStackScreen} />

@@ -97,7 +97,16 @@ const READ_SQUASH = gql`
       }
       likes
       dislikes
-      likedByUSers
+      likedByUSers {
+      _id
+      first_name
+      age
+      profileImage {
+        img_idx
+        imageURL
+        filePath
+      }
+      }
       matches
       {
       _id

@@ -15,10 +15,10 @@ import {TouchableOpacity} from 'react-native';
       //////squashItemsVar([...squashItems, data.createSquash._id])
 
 const renderMatchCard = (card) => {
-      const profileImage = card.image_set.find(imgObj => imgObj.img_idx == 0)
+      const profileImage = card.profileImage
       const title = card.first_name +', ' + card.age
       return (
-              <TouchableOpacity>
+        <TouchableOpacity style={{padding: 5}}>
                 <CardItem
                   profileImage={profileImage}
                   profileTitle={title}

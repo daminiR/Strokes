@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useContext, useState } from 'react'
 import {FilterFields} from '@localModels'
 import {Text, View } from 'react-native';
-import {createInitialFilterFormik, createPatronList, calculateOfflineMatches, byGameLevel} from '@utils'
+import {createInitialFilterFormik, byGameLevel} from '@utils'
 import _ from 'lodash'
 import {UserContext} from '@UserContext'
 import { useFormikContext} from 'formik'
@@ -59,6 +59,7 @@ const MatchList = ({matches}) => {
   })
   useEffect(() => {
     setLoadingFilters(true);
+    userData?.squash &&
       createInitialFilterFormik(userData.squash.sports).then(
         (initialValues) => {
           if (filterSportChangedVar() || isCityChangedVar()) {
@@ -92,7 +93,7 @@ const MatchList = ({matches}) => {
         },
       );
     setLoadingFilters(false);
-  }, [userData.squash.sports, isCityChangedVar()]);
+  }, [userData?.squash.sports, isCityChangedVar()]);
 
   useEffect(() => {
       if (matches?.length == 0) {

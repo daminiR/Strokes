@@ -33,7 +33,14 @@ export interface PotentialMatchType {
     description: string
     image_set: ImageSetT[]
 }
+export interface LikedByUserType {
+    first_name: string
+    _id: string
+    age: number
+    profileImage: ImageSetT
+}
 export type PotentialMatchT = PotentialMatchType[]
+export type LikedByUserT = LikedByUserType[]
 export type SportsList = Sport[]
 export interface SquashDocument extends Document {
   first_name: string

@@ -1,5 +1,5 @@
 import { Types, model, Schema} from 'mongoose';
-import { DeleteT, SquashDocument, PotentialMatchT, LocationT} from '../types/Squash.d'
+import { DeleteT, SquashDocument, LikedByUserT, PotentialMatchT, LocationT} from '../types/Squash.d'
 //const mongoose = require('mongoose');
 //const Schema = mongoose.Schema;
 const GENDERS = ["Male", "Female"]
@@ -119,7 +119,7 @@ var squashSchema = new Schema({
     required: false,
   },
   likedByUSers: {
-    type:[String],
+    type:<LikedByUserT>{},
     required: false,
   },
   dislikes: {
