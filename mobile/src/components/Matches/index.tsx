@@ -24,9 +24,11 @@ const Matches = ({navigation}) => {
     const user = currentUserData.squash
       // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
     const likesByUsers = user?.likedByUSers
+    const dislikeIDs = user?.dislikes
     const totalMatches = calculateOfflineMatches(user)
-    const totalLikes = _.differenceBy(likesByUsers, totalMatches, '_id')
-    console.log("totalelikes", totalLikes)
+    const final = _.filter(likesByUsers, likeObj => !_.includes(dislikeIDs, likeObj._id ))
+    const totalLikes = _.differenceBy(final, totalMatches, '_id')
+    console.log("total likes", totalLikes)
     setTotalLikesFromUsers(totalLikes)
     setLoading(false)
     }
@@ -70,7 +72,7 @@ const Matches = ({navigation}) => {
         {!loading && (
           <FlatList
             numColumns={2}
-            columnWrapperStyle={{justifyContent: 'center'}}
+            columnWrapperStyle={styles.LikesFlatListSyle}
             data={totalLikesFromUsers}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => renderMatchCard(item)}

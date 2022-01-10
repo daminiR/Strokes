@@ -2,7 +2,7 @@ import { dislikesVar, likesVar} from '../../cache'
 import React from 'react'
 import {MAX_DISLIKES, MAX_LIKES} from '@constants'
 import _ from 'lodash'
-import {PotentialMatchType, Sport, ImageSetT} from '@localModels'
+import {PotentialMatchType, Sport, ImageSetT, LocationT} from '@localModels'
 import { Card } from 'react-native-card-stack-swiper';
 import {CardItem} from '../../components/CardItem/CardItem';
 import {TouchableOpacity} from 'react-native';
@@ -60,6 +60,7 @@ export const sanitizeCard = (card) => {
     })
     const  potentialMatch: PotentialMatchType= {
        "first_name": card.first_name,
+       "location": _.omit(card.location, "__typename") as LocationT,
        "age": card.age,
        "_id": card._id,
        "gender": card.gender,

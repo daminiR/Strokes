@@ -82,15 +82,15 @@ const createPatronList = (currentUser, allUsers, filters) => {
   //bounded arrays will be filtered in mongodb
   //unbounded wil not be filtered for performance
     //const currentUseLocation = currentUser.location
-    //const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
-    //const likes = currentUser?.likes ? currentUser.likes : []
-    ////const matches = currentUser?.matches ? currentUser.likes : []
-    //const dislikes = currentUser?.dislikes ? currentUser.dislikes : []
-    //const exclude = _.concat(likes, dislikes)
-    //const patron_list = _.filter(activeUsers, userObj => !_.includes(exclude, userObj._id))
-    ////const newPatronList2 = filterByFieldsByUser(patron_list  , filters)
+  // TODO: add a few more of likedBYusers to get some matches started
+    const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
+    const likes = currentUser?.likes ? currentUser.likes : []
+    //const matches = currentUser?.matches ? currentUser.likes : []
+    const dislikes = currentUser?.dislikes ? currentUser.dislikes : []
+    const exclude = _.concat(likes, dislikes)
+    const patron_list = _.filter(activeUsers, userObj => !_.includes(exclude, userObj._id))
     //const newPatronList2 = _.slice(filterByFieldsByUser(patron_list  , filters), 0, SWIPIES_PER_DAY_LIMIT)
-    //console.log(newPatronList2)
-    return allUsers
+    //return newPatronList2
+    return patron_list
 }
 export {createPatronList}

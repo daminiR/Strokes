@@ -1,6 +1,7 @@
 export * from './AppContainer'
 export * from './Button'
 export * from './ActiveChatScreen'
+export * from './ActiveChatProfileView'
 export * from './ChatUserSettings'
 export * from './DismissKeyboard'
 export * from './Space'

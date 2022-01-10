@@ -35,7 +35,6 @@ const Match =()  => {
   } = useContext(UserContext);
   useEffect(() => {
     setLoadingData(true);
-    console.log("did we hit match/ before patron")
     if (data) setLoadingData(false);
   }, [data.squash])
   const renderPatron = () => {

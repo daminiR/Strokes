@@ -666,9 +666,6 @@ export const resolvers = {
           //const filter = {'_id': [_idUser, _idChatUser]},
       // remove _ids from matches, likedByUSers, likes
           //{ $pull: { matches: {}, likes: {}, likedByUSers: {}} },
-      console.log("_idUser", _idUser)
-      console.log("_idChatUser", _idChatUser)
-        console.log("valid2")
       if (!_.isEqual(_idUser,_idChatUser)){
         const filter = [_idUser, _idChatUser]
         const Users = await Squash.find(
@@ -704,12 +701,9 @@ export const resolvers = {
               //TODO: some weird issue with description type
               'description': userObj.description.toString(),
             }
-            //console.log("whats hapening ", potentialDisLike.description)
-            //matchObj.ChatUserMatchObj = _.pick(userObj, ['_id', 'first_name', 'last_name', 'age', 'gender', 'sports', 'description', 'image_set'])
             matchObj[_idChatUser] = _.concat(userObj.dislikes, potentialDisLike)
           }
         })
-        console.log("test docs in delete", matchObj)
         const doc = await Squash.findOneAndUpdate(
           {'_id': _idUser},
           {

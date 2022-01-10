@@ -1,12 +1,13 @@
 import React from 'react'
-import {ActiveChatScreen} from '@components'
+import {ActiveChatProfileView, ActiveChatScreen} from '@components'
 import { createMaterialTopTabNavigator  } from '@react-navigation/material-top-tabs';
 import {tabBarSize} from '@constants'
 import {Icon} from 'react-native-elements'
-import { useRoute, useNavigation } from '@react-navigation/native'
+import { useRoute } from '@react-navigation/native'
 const ActiveChatTab  = createMaterialTopTabNavigator()
 export type RootStackProfileScreenParamList = {
   ACTIVE_CHAT_SCREEN: undefined
+  ACTIVE_CHAT_PROFILE_SCREEN: undefined
   //PROFILE_EDIT: undefined
 }
 const customTabBarStyle = {
@@ -28,10 +29,10 @@ const customTabBarStyle = {
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
           switch (route.name) {
-            case 'Profile Edit':
+            case 'Chat Screen':
               iconName = focused ? 'person-outline' : 'person-outline';
               break;
-            case 'Profile View':
+            case 'Chat Profile Screen':
               iconName = focused ? 'visibility' : 'visibility';
               break;
           }
@@ -53,6 +54,11 @@ const customTabBarStyle = {
       <ActiveChatTab.Screen
         name="Chat Screen"
         component={ActiveChatScreen}
+        initialParams={route.params}
+      />
+      <ActiveChatTab.Screen
+        name="Chat Profile Screen"
+        component={ActiveChatProfileView}
         initialParams={route.params}
       />
     </ActiveChatTab.Navigator>

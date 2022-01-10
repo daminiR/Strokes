@@ -14,8 +14,8 @@ import  {cityVar} from '@cache'
 import { GET_POTENTIAL_MATCHES} from './graphql/queries'
 import { useApolloClient} from '@apollo/client'
 import { showMessage, hideMessage } from "react-native-flash-message";
-export const UserContext = createContext(null);
 
+export const UserContext = createContext(null);
 import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} from '@utils'
 export const AuthNavigator = () => {
   const [currentUser, setCurrentUser ] = useState(null)

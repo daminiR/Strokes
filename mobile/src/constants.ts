@@ -72,7 +72,7 @@ export const settingsFlatList = [
   {title: 'Neighborhood', icon: 'flight-takeoff', subtitle: 'Female',buttonPress: _neighborhood},
 ]
 export const ChatUserSettingsList = [
-  {title: 'Delete User', icon: 'av-timer'},
+  {title: 'Unmatch', icon: 'av-timer'},
 ]
 
 // Sign Up Slide Labels

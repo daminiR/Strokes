@@ -48,10 +48,10 @@ import {AppContainer} from '@components'
       </View>
           <Button
             title="Cancel"
-            //titleStyle={styles.buttonText}
+            titleStyle={styles.buttonText}
             onPress={() => _onPressCancel()}
-            //style={styles.buttonIndStyle}
-            //buttonStyle={styles.buttonStyle}
+            style={styles.buttonIndStyle}
+            buttonStyle={styles.buttonStyle}
           />
 
     </BottomSheet>

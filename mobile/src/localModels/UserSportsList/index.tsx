@@ -40,6 +40,7 @@ export interface PotentialMatchType {
     first_name: string
     _id: string
     age: number
+    location: LocationT
     gender: string
     sports: Sport[],
     description: string

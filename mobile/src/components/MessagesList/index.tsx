@@ -13,11 +13,11 @@ import _ from 'lodash'
 import {calculateOfflineMatches} from '@utils'
 import {Avatar, Divider, ListItem, Button} from 'react-native-elements'
 
-const renderMessage = (item, navigation, currentUserID) => {
-    const profileImage = item.profileImage.imageURL
+const renderMessage = (item, navigation, currentUserID, setLoading) => {
+    const profileImage = item.image_set.find(imgObj => imgObj.img_idx == 0).imageURL
     const title = item.first_name;
     const _onPressActiveChat = () => {
-      navigation.navigate('ACTIVE_CHAT', {currentUserID: currentUserID, matchID: item._id, matchedUserProfileImage: profileImage, matchedUserName: item.first_name});
+      navigation.navigate('ACTIVE_CHAT', {currentUserID: currentUserID, matchID: item._id, matchedUserProfileImage: profileImage, matchedUserName: item.first_name, profileViewData: item});
   };
   return (
     <ListItem
@@ -44,13 +44,11 @@ const MessagesList = () => {
     setLoading(true)
     const totalMatches = calculateOfflineMatches(user)
     // if in likedBy USe and in likes but not in matches then add to matches else load matches
-    console.log("list of matched", totalMatches)
     setTitle(title)
     // set total likes to ke local and database likes
     setMatches(totalMatches)
     setOfflineMatches(totalMatches)
     setLoading(false)
-
     }
   }, [currentUserData.squash.matches])
 
@@ -62,7 +60,7 @@ const MessagesList = () => {
         { !loading && !_.isEmpty(matches) && <FlatList
             data={matches}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => renderMessage(item, navigation, currentUser.uid)}
+            renderItem={({ item }) => renderMessage(item, navigation, currentUser.uid, setLoading)}
           />}
       </View>
   );
