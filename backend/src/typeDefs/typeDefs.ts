@@ -41,6 +41,7 @@ const PotentialMatchUserType = `
     gender: String!
     sports: [SquashNode!]!
     description: String
+    location: LocationType!
     image_set: [Data!]!
 `
 const LikedByUserType = `
@@ -63,6 +64,7 @@ export const PotentialMatchUserInputType = `
     sports: [SquashNodeInput!]!
     description: String
     image_set: [DataInput!]!
+    location: LocationInput!
 `
 const SquashType = `
     first_name: String!
@@ -123,6 +125,9 @@ export const typeDefs = gql`
     ${DeletedType}
   }
   input LocationInput {
+    ${LocationType}
+  }
+  type LocationType {
     ${LocationType}
   }
   input LikedByUserInput {

@@ -112,6 +112,11 @@ const READ_SQUASH = gql`
       _id
       first_name
       age
+      location {
+        city
+        state
+        country
+      }
       gender
       sports {
         sport

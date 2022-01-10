@@ -51,7 +51,8 @@ const ActiveChat = ({ route, navigation}) => {
        _idChatUser:matchID
     }})
     setDisplayInput(false)
-    navigation.goBack()
+    navigation.goBack({loadingA: "AAAA"})
+
     setLoadinDeleteChat(true)
   }
   useEffect(() => {

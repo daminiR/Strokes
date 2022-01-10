@@ -190,6 +190,11 @@ const UPDATE_MATCHES = gql`
       likes
       dislikes
       matches {
+      location {
+        city
+        state
+        country
+      }
         _id
         first_name
         age
