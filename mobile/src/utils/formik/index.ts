@@ -47,9 +47,9 @@ const createInitialFilterFormik = async (sports) => {
   // cached values is not in current sports remove it and chosse any one in the sports filer
   const sportsList = _.map(sports, sportObj =>{return sportObj.sport})
   var defailtSportFilter  = null
-  if (!_.includes(sportsList, sportFilter.sport)) {
-    console.log("inside cashe", sports, sportFilter.sport)
-    filterSportChangedVar(true)
+  if (sportFilter && !_.includes(sportsList, sportFilter.sport)) {
+   console.log("inside cashe", sports, sportFilter.sport)
+   filterSportChangedVar(true)
    defailtSportFilter = _.map(sports, (sportObj, key) => {
      if (key == '0') {
       const new_cached = {sport: sportObj.sport, filterSelected: true} as SportFilters;

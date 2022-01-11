@@ -9,7 +9,7 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import {CachePersistor, persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import  { createUploadLink } from 'apollo-upload-client';
-import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
+//import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { LogBox } from 'react-native'
 
@@ -33,7 +33,7 @@ const App = () =>
         trigger: 'write',
       });
       await newPersistor.restore();
-      //setPersistor(newPersistor);
+      setPersistor(newPersistor);
       //newPersistor.pause()
       //newPersistor.purge()
         console.log("uri", uri_upload)

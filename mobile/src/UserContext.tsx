@@ -94,16 +94,14 @@ export const AuthNavigator = () => {
                   ageRange: initialValues.ageRange,
                 },
               });
-            if (loadingSigning) setLoadingSiginig(false);
             setUserDataDidMount(true);
           })
           .catch((err) => {
             console.log(err);
-            if (loadingSigning) setLoadingSiginig(false);
           });
-        if (loadingSigning) setLoadingSiginig(false);
         didMountRef.current = true
       }
+        if (loadingSigning) setLoadingSiginig(false);
     }
   }, [userLoading]);
   const client = useApolloClient();
@@ -141,7 +139,6 @@ export const AuthNavigator = () => {
   useEffect(() => {
     if(didMountRef.current){
       console.log("figure logic for useRef")
-
     }
   }, [cityVar()])
 
@@ -169,6 +166,7 @@ export const AuthNavigator = () => {
     //}
   //}, [userData.squash.matches]);
 
+  console.log("do we make it here", loadingSigning)
   if (loadingSigning) return null
   const value = {
     getSquashProfile: getSquashProfile,
@@ -208,10 +206,6 @@ export const AuthNavigator = () => {
             }>
       {render2()}
           </Formik>
-
-
-
       }
     </UserContext.Provider>
-  )
-}
+  )}
