@@ -4,6 +4,7 @@ import { useFormikContext} from 'formik';
 import { View} from 'react-native'
 import {styles} from '@styles'
 import { ProfileFields} from '@localModels'
+import { DismissKeyboard} from '@components'
 import { registerOnFirebase} from '@utils'
 import { formatCode} from '@validation'
 
@@ -37,6 +38,7 @@ const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {
   }
   return (
     <>
+      <DismissKeyboard>
       <View style={styles.confirmationCodeContainer}>
         <View style={styles.emailInput}>
           <Input
@@ -66,6 +68,7 @@ const ConfirmationCode = ({isLastSlide, _confirmSignInGC}) => {
         />
       </View>
       </View>
+      </DismissKeyboard>
     </>
   );
 }
