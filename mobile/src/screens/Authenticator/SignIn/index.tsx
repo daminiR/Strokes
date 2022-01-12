@@ -1,17 +1,19 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
+import auth from '@react-native-firebase/auth'
 import { useFormikContext, Formik} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
 import {signInSlides, iniitialSignInForm} from '@constants'
 import {  RootStackSignOutParamList } from '@navigationStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import { ProfileFields} from '@localModels'
-import {ConfirmationCode, Cancel, PhoneInput, NextButton} from '@components'
+import {ProfileFields} from '@localModels';
+import {AppContainer, ConfirmationCode, Cancel, PhoneInput, NextButton} from '@components'
 import { registerOnFirebase} from '@utils'
 import {useNavigation} from '@react-navigation/native'
-import {Button} from 'react-native-elements'
-import {View} from 'react-native'
+import { CHECK_PHONE_INPUT } from '@graphQL'
+import {View, Keyboard} from 'react-native'
 import {styles }from '@styles'
 import  { signInSchema } from '@validation'
+import {useLazyQuery, useQuery} from '@apollo/client'
 import  _ from 'lodash'
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
@@ -39,8 +41,52 @@ export const Slider =  ({changeEmail}) => {
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const navigation = useNavigation()
   const [index, setIndex] = useState(0)
+  const [canSignIn, setCanSignIn] = useState(false)
+  const [noUserFoundMessage, setNoUserFoundMessage] = useState(null)
   const [showNextButton, setShowNextButton] = useState(true)
+  const [loadingSubmit, setLoadingSubmit] = useState(false)
+  const [isKeyboardShown, setIsKeyboardShown] = useState(undefined);
+  const [checkPhoneInput, {data: userPhoneInfo}] = useLazyQuery(CHECK_PHONE_INPUT, {
+    //variables: {phoneNumber: '+12025550173'},
+    //variables: {phoneNumber: '+18008799999'},
+    onCompleted: (data) => {
+      if (
+        data.checkPhoneInput.isPhoneExist == true &&
+        data.checkPhoneInput.isDeleted == false
+      ) {
+        registerOnFirebase(values.phoneNumber)
+          .then((confirmation: any) => {
+            this.slider.goToSlide(2);
+            setConfirmationFunc(confirmation);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        setCanSignIn(true);
+      } else {
+        this.slider.goToSlide(index + 1, true);
+        setCanSignIn(false);
+      }
+    },
+    onError: (err) => {
+      console.log('phone query', err);
+    },
+  });
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setIsKeyboardShown(true);
+      console.log("shown")
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setIsKeyboardShown(false);
+      console.log("not shown")
+    });
 
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
     if (index == 2){
@@ -52,14 +98,7 @@ export const Slider =  ({changeEmail}) => {
     }
   }
   const _signIn = () => {
-    registerOnFirebase(values.phoneNumber)
-      .then((confirmation: any) => {
-        this.slider.goToSlide(2);
-        setConfirmationFunc(confirmation)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    checkPhoneInput({variables: {phoneNumber: values.phoneNumber}});
   }
   const renderNext = () => {
     return <NextButton />;
@@ -74,31 +113,53 @@ export const Slider =  ({changeEmail}) => {
     setFieldTouched(field);
 
     if (index == 0) {
-      _signIn();
+      !errors[field] && touched[field] && _signIn();
     } else {
       !errors[field] &&
         touched[field] &&
         this.slider.goToSlide(index + 1, true);
     }
   };
+const _checkSignIn = () => {
+  canSignIn
+    ? _confirmSignInGC()
+    : userPhoneInfo.checkPhoneInput.isDeleted
+    ? setNoUserFoundMessage(
+        'User was deleted in the past few months, cannot sign in yet',
+      )
+    : setNoUserFoundMessage('invalid code or phone number');
+}
 const _confirmSignInGC = () => {
   //console.log("confirmation func", confirmationFunc)
-
-    confirmationFunc
-      .confirm(values.confirmationCode)
-      .then((userCredential) => {
-        console.log('logged in');
-        //if (changeEmail) {
-          //setAuthOverlay(true)
-          //console.log("changeemail here")
-        //}
-        //setIsUseOnMongoDb(true);
-      })
-      .catch(async (err) => {
-        //await auth().currentUser.delete()
-        console.log(err);
-      });
-  };
+  setLoadingSubmit(true);
+  confirmationFunc
+    .confirm(values.confirmationCode)
+    .then((userCredential) => {
+      if (userCredential.additionalUserInfo.isNewUser){
+        auth().currentUser.delete().then(() => {
+          setLoadingSubmit(true);
+          console.log("use needs to sign up")
+        })
+      }
+      console.log('logged in');
+      //if (changeEmail) {
+      //setAuthOverlay(true)
+      //console.log("changeemail here")
+      //}
+      //setIsUseOnMongoDb(true);
+    })
+    .catch(async (err) => {
+      //await auth().currentUser.delete()
+      if (err.code === 'auth/invalid-verification-code') {
+        console.log(
+          'you provided incorrect verifcation code / phone number. Make sure phone number and code is valid',
+        );
+      } else if (err.code === 'auth/missing-verification-code') {
+        console.log('did not provide verification code');
+      }
+      setLoadingSubmit(false);
+    });
+};
   const _onPressCancel = () => {
     navigation.navigate('HELLO');
   }
@@ -121,8 +182,9 @@ const _confirmSignInGC = () => {
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
                   <ConfirmationCode
+                    noUserFoundMessage={noUserFoundMessage}
                     isLastSlide={lastSlide}
-                    _confirmSignInGC={_confirmSignInGC}
+                    _confirmSignInGC={_checkSignIn}
                   />
                 </>
               );
@@ -131,19 +193,23 @@ const _confirmSignInGC = () => {
   };
 
   return (
+    <AppContainer loading={loadingSubmit}>
       <AppIntroSlider
         renderItem={renderInputForm}
         data={signInSlides}
         scrollEnabled={false}
-        showPrevButton={true}
+        showPrevButton={false}
         onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-        onDone={() => {_confirmSignInGC()}}
-        showNextButton={showNextButton}
+        onDone={() => {
+          _confirmSignInGC();
+        }}
+        showNextButton={showNextButton && !isKeyboardShown}
         showDoneButton={false}
         renderNextButton={renderNext}
         onNext={() => _onNext()}
         ref={(ref) => (this.slider = ref!)}
       />
-  )
+    </AppContainer>
+  );
 }
 export { SignIn }

@@ -18,6 +18,7 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 export const UserContext = createContext(null);
 import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} from '@utils'
 export const AuthNavigator = () => {
+  //auth().currentUser.delete().then(() => {})
   const [currentUser, setCurrentUser ] = useState(null)
   const [isProfileComplete, setProfileState ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(true);
@@ -30,7 +31,7 @@ export const AuthNavigator = () => {
   const [userDataDidMount, setUserDataDidMount] = useState(false)
   const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
-  const [initialValuesFormik, setInitialValuesFormik] = useState(null);
+  const [initialValuesFormik, setInitialValuesFormik] = useState({});
   const didMountRef = useRef(false)
   const [queryProssibleMatches, {data: testData}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
@@ -49,7 +50,7 @@ export const AuthNavigator = () => {
       //TODO: if data doesnt exists input is incorrect => add checks
       console.log("data", data)
       if (data) {
-        setDeleted(data.squash.deleted)
+        data.squash && setDeleted(data.squash.deleted)
         setProfileState(true);
         setData(data)
       }
@@ -187,7 +188,7 @@ export const AuthNavigator = () => {
     queryProssibleMatches: queryProssibleMatches
   };
   const render2 = () =>{
-    if (currentUser && (!deleted || !deleted.isDeleted)) {
+    if (userData?.squash && currentUser && (!deleted || !deleted.isDeleted)) {
           return !loadingSigning  &&   !loadingMatches  && <MatchStackScreen/>;
       }
     else {

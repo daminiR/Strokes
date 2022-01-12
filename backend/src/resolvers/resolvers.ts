@@ -154,6 +154,17 @@ export const resolvers = {
       console.log(squash_val);
       return squash_val;
     },
+    checkPhoneInput: async (parents,{phoneNumber}, context, info) => {
+      const filter = {phoneNumber: phoneNumber}
+      const user = await Squash.findOne(filter)
+      console.log("pphone", user)
+      if(user){
+        return {isPhoneExist: true, isDeleted: user.deleted? user.deleted.isDeleted : false}
+      }
+      else {
+        return {isPhoneExist: false, isDeleted: false}
+      }
+    },
     /////////////////////////////////////////////// Jmeter Testing ///////////////////////////////////////
     matchesNotOptim: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange, dislikes}, context, info) => {
       //const users = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);

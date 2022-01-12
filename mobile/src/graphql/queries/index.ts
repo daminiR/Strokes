@@ -9,6 +9,14 @@ const READ_SQUASHES = gql`
     }
   }
 `
+const CHECK_PHONE_INPUT = gql`
+  query  CheckPhoneInput($phoneNumber: String!){
+    checkPhoneInput (phoneNumber: $phoneNumber){
+      isPhoneExist,
+      isDeleted
+    }
+  }
+`
 
 const GET_MESSAGES = gql`
   query  Messages($currentUserID: String!, $matchedUserID: String!){
@@ -188,8 +196,27 @@ const GET_GENDER = gql`
     }
 `;
 const GET_PROFILE_STATUS = gql`
-    query  getProfileStatus {
-      isProfileComplete @client
-    }
+  query getProfileStatus {
+    isProfileComplete @client
+  }
 `;
-export { GET_ACCOUNT_DETAIL_INPUT_TYPE, GET_ACCOUNT_INPUT_TYPE, MESSAGE_POSTED, GET_MESSAGES, GET_INPUT_TYPE, GET_POTENTIAL_MATCHES, GET_DESCRIPTION, GET_AGE, GET_GENDER, GET_FIRST_NAME, GET_SPORTS_LIST, READ_URL,GET_PROFILE_STATUS, READ_SQUASH, READ_SQUASHES, GET_SELECTED_SQUASH, GET_SELECTED_SQUASH_1}
+export {
+  CHECK_PHONE_INPUT,
+  GET_ACCOUNT_DETAIL_INPUT_TYPE,
+  GET_ACCOUNT_INPUT_TYPE,
+  MESSAGE_POSTED,
+  GET_MESSAGES,
+  GET_INPUT_TYPE,
+  GET_POTENTIAL_MATCHES,
+  GET_DESCRIPTION,
+  GET_AGE,
+  GET_GENDER,
+  GET_FIRST_NAME,
+  GET_SPORTS_LIST,
+  READ_URL,
+  GET_PROFILE_STATUS,
+  READ_SQUASH,
+  READ_SQUASHES,
+  GET_SELECTED_SQUASH,
+  GET_SELECTED_SQUASH_1,
+};

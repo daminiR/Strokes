@@ -65,8 +65,7 @@ const Slider =  () => {
     onCompleted: (data) => {
     },
   });
-    const [isKeyboardShown, setIsKeyboardShown] = useState(undefined);
-
+  const [isKeyboardShown, setIsKeyboardShown] = useState(undefined);
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setIsKeyboardShown(true);
@@ -82,17 +81,6 @@ const Slider =  () => {
       hideSubscription.remove();
     };
   }, []);
-  useEffect(() => {
-    if (isKeyboardShown) {
-
-
-
-    }
-    else{
-
-
-    }
-  }, [isKeyboardShown]);
 
   const _onSlideChange = (index, last_index) => {
     setIndex(index)
@@ -125,28 +113,48 @@ const Slider =  () => {
       });
     !_.isEmpty(errors) && console.log(errors)
   }
-
-  const _confirmSignInGC = () => {
+  const [authMessage, setAuthMessage] = useState(null)
+const _checkSignIn = () => {
+  //setAuthMessage('invalid verification code')
+  _confirmSignInGC()
+}
+const _confirmSignInGC = () => {
     // promise in parralell
-    setLoadingSubmit(true)
       confirmationFunc
         .confirm(values.confirmationCode)
         .then((userCredential) => {
-            console.log("values before submit",values)
-            console.log(userCredential.additionalUserInfo)
-            registerOnMongoDb(values, userCredential.user.uid, createSquash2).then(() => {
-            //setInitialFilters()
-            console.log('logged in');
-            setIsUseOnMongoDb(true)
-            setLoadingSubmit(false)
+          setLoadingSubmit(true)
+          console.log('values before submit', values);
+          console.log(userCredential.additionalUserInfo);
+          registerOnMongoDb(values, userCredential.user.uid, createSquash2)
+            .then(() => {
+              //setInitialFilters()
+              console.log('logged in');
+              setIsUseOnMongoDb(true);
+              setLoadingSubmit(false);
+            })
+            .catch(async (err) => {
+              // else delete user as if not created
+              //await auth().currentUser.delete()
+              console.log(err);
+              // this error reallu shoudnt happen
+              setAuthMessage('unable to upload information to the cloud');
+              setLoadingSubmit(false);
+            });
         })
         .catch(async (err) => {
-            // else delete user as if not created
-            //await auth().currentUser.delete()
           console.log(err);
-          setLoadingSubmit(false)
+          if (err.code === 'auth/invalid-verification-code') {
+            console.log(
+              'you provided incorrect verifcation code / phone number. Make sure phone number and code is valid',
+            );
+            setAuthMessage('invalid verification code');
+          } else if (err.code === 'auth/missing-verification-code') {
+            console.log('did not provide verification code');
+            setAuthMessage('need to provide verification code');
+          }
         });
-        });
+
 
   }
   const _onPrev = () => {
@@ -269,8 +277,9 @@ const Slider =  () => {
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
                   <ConfirmationCode
+                    authMessage={authMessage}
                     isLastSlide={lastSlide}
-                    _confirmSignInGC={_confirmSignInGC}
+                    _confirmSignInGC={_checkSignIn}
                   />
                 </>
               )
@@ -288,9 +297,9 @@ const [visible, setVisible] = useState(false);
           showPrevButton={true && !isKeyboardShown}
           showDoneButton={false}
           onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-          onDone={() => {
-            _confirmSignInGC();
-          }}
+          //onDone={() => {
+            //_confirmSignInGC();
+          //}}
           showNextButton={showNextButton && !isKeyboardShown}
           renderNextButton={renderNext}
           renderPrevButton={renderPrev}

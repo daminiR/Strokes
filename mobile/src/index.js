@@ -9,7 +9,7 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import {CachePersistor, persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import  { createUploadLink } from 'apollo-upload-client';
-//import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
+import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { LogBox } from 'react-native'
 
@@ -34,8 +34,8 @@ const App = () =>
       });
       await newPersistor.restore();
       setPersistor(newPersistor);
-      //newPersistor.pause()
-      //newPersistor.purge()
+      newPersistor.pause()
+      newPersistor.purge()
         console.log("uri", uri_upload)
         console.log("uri",uri_ws)
       const uploadLink = createUploadLink({
@@ -94,14 +94,14 @@ const App = () =>
       );
     }
 
-  //client.resetStore()
-  //client.resetStore()
+  client.resetStore()
+  client.resetStore()
   //just to reset cache for debugging
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}
   //return renderInitial();
     //only in androik
-  //enableFlipperApolloDevtools(client)
+  enableFlipperApolloDevtools(client)
   //return (
     //<ApolloProvider client={client}>
       //<FormProvider>
