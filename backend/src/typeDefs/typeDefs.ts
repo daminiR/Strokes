@@ -56,6 +56,10 @@ const LikedByUserInputType = `
     age: Int!
     profileImage: DataInput
 `
+const userExistT = `
+    isPhoneExist: Boolean!
+    isDeleted: Boolean!
+`
 export const PotentialMatchUserInputType = `
     _id: ID!
     first_name: String!
@@ -136,13 +140,17 @@ export const typeDefs = gql`
   type LikedByUser {
     ${LikedByUserType}
   }
+  type userExistType {
+    ${userExistT}
+  }
   scalar FileUpload
   type Query {
     messages(currentUserID: String!, matchedUserID:String!): [Message!]
     hello: String!
-    squash(id: String!): Squash!
+    squash(id: String!): Squash
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
+    checkPhoneInput (phoneNumber: String!): userExistType!
     queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
 
     matchesNotOptim(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]

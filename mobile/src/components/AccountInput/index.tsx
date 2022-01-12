@@ -13,11 +13,12 @@ import { useFormikContext} from 'formik';
 import { EditFields} from '@localModels'
 import {EditAccountInputVar} from '@cache'
 import {UserContext} from '@UserContext'
-import { useQuery, useMutation} from '@apollo/client'
-import { registerOnFirebase} from '@utils'
+import { useApolloClient, useQuery, useMutation} from '@apollo/client'
+import { _onPressSignOut, registerOnFirebase} from '@utils'
 import _  from 'lodash'
 
 const AccountDetails = ({signOut}) => {
+  const client = useApolloClient();
   const [inputType, setInputType] = useState();
   const {currentUser, currentUserData, userData, userLoading, refetchUserData} = useContext(UserContext)
   const [phoneNumber, setPhoneNumber] = useState(null)
@@ -28,9 +29,10 @@ const AccountDetails = ({signOut}) => {
   const {handleReset, setValues, values: formikValues } = useFormikContext<EditFields>();
   const [deleteSquash] = useMutation(DELETE_PROFILE);
   const [softDeleteUser] = useMutation(SOFT_DELETE_PROFILE,{
-    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
+    //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     onCompleted: () => {
-      refetchUserData()
+      _onPressSignOut(setDisplayInput, client)
+      console.log('Succesful signout, and soft delete');
     },
   });
   const {data:InputTypeData } = useQuery(GET_ACCOUNT_DETAIL_INPUT_TYPE);
@@ -41,8 +43,8 @@ const AccountDetails = ({signOut}) => {
   // add delete account here
   useEffect(() => {
     if( InputTypeData.inputAccountDetailItems.displayInput == true){
-    setInputType(InputTypeData.inputAccountDetailItems.inputType)
-    setDisplayInput(InputTypeData.inputAccountDetailItems.displayInput)
+    setInputType(InputTypeData.inputAccountDetailItems.inputType);
+    setDisplayInput(InputTypeData.inputAccountDetailItems.displayInput);
     }
     }, [InputTypeData])
   useEffect(() => {
@@ -135,13 +137,13 @@ const confirmDelete = async() => {
         title="Sign Out"
         buttonStyle={styles.buttonStyle}
         onPress={() => {
-          signOut(setDisplayInput)
+          signOut(setDisplayInput, client)
         }}
       />
       <Button
         title="Delete Account"
         buttonStyle={styles.buttonStyle}
-        onPress={() => deleteStart()}
+        onPress={() => softDelete()}
       />
         <Modal
           animationType="slide"
