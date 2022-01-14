@@ -21,7 +21,6 @@ export const MatchesProfileContext = createContext(null)
 
 
 const Match =()  => {
-  console.log("Match how many querries are running")
   const [allUsers, setAllUsers] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
   const {

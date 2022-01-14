@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Bubble, GiftedChat } from 'react-native-gifted-chat'
 import { RootStackSignInParamList } from '@NavStack'
-import {DELETE_CHAT_USER,GET_MESSAGES, MESSAGE_POSTED, POST_MESSAGE} from '@graphQL'
+import {DELETE_CHAT_USER,GET_MESSAGES, MESSAGE_POSTED, POST_MESSAGE} from '@graphQL2'
 import { useQuery, useMutation, useSubscription} from '@apollo/client'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useRoute, useNavigation } from '@react-navigation/native'

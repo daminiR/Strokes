@@ -1,6 +1,6 @@
 import React, {useRef, useContext, useEffect, useState} from 'react'
 import { Card, ListItem, Overlay} from 'react-native-elements'
-import {GET_ACCOUNT_INPUT_TYPE} from '@graphQL'
+import {GET_ACCOUNT_INPUT_TYPE} from '@graphQL2'
 import {UserContext} from '@UserContext'
 import {styles} from '@styles'
 import { EditFields} from '@localModels'

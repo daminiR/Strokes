@@ -11,7 +11,7 @@ import { City, MatchCard, Filters} from '@components';
 import {styles }from '@styles'
 import {renderMatches, swipeRightLiked, swipeLeftDisliked} from '@utils'
 import { useLazyQuery, useMutation} from '@apollo/client'
-import { READ_SQUASH, UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '@graphQL'
+import { READ_SQUASH, UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '@graphQL2'
 import {W, tabBarSize, SWIPIES_PER_DAY_LIMIT}  from '@constants'
 import { isCityChangedVar, filterSportChangedVar} from '@cache'
 

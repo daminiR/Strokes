@@ -9,11 +9,12 @@ import {ProfileFields} from '@localModels';
 import {AppContainer, ConfirmationCode, Cancel, PhoneInput, NextButton} from '@components'
 import { registerOnFirebase} from '@utils'
 import {useNavigation} from '@react-navigation/native'
-import { CHECK_PHONE_INPUT } from '@graphQL'
+import { CHECK_PHONE_INPUT } from '@graphQL2'
 import {View, Keyboard} from 'react-native'
 import {styles }from '@styles'
 import  { signInSchema } from '@validation'
 import {useLazyQuery, useQuery} from '@apollo/client'
+import {RootRefreshContext} from '../../../index.js'
 import  _ from 'lodash'
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
@@ -46,9 +47,8 @@ export const Slider =  ({changeEmail}) => {
   const [showNextButton, setShowNextButton] = useState(true)
   const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [isKeyboardShown, setIsKeyboardShown] = useState(undefined);
+  const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const [checkPhoneInput, {data: userPhoneInfo}] = useLazyQuery(CHECK_PHONE_INPUT, {
-    //variables: {phoneNumber: '+12025550173'},
-    //variables: {phoneNumber: '+18008799999'},
     onCompleted: (data) => {
       if (
         data.checkPhoneInput.isPhoneExist == true &&
@@ -56,8 +56,8 @@ export const Slider =  ({changeEmail}) => {
       ) {
         registerOnFirebase(values.phoneNumber)
           .then((confirmation: any) => {
-            this.slider.goToSlide(2);
             setConfirmationFunc(confirmation);
+            this.slider.goToSlide(2);
           })
           .catch((err) => {
             console.log(err);
@@ -127,11 +127,14 @@ const _checkSignIn = () => {
     ? setNoUserFoundMessage(
         'User was deleted in the past few months, cannot sign in yet',
       )
-    : setNoUserFoundMessage('invalid code or phone number');
+    : /// user doesnt exist  so he CAN NOT sign in(firebase allwos autmatic phon sigin ) again, but msg is left vague to prevent
+      setNoUserFoundMessage('invalid code or phone number');
 }
+const [authMessage, setAuthMessage] = useState(null)
 const _confirmSignInGC = () => {
   //console.log("confirmation func", confirmationFunc)
   setLoadingSubmit(true);
+  setLoadingSignUInRefresh(true)
   confirmationFunc
     .confirm(values.confirmationCode)
     .then((userCredential) => {
@@ -141,6 +144,7 @@ const _confirmSignInGC = () => {
           console.log("use needs to sign up")
         })
       }
+      setLoadingSignUInRefresh(false)
       console.log('logged in');
       //if (changeEmail) {
       //setAuthOverlay(true)
@@ -154,10 +158,13 @@ const _confirmSignInGC = () => {
         console.log(
           'you provided incorrect verifcation code / phone number. Make sure phone number and code is valid',
         );
+            setAuthMessage('invalid verification code');
       } else if (err.code === 'auth/missing-verification-code') {
+            setAuthMessage('need to provide verification code');
         console.log('did not provide verification code');
       }
       setLoadingSubmit(false);
+      setLoadingSignUInRefresh(false)
     });
 };
   const _onPressCancel = () => {
@@ -182,6 +189,7 @@ const _confirmSignInGC = () => {
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
                   <ConfirmationCode
+                    authMessage={authMessage}
                     noUserFoundMessage={noUserFoundMessage}
                     isLastSlide={lastSlide}
                     _confirmSignInGC={_checkSignIn}

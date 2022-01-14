@@ -6,6 +6,7 @@ import _ from 'lodash'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter, createPatronList} from '@utils'
 import {FilterFields} from '@localModels'
 import {cityVar}from '@cache'
+import {RootRefreshContext} from '../../index'
 
 //export const FilterContext = createContext(null)
 const addmoreData= {
@@ -26,9 +27,19 @@ const Patron = ()  => {
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [allUsers, setAllUsers] = useState(null)
   const [loadUsers, setLoadUsers] = useState(null)
-  const {values: filterValues } = useFormikContext<FilterFields>();
-  const {userData, queryProssibleMatches, potentialMatches, currentUser, data: currentUserData, userLoading, setPotentialMatches} = useContext(UserContext)
+  const {values: filterValues} = useFormikContext<FilterFields>();
+  const {
+    setLoadAllResults,
+    userData,
+    queryProssibleMatches,
+    potentialMatches,
+    currentUser,
+    data: currentUserData,
+    userLoading,
+    setPotentialMatches,
+  } = useContext(UserContext);
   const [matches, setMatches] = useState(null)
+  //const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   useEffect(() => {
         cityVar(currentUserData?.squash.location.city)
   }, []);
@@ -42,6 +53,7 @@ const Patron = ()  => {
       );
       setMatches(patron_list);
       setLoadingMatches(false);
+      //setLoadAllResults(false)
     }
   }, [potentialMatches]);
   return (

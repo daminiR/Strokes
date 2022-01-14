@@ -1,7 +1,7 @@
-import React, { useEffect, useState, ReactElement } from 'react'
+import React, { createContext, useEffect, useState, ReactElement } from 'react'
 import { Text} from 'react-native'
 import { cache, persist} from './cache'
-import {AuthNavigator} from './UserContext'
+import {AuthNavigator} from '@screens'
 import { from ,createHttpLink, ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
 import { FormProvider } from './Contexts/FormContext'
 import {split} from '@apollo/client'
@@ -12,19 +12,22 @@ import  { createUploadLink } from 'apollo-upload-client';
 import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { LogBox } from 'react-native'
+import { AppContainer } from '@components'
 
 //TODO: async funtion persist check later
 
+export const RootRefreshContext = createContext(null);
 const App = () =>
 {
   const [client, setClient] = useState();
   const [persistor, setPersistor] = useState();
   const [loadingClient, setLoadingClient] = useState(true);
+  const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const uri_upload = process.env.React_App_UriUploadRemote
   const uri_ws = process.env.React_App_WSlinkRemote
   useEffect(() => {
-      //LogBox.ignoreLogs(['Warning: ...']);
-      //LogBox.ignoreAllLogs();
+    //LogBox.ignoreLogs(['Warning: ...']);
+    //LogBox.ignoreAllLogs();
     async function init() {
       console.log('getting fired up');
       let newPersistor = new CachePersistor({
@@ -34,18 +37,18 @@ const App = () =>
       });
       await newPersistor.restore();
       setPersistor(newPersistor);
-      newPersistor.pause()
-      newPersistor.purge()
-        console.log("uri", uri_upload)
-        console.log("uri",uri_ws)
+      newPersistor.pause();
+      newPersistor.purge();
+      console.log('uri', uri_upload);
+      console.log('uri', uri_ws);
       const uploadLink = createUploadLink({
-      uri: uri_upload,
-      //uri: "http://169.254.63.0:4000/graphql"
+        uri: uri_upload,
+        //uri: "http://169.254.63.0:4000/graphql"
         //uri: 'http://192.168.1.12:4000/graphql',
       });
       const wsLink = new WebSocketLink({
         //uri: 'ws://192.168.1.12:4000/graphql',
-      uri: uri_ws,
+        uri: uri_ws,
         options: {
           reconnect: true,
         },
@@ -76,21 +79,29 @@ const App = () =>
     }
     init();
   }, []);
+  const rootRefreshValues = {
+    setLoadingSignUInRefresh: setLoadingSignUInRefresh,
+  }
   const renderAuth = () => {
-    return <AuthNavigator />;
+    return (
+      <AppContainer loading={loadingSignUpInRefresh}>
+        <RootRefreshContext.Provider value={rootRefreshValues}>
+          <AuthNavigator />
+        </RootRefreshContext.Provider>
+      </AppContainer>
+    );
   };
     if (!client) {
+      // TODO : MAKE FANCY loadin gwhile app is intiializing// som eanimatioin preferable
     console.log(' still no clinet');
     return <Text>Initializing app...</Text>;
     }
     if (client) {
       console.log('clinet found');
       return (
-        <ApolloProvider client={client}>
-          <FormProvider>
-            {renderAuth()}
-          </FormProvider>
-        </ApolloProvider>
+          <ApolloProvider client={client}>
+            <FormProvider>{renderAuth()}</FormProvider>
+          </ApolloProvider>
       );
     }
 

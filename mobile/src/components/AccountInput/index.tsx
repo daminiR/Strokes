@@ -3,7 +3,7 @@ import {View, Modal} from 'react-native';
 import auth from '@react-native-firebase/auth'
 import {styles} from '@styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {READ_SQUASH, GET_ACCOUNT_DETAIL_INPUT_TYPE,SOFT_DELETE_PROFILE, DELETE_PROFILE} from '@graphQL'
+import {READ_SQUASH, GET_ACCOUNT_DETAIL_INPUT_TYPE,SOFT_DELETE_PROFILE, DELETE_PROFILE} from '@graphQL2'
 import {Cancel, Done, ConfirmationCode, EditAccountDetailsInput} from '@components'
 import {Button, ListItem, Overlay} from 'react-native-elements';
 import { EditAccounDetailInputVar} from '@cache'
