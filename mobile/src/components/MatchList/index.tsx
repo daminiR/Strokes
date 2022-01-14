@@ -22,7 +22,8 @@ const likeIconStyle= {
     size: 60,
     style:{margin:0, padding: 0,
     shadowOpacity:0,
-    elevation:0
+    elevation:0,
+    backgroundColor: 'transparent'
     },
     containerStyle: {padding:0,
     },
@@ -208,11 +209,10 @@ const MatchList = ({matches}) => {
             icon={likeIconStyle}
             color="transparent"
             disabled={
-              lastMatch
-            //||
-              //disableLikes ||
-              //disableDisLikes ||
-              //disableMatches
+              lastMatch ||
+              disableLikes ||
+              disableDisLikes ||
+              disableMatches
             }
             onPress={() => {
               setDisableLikes(true);
@@ -226,11 +226,10 @@ const MatchList = ({matches}) => {
             style={{margin: 0, padding: 0}}
             color="transparent"
             disabled={
-              lastMatch
-            //||
-              //disableDisLikes ||
-              //disableLikes ||
-              //disableMatches
+              lastMatch ||
+              disableDisLikes ||
+              disableLikes ||
+              disableMatches
             }
             onPress={() => {
               setDisableDislikes(true);
