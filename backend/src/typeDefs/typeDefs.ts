@@ -84,6 +84,7 @@ const SquashType = `
     blocked_me : [PotentialMatch!]
     i_blocked : [PotentialMatch!]
     likes : [String!]
+    swipesPerDay: Int!
     dislikes : [String!]
     likedByUSers: [LikedByUser!]
     deleted: DeletedT
@@ -107,6 +108,7 @@ const SquashInputType = `
     i_blocked : [PotentialMatchInput!]
     likes : [String!]
     dislikes : [String!]
+    swipesPerDay: Int!
     likedByUSers: [LikedByUserInput!]
     phoneNumber: String
     email: String
@@ -152,8 +154,8 @@ export const typeDefs = gql`
     display(filaname: String): String
     checkPhoneInput (phoneNumber: String!): userExistType!
     queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
-
     matchesNotOptim(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
+    getSwipesPerDay(_id: String!): Int!
   }
   input SquashNodeInput {
     ${SquashNodeType}

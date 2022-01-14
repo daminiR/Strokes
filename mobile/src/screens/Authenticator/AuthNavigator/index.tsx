@@ -6,7 +6,7 @@ import {styles} from '@styles'
 import _ from 'lodash'
 import FlashMessage from "react-native-flash-message";
 import { SignOutStack, MatchStackScreen} from '@NavStack'
-import { READ_SQUASH, MESSAGE_POSTED, GET_POTENTIAL_MATCHES} from '@graphQL2'
+import { SWIPED_LEFT, READ_SQUASH, MESSAGE_POSTED, GET_POTENTIAL_MATCHES} from '@graphQL2'
 import { useSubscription, useQuery, useLazyQuery} from '@apollo/client'
 import {SWIPIES_PER_DAY_LIMIT} from '@constants'
 import  {cityVar} from '@cache'
@@ -53,8 +53,8 @@ const AuthNavigator = () => {
     onCompleted: async (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
       console.log("data", data)
-      if (data) {
-        data.squash && setDeleted(data.squash.deleted)
+      if (data?.squash) {
+        setDeleted(data.squash.deleted)
         setProfileState(true);
         setData(data)
       }
@@ -172,8 +172,6 @@ const AuthNavigator = () => {
       //}
     //}
   //}, [userData.squash.matches]);
-
-  console.log("do we make it here", loadingSigning)
   if (loadingSigning) return null
   const value = {
     getSquashProfile: getSquashProfile,

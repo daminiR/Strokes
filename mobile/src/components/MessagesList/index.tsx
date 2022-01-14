@@ -53,16 +53,22 @@ const MessagesList = () => {
   }, [currentUserData.squash.matches])
 
   return (
+    <>
+      <View style={styles.top}>
+        <Text style={styles.title}>Messages</Text>
+      </View>
       <View style={styles.containerMessages}>
-          <View style={styles.top}>
-            <Text style={styles.title}>Messages</Text>
-          </View>
-        { !loading && !_.isEmpty(matches) && <FlatList
+        {!loading && !_.isEmpty(matches) && (
+          <FlatList
             data={matches}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => renderMessage(item, navigation, currentUser.uid, setLoading)}
-          />}
+            renderItem={({item}) =>
+              renderMessage(item, navigation, currentUser.uid, setLoading)
+            }
+          />
+        )}
       </View>
+    </>
   );
 };
 export {MessagesList};

@@ -17,7 +17,11 @@ const CHECK_PHONE_INPUT = gql`
     }
   }
 `
-
+const SWIPED_LEFT = gql`
+  query  GetSwipesPerDay($phoneNumber: String!){
+    getSwipesPerDay (_id: Number)
+  }
+`
 const GET_MESSAGES = gql`
   query  Messages($currentUserID: String!, $matchedUserID: String!){
     messages (currentUserID: $currentUserID, matchedUserID: $matchedUserID){
@@ -95,6 +99,7 @@ const READ_SQUASH = gql`
         state
         country
       }
+      swipesPerDay
       description
       phoneNumber
       email
@@ -219,4 +224,5 @@ export {
   READ_SQUASHES,
   GET_SELECTED_SQUASH,
   GET_SELECTED_SQUASH_1,
+  SWIPED_LEFT,
 };

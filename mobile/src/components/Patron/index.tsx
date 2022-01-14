@@ -37,6 +37,7 @@ const Patron = ()  => {
     data: currentUserData,
     userLoading,
     setPotentialMatches,
+    swipesLeft,
   } = useContext(UserContext);
   const [matches, setMatches] = useState(null)
   //const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
