@@ -369,28 +369,38 @@ export const resolvers = {
       return doc;
     },
     updateLikes: async (parents, { _id, likes, currentUserData}, context, info) => {
+      // the one who swiped get one less swipe so for _id, decease swipe
+      // only upser documents if likes/dislikes are more than 0
       const doc = await Squash.findOneAndUpdate(
-          { _id: _id },
-          {$addToSet:{likes:{ $each: likes }}},
-          {new: true}
-        );
-      const filter = {_id: likes}
-      const profileImage = _.find(doc?.image_set, imgObj => {imgObj.img_idx == 0})
+        { $and: [{ _id: _id }, { $gt: { swipesPerDay: 0 } }] },
+        {
+          $addToSet: { likes: { $each: likes } },
+          $inc: { swipesPerDay: -1 },
+        },
+        { new: true }
+      );
+      const filter = { _id: likes };
+      const profileImage = _.find(doc?.image_set, (imgObj) => {
+        imgObj.img_idx == 0;
+      });
       const likedByUser = {
         first_name: doc?.first_name,
         _id: _id,
         age: doc?.age,
         profileImage: profileImage,
       };
-      const update = { $addToSet: { likedByUSers: likedByUser}}
-      const check_doc = await Squash.updateMany(filter, update)
+      const update = { $addToSet: { likedByUSers: likedByUser } };
+      const check_doc = await Squash.updateMany(filter, update);
       return doc;
     },
     updateDislikes: async (parents, { _id, dislikes }, context, info) => {
       // todo: create dilikedby users list, users that didnt like you so you done need to show these
         const doc = await Squash.findOneAndUpdate(
-          { _id: _id },
-          { $addToSet: { dislikes: {$each: dislikes} } },
+          { $and: [{ _id: _id }, { $gt: { swipesPerDay: 0 } }] },
+          {
+            $addToSet: { dislikes: { $each: dislikes } },
+            $inc: { swipesPerDay: -1 },
+          },
           { new: true }
         );
         console.log("Updated user dislikes ", dislikes);

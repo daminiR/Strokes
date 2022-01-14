@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
 import {styles} from '@styles'
-import { View, Text, TouchableOpacity } from 'react-native';
-import {Icon} from '@components';
+import {Text } from 'react-native';
 import {Overlay} from 'react-native-elements'
 import LottieView from 'lottie-react-native';
 const MatchCard = ({matched, setMatched}) => {

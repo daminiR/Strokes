@@ -42,19 +42,34 @@ const dislikeIconStyle= {
 
 //export const FilterContext = createContext(null)
 const MatchList = ({matches}) => {
-  const [updateLikes] = useMutation(UPDATE_LIKES);
-  const [updateDislikes] = useMutation(UPDATE_DISLIKES);
+  const [updateLikes] = useMutation(UPDATE_LIKES, {
+    onCompleted: () => {
+      /// enable disabled like/ dislike after complete
+      setDisableLikes(false)
+    },
+  });
+  const [updateDislikes] = useMutation(UPDATE_DISLIKES, {
+    onCompleted: () => {
+      /// enable disabled like/ dislike after complete
+      setDisableDislikes(false)
+    },
+  });
   const {setValues, setFieldValue, values: filterValues } = useFormikContext<FilterFields>();
   const [endingText, setEndingText] = useState(null)
   const {currentUser, queryProssibleMatches , data, userData, setData, userLoading} = useContext(UserContext)
   console.log("user data vals here userData", userData)
   const [loadingFilters, setLoadingFilters] = useState(true)
+  const [disableLikes, setDisableLikes] = useState(false)
+  const [disableDisLikes, setDisableDislikes] = useState(false)
+  const [disableMatches, setDisableMatches] = useState(false)
   const [matched, setMatched] = useState(false)
+  const [lastMatch, setLastMatch] = useState(matches.length == 0)
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     awaitRefetchQueries: true,
     onCompleted: () => {
       getSquashProfile({variables: {id: currentUser.uid}});
+      setDisableMatches(false)
     },
   })
   useEffect(() => {
@@ -149,7 +164,10 @@ const MatchList = ({matches}) => {
               );
             }}
             //hacky solution to add note at the last deck
-            onSwipedAll={() => setEndingText('No more matches left!')}
+            onSwipedAll={() => {
+              setLastMatch(true);
+              setEndingText('No more matches left!');
+            }}
             disableBottomSwipe={true}
             disableTopSwipe={true}
             verticalSwipe={false}
@@ -176,21 +194,30 @@ const MatchList = ({matches}) => {
         <City />
         {!loadingFilters && <Filters />}
       </View>
-        <View style={styles.swipeContainer}>
-          {matches && renderMoreMatches()}
-          {endingText && (
-            <View style={styles.center}>
-              <Text style={styles.nameStyle}>{endingText}</Text>
-            </View>
-          )}
-        </View>
+      <View style={styles.swipeContainer}>
+        {matches && renderMoreMatches()}
+        {endingText && (
+          <View style={styles.center}>
+            <Text style={styles.nameStyle}>{endingText}</Text>
+          </View>
+        )}
+      </View>
       <View style={styles.bottom}>
         <View style={styles.spaceLikeDislike}>
           <FAB
             icon={likeIconStyle}
             color="transparent"
-            disabled={matches.length == 0}
-            onPress={() => this.swiper.swipeRight()}
+            disabled={
+              lastMatch
+            //||
+              //disableLikes ||
+              //disableDisLikes ||
+              //disableMatches
+            }
+            onPress={() => {
+              setDisableLikes(true);
+              this.swiper.swipeRight();
+            }}
             buttonStyle={styles.likeDislikeFAB}
             containerStyle={{width: 60, height: 60}}
           />
@@ -198,8 +225,17 @@ const MatchList = ({matches}) => {
             icon={dislikeIconStyle}
             style={{margin: 0, padding: 0}}
             color="transparent"
-            disabled={matches.length == 0}
-            onPress={() => this.swiper.swipeLeft()}
+            disabled={
+              lastMatch
+            //||
+              //disableDisLikes ||
+              //disableLikes ||
+              //disableMatches
+            }
+            onPress={() => {
+              setDisableDislikes(true);
+              this.swiper.swipeLeft();
+            }}
             buttonStyle={styles.likeDislikeFAB}
             containerStyle={{width: 60, height: 60}}
           />

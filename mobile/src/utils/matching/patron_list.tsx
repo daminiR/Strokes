@@ -78,17 +78,19 @@ const filterByCity = (currentUseLocation, patron_list) => {
     const newPatronList = _.filter(patron_list, _.iteratee({"location":{"city": currentUseLocation.city, "state": currentUseLocation.state}}))
     return newPatronList
 }
-const createPatronList = (currentUser, allUsers, filters, swipesleft) => {
+const createPatronList = (currentUser, allUsers, filters) => {
   //bounded arrays will be filtered in mongodb
   //unbounded wil not be filtered for performance
     //const currentUseLocation = currentUser.location
   // TODO: add a few more of likedBYusers to get some matches started
+    const swipesLeft = currentUser.swipesLeft
     const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
     const likes = currentUser?.likes ? currentUser.likes : []
     //const matches = currentUser?.matches ? currentUser.likes : []
     const dislikes = currentUser?.dislikes ? currentUser.dislikes : []
     const exclude = _.concat(likes, dislikes)
-    const patron_list = _.filter(activeUsers, userObj => !_.includes(exclude, userObj._id))
+    const patron_list = _.slice(_.filter(activeUsers, userObj => !_.includes(exclude, userObj._id)), swipesLeft)
+    console.log("swipes left", patron_list.length)
     //const newPatronList2 = _.slice(filterByFieldsByUser(patron_list  , filters), 0, SWIPIES_PER_DAY_LIMIT)
     //return newPatronList2
     return patron_list
