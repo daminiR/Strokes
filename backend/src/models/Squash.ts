@@ -45,6 +45,15 @@ var squashSchema = new Schema({
     minlength: 3,
     maxlength: 30,
   },
+  swipesPerDay: {
+    type: Number,
+    required: true,
+    //TODO: fix the age and bithday category asap
+    //validate: {
+    //validator: Number.isInteger,
+    //message: "{VALUE} is not an integer value",
+    //},
+  },
   age: {
     type: Number,
     required: true,

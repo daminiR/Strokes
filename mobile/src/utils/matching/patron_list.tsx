@@ -78,7 +78,7 @@ const filterByCity = (currentUseLocation, patron_list) => {
     const newPatronList = _.filter(patron_list, _.iteratee({"location":{"city": currentUseLocation.city, "state": currentUseLocation.state}}))
     return newPatronList
 }
-const createPatronList = (currentUser, allUsers, filters) => {
+const createPatronList = (currentUser, allUsers, filters, swipesleft) => {
   //bounded arrays will be filtered in mongodb
   //unbounded wil not be filtered for performance
     //const currentUseLocation = currentUser.location

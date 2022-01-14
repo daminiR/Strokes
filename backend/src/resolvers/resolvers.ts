@@ -17,6 +17,7 @@ import _ from 'lodash'
 //import { PubSub } from 'graphql-subscriptions';
 import { pubsub } from '../pubsub'
 //const pubsub = new PubSub()
+const SWIPIES_PER_DAY_LIMIT = 10
 export interface Sport {
   sport: string;
   game_level: number;
@@ -153,6 +154,10 @@ export const resolvers = {
       const squash_val = await Squash.findById(args.id)
       console.log(squash_val);
       return squash_val;
+    },
+    getSwipesPerDay: async (parents, {_id}, context, info) => {
+      const user = await Squash.findById(_id)
+      return user? user.swipesPerDay : 0
     },
     checkPhoneInput: async (parents,{phoneNumber}, context, info) => {
       const filter = {phoneNumber: phoneNumber}
@@ -628,7 +633,9 @@ export const resolvers = {
           description: description,
           phoneNumber: phoneNumber,
           email: email,
-          active: true
+          active: true,
+          swipesPerDay: SWIPIES_PER_DAY_LIMIT
+
         });
         console.log(doc);
         return doc;

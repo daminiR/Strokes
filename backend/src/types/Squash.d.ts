@@ -61,4 +61,5 @@ export interface SquashDocument extends Document {
   blockedByAdmin : Boolean
   phoneNumber : String
   email : String
+  swipesPerDay : number
 }
