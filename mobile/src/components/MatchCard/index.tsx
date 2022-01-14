@@ -5,9 +5,15 @@ import {Icon} from '@components';
 import {Overlay} from 'react-native-elements'
 import LottieView from 'lottie-react-native';
 const MatchCard = ({matched, setMatched}) => {
-  const [removeOverlay, setRemoveOverlay] = useState(false)
-  setTimeout(() => setMatched(false), 20000);
-  setTimeout(() => setRemoveOverlay(true), 5000);
+  const [removeOverlay, setRemoveOverlay] = useState(false);
+  useEffect(() => {
+    const matchedTimer = setTimeout(() => setMatched(false), 20000);
+    const overLayTimer = setTimeout(() => setRemoveOverlay(true), 5000);
+    return () => {
+      clearTimeout(matchedTimer)
+      clearTimeout(overLayTimer)
+    }
+  }, []);
   return (
     <Overlay
       overlayStyle={styles.matchedOverlay}

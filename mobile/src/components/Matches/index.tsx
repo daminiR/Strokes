@@ -7,7 +7,7 @@ import {
   FlatList,
   AppState
 } from 'react-native';
-import {READ_SQUASH} from '@graphQL'
+import {READ_SQUASH} from '@graphQL2'
 import { useLazyQuery} from '@apollo/client'
 import {UserContext} from '@UserContext'
 import {renderMatchCard, calculateOfflineMatches} from '@utils'

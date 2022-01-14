@@ -1,12 +1,12 @@
 import React, { useEffect, useContext, useState, ReactElement } from 'react'
-import {useMutation} from '@apollo/client'
+import {useLazyQuery, useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
 import {useNavigation} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
 import {signUpSlides, intitialFormikSignUp, TOTAL_SIGNUP_SLIDES} from '@constants'
 import {  RootStackSignOutParamList } from 'src/navigation'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import { ADD_PROFILE2 } from '@graphQL'
+import {CHECK_PHONE_INPUT, ADD_PROFILE2 } from '@graphQL2'
 import {ProfileFields} from '@localModels';
 import {
   NeighborhoodSearch,
@@ -30,6 +30,7 @@ import {Keyboard, View} from 'react-native'
 import  _ from 'lodash'
 import { styles } from '@styles'
 import  { signUpSchema} from '@validation'
+import {RootRefreshContext} from '../../../index.js'
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
@@ -44,7 +45,6 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
       validationSchema={signUpSchema}
       initialValues={intitialFormikSignUp}
       onSubmit={(values) =>
-
       console.log()}>
       <Slider/>
     </Formik>
@@ -59,7 +59,36 @@ const Slider =  () => {
   const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [index, setIndex] = useState(0)
   const [showNextButton, setShowNextButton] = useState(true)
+  const [canSignUp, setCanSignUp] = useState(false)
+  const [noUserFoundMessage, setNoUserFoundMessage] = useState(null)
   const navigation = useNavigation()
+  const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
+  const [checkPhoneInput, {data: userPhoneInfo}] = useLazyQuery(CHECK_PHONE_INPUT, {
+    onCompleted: (data) => {
+      if (
+        data.checkPhoneInput.isPhoneExist == false &&
+        data.checkPhoneInput.isDeleted == false
+      ) {
+        _.isEmpty(errors) &&
+          registerOnFirebase(values.phoneNumber, values.email)
+            .then((confirmation: any) => {
+              setConfirmationFunc(confirmation);
+              this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        !_.isEmpty(errors) && console.log(errors);
+        setCanSignUp(true);
+      } else {
+        this.slider.goToSlide(index + 1, true);
+        setCanSignUp(false);
+      }
+    },
+    onError: (err) => {
+      console.log('phone query', err);
+    },
+  });
   const [createSquash2, {client, data}] = useMutation(ADD_PROFILE2, {
     ignoreResults: false,
     onCompleted: (data) => {
@@ -102,27 +131,27 @@ const Slider =  () => {
     return <PrevButton />;
   };
   const _submit = ( value ) => {
-    _.isEmpty(errors)
-    && registerOnFirebase(values.phoneNumber, values.email)
-      .then((confirmation: any) => {
-        this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
-        setConfirmationFunc(confirmation)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    !_.isEmpty(errors) && console.log(errors)
+    checkPhoneInput({variables: {phoneNumber: values.phoneNumber}});
   }
   const [authMessage, setAuthMessage] = useState(null)
 const _checkSignIn = () => {
   //setAuthMessage('invalid verification code')
-  _confirmSignInGC()
+  canSignUp
+    ? _confirmSignInGC()
+    : userPhoneInfo.checkPhoneInput.isDeleted
+    ? setNoUserFoundMessage(
+        'User was deleted in the past few months, cannot sign up again just yet',
+      )
+    /// user already exixts so he CAN NOT sign up again, but msg is left vague to prevent
+    : setNoUserFoundMessage('invalid code or phone number');
+
 }
 const _confirmSignInGC = () => {
     // promise in parralell
       confirmationFunc
         .confirm(values.confirmationCode)
         .then((userCredential) => {
+          setLoadingSignUInRefresh(true)
           setLoadingSubmit(true)
           console.log('values before submit', values);
           console.log(userCredential.additionalUserInfo);
@@ -140,6 +169,7 @@ const _confirmSignInGC = () => {
               // this error reallu shoudnt happen
               setAuthMessage('unable to upload information to the cloud');
               setLoadingSubmit(false);
+              setLoadingSignUInRefresh(false)
             });
         })
         .catch(async (err) => {
@@ -278,6 +308,7 @@ const _confirmSignInGC = () => {
                   </View>
                   <ConfirmationCode
                     authMessage={authMessage}
+                    noUserFoundMessage={noUserFoundMessage}
                     isLastSlide={lastSlide}
                     _confirmSignInGC={_checkSignIn}
                   />

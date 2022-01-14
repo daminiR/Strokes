@@ -9,6 +9,8 @@ export * from './Match'
 export * from './ApolloErrorScreen'
 export * from './SignUp'
 export * from './ActiveChat'
+export * from './AuthNavigator'
+
 
 
 

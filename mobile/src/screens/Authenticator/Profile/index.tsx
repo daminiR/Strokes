@@ -8,7 +8,7 @@ import { RootStackSignInParamList, ProfileInputEdits} from '@NavStack'
 import {UserContext} from '@UserContext'
 import { useFormikContext, Formik} from 'formik';
 import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
-import {GET_INPUT_TYPE, READ_SQUASH, UPDATE_USER_PROFILE} from '@graphQL'
+import {GET_INPUT_TYPE, READ_SQUASH, UPDATE_USER_PROFILE} from '@graphQL2'
 import {ProfileSettings, EditInput, Done, Cancel} from '@components'
 import { EditFields, FilterFields} from '@localModels'
 import { isCityChangedVar, cityVar, EditInputVar} from '@cache'
