@@ -141,11 +141,11 @@ const dest_gcs_images = "all_images"
 const POST_CHANNEL = 'MESSAGE_CHANNEL'
 export const resolvers = {
   Query: {
-    messages: async (parents, {currentUserID, matchedUserID}, context, info) => {
+    messages: async (parents, {currentUserID, matchedUserID, offset, limit}, context, info) => {
       //TODO: index the sorting id thing! high latency
       const messages = await Message.find({
         $or: [{sender: currentUserID, receiver: matchedUserID},{sender: matchedUserID, receiver: currentUserID}]
-      }).sort({"_id": -1})
+      }).sort({"_id": -1}).skip(offset).limit(limit)
       // sort based on objectId
       console.log(messages)
       return messages
@@ -315,11 +315,12 @@ export const resolvers = {
     postMessage2: async (parents, {sender, receiver, text}, context, info) => {
       const id = text.length
       const messageID = new ObjectId()
+      const createdAt = new Date()
       pubsub.publish(POST_CHANNEL, {
-        messagePosted: { _id: messageID, sender: sender, receiver: receiver, text: text}
+        messagePosted: { _id: messageID, sender: sender, receiver: receiver, text: text, createdAt: createdAt}
       })
       const doc = await Message.create(
-          { _id: messageID, sender: sender, receiver: receiver, text: text}
+          { _id: messageID, sender: sender, receiver: receiver, text: text, createdAt: createdAt}
       )
        return id
     },

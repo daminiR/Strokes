@@ -10,10 +10,7 @@ import {Icon, BottomSheet, ListItem, Text, Button, Avatar} from 'react-native-el
 import _ from 'lodash'
 import {styles} from '@styles'
 import {ActiveChatView} from '@NavStack'
-import {LIGHT_GRAY, CHAT_TEXT_COLOR_USER} from '@styles'
-import {createMessageObject} from '@utils'
-import {ChatUserSettingsList} from '@constants'
-import {AppContainer, ActiveChatScreen} from '@components'
+import {AppContainer} from '@components'
 import { HeaderBackButton } from '@react-navigation/elements'
 import { ChatUserSettings } from '@components'
 export type ActiveChatTScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'ACTIVE_CHAT'>

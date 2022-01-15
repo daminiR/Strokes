@@ -24,12 +24,14 @@ const ActiveChatScreen = ({route}) => {
     onCompleted: () => {
     },
   })
-  const {data: messagesData, loading: loadingMessages} = useQuery(GET_MESSAGES,
+  const {data: messagesData, loading: loadingMessages, fetchMore} = useQuery(GET_MESSAGES,
   {
     fetchPolicy: "network-only",
     variables: {
         currentUserID: currentUserID,
         matchedUserID: matchID,
+        offset: 0,
+        limit: 10
       },
     },
   );
