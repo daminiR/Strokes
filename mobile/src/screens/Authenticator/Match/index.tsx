@@ -18,8 +18,6 @@ import {FilterFields} from "@localModels"
 type MatchScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'MATCH'>
 export const FilterSportContext = createContext(null);
 export const MatchesProfileContext = createContext(null)
-
-
 const Match =()  => {
   const [allUsers, setAllUsers] = useState(null);
   const [loadingData, setLoadingData] = useState(true);

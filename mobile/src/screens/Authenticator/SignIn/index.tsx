@@ -133,8 +133,8 @@ const _checkSignIn = () => {
 const [authMessage, setAuthMessage] = useState(null)
 const _confirmSignInGC = () => {
   //console.log("confirmation func", confirmationFunc)
-  setLoadingSubmit(true);
-  setLoadingSignUInRefresh(true)
+  //setLoadingSubmit(true);
+  //setLoadingSignUInRefresh(true)
   confirmationFunc
     .confirm(values.confirmationCode)
     .then((userCredential) => {
@@ -144,7 +144,7 @@ const _confirmSignInGC = () => {
           console.log("use needs to sign up")
         })
       }
-      setLoadingSignUInRefresh(false)
+      //setLoadingSignUInRefresh(false)
       console.log('logged in');
       //if (changeEmail) {
       //setAuthOverlay(true)
@@ -158,13 +158,13 @@ const _confirmSignInGC = () => {
         console.log(
           'you provided incorrect verifcation code / phone number. Make sure phone number and code is valid',
         );
-            setAuthMessage('invalid verification code');
+        setAuthMessage('invalid verification code');
       } else if (err.code === 'auth/missing-verification-code') {
-            setAuthMessage('need to provide verification code');
+        setAuthMessage('need to provide verification code');
         console.log('did not provide verification code');
       }
-      setLoadingSubmit(false);
-      setLoadingSignUInRefresh(false)
+      //setLoadingSubmit(false);
+      //setLoadingSignUInRefresh(false)
     });
 };
   const _onPressCancel = () => {
@@ -207,12 +207,13 @@ const _confirmSignInGC = () => {
         data={signInSlides}
         scrollEnabled={false}
         showPrevButton={false}
-        onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-        onDone={() => {
-          _confirmSignInGC();
-        }}
-        showNextButton={showNextButton && !isKeyboardShown}
         showDoneButton={false}
+        onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
+        //onDone={() => {
+          //_confirmSignInGC();
+        //}}
+        showNextButton={showNextButton && !isKeyboardShown}
+        dotClickEnabled={false}
         renderNextButton={renderNext}
         onNext={() => _onNext()}
         ref={(ref) => (this.slider = ref!)}

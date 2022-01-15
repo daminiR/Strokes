@@ -17,24 +17,35 @@ const ActiveChatScreen = ({route}) => {
   const [postMessage2] = useMutation(POST_MESSAGE)
   const [loadingDeleteChat, setLoadinDeleteChat] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [loadPressNum, setLoadPressNum] = useState(0);
   const [displayInput, setDisplayInput] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const {currentUserID, matchID, matchedUserProfileImage, matchedUserName} = route.params
   const {data: postedMessages, loading: loadingMessagePosted} = useSubscription(MESSAGE_POSTED)
   const [deleteChatUser] = useMutation(DELETE_CHAT_USER, {
     onCompleted: () => {
     },
   })
-  const {data: messagesData, loading: loadingMessages, fetchMore} = useQuery(GET_MESSAGES,
-  {
-    fetchPolicy: "network-only",
+  const {
+    data: messagesData,
+    loading: loadingMessages,
+    fetchMore,
+  } = useQuery(GET_MESSAGES, {
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: "cache-first",
     variables: {
-        currentUserID: currentUserID,
-        matchedUserID: matchID,
-        offset: 0,
-        limit: 10
-      },
+      currentUserID: currentUserID,
+      matchedUserID: matchID,
+      offset: 0,
+      limit: 10,
     },
-  );
+    onCompleted: async (data) => {
+      setLoadingMore(false)
+    },
+  });
+  useEffect(() => {
+    console.log("messages here", messagesData)
+  }, [messagesData])
   useEffect(() => {
   if (postedMessages){
     if (!loadingMessagePosted) {
@@ -45,6 +56,7 @@ const ActiveChatScreen = ({route}) => {
   }
   }, [postedMessages])
   useEffect(() => {
+    console.log("doesn ik reload")
     if(!loadingMessages){
       if (messagesData){
         const messages = messagesData.messages
@@ -54,7 +66,7 @@ const ActiveChatScreen = ({route}) => {
         setMessages(displayUserMessages);
       }
     }
-  }, [loadingMessages])
+  }, [messagesData])
 
 
   const onSend = (messages = []) => {
@@ -87,11 +99,27 @@ const ActiveChatScreen = ({route}) => {
       />
     );
   }
+  const loadMore = () => {
+    //console.log("fetch data", fetchMore)
+    if (typeof fetchMore !== 'undefined') {
+      const offset = loadPressNum + 10;
+      setLoadingMore(true)
+      fetchMore({
+        variables: {
+          offset: offset,
+        },
+      });
+      setLoadPressNum(offset);
+    }
+  }
 
   return (
     <>
       <AppContainer loading={loadingDeleteChat}>
         <GiftedChat
+          //isLoadingEarlier={loadingMessages}
+          loadEarlier={true}
+          onLoadEarlier={() => loadMore()}
           messages={messages}
           onSend={(messages) => onSend(messages)}
           renderBubble={(props) => renderBubble(props)}

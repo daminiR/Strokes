@@ -7,7 +7,7 @@ console.log("mesobj", matchedUserProfileImage)
    text: messageObj.text,
    user: {
      _id: messageInitiator,
-     avatar: matchedUserProfileImage.imageURL,
+     avatar: matchedUserProfileImage,
    }
  }
   //console.log("sinitized", sanitized)

@@ -10,7 +10,7 @@ letters = string.ascii_lowercase
 _id1 = "wLP3M9NMuVb0HZ6YgRflMlZZtZs1"
 _id2= "ajxydxqqodmnnflqrszduslasqvq"
 IDs = [_id1, _id2]
-numMessages = 40
+numMessages = 200
 with open("/home/damini/activityBook/backend/src/admin/createMessages/sampleMessages.csv", mode='w') as csv_file:
   dataWriter = csv.writer(csv_file, delimiter=';',quotechar = "'")
   dataWriter.writerow(['sender', 'receiver', 'text'])

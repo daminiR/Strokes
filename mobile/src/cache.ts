@@ -29,21 +29,21 @@ export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        //queryProssibleMatches: {
-          //keyArgs: false,
-           //Concatenate the incoming list items with
-           // the existing list items.
+        messages: {
+          keyArgs: false,
+          //Concatenate the incoming list items with
+          //the existing list items.
           //merge(existing = [], incoming, {args: {offset = 0}}) {
-            //const merged = existing ? existing.slice(0) : [];
-              //for (let i = 0; i < incoming.length; ++i) {
-              //merged[offset + i] = incoming[i];
-            //}
-            //return incoming;
-        //},
-          //merge(existing = [], incoming) {
-            //return [...incoming];
-        //},
-        //},
+          //const merged = existing ? existing.slice(0) : [];
+          //for (let i = 0; i < incoming.length; ++i) {
+          //merged[offset + i] = incoming[i];
+          //}
+          //return incoming;
+          //},
+          merge(existing = [], incoming) {
+            return [...existing, ...incoming];
+          },
+        },
         inputItems: {
           read() {
             return EditInputVar();
