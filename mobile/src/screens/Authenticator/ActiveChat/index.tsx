@@ -80,7 +80,7 @@ const ActiveChat = ({ route, navigation}) => {
   return (
     <>
       <AppContainer loading={loadingDeleteChat}>
-        <ActiveChatView />
+        <ActiveChatView/>
         <ChatUserSettings
           deleteButton={_onPressDelete}
           setDisplayInput={setDisplayInput}
