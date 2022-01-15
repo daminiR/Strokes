@@ -20,6 +20,9 @@ var messageSchema = new Schema({
     required: true,
     maxlength: 3000,
   },
+  createdAt: {
+    type: Date,
+  },
 });
 const Message = model<MessageDocument>('Messages', messageSchema)
 export default Message

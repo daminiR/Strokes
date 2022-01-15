@@ -12,6 +12,7 @@ import {gql} from 'apollo-server-express';
  sender: String!,
  receiver: String!,
  text: String!
+ createdAt: String
 `;
  const DeletedType = `
  isDeleted: Boolean,
@@ -147,7 +148,7 @@ export const typeDefs = gql`
   }
   scalar FileUpload
   type Query {
-    messages(currentUserID: String!, matchedUserID:String!): [Message!]
+    messages(currentUserID: String!, matchedUserID:String!, offset: Int!, limit: Int!): [Message!]
     hello: String!
     squash(id: String!): Squash
     squashes(limit: Int): [Squash!]

@@ -10,6 +10,7 @@ export interface MessageDocument extends Document {
   sender: string
   text: string
   receiver: string
+  createdAt: ISODate
 }
 
 

@@ -23,8 +23,8 @@ const SWIPED_LEFT = gql`
   }
 `
 const GET_MESSAGES = gql`
-  query  Messages($currentUserID: String!, $matchedUserID: String!){
-    messages (currentUserID: $currentUserID, matchedUserID: $matchedUserID){
+  query  Messages($currentUserID: String!, $matchedUserID: String!, $offset: Int!, $limit: Int!){
+    messages (currentUserID: $currentUserID, matchedUserID: $matchedUserID, offset: $offset, limit: $limit){
       _id,
       sender,
       receiver,
