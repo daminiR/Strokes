@@ -49,13 +49,21 @@ const LikedByUserType = `
     _id: ID!
     first_name: String!
     age: Int!
-    profileImage: Data
+    gender: String!
+    sports: [SquashNode!]!
+    description: String
+    location: LocationType!
+    image_set: [Data!]!
 `
 const LikedByUserInputType = `
     _id: ID!
     first_name: String!
     age: Int!
-    profileImage: DataInput
+    gender: String!
+    sports: [SquashNodeInput!]!
+    description: String
+    image_set: [DataInput!]!
+    location: LocationInput!
 `
 const userExistT = `
     isPhoneExist: Boolean!

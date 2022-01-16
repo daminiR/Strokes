@@ -1,11 +1,12 @@
 import { dislikesVar, likesVar} from '../../cache'
-import React from 'react'
+import React, {useState} from 'react'
 import {MAX_DISLIKES, MAX_LIKES} from '@constants'
 import _ from 'lodash'
 import {PotentialMatchType, Sport, ImageSetT, LocationT} from '@localModels'
 import { Card } from 'react-native-card-stack-swiper';
 import {CardItem} from '../../components/CardItem/CardItem';
 import {TouchableOpacity} from 'react-native';
+import {createProfileImage} from '@utils'
 
     //Have a separate bloom filter to check if it is a match ... there can be false positives but since the majority will be 'not matched yet' this will save a lot of database queries
     //If it is not a match yet and you need to store the swiped up data entry, keep multiple such entries in memory/redis for a while and then bulk insert in the database
@@ -14,19 +15,18 @@ import {TouchableOpacity} from 'react-native';
 
       //////squashItemsVar([...squashItems, data.createSquash._id])
 
-const renderMatchCard = (card) => {
-      const profileImage = card.profileImage
+const renderMatchCard = (card, setLike, setIndex, index) => {
+      const profileImage = createProfileImage( card.image_set)
       const title = card.first_name +', ' + card.age
+      const _onPress = () => {
+        setLike(true)
+        setIndex(index)
+      }
       return (
-        <TouchableOpacity style={{padding: 5}}>
-                <CardItem
-                  profileImage={profileImage}
-                  profileTitle={title}
-                  variant
-                />
-              </TouchableOpacity>
-
-      )
+        <TouchableOpacity style={{padding: 5}} onPress={_onPress}>
+          <CardItem profileImage={profileImage} profileTitle={title} variant />
+        </TouchableOpacity>
+      );
 }
 const renderMatches =  (card, index) => {
       const image_set_copy = card.image_set
@@ -103,15 +103,17 @@ const swipeLeftDisliked = async (_id, card, updateDislikes) => {
     var array = dislikesVar()
     //if (array.length  == MAX_DISLIKES){
         //update mutation for dislikes
-    updateDislikes({variables: {
-            _id: _id,
-            dislikes: array
-        }})
-        array = []
-    //}
     const potentialMatch = card._id
     array.push(potentialMatch)
     dislikesVar(array)
-    console.log(dislikesVar())
+    console.log(dislikesVar());
+    updateDislikes({
+      variables: {
+        _id: _id,
+        dislikes: array,
+      },
+    });
+        array = []
+    //}
 }
 export {renderMatchCard, renderMatches, swipeLeftDisliked, swipeRightLiked}

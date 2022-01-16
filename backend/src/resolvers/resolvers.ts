@@ -381,17 +381,21 @@ export const resolvers = {
         { new: true }
       );
       const filter = { _id: likes };
-      const profileImage = _.find(doc?.image_set, (imgObj) => {
-        imgObj.img_idx == 0;
-      });
+      //const profileImage = _.find(doc?.image_set, (imgObj) => {
+        //imgObj.img_idx == 0;
+      //});
       const likedByUser = {
         first_name: doc?.first_name,
         _id: _id,
         age: doc?.age,
-        profileImage: profileImage,
+        gender: doc?.gender,
+        sports: doc?.sports,
+        description: doc?.description,
+        image_set: doc?.image_set,
+        location: doc?.location
       };
       const update = { $addToSet: { likedByUSers: likedByUser } };
-      const check_doc = await Squash.updateMany(filter, update);
+      await Squash.updateMany(filter, update);
       return doc;
     },
     updateDislikes: async (parents, { _id, dislikes }, context, info) => {

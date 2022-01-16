@@ -11,8 +11,11 @@ import {READ_SQUASH} from '@graphQL2'
 import { useLazyQuery} from '@apollo/client'
 import {UserContext} from '@UserContext'
 import {renderMatchCard, calculateOfflineMatches} from '@utils'
+import {LikesOverLay} from '@components';
 
 const Matches = ({navigation}) => {
+  const [like, setLike] = useState(false)
+  const [indexVal, setIndex] = useState(0)
   const [totalLikesFromUsers, setTotalLikesFromUsers] = useState(null)
   const {currentUser, data: currentUserData} = useContext(UserContext)
   const [loading, setLoading] = useState(true)
@@ -35,8 +38,9 @@ const Matches = ({navigation}) => {
   })
   const appState = useRef(AppState.currentState)
   useEffect(() => {
+    console.log("/////////////////////////// trigier")
       getSquashProfile({variables: {id: currentUser.uid}});
-  }, [currentUserData.squash.matches])
+  }, [currentUserData.squash.matches, currentUserData.squash.dislikes])
 
   //useEffect(() => {
     //setLoading(true)
@@ -65,6 +69,13 @@ const Matches = ({navigation}) => {
     }, [])
   return (
     <View style={styles.containerMatches}>
+      {totalLikesFromUsers && (
+        <LikesOverLay
+          like={like}
+          setLike={setLike}
+          likeProfile={totalLikesFromUsers && totalLikesFromUsers[indexVal]}
+        />
+      )}
       <View style={styles.top}>
         <Text style={styles.title}>Likes</Text>
       </View>
@@ -75,7 +86,9 @@ const Matches = ({navigation}) => {
             columnWrapperStyle={styles.LikesFlatListSyle}
             data={totalLikesFromUsers}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => renderMatchCard(item)}
+            renderItem={({item, index}) =>
+              renderMatchCard(item, setLike, setIndex, index)
+            }
           />
         )}
       </View>

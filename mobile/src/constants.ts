@@ -185,5 +185,31 @@ export const signUpSlides = [
     backgroundColor: '#59b2ab',
   },
 ];
+export const likeIconStyle= {
+    type: 'material-community',
+    name: 'heart',
+    color: '#ff7f02',
+    size: 60,
+    style:{margin:0, padding: 0,
+    shadowOpacity:0,
+    elevation:0,
+    backgroundColor: 'transparent'
+    },
+    containerStyle: {padding:0,
+    },
+  }
+export const dislikeIconStyle= {
+    type: 'material-community',
+    name: 'close-circle-outline',
+    color: '#ff7f02',
+    style:{margin:0, padding: 0,
+    shadowOpacity:0,
+    elevation:0
+    },
+    containerStyle: {padding:0,
+    },
+    size: 60,
+  }
+
 
 export const TOTAL_SIGNUP_SLIDES = signUpSlides.length

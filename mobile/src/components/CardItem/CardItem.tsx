@@ -39,7 +39,6 @@ const CardItem = ({
   return (
     <>
       <ScrollView>
-        <TouchableWithoutFeedback>
         <View style={styles.containerCardItem}>
           {/* IMAGE */}
           {profileImage &&   <Image source={{uri: profileImage.imageURL}} style={variant ? styles.profileLikesContainer : styles.profileContainer}/>}
@@ -63,7 +62,6 @@ const CardItem = ({
           {image_set && image_set.map((imgObj, index) => renderImages(imgObj, index, image_set.length, isProfileView)
           )}
         </View>
-        </TouchableWithoutFeedback>
       </ScrollView>
     </>
   )
