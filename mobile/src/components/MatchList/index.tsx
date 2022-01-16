@@ -12,34 +12,8 @@ import {styles }from '@styles'
 import {renderMatches, swipeRightLiked, swipeLeftDisliked} from '@utils'
 import { useLazyQuery, useMutation} from '@apollo/client'
 import { READ_SQUASH, UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '@graphQL2'
-import {W, tabBarSize, SWIPIES_PER_DAY_LIMIT}  from '@constants'
+import {W, tabBarSize, SWIPIES_PER_DAY_LIMIT, likeIconStyle, dislikeIconStyle}  from '@constants'
 import { isCityChangedVar, filterSportChangedVar} from '@cache'
-
-const likeIconStyle= {
-    type: 'material-community',
-    name: 'heart',
-    color: '#ff7f02',
-    size: 60,
-    style:{margin:0, padding: 0,
-    shadowOpacity:0,
-    elevation:0,
-    backgroundColor: 'transparent'
-    },
-    containerStyle: {padding:0,
-    },
-  }
-const dislikeIconStyle= {
-    type: 'material-community',
-    name: 'close-circle-outline',
-    color: '#ff7f02',
-    style:{margin:0, padding: 0,
-    shadowOpacity:0,
-    elevation:0
-    },
-    containerStyle: {padding:0,
-    },
-    size: 60,
-  }
 
 //export const FilterContext = createContext(null)
 const MatchList = ({matches}) => {

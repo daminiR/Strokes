@@ -111,36 +111,46 @@ const READ_SQUASH = gql`
       likes
       dislikes
       likedByUSers {
-      _id
-      first_name
-      age
-      profileImage {
-        img_idx
-        imageURL
-        filePath
+        _id
+        first_name
+        age
+        location {
+          city
+          state
+          country
+        }
+        gender
+        sports {
+          sport
+          game_level
+        }
+        description
+        image_set {
+          img_idx
+          imageURL
+          filePath
+        }
       }
-      }
-      matches
-      {
-      _id
-      first_name
-      age
-      location {
-        city
-        state
-        country
-      }
-      gender
-      sports {
-        sport
-        game_level
-      }
-      description
-      image_set {
-        img_idx
-        imageURL
-        filePath
-      }
+      matches {
+        _id
+        first_name
+        age
+        location {
+          city
+          state
+          country
+        }
+        gender
+        sports {
+          sport
+          game_level
+        }
+        description
+        image_set {
+          img_idx
+          imageURL
+          filePath
+        }
       }
     }
   }
