@@ -24,7 +24,7 @@ const renderMatchCard = (card, setLike, setIndex, index) => {
       }
       return (
         <TouchableOpacity style={{padding: 5}} onPress={_onPress}>
-          <CardItem profileImage={profileImage} profileTitle={title} variant />
+          <CardItem toBlur={index >= 3} profileImage={profileImage} profileTitle={title} variant />
         </TouchableOpacity>
       );
 }
@@ -109,7 +109,7 @@ const swipeLeftDisliked = async (_id, card, updateDislikes) => {
     console.log(dislikesVar());
     updateDislikes({
       variables: {
-        _id: _id,
+        _ij: _id,
         dislikes: array,
       },
     });

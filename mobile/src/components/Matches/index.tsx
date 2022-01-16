@@ -13,6 +13,10 @@ import {UserContext} from '@UserContext'
 import {renderMatchCard, calculateOfflineMatches} from '@utils'
 import {LikesOverLay} from '@components';
 
+
+// number of likes allowed to be seen per day -> rest is blurred
+const LIKES_ACTIVE = 3
+
 const Matches = ({navigation}) => {
   const [like, setLike] = useState(false)
   const [indexVal, setIndex] = useState(0)
@@ -38,9 +42,8 @@ const Matches = ({navigation}) => {
   })
   const appState = useRef(AppState.currentState)
   useEffect(() => {
-    console.log("/////////////////////////// trigier")
       getSquashProfile({variables: {id: currentUser.uid}});
-  }, [currentUserData.squash.matches, currentUserData.squash.dislikes])
+  }, [currentUserData.squash.matches])
 
   //useEffect(() => {
     //setLoading(true)

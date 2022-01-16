@@ -6,6 +6,7 @@ import {SportChips} from '@components'
 
 
 const CardItem = ({
+  toBlur=null,
   isProfileView=null,
   profileImage = null,
   image_set = null,
@@ -41,7 +42,7 @@ const CardItem = ({
       <ScrollView>
         <View style={styles.containerCardItem}>
           {/* IMAGE */}
-          {profileImage &&   <Image source={{uri: profileImage.imageURL}} style={variant ? styles.profileLikesContainer : styles.profileContainer}/>}
+          {profileImage &&  <Image blurRadius={toBlur && variant ? 20 : 0} source={{uri: profileImage.imageURL}} style={variant ? styles.profileLikesContainer : styles.profileContainer}/>}
           {/* NAME */}
           {profileTitle && (<Text style={variant? styles.nameStyleLikes :styles.nameStyle }>{profileTitle}</Text>)}
           {/* DESCRIPTION */}
