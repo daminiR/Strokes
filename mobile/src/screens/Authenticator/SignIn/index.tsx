@@ -88,8 +88,10 @@ export const Slider =  ({changeEmail}) => {
     };
   }, []);
   const _onSlideChange = (index, last_index) => {
+    console.log(index)
+    console.log("did we make it:w")
     setIndex(index)
-    if (index == 2){
+    if (index == 1){
       setLastSlide(true)
       setShowNextButton(false)
     }
@@ -113,7 +115,8 @@ export const Slider =  ({changeEmail}) => {
     setFieldTouched(field);
 
     if (index == 0) {
-      !errors[field] && touched[field] && _signIn();
+      //!errors[field] && touched[field] && this.slider.goToSlide(index + 1, true) && _signIn()
+      !errors[field] && touched[field] &&  _signIn()
     } else {
       !errors[field] &&
         touched[field] &&
@@ -206,7 +209,7 @@ const _confirmSignInGC = () => {
         renderItem={renderInputForm}
         data={signInSlides}
         scrollEnabled={false}
-        showPrevButton={false}
+        showPrevButton={true}
         showDoneButton={false}
         onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
         //onDone={() => {

@@ -62,4 +62,5 @@ export interface SquashDocument extends Document {
   phoneNumber : String
   email : String
   swipesPerDay : number
+  visableLikePerDay : number
 }

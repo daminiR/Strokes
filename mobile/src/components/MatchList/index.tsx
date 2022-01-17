@@ -126,6 +126,7 @@ const MatchList = ({matches}) => {
                 currentUser.uid,
                 matches[index],
                 updateDislikes,
+                false
               );
             }}
             onSwipedRight={(index) => {
@@ -136,6 +137,7 @@ const MatchList = ({matches}) => {
                 updateLikes,
                 updateMatches,
                 match,
+                false
               );
             }}
             //hacky solution to add note at the last deck

@@ -15,7 +15,7 @@ import {createProfileImage} from '@utils'
 
       //////squashItemsVar([...squashItems, data.createSquash._id])
 
-const renderMatchCard = (card, setLike, setIndex, index) => {
+const renderMatchCard = (card, setLike, setIndex, index, likesLeft) => {
       const profileImage = createProfileImage( card.image_set)
       const title = card.first_name +', ' + card.age
       const _onPress = () => {
@@ -23,8 +23,8 @@ const renderMatchCard = (card, setLike, setIndex, index) => {
         setIndex(index)
       }
       return (
-        <TouchableOpacity style={{padding: 5}} onPress={_onPress}>
-          <CardItem toBlur={index >= 3} profileImage={profileImage} profileTitle={title} variant />
+        <TouchableOpacity disabled={index >= likesLeft} style={{padding: 5}} onPress={_onPress}>
+          <CardItem toBlur={index >= likesLeft} profileImage={profileImage} profileTitle={title} variant />
         </TouchableOpacity>
       );
 }
@@ -70,7 +70,7 @@ export const sanitizeCard = (card) => {
    }
     return potentialMatch
 }
-const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches, setMatched) => {
+const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches, setMatched, isFromLikes) => {
     // push all ids when likes or dislikes and bulk send mutation
     // if potential match likes current user upsert a match array
     // update mutation for both users
@@ -84,7 +84,8 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
     updateLikes({variables: {
             _id: _id,
             likes: array,
-            currentUserData: userMatchingData
+            currentUserData: userMatchingData,
+            isFromLikes: isFromLikes
         }})
 
     // to slow ith liks condition
@@ -98,7 +99,7 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
                   potentialMatch: matchedUser}})
     }
 }
-const swipeLeftDisliked = async (_id, card, updateDislikes) => {
+const swipeLeftDisliked = async (_id, card, updateDislikes, isFromLikes) => {
     // push all ids when likes or dislikes and bulk send mutation
     var array = dislikesVar()
     //if (array.length  == MAX_DISLIKES){
@@ -111,6 +112,7 @@ const swipeLeftDisliked = async (_id, card, updateDislikes) => {
       variables: {
         _ij: _id,
         dislikes: array,
+        isFromLikes: isFromLikes
       },
     });
         array = []

@@ -112,6 +112,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
                   updateLikes,
                   updateMatches,
                   match,
+                  true
                 );
 
                 //setDisableLikes(true);
@@ -133,6 +134,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
                   currentUser.uid,
                   likeProfile,
                   updateDislikes,
+                  true
                 );
                 setLike(false);
                 //setDisableDislikes(true);

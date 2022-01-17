@@ -133,8 +133,8 @@ const UPDATE_USER_SPORTS = gql`
   }
 `;
 const UPDATE_DISLIKES = gql`
-  mutation UpdateDislikes($_id: String!, $dislikes: [String!]!) {
-    updateDislikes(_id: $_id, dislikes: $dislikes)
+  mutation UpdateDislikes($_id: String!, $dislikes: [String!]!, $isFromLikes: Boolean!) {
+    updateDislikes(_id: $_id, dislikes: $dislikes, isFromLikes: $isFromLikes)
     {
       _id
       first_name
@@ -215,8 +215,8 @@ const UPDATE_MATCHES = gql`
 `;
 
 const UPDATE_LIKES = gql`
-  mutation UpdateLikes($_id: String!, $likes: [String!]!, $currentUserData: PotentialMatchInput!) {
-    updateLikes(_id: $_id, likes: $likes, currentUserData: $currentUserData){
+  mutation UpdateLikes($_id: String!, $likes: [String!]!, $currentUserData: PotentialMatchInput!, $isFromLikes: Boolean!) {
+    updateLikes(_id: $_id, likes: $likes, currentUserData: $currentUserData, isFromLikes: $isFromLikes){
       _id
       first_name
       age
