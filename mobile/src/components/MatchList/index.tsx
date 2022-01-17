@@ -86,9 +86,15 @@ const MatchList = ({matches}) => {
   }, [userData?.squash.sports, isCityChangedVar()]);
 
   useEffect(() => {
-      if (matches?.length == 0) {
-        setEndingText('No more matches left!');
-      } else {
+    console.log("swipes per day", userData.squash.swipesPerDay)
+      if (matches?.length == 0 && userData.squash.swipesPerDay != 0) {
+        setEndingText('no more matches left!');
+      }
+      else if (matches?.length == 0 && userData.squash.swipesPerDay == 0) {
+        setEndingText('you have reach swipe limit for the day!');
+      }
+
+      else {
         setEndingText(null);
       }
   }, [matches])
