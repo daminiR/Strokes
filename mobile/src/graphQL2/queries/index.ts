@@ -100,6 +100,7 @@ const READ_SQUASH = gql`
         country
       }
       swipesPerDay
+      visableLikePerDay
       description
       phoneNumber
       email

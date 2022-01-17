@@ -94,6 +94,7 @@ const SquashType = `
     i_blocked : [PotentialMatch!]
     likes : [String!]
     swipesPerDay: Int!
+    visableLikePerDay: Int!
     dislikes : [String!]
     likedByUSers: [LikedByUser!]
     deleted: DeletedT
@@ -118,6 +119,7 @@ const SquashInputType = `
     likes : [String!]
     dislikes : [String!]
     swipesPerDay: Int!
+    visableLikePerDay: Int!
     likedByUSers: [LikedByUserInput!]
     phoneNumber: String
     email: String
@@ -223,8 +225,8 @@ export const typeDefs = gql`
 
     updateLocation(check: String): String
 
-    updateLikes(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!): Squash
-    updateDislikes(_id: String!, dislikes: [String!]): Squash
+    updateLikes(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): Squash
+    updateDislikes(_id: String!, dislikes: [String!], isFromLikes: Boolean!): Squash
     updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): Squash
 
     postMessage2(sender: String, receiver: String, text: String): ID!

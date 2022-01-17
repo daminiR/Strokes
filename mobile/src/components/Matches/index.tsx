@@ -90,7 +90,7 @@ const Matches = ({navigation}) => {
             data={totalLikesFromUsers}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) =>
-              renderMatchCard(item, setLike, setIndex, index)
+              renderMatchCard(item, setLike, setIndex, index, currentUserData.squash.visableLikePerDay)
             }
           />
         )}
