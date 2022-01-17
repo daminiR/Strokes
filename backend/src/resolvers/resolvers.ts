@@ -653,7 +653,7 @@ export const resolvers = {
           sports: sports,
           location: location,
           description: description,
-          swipesPerDay: SWIPIES_PER_DAY_LIMIT,
+          swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
           visableLikePerDay: LIKES_PER_DAY_LIMIT,
           i_blocked: [],
           blocked_me: [],
@@ -697,7 +697,7 @@ export const resolvers = {
           phoneNumber: phoneNumber,
           email: email,
           active: true,
-          swipesPerDay: SWIPIES_PER_DAY_LIMIT,
+          swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
           visableLikePerDay: LIKES_PER_DAY_LIMIT,
         });
         console.log(doc);

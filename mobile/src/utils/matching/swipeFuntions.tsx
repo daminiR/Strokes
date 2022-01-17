@@ -110,7 +110,7 @@ const swipeLeftDisliked = async (_id, card, updateDislikes, isFromLikes) => {
     console.log(dislikesVar());
     updateDislikes({
       variables: {
-        _ij: _id,
+        _id: _id,
         dislikes: array,
         isFromLikes: isFromLikes
       },
