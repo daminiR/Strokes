@@ -20,7 +20,7 @@ const EditInput = ({inputType= null, signOut = null, isSignUp}) => {
         return <NeighborhoodSearch isSignUp={isSignUp}/>;
         break;
       case 'Sports Input':
-        return <SportsInput isSignUp={isSignUp}/>;
+        return <SportsInput isSignUp={true}/>;
         break;
       case 'Description Input':
         return <DescriptionInput isSignUp={isSignUp}/>;

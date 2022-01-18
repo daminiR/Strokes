@@ -6,7 +6,8 @@ import {styles} from '@styles'
 import {SWIPIES_PER_DAY_LIMIT} from '@constants'
 import { RootStackSignInParamList, ProfileInputEdits} from '@NavStack'
 import {UserContext} from '@UserContext'
-import { useFormikContext, Formik} from 'formik';
+import {Overlay, Text} from 'react-native-elements'
+import { useFormikContext, Formik, useField} from 'formik';
 import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
 import {GET_INPUT_TYPE, READ_SQUASH, UPDATE_USER_PROFILE} from '@graphQL2'
 import {ProfileSettings, EditInput, Done, Cancel} from '@components'
@@ -15,6 +16,8 @@ import { isCityChangedVar, cityVar, EditInputVar} from '@cache'
 import {convertImagesToFormat, createInitialValuesFormik, _onPressSignOut, deleteUser} from '@utils'
 import {DoneCancelContext} from '@Contexts'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import  { profileEditSchema} from '@validation'
+import _ from 'lodash'
 
 const Tab  = createBottomTabNavigator()
 
@@ -30,12 +33,13 @@ const EditProfile = ({}) => {
   const {
     setValues: setFilterVals,
     values: filterValues,
+    setFieldValue,
   } = useFormikContext<FilterFields>();
   const [inputType, setInputType] = useState();
-  const {setValues, values: formikValues,handleReset} = useFormikContext<EditFields>();
+  const {touched, initialValues: formikInitialValues, setValues, values: formikValues,handleReset, errors: validationErrors} = useFormikContext<EditFields>();
   const [tempInputValues, setTempInputValues] = useState(null);
   const [cityChanged, setCityChanged] = useState(false);
-  const {queryProssibleMatches, currentUser, setData, refetchUserData} = useContext(UserContext)
+  const {queryProssibleMatches, currentUser, setData, refetchUserData, data:userData, imageErrorVisible, setImageErrorVisible} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
@@ -94,20 +98,108 @@ const _onPressCancelProfile = () => {
     setFormikChanged(false)
     setIsVisible(false);
 }
+  const [field, meta, helpers] = useField('age');
   const [temptSports2, setTempSports2] = useState(formikValues.sports)
-const _onPressDoneInput = () => {
-    setValues({... formikValues,
-              'description': tempInputValues.description ? tempInputValues.description : formikValues.description,
-              'location': tempInputValues.location ? tempInputValues.location : formikValues.location,
-              'gender': tempInputValues.gender ? tempInputValues.gender : formikValues.gender,
-              'age': tempInputValues.age ? tempInputValues.age : formikValues.age,
-              'first_name': tempInputValues.first_name ? tempInputValues.first_name : formikValues.first_name,
-              'last_name': tempInputValues.last_name ? tempInputValues.last_name : formikValues.last_name})
-              //'sports': temptSports2 ? temptSports2 : formikValues.sports})
-    EditInputVar({inputType:'', displayInput: false})
-    setDisplayInput(false);
-}
+  const _onPressDoneInput = async () => {
+    //_.isEmpty(validationErrors) &&
+    //EditInputVar({inputType: '', displayInput: false}) &&
+    //setDisplayInput(false);
+    console.log(inputType)
+    switch (inputType) {
+      //case 'Name Input':
+        //return <NameInput isSignUp={isSignUp}/>;
+        //break;
+      case 'Name Input':
+        if (_.isEmpty(validationErrors.first_name) && _.isEmpty(validationErrors.last_name)) {
+          setFieldValue('first_name', formikValues.first_name);
+          setFieldValue('last_name', formikValues.last_name);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Birthday Input':
+        if (_.isEmpty(validationErrors.age)) {
+          setFieldValue('age', formikValues.age);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Neighborhood Input':
+        if (_.isEmpty(validationErrors.age) && touched.location) {
+          console.log("fromik values locatio", formikValues.location)
+          setFieldValue('location', formikValues.location);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Gender Input':
+        if (_.isEmpty(validationErrors.age)) {
+          setFieldValue('gender', formikValues.gender);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Description Input':
+        if (_.isEmpty(validationErrors.description)) {
+          setFieldValue('description', formikValues.description);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Sports Input':
+        if (_.isEmpty(validationErrors.sports)) {
+          setFieldValue('sports', formikValues.sports);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+    }
+      //case 'Gender Input':
+        //return <GenderInput isSignUp={isSignUp}/>;
+        //break;
+      //case 'Neighborhood Input':
+        //return <NeighborhoodSearch isSignUp={isSignUp}/>;
+        //break;
+      //case 'Sports Input':
+        //return <SportsInput isSignUp={isSignUp}/>;
+        //break;
+      //case 'Description Input':
+        //return <DescriptionInput isSignUp={isSignUp}/>;
+        //break;
+
+    //'sports': temptSports2 ? temptSports2 : formikValues.sports})
+    //setFieldValue('age', tempInputValues.age)
+    //await Promise.resolve()
+
+    console.log('validation, errors', validationErrors);
+    //console.log('validation values', tempInputValues.age, formikValues.age);
+
+  }
 const _onPressCancelInput = () => {
+    switch (inputType) {
+      //case 'Name Input':
+        //return <NameInput isSignUp={isSignUp}/>;
+        //break;
+      case 'Name Input':
+        setFieldValue('first_name', formikInitialValues.first_name)
+        setFieldValue('last_name', formikInitialValues.last_name)
+        break;
+      case 'Birthday Input':
+        setFieldValue('age', formikInitialValues.age)
+        break;
+      case 'Neighborhood Input':
+        setFieldValue('location', formikInitialValues.location)
+        break;
+      case 'Gender Input':
+        setFieldValue('gender', formikInitialValues.gender)
+        break;
+      case 'Description Input':
+        setFieldValue('description', formikInitialValues.description)
+        break;
+      case 'Sports Input':
+        setFieldValue('sports', formikInitialValues.sports)
+        break;
+    }
     EditInputVar({inputType: '', displayInput: false})
     setDisplayInput(false);
 }
@@ -138,11 +230,19 @@ const doneCancelValues = {
           onRequestClose={() => {
             setIsVisible(!isVisible);
           }}>
+          <Overlay
+            overlayStyle={styles.imageErrorOverlay}
+            isVisible={imageErrorVisible}
+            onBackdropPress={() => setImageErrorVisible(false)}>
+            <View>
+              <Text style={styles.imageErrorText}>must have atlease one image</Text>
+            </View>
+          </Overlay>
           <View style={styles.top}>
             <Cancel _onPressCancel={_onPressCancelProfile} />
             <Done _onPressDone={_onPressDoneProfile} />
           </View>
-            <ProfileInputEdits/>
+          <ProfileInputEdits />
           <Modal
             animationType="slide"
             transparent={false}
@@ -151,12 +251,10 @@ const doneCancelValues = {
               setIsVisible(!displayInput);
             }}>
             <View style={{flex: 1}}>
-              {inputType != 'Sports Input' ? (
-                <View style={styles.top}>
-                  <Cancel _onPressCancel={_onPressCancelInput} />
-                  <Done _onPressDone={_onPressDoneInput} />
-                </View>
-              ) : null}
+              <View style={styles.top}>
+                <Cancel _onPressCancel={_onPressCancelInput} />
+                <Done _onPressDone={_onPressDoneInput} />
+              </View>
               <DoneCancelContext.Provider value={doneCancelValues}>
                 <EditInput inputType={inputType} isSignUp={false} />
               </DoneCancelContext.Provider>
@@ -175,7 +273,7 @@ const Profile = (): ReactElement => {
     setLoadingFormikValues(true)
     const userDetails = auth().currentUser
     if (userDetails) {
-    const initialValues = createInitialValuesFormik(data, userDetails.phoneNumber, userDetails.email)
+    const initialValues = createInitialValuesFormik(data, userDetails.phoneNumber)
     setInitialValuesFormik(initialValues)
     setLoadingFormikValues(false)
     }
@@ -184,6 +282,7 @@ const Profile = (): ReactElement => {
     <>
       {!userLoading && !loadingFormikValues && (
         <Formik
+          validationSchema={profileEditSchema}
           enableReinitialize={true}
           initialValues={initialValuesFormik}
           onSubmit={(values) => console.log(values)}>

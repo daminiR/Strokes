@@ -1,11 +1,12 @@
 import { Icon, Avatar } from 'react-native-elements'
-import React, {useEffect, useState, ReactElement } from 'react'
+import React, {useEffect, useState, useContext } from 'react'
 import {launchImageLibrary} from 'react-native-image-picker';
 import { _check_single} from '@utils'
 import  {styles, SECONDARY_THEME} from '@styles'
 import { useFormikContext} from 'formik';
 import _ from 'lodash';
 import {EditFields, ProfileFields} from '@localModels';
+import {UserContext} from '@UserContext'
 
 const SingleImage = ({img_idx}) => {
   const [Image, setImage] = React.useState(null)
@@ -13,7 +14,8 @@ const SingleImage = ({img_idx}) => {
   const {setFieldValue, values: formikValues, submitForm, handleChange, handleSubmit } = useFormikContext<EditFields | ProfileFields>();
   const [displayImage, setDisplayImage] = React.useState(null)
   const [displayObj, setDisplayObj] = React.useState(null)
-  const [disablePress, setDisablePress] = useState(false)
+  const [disablePress, setDisablePress] = useState(false);
+  const {setImageErrorVisible} = useContext(UserContext)
 
   useEffect(() => {
     const display = formikValues.image_set?.find(imgObj => imgObj.img_idx == img_idx)
@@ -56,36 +58,42 @@ const SingleImage = ({img_idx}) => {
       setLoading(true)
       setImage(null)
       const displayValues = formikValues.image_set
-      if (displayValues != null){
-      const new_values = displayValues.filter(imgObj => imgObj.img_idx != img_idx)
-      setFieldValue('image_set', new_values)
-      }
-      else{
-        // this here means there is  only one image and it cannot be deleted
-      console.error("image connot be deleted, only one image left")
-      }
-      if (displayImage.startsWith('https')) {
-        const remove_uploaded_images = formikValues.remove_uploaded_images;
-        if (remove_uploaded_images != null) {
-          const new_values = remove_uploaded_images.concat(displayObj);
-          setFieldValue('remove_uploaded_images', new_values);
+      console.log('displayValues', displayValues);
+      if (displayValues.length > 1) {
+        const new_values = displayValues.filter(
+          (imgObj) => imgObj.img_idx != img_idx,
+        );
+        setFieldValue('image_set', new_values);
+        if (displayImage.startsWith('https')) {
+          const remove_uploaded_images = formikValues.remove_uploaded_images;
+          if (remove_uploaded_images != null) {
+            const new_values = remove_uploaded_images.concat(displayObj);
+            setFieldValue('remove_uploaded_images', new_values);
+          } else {
+            const new_values = displayObj;
+            setFieldValue('remove_uploaded_images', new_values);
+          }
         } else {
-          const new_values = displayObj
-          setFieldValue('remove_uploaded_images', new_values);
+          // remove image from locals!!
+          const currentLocals = formikValues.add_local_images;
+          if (currentLocals != null) {
+            // filter out
+            _.remove(
+              currentLocals,
+              (localImage) => localImage.img_idx == img_idx,
+            );
+            setFieldValue('add_local_images', currentLocals);
+          }
         }
+        console.log(formikValues.remove_uploaded_images);
+        setDisplayImage(null);
+        setLoading(false);
+      } else {
+        // this here means there is  only one image and it cannot be deleted
+        setImageErrorVisible(true)
+        console.log('image connot be deleted, only one image left');
+        setLoading(false);
       }
-      else {
-        // remove image from locals!!
-        const currentLocals = formikValues.add_local_images
-        if (currentLocals != null) {
-          // filter out
-          _.remove(currentLocals, (localImage) => localImage.img_idx == img_idx)
-          setFieldValue('add_local_images', currentLocals);
-       }
-      }
-      console.log(formikValues.remove_uploaded_images)
-      setDisplayImage(null)
-      setLoading(false)
   }
   const _singleUpload = async (): Promise<void> => {
       setLoading(true);

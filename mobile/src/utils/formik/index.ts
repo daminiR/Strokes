@@ -4,7 +4,7 @@ import {defaultAgeRange, defaultGameLevel} from '@constants'
 import {SportFilters} from '@localModels'
 import {filterSportChangedVar} from '@cache'
 
-const createInitialValuesFormik = (userData, phoneNumber, email) => {
+const createInitialValuesFormik = (userData, phoneNumber) => {
     if (userData){
       const formik_images = userData.squash.image_set.map((imageObj) => ({
       img_idx: imageObj.img_idx,
@@ -21,7 +21,7 @@ const createInitialValuesFormik = (userData, phoneNumber, email) => {
         country: userData.squash.location.country,
       }
       return {
-        email: email,
+        email: userData.squash.email,
         phoneNumber: phoneNumber,
         first_name: userData.squash.first_name,
         last_name: userData.squash.last_name,

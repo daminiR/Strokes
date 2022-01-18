@@ -528,6 +528,24 @@ export const styles = StyleSheet.create({
     color: FLASH_ACTIONS,
   },
 
+  // COMPONENT Image Error Overlay
+  imageErrorText: {
+    //fontFamily: ICON_FONT,
+    //color: DARK_GRAY,
+    fontSize: 13,
+  },
+  imageErrorOverlay: {
+    backgroundColor: 'white',
+    flex: 0,
+    width: DIMENSION_WIDTH * 0.8,
+    height: DIMENSION_HEIGHT * 0.2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    padding: 0,
+    margin: 0,
+  },
+
   // COMPONENT - CITY
   city: {
     backgroundColor: WHITE,

@@ -10,16 +10,16 @@ import {DoneCancelContext} from '@Contexts'
 const GooglePlacesInput = ({isSignUp = false}) => {
   const { handleBlur, errors, setFieldTouched, touched, setValues, values, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
   const [locationSelected, setLocationSelected] = useState(false)
-  var setDisplayInput = null
-  var setTempInputValues = null
-  var tempInputValues= null
-  if (!isSignUp){
-    var {setDisplayInput, setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
-  }
+  //var setDisplayInput = null
+  //var setTempInputValues = null
+  //var tempInputValues= null
+  //if (!isSignUp){
+    //var {setDisplayInput, setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+  //}
   const ref = useRef(null);
   useEffect(() => {
     const GooglePlacesProps = ref.current;
-      !isSignUp && GooglePlacesProps?.setAddressText(values?.location?.city);
+      GooglePlacesProps?.setAddressText(values?.location?.city);
   }, []);
   const _onPressLocation = (data, details=null) => {
 //         'details' is provided when fetchDetails = true
@@ -32,13 +32,13 @@ const GooglePlacesInput = ({isSignUp = false}) => {
           country: data.terms[2].value,
           state: data.terms[1].value,
         };
-        if (isSignUp) {
-          console.log("do we hit this", isSignUp)
+        //if (isSignUp) {
+          ////console.log("do we hit this", isSignUp)
         setValues({... values, 'location': tempLocation})
-        }
-        else {
-        setTempInputValues((prevState) => {return {...prevState, 'location' : tempLocation}})
-        }
+        //}
+        //else {
+        //setTempInputValues((prevState) => {return {...prevState, 'location' : tempLocation}})
+        //}
   }
   //const _onFail = () => {
     //console.log("onFail")
@@ -87,5 +87,4 @@ const NeighborhoodSearch = ({isSignUp}) => {
             //{errors.location && touched.location? (
               //<Text style={{alignSelf:'center'}}>{errors.location}</Text>
             //) : null}
-
 export {NeighborhoodSearch};

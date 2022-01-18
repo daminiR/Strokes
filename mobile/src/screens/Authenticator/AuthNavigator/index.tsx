@@ -23,6 +23,7 @@ const AuthNavigator = () => {
   const [isProfileComplete, setProfileState ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(true);
   const [deleted, setDeleted] = useState({isDeleted: false});
+  const [imageErrorVisible, setImageErrorVisible] = useState(false)
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
   const [loadingMatches, setLoadingMatches] = useState(false);
@@ -191,6 +192,8 @@ const AuthNavigator = () => {
     initialValuesFormik: initialValuesFormik,
     queryProssibleMatches: queryProssibleMatches,
     setLoadAllResults: setLoadAllResults,
+    imageErrorVisible: imageErrorVisible,
+    setImageErrorVisible: setImageErrorVisible
   };
   const render2 = () =>{
     console.log(

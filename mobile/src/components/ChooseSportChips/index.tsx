@@ -15,15 +15,17 @@ const removeSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, tem
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
       setTempSports(filterSports);
-      !isSignUp && setTempSports2(filterSports);
-      isSignUp && setFieldValue('sports', filterSports);
+      //!isSignUp && setTempSports2(filterSports);
+      //isSignUp &&
+        setFieldValue('sports', filterSports);
 }
 const undoSportSelect = (isSignUp, setFieldValue, newSport, setTempSports, temptSports, setTempSports2) => {
       const allSports = temptSports
       const filterSports = allSports.filter((sport) => sport.sport !== newSport)
       setTempSports(filterSports);
-      !isSignUp && setTempSports2(filterSports);
-      isSignUp && setFieldValue('sports', filterSports);
+      //!isSignUp && setTempSports2(filterSports);
+      //isSignUp &&
+      setFieldValue('sports', filterSports);
 }
 const ChooseSportsChips = ({isSignUp}) => {
   var setDisplayInput = null;
@@ -31,9 +33,9 @@ const ChooseSportsChips = ({isSignUp}) => {
   let _onPressCancelInput = null
 
     var setTempSports2 = null;
-   if (!isSignUp){
-    var {setTempSports2} = useContext(DoneCancelContext);
-   }
+   //if (!isSignUp){
+    //var {setTempSports2} = useContext(DoneCancelContext);
+   //}
   const {setFieldValue, values: formikValues} = useFormikContext<EditFields | ProfileFields>();
   const [temptSports, setTempSports] = useState(formikValues.sports)
   const getData = (newSport, isSelected, game_level) => {
@@ -55,8 +57,9 @@ const ChooseSportsChips = ({isSignUp}) => {
         });
         console.log('new_vals 1', new_values);
         setTempSports(new_values)
-        !isSignUp && setTempSports2(new_values)
-        isSignUp && setFieldValue('sports', new_values)
+        //!isSignUp && setTempSports2(new_values)
+        //isSignUp &&
+          setFieldValue('sports', new_values)
       }
       else {
         newSportObj = [{sport: newSport, game_level: game_level}];
@@ -64,14 +67,16 @@ const ChooseSportsChips = ({isSignUp}) => {
         new_values = temptSports.concat(newSportObj);
         console.log("new_vals 2",new_values)
         setTempSports(new_values)
-        !isSignUp && setTempSports2(new_values)
-        isSignUp && setFieldValue('sports', new_values)
+        //!isSignUp && setTempSports2(new_values)
+        //isSignUp &&
+          setFieldValue('sports', new_values)
         } else {
         new_values = newSportObj;
         console.log("new_vals 3",new_values)
         setTempSports(new_values)
-        !isSignUp && setTempSports2(new_values)
-        isSignUp && setFieldValue('sports', new_values)
+        //!isSignUp && setTempSports2(new_values)
+        //isSignUp &&
+          setFieldValue('sports', new_values)
         }
       }
     }
@@ -86,27 +91,21 @@ const ChooseSportsChips = ({isSignUp}) => {
   const _removeSport = (sport) => {
     removeSportSelect( isSignUp, setFieldValue, sport, setTempSports, temptSports, setTempSports2)
   }
-  if (!isSignUp) {
-    var {setDisplayInput} = useContext(DoneCancelContext);
-     _onPressDoneInput = () => {
-      setFieldValue('sports', temptSports);
-      EditInputVar({inputType: '', displayInput: false});
-      setDisplayInput(false);
-    };
-     _onPressCancelInput = () => {
-      EditInputVar({inputType: '', displayInput: false});
-      setDisplayInput(false);
-    };
-  }
+  //if (!isSignUp) {
+    //var {setDisplayInput} = useContext(DoneCancelContext);
+     //_onPressDoneInput = () => {
+      //setFieldValue('sports', temptSports);
+      //EditInputVar({inputType: '', displayInput: false});
+      //setDisplayInput(false);
+    //};
+     //_onPressCancelInput = () => {
+      //EditInputVar({inputType: '', displayInput: false});
+      //setDisplayInput(false);
+    //};
+  //}
   const renderFormikSports = () => {
     return (
       <>
-        {!isSignUp && (
-          <View style={styles.top}>
-            <Cancel _onPressCancel={_onPressCancelInput} />
-            <Done _onPressDone={_onPressDoneInput} />
-          </View>
-        )}
         <Card containerStyle={styles.CardStyle}>
           <Card.Title> List of Acitivities</Card.Title>
           <Card.Divider />

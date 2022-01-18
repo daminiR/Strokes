@@ -41,11 +41,11 @@ const ImageInput = ({_submit, isSignUp}) => {
   const [loadRadioButtons, setLoadRadioButtons] = useState(true)
   const [check1, setCheck1] = useState(false);
   const [check2, setCheck2] = useState(false);
-    var setTempInputValues = null;
-    var tempInputValues = null;
-   if (!isSignUp){
-    var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
-   }
+    //var setTempInputValues = null;
+    //var tempInputValues = null;
+   //if (!isSignUp){
+    //var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+   //}
   const genders = [
     {title: "Female", checkFunc: setCheck1, checked: check1},
     {title: "Male", checkFunc: setCheck2, checked: check2}
@@ -53,9 +53,9 @@ const ImageInput = ({_submit, isSignUp}) => {
   useEffect(() => {
       setLoadRadioButtons(true)
       const gender = values.gender
-      if (!isSignUp){
-          gender && setTempInputValues((prevState) => {return {...prevState, 'gender' : gender}})
-      }
+      //if (!isSignUp){
+          //gender && setTempInputValues((prevState) => {return {...prevState, 'gender' : gender}})
+      //}
         gender && _.find(genders, genderObj => genderObj.title == gender).checkFunc(true)
       setLoadRadioButtons(false)
     }, [])
@@ -63,11 +63,11 @@ const ImageInput = ({_submit, isSignUp}) => {
       setFieldTouched('gender')
      _.map(genders, genderObj => genderObj.checkFunc(false))
      genderFunc(true)
-     isSignUp?
+     //isSignUp?
         setValues({... values, 'gender': gender})
-       : setTempInputValues((prevState) => {
-           return {...prevState, gender: gender};
-         });
+       //: setTempInputValues((prevState) => {
+           //return {...prevState, gender: gender};
+         //});
     }
     return (
       <View style={styles.ageContainer}>
@@ -112,16 +112,16 @@ const ImageInput = ({_submit, isSignUp}) => {
    const [loadingTempValues, setLoadingTempValues] = useState(true);
     var setTempInputValues = null;
     var tempInputValues = null;
-   if (!isSignUp){
-    var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
-   }
-    useEffect(() => {
-        setLoadingTempValues(true)
-      if (!isSignUp ){
-        setTempInputValues((prevState) => {return {...prevState, 'first_name' : values.first_name, 'last_name' : values.last_name}})
-      }
-        setLoadingTempValues(false)
-    }, [])
+   //if (!isSignUp){
+    //var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+   //}
+    //useEffect(() => {
+        //setLoadingTempValues(true)
+      //if (!isSignUp ){
+        //setTempInputValues((prevState) => {return {...prevState, 'first_name' : values.first_name, 'last_name' : values.last_name}})
+      //}
+        //setLoadingTempValues(false)
+    //}, [])
     var val1 = null
     var val2 = null
     var val3 = null
@@ -146,49 +146,68 @@ const ImageInput = ({_submit, isSignUp}) => {
     }
     return (
       <>
-        {!loadingTempValues && (
-      <DismissKeyboard>
-          <View style={styles.nameContainer}>
-            <Input
-              placeholder="FirstName"
-              label="First Name"
-              leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-              onBlur={handleBlur('first_name')}
-              onChangeText={
-                isSignUp
-                  ? handleChange('first_name')
-                  : (text) => {
-                    console.log("first name",text)
-                    setTempInputValues((prevState) => {return {...prevState, 'first_name' : text}})}
-              }
-              value={isSignUp ? values.first_name : tempInputValues.first_name}
-            />
-            <Input
-              placeholder="Last Name"
-              label="Last Name"
-              leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-              onBlur={handleBlur('last_name')}
-              onChangeText={
-                isSignUp
-                  ? handleChange('last_name')
-                  : (text) => {
-                    console.log("lat name", tempInputValues.last_name)
-                    setTempInputValues((prevState) => {return {...prevState, 'last_name' : text}})}
-              }
-              value={isSignUp ? values.last_name : tempInputValues.last_name}
-            />
-            {renderError()}
-          </View>
-      </DismissKeyboard>
-        )}
+        {
+
+          //!loadingTempValues && (
+          <DismissKeyboard>
+            <View style={styles.nameContainer}>
+              <Input
+                placeholder="FirstName"
+                label="First Name"
+                leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+                onBlur={handleBlur('first_name')}
+                onChangeText={
+                  //isSignUp
+                  //?
+                  handleChange('first_name')
+                  //: (text) => {
+                  //console.log("first name",text)
+                  //setTempInputValues((prevState) => {return {...prevState, 'first_name' : text}})
+                  //}
+                }
+                value={
+                  //isSignUp ?
+                  values.first_name
+                  //: tempInputValues.first_name
+                }
+              />
+              <Input
+                placeholder="Last Name"
+                label="Last Name"
+                leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+                onBlur={handleBlur('last_name')}
+                onChangeText={
+                  //isSignUp
+                  //?
+                  handleChange('last_name')
+                  //: (text) => {
+                  //console.log('lat name', tempInputValues.last_name);
+                  //setTempInputValues((prevState) => {
+                  //return {...prevState, last_name: text};
+                  //});
+                  //}
+                }
+                value={
+                //isSignUp
+                  //?
+                values.last_name
+                //: tempInputValues.last_name
+                }
+              />
+              {renderError()}
+            </View>
+          </DismissKeyboard>
+        //)
+          }
       </>
     );
   }
   const EmailInput = ({isSignUp, _signIn=null, getData=null}) => {
-    const { handleBlur, values, errors, touched, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | SignIn>();
+    const { handleBlur, values, errors, touched, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
     const [email, setEmail] = useState(values.email)
     useEffect(() => {
       if (getData){
+        console.log("//////////////////emai",values.email)
       getData(email, 'Email Input');
       }
     }, [email])
@@ -224,10 +243,7 @@ const ImageInput = ({_submit, isSignUp}) => {
 
 
   const PhoneInput = () => {
-    const { values, handleBlur, setFieldValue, submitForm, handleChange, errors, touched} = useFormikContext<ProfileFields | SignIn>();
-    useEffect(() => {
-        console.log(touched)
-    }, [errors])
+    const { values, handleBlur, setFieldValue, submitForm, handleChange, errors, touched} = useFormikContext<ProfileFields | SignIn | EditFields>();
     const [inputValue, setDisplayInputValue] = useState("")
     const handleInput = (text) => {
       const tempText = text
@@ -264,19 +280,18 @@ const ImageInput = ({_submit, isSignUp}) => {
     );}
   const BirthdayInput = ({isSignUp}) => {
     const { handleBlur, errors, touched, values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
-
    const [loadingTempValues, setLoadingTempValues] = useState(true);
     var setTempInputValues = null;
     var tempInputValues = null;
-   if (!isSignUp){
-    var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
-   }
+   //if (!isSignUp){
+    //var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+   //}
     useEffect(() => {
         setLoadingTempValues(true)
-      if (!isSignUp){
-        console.log("age value", values.age)
-        setTempInputValues((prevState) => {return {...prevState, 'age' : values.age}})
-      }
+      //if (!isSignUp){
+        //console.log("age value", values.age)
+        //setTempInputValues((prevState) => {return {...prevState, 'age' : values.age}})
+      //}
         setLoadingTempValues(false)
     }, [])
     return (
@@ -291,14 +306,17 @@ const ImageInput = ({_submit, isSignUp}) => {
               label="Age"
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
               onChangeText={
-                isSignUp
-                  ? handleChange('age')
-                  : (text) =>
-                    setTempInputValues((prevState) => {return {...prevState, 'age' : text}})}
+                //isSignUp
+                  //?
+                  handleChange('age')
+                  //: (text) =>
+                    //setTempInputValues((prevState) => {return {...prevState, 'age' : text}})
+              }
               value={
-                isSignUp
-                  ? values.age.toString()
-                  : tempInputValues.age.toString()
+                //isSignUp
+                  //?
+                    values.age.toString()
+                  //: tempInputValues.age.toString()
               }
             />
             {errors.age && touched.age ? (
@@ -322,53 +340,45 @@ const ImageInput = ({_submit, isSignUp}) => {
   };
 const DescriptionInput = ({isSignUp}) => {
   const { handleBlur, errors, touched, values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
-    var setTempInputValues = null;
-    var tempInputValues = null;
-   if (!isSignUp){
-    var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
-   }
-   const [loadingTempValues, setLoadingTempValues] = useState(true);
-    useEffect(() => {
-        setLoadingTempValues(true)
-      if (!isSignUp ){
-        setTempInputValues((prevState) => {return {...prevState, 'description' : values.description}})
-      }
-        setLoadingTempValues(false)
-    }, [])
+    //var setTempInputValues = null;
+    //var tempInputValues = null;
+   //if (!isSignUp){
+    //var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
+   //}
+   //const [loadingTempValues, setLoadingTempValues] = useState(true);
+    //useEffect(() => {
+        //setLoadingTempValues(true)
+      //if (!isSignUp ){
+        //setTempInputValues((prevState) => {return {...prevState, 'description' : values.description}})
+      //}
+        //setLoadingTempValues(false)
+    //}, [])
     return (
       <>
-      <DismissKeyboard>
-        <View style={{flex:1}}>
-        {!loadingTempValues && (
-          <Card containerStyle={styles.CardStyle}>
-            <Card.Title> Description </Card.Title>
-            <Card.Divider />
-            <View style={styles.sportChipSet}>
-              <Input
-                onBlur={handleBlur('description')}
-                multiline={true}
-                inputContainerStyle={{borderBottomWidth: 0}}
-                placeholder="Descriptionn"
-                label="Description"
-                leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-                maxLength={300}
-                onChangeText={
-                  isSignUp
-                    ? handleChange('description')
-                    : (text) =>
-                    setTempInputValues((prevState) => {return {...prevState, 'description' : text}})}
-                value={
-                  isSignUp ? values.description : tempInputValues.description
-                }
-              />
-            </View>
-          </Card>
-        )}
-        {errors.description && touched.description ? (
-          <Text style={{alignSelf: 'center'}}>{errors.description}</Text>
-        ) : null}
-        </View>
-      </DismissKeyboard>
+        <DismissKeyboard>
+          <View style={{flex: 1}}>
+            <Card containerStyle={styles.CardStyle}>
+              <Card.Title> Description </Card.Title>
+              <Card.Divider />
+              <View style={styles.sportChipSet}>
+                <Input
+                  onBlur={handleBlur('description')}
+                  multiline={true}
+                  inputContainerStyle={{borderBottomWidth: 0}}
+                  placeholder="Descriptionn"
+                  label="Description"
+                  leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+                  maxLength={300}
+                  onChangeText={handleChange('description')}
+                  value={values.description}
+                />
+              </View>
+            </Card>
+            {errors.description && touched.description ? (
+              <Text style={{alignSelf: 'center'}}>{errors.description}</Text>
+            ) : null}
+          </View>
+        </DismissKeyboard>
       </>
     );
   };
