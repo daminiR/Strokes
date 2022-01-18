@@ -13,7 +13,7 @@ type ProfileT = {
 }
 const ProfileSettingsInput = () => {
   const [sportsList, setSportsList] = React.useState(null)
-  const {values: formikValues} = useFormikContext<EditFields>();
+  const {values: formikValues, initialStatus} = useFormikContext<EditFields>();
   const [description, setDescription] = React.useState('Description')
   const [loadingSports, setLoadingSports] = React.useState(true)
   const [loadingDescription, setLoadingDescription] = React.useState(false)
@@ -29,7 +29,7 @@ const ProfileSettingsInput = () => {
           setDescription(descriptionValue);
         console.log("///check in sport",formikValues.sports)
           setLoadingDescription(false);
-  }, [formikValues]);
+  }, [formikValues, initialStatus]);
   return (
     <>
       <Card containerStyle={styles.CardStyle}>
