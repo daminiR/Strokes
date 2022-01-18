@@ -58,7 +58,6 @@ const SingleImage = ({img_idx}) => {
       setLoading(true)
       setImage(null)
       const displayValues = formikValues.image_set
-      console.log('displayValues', displayValues);
       if (displayValues.length > 1) {
         const new_values = displayValues.filter(
           (imgObj) => imgObj.img_idx != img_idx,
@@ -85,7 +84,8 @@ const SingleImage = ({img_idx}) => {
             setFieldValue('add_local_images', currentLocals);
           }
         }
-        console.log(formikValues.remove_uploaded_images);
+        console.log("formik removed images", formikValues.remove_uploaded_images);
+        console.log("formik, add locals", formikValues.add_local_images);
         setDisplayImage(null);
         setLoading(false);
       } else {

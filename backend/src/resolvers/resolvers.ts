@@ -117,16 +117,26 @@ const deleteAllUserImages = async (image_set) => {
     }
   });
 };
-const deleteFilesFromGC = async (files_to_del, original_uploaded_image_set) => {
+const deleteFilesFromGC = async (files_to_del, original_uploaded_image_set, add_local_images_length) => {
   // remove from gc AND mongdb
   // remove from mongoDb
-  const  img_idx_del = files_to_del.map(imgObj => imgObj.img_idx)
-  const filtered_array = original_uploaded_image_set.filter(imgObj => !img_idx_del.includes(imgObj.img_idx))
-  console.log("check filtered again", filtered_array)
-  files_to_del.map(async (file_to_del) => {
-    await deleteFromGC(file_to_del.filePath);
-  });
-  return filtered_array
+  // ote sure about wehen one image is left check again
+  console.log("where does it go");
+  if (original_uploaded_image_set.length - files_to_del.length + add_local_images_length >= 1) {
+    const img_idx_del = files_to_del.map((imgObj) => imgObj.img_idx);
+    const filtered_array = original_uploaded_image_set.filter(
+      (imgObj) => !img_idx_del.includes(imgObj.img_idx)
+    );
+    console.log("check filtered again", filtered_array);
+    files_to_del.map(async (file_to_del) => {
+      await deleteFromGC(file_to_del.filePath);
+    });
+    return filtered_array;
+  }
+  else{
+    return original_uploaded_image_set
+
+  }
 };
 const deleteFromGC = async (file_to_del: string) => {
        await acsport1.file(file_to_del).delete().then(
@@ -721,7 +731,7 @@ export const resolvers = {
       }
     ) => {
       // remove from gc
-      const removed_image_set = await deleteFilesFromGC(remove_uploaded_images, original_uploaded_image_set);
+      const removed_image_set = await deleteFilesFromGC(remove_uploaded_images, original_uploaded_image_set, add_local_images.length);
       const data_set = await creatGCUpload(add_local_images, _id)
       const final_image_set = removed_image_set.concat(data_set)
       const doc = await Squash.findOneAndUpdate(

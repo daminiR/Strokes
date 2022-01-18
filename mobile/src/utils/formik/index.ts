@@ -20,7 +20,8 @@ const createInitialValuesFormik = (userData, phoneNumber) => {
         state: userData.squash.location.state,
         country: userData.squash.location.country,
       }
-      return {
+      console.log("/////////////////// did we make it here when reintia", userData.image_set)
+      const new_formik =  {
         email: userData.squash.email,
         phoneNumber: phoneNumber,
         first_name: userData.squash.first_name,
@@ -35,6 +36,8 @@ const createInitialValuesFormik = (userData, phoneNumber) => {
         add_local_images: [],
         original_uploaded_image_set: formik_images
       }
+      console.log("/////////////////// formik vals did we", new_formik)
+      return new_formik
     }
 }
 const createInitialFilterFormik = async (sports) => {
