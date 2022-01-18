@@ -28,7 +28,7 @@ type ProfileT = {
   navigation: ProfileScreenNavigationProp
   route: ProfileScreenRouteProp
 }
-const EditProfile = ({}) => {
+const EditProfile = () => {
   const [isVisible, setIsVisible] = useState(false);
   const {
     setValues: setFilterVals,
@@ -36,7 +36,7 @@ const EditProfile = ({}) => {
     setFieldValue,
   } = useFormikContext<FilterFields>();
   const [inputType, setInputType] = useState();
-  const {touched, initialValues: formikInitialValues, setValues, values: formikValues,handleReset, errors: validationErrors} = useFormikContext<EditFields>();
+  const {touched, initialValues: formikInitialValues, setValues, values: formikValues,handleReset, errors: validationErrorsm, handleSubmit} = useFormikContext<EditFields>();
   const [tempInputValues, setTempInputValues] = useState(null);
   const [cityChanged, setCityChanged] = useState(false);
   const {queryProssibleMatches, currentUser, setData, refetchUserData, data:userData, imageErrorVisible, setImageErrorVisible} = useContext(UserContext)
@@ -44,7 +44,12 @@ const EditProfile = ({}) => {
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     awaitRefetchQueries: true,
+    onCompleted: () => {
+      // wow this was the missing peace, reset needed to be here for cancel and done to work properly with reintialization
+      handleSubmit();
+    },
   });
+  console.log("did we new formik values", formikValues)
   const [displayInput, setDisplayInput] = useState(false);
   const [formikChanged, setFormikChanged] = useState(false);
   const didMountRef = useRef(false)
@@ -68,6 +73,8 @@ const _onPressDoneProfile = () => {
     if (formikChanged) {
       const RNLocalFiles = convertImagesToFormat(formikValues.add_local_images, currentUser.uid)
       ///// debug images
+      console.log("formik remove", formikValues.remove_uploaded_images)
+      console.log("formik add", formikValues.add_local_images)
       updateUserProfile({
         variables: {
           _id: currentUser.uid,
@@ -83,6 +90,9 @@ const _onPressDoneProfile = () => {
           description: formikValues.description,
         },
       });
+      // remove and add locals need to be reset TODO: very hacky way to reset, est flow would be too reset entire form
+
+
       // update firebase auth
       if (cityVar() != formikValues.location.city){
         cityVar(formikValues.location.city)
@@ -101,14 +111,7 @@ const _onPressCancelProfile = () => {
   const [field, meta, helpers] = useField('age');
   const [temptSports2, setTempSports2] = useState(formikValues.sports)
   const _onPressDoneInput = async () => {
-    //_.isEmpty(validationErrors) &&
-    //EditInputVar({inputType: '', displayInput: false}) &&
-    //setDisplayInput(false);
-    console.log(inputType)
     switch (inputType) {
-      //case 'Name Input':
-        //return <NameInput isSignUp={isSignUp}/>;
-        //break;
       case 'Name Input':
         if (_.isEmpty(validationErrors.first_name) && _.isEmpty(validationErrors.last_name)) {
           setFieldValue('first_name', formikValues.first_name);
@@ -154,32 +157,9 @@ const _onPressCancelProfile = () => {
         }
         break;
     }
-      //case 'Gender Input':
-        //return <GenderInput isSignUp={isSignUp}/>;
-        //break;
-      //case 'Neighborhood Input':
-        //return <NeighborhoodSearch isSignUp={isSignUp}/>;
-        //break;
-      //case 'Sports Input':
-        //return <SportsInput isSignUp={isSignUp}/>;
-        //break;
-      //case 'Description Input':
-        //return <DescriptionInput isSignUp={isSignUp}/>;
-        //break;
-
-    //'sports': temptSports2 ? temptSports2 : formikValues.sports})
-    //setFieldValue('age', tempInputValues.age)
-    //await Promise.resolve()
-
-    console.log('validation, errors', validationErrors);
-    //console.log('validation values', tempInputValues.age, formikValues.age);
-
   }
 const _onPressCancelInput = () => {
     switch (inputType) {
-      //case 'Name Input':
-        //return <NameInput isSignUp={isSignUp}/>;
-        //break;
       case 'Name Input':
         setFieldValue('first_name', formikInitialValues.first_name)
         setFieldValue('last_name', formikInitialValues.last_name)
@@ -267,28 +247,38 @@ const doneCancelValues = {
 const Profile = (): ReactElement => {
   // TODO: very hacky way to stop useEffect from firt render => need more elegant sol
   const [loadingFormikValues, setLoadingFormikValues] = useState(true)
-  const {data, userLoading} = useContext(UserContext)
+  const {data, userData, userLoading} = useContext(UserContext)
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   useEffect(() => {
+    console.log("did we reinittailiz", userData)
     setLoadingFormikValues(true)
     const userDetails = auth().currentUser
     if (userDetails) {
     const initialValues = createInitialValuesFormik(data, userDetails.phoneNumber)
     setInitialValuesFormik(initialValues)
+    console.log("did we change initial values ////", initialValues)
     setLoadingFormikValues(false)
     }
-    }, [data])
+    //}, [data])
+    }, [userData])
+    //}, [userLoading])
   return (
     <>
       {!userLoading && !loadingFormikValues && (
         <Formik
+          //enableReinitialize={true}
           validationSchema={profileEditSchema}
-          enableReinitialize={true}
           initialValues={initialValuesFormik}
-          onSubmit={(values) => console.log(values)}>
-          <View>
-            <EditProfile/>
-          </View>
+          onSubmit={(values, {resetForm}) => {
+            const userDetails = auth().currentUser;
+            const initialValues2 = createInitialValuesFormik(
+              userData,
+              userDetails.phoneNumber,
+            );
+            setInitialValuesFormik(initialValues2);
+            resetForm({values: {...initialValues2}})
+          }}>
+          <View>{!loadingFormikValues && <EditProfile />}</View>
         </Formik>
       )}
     </>
