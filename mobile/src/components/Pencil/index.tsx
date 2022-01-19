@@ -8,7 +8,7 @@ const EditPencil = ({_edit}) => {
   <Icon
     color="black"
     size={28}
-    onPress={() => _edit(true)}
+    onPress={_edit}
     name="pencil"
     type="material-community"
     style={styles.pencilEdit}

@@ -3,9 +3,10 @@ import { CardItem } from '@components';
 import { Card } from 'react-native-card-stack-swiper';
 import {View} from 'react-native'
 import { styles } from '@styles';
-import { _check_single } from '@utils'
+import { _check_single, createProfileImage} from '@utils'
 import { useFormikContext} from 'formik';
 import { EditFields} from '@localModels'
+import _ from 'lodash'
 
 const ProfileView = () => {
   const [loading, setLoading] = React.useState(true)
@@ -19,10 +20,13 @@ const ProfileView = () => {
     // TODO: not important sort image by order
       const user = formikValues
       setUserProfile(user);
-      const profileImage = user.image_set.find(imgObj => imgObj.img_idx == 0)
+      const profileImage = createProfileImage(user.image_set)
       setProfileImageValue(profileImage)
-      const image_set_copy = user.image_set.filter(imgObj => imgObj.img_idx != 0)
-      setNewImageSet(image_set_copy)
+      const newImageSet = _.filter(
+        user.image_set,
+        (imageObj) => imageObj.img_idx != profileImage.img_idx,
+      );
+      setNewImageSet(newImageSet)
       const title = user.first_name +', ' + user.age
       setProfileTitle(title)
       setLoading(false);

@@ -24,6 +24,7 @@ const AuthNavigator = () => {
   const [loadingSigning, setLoadingSiginig] = useState(true);
   const [deleted, setDeleted] = useState({isDeleted: false});
   const [imageErrorVisible, setImageErrorVisible] = useState(false)
+  const [changeSport, setChangeSport] = useState(true)
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
   const [loadingMatches, setLoadingMatches] = useState(false);
@@ -193,7 +194,9 @@ const AuthNavigator = () => {
     queryProssibleMatches: queryProssibleMatches,
     setLoadAllResults: setLoadAllResults,
     imageErrorVisible: imageErrorVisible,
-    setImageErrorVisible: setImageErrorVisible
+    setImageErrorVisible: setImageErrorVisible,
+    changeSport: changeSport,
+    setChangeSport: setChangeSport
   };
   const render2 = () =>{
     console.log(

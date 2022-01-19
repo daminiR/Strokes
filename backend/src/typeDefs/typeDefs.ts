@@ -94,6 +94,7 @@ const SquashType = `
     i_blocked : [PotentialMatch!]
     likes : [String!]
     swipesPerDay: Int!
+    sportChangesPerDay: Int!
     visableLikePerDay: Int!
     dislikes : [String!]
     likedByUSers: [LikedByUser!]
@@ -119,6 +120,7 @@ const SquashInputType = `
     likes : [String!]
     dislikes : [String!]
     swipesPerDay: Int!
+    sportChangesPerDay: Int!
     visableLikePerDay: Int!
     likedByUSers: [LikedByUserInput!]
     phoneNumber: String

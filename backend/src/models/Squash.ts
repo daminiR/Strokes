@@ -58,6 +58,15 @@ var squashSchema = new Schema({
     //message: "{VALUE} is not an integer value",
     //},
   },
+  sportChangesPerDay: {
+    type: Number,
+    required: true,
+    //TODO: fix the age and bithday category asap
+    //validate: {
+    //validator: Number.isInteger,
+    //message: "{VALUE} is not an integer value",
+    //},
+  },
   swipesPerDay: {
     type: Number,
     required: true,
