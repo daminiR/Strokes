@@ -19,6 +19,7 @@ import { pubsub } from '../pubsub'
 //const pubsub = new PubSub()
 const SWIPIES_PER_DAY_LIMIT = 10
 const LIKES_PER_DAY_LIMIT = 3
+const SPORT_CHANGES_PER_DAY = 2
 export interface Sport {
   sport: string;
   game_level: number;
@@ -222,35 +223,35 @@ export const resolvers = {
       //// it is imperitive all the filter items are indexed!
       //just for testing!
       const matchingestingFIlter = [
-        "vesysemweoqsfeeqmmbgpfbjgyfb",
-        "gmmrumjnprkvomlaujtnchuxmimg",
-        "ajxydxqqodmnnflqrszduslasqvq",
-        "txwqpoyqxcpvggrdogoasgtgbhnl",
-        "fbxqmzosqyicrcqrwzcaxocphhof",
-        "wretbbdbqrrsislfcgieoyyjrjug",
-        "uxvzrlscekmkfnfiokkilcayaldn",
-        "vhyykzhbjsewczprvgdmhwbxsmzu",
-        "hcdqelwjyxokdmzlenomdjpzwpjo",
-        "jsznhtqnocylruuzwaqurgjpoabz",
-        "yxfscryrnuoboobsexdhnyfiuuaw",
-        "kfpbkdaccdjgunmpvaasxcuvbyvx",
-        "ntittoomnqedaqnblriizjoptnag",
-        "wgksentfjqihijyhornfzmqidjow",
-        "gzmoxyusjiquidhieqkygfzyspqx",
-        "iqpsehxvmnkgeizymmimmslyzvds",
-        "katnabhjuvrtbhdxqdnqonayftis",
-        "kntalpxtkpzkokrjuemytzyofwzw",
-        "sbruwlskfkpzcbwkhzfvcdjkfjnq",
-        "hjtbjqtakkjmlehssknoghjusitp",
-        "gowrdjixecspyedrwukycfzfydyd",
-        "uohqumzhnhdyahntacizxsxpzmga",
-        "upxsfctsaauzmuqjhkxmrxuxzbar",
-        "zogmxlupmwmxkvxinnugxulwokgp",
-        "nnxskfiqbrnmcovjzhehuejniwxw",
-        "oitakxbvjqjdcpegiuglanzpkdjr",
-        "bcnuigtqctzcmxktppjrrvbadccn",
-        "qpqvaclkjuopmmgjysscgtvanmvv",
-        "ftnyvcgszxrkxezuszktusqkmkzw",
+        "zlmfnsxombvhhgdaededeywqgrye",
+        "rpdiszrxocuawphcjwfpfartqmjw",
+        "bpikrcdgfptbmcfdxiuhsjtyixvw",
+        "pkimewhaimvhcbffqeomhaxrvago",
+        "umfiemicigdyoewibrkdwcqvqllq",
+        "ezwviwnqurrlxkwfgoapxfsheluo",
+        "tqcnpdeqhnxwszstoqjzeytezloy",
+        "idzlmexjvinaeazrhtmtcikkzdae",
+        "eqiibyvrqlepzlszreecrlxnjmgb",
+        "vrgffumzkdkiqccwtmppfxqgkfuz",
+        "xbymfauwsmsxqiltefpifsewejsn",
+        "qydkdyxagzlmmwhwneysttezjtbc",
+        "tpxwhbgxczdchqtoctketztpxwvm",
+        "ppajvinskckeuuzpokvwbyuquxzl",
+        "nakikrbjpuebtczseojwtkancxki",
+        "onzhxkhugnsacdjlicyqnheprxsq",
+        "efvtocugfomuixmsjthqdglmfzsr",
+        "fmyuiatkqbnlspmtkgcdypwtwdls",
+        "mpmcgtuzyljycxqhtumrshvglnob",
+        "shfycwppdykpzlavlzohrszpnklw",
+        "onifaweiyfdmqnixzgfyqwmkotic",
+        "krnsxazpljpdkapztjvlxzsxnmkc",
+        "pejvchkzlidjyuzpqbgsgfgxqckp",
+        "esjcajqstsrbpyxqcbalypltaxli",
+        "tyhhqcivlnrjhboxfyeshxytgkdu",
+        "sckvatjzhcrxmjavtejhdzjlqwso",
+        "wbunwiospcfrjtzddydmgfzzqqfv",
+        "rqukfbpkivnkoazcesdfkstlstin",
+        "bmuvqdedmagznvvwkccwmsfpukzs",
       ];
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
@@ -275,7 +276,7 @@ export const resolvers = {
           },
         ],
       };
-      const test_filter = {_id: {$in: matchingestingFIlter}}
+      const test_filter = { _id: { $in: matchingestingFIlter } };
       const fieldsNeeded = {
         _id: 1,
         first_name: 1,
@@ -665,6 +666,7 @@ export const resolvers = {
           description: description,
           swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
           visableLikePerDay: LIKES_PER_DAY_LIMIT,
+          sportChangesPerDay: SPORT_CHANGES_PER_DAY,
           i_blocked: [],
           blocked_me: [],
           likes: [],
@@ -709,6 +711,7 @@ export const resolvers = {
           active: true,
           swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
           visableLikePerDay: LIKES_PER_DAY_LIMIT,
+          sportChangesPerDay: SPORT_CHANGES_PER_DAY,
         });
         console.log(doc);
         return doc;
@@ -734,6 +737,18 @@ export const resolvers = {
       const removed_image_set = await deleteFilesFromGC(remove_uploaded_images, original_uploaded_image_set, add_local_images.length);
       const data_set = await creatGCUpload(add_local_images, _id)
       const final_image_set = removed_image_set.concat(data_set)
+      // if sport changes decrement sportsPerDay
+      const check_doc_sports = await Squash.findById( _id);
+      var sportChangesPerDay = check_doc_sports?.sportChangesPerDay
+      // only check if list of sports are the same, user shoul dbe allowed to change gamelevels freely
+      const sportsOld = _.map(check_doc_sports?.sports, (sportObj) => {return sportObj.sport})
+      const sportsNew = _.map(sports, (sportObj) => {return sportObj.sport})
+      //if (!_.isEqual(sportsOld, sportsNew)) {
+      if (!_.isEqual(check_doc_sports?.sports, sports)) {
+        sportChangesPerDay = sportChangesPerDay
+          ? sportChangesPerDay - 1
+          : SPORT_CHANGES_PER_DAY;
+      }
       const doc = await Squash.findOneAndUpdate(
           { _id: _id },
           {
@@ -747,6 +762,7 @@ export const resolvers = {
               age: age,
               sports: sports,
               description: description,
+              sportChangesPerDay: sportChangesPerDay,
             },
           },
           { new: true }

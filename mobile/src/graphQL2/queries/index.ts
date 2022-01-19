@@ -101,6 +101,7 @@ const READ_SQUASH = gql`
       }
       swipesPerDay
       visableLikePerDay
+      sportChangesPerDay
       description
       phoneNumber
       email

@@ -36,10 +36,10 @@ const EditProfile = () => {
     setFieldValue,
   } = useFormikContext<FilterFields>();
   const [inputType, setInputType] = useState();
-  const {touched, initialValues: formikInitialValues, setValues, values: formikValues,handleReset, errors: validationErrorsm, handleSubmit} = useFormikContext<EditFields>();
+  const {touched, initialValues: formikInitialValues, setValues, values: formikValues,handleReset, errors: validationErrors, handleSubmit} = useFormikContext<EditFields>();
   const [tempInputValues, setTempInputValues] = useState(null);
   const [cityChanged, setCityChanged] = useState(false);
-  const {queryProssibleMatches, currentUser, setData, refetchUserData, data:userData, imageErrorVisible, setImageErrorVisible} = useContext(UserContext)
+  const {queryProssibleMatches, currentUser, setData, refetchUserData, data:userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
@@ -90,9 +90,6 @@ const _onPressDoneProfile = () => {
           description: formikValues.description,
         },
       });
-      // remove and add locals need to be reset TODO: very hacky way to reset, est flow would be too reset entire form
-
-
       // update firebase auth
       if (cityVar() != formikValues.location.city){
         cityVar(formikValues.location.city)
@@ -184,7 +181,7 @@ const _onPressCancelInput = () => {
     setDisplayInput(false);
 }
 const _editDisplay2 = (display) => {
-    setIsVisible(display)
+    setIsVisible(true)
 }
 
 const doneCancelValues = {
@@ -216,6 +213,14 @@ const doneCancelValues = {
             onBackdropPress={() => setImageErrorVisible(false)}>
             <View>
               <Text style={styles.imageErrorText}>must have atlease one image</Text>
+            </View>
+          </Overlay>
+          <Overlay
+            overlayStyle={styles.imageErrorOverlay}
+            isVisible={!changeSport}
+            onBackdropPress={() => setChangeSport(!changeSport)}>
+            <View>
+              <Text style={styles.imageErrorText}>cannot changes sports too often</Text>
             </View>
           </Overlay>
           <View style={styles.top}>
@@ -278,7 +283,7 @@ const Profile = (): ReactElement => {
             setInitialValuesFormik(initialValues2);
             resetForm({values: {...initialValues2}})
           }}>
-          <View>{!loadingFormikValues && <EditProfile />}</View>
+          <View>{!loadingFormikValues && <EditProfile/>}</View>
         </Formik>
       )}
     </>

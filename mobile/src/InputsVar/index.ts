@@ -28,8 +28,15 @@ const _neighborhood = () => {
   EditInputVar({inputType: 'Neighborhood Input', displayInput: true});
   console.log(EditInputVar());
 };
-const _editSports = () => {
+const _editSports = (setChangeSport, numChangesLeft) => {
+  //if (numChangesLeft <= 0){
+    //// no more sport chnages should be possible
+    //setChangeSport(false)
+  //}
+  //else{
+    //setChangeSport(true)
     EditInputVar({inputType: 'Sports Input', displayInput: true});
+  //}
 }
 const _editDescription = () => {
       EditInputVar({inputType: 'Description Input', displayInput: true})
