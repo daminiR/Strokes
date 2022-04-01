@@ -86,7 +86,7 @@ const App = () =>
     return (
       <AppContainer loading={loadingSignUpInRefresh}>
         <RootRefreshContext.Provider value={rootRefreshValues}>
-          <AuthNavigator />
+          <AuthNavigator/>
         </RootRefreshContext.Provider>
       </AppContainer>
     );

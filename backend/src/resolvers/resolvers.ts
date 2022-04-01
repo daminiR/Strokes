@@ -15,7 +15,7 @@ import { typeDefs }  from '../typeDefs/typeDefs'
 import { PotentialMatchUserInputType }  from '../typeDefs/typeDefs'
 import _ from 'lodash'
 //import { PubSub } from 'graphql-subscriptions';
-import { pubsub } from '../pubsub'
+//import { pubsub } from '../pubsub'
 //const pubsub = new PubSub()
 const SWIPIES_PER_DAY_LIMIT = 10
 const LIKES_PER_DAY_LIMIT = 3
@@ -299,13 +299,13 @@ export const resolvers = {
     display: async (parents, args, context, info) => {},
   },
 
-  FileUpload: GraphQLUpload,
-  Subscription: {
-    messagePosted: {
-      //subscribe: (parents, args, {pubsub}, info) => pubsub.asyncIterator(POST_CHANNEL)
-      subscribe: () => pubsub.asyncIterator([POST_CHANNEL])
-    },
-  },
+//export   FileUpload: GraphQLUpload,
+  //Subscription: {
+    //messagePosted: {
+      ////subscribe: (parents, args, {pubsub}, info) => pubsub.asyncIterator(POST_CHANNEL)
+      //subscribe: () => pubsub.asyncIterator([POST_CHANNEL])
+    //},
+  //},
 
   Mutation: {
     //////////////////////////////////////// JMETER Testing MUtations ////////////////////////////////////////////////
@@ -324,18 +324,18 @@ export const resolvers = {
         return "Done";
     },
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    postMessage2: async (parents, {sender, receiver, text}, context, info) => {
-      const id = text.length
-      const messageID = new ObjectId()
-      const createdAt = new Date()
-      pubsub.publish(POST_CHANNEL, {
-        messagePosted: { _id: messageID, sender: sender, receiver: receiver, text: text, createdAt: createdAt}
-      })
-      const doc = await Message.create(
-          { _id: messageID, sender: sender, receiver: receiver, text: text, createdAt: createdAt}
-      )
-       return id
-    },
+    //postMessage2: async (parents, {sender, receiver, text}, context, info) => {
+      //const id = text.length
+      //const messageID = new ObjectId()
+      //const createdAt = new Date()
+      //pubsub.publish(POST_CHANNEL, {
+        //messagePosted: { _id: messageID, sender: sender, receiver: receiver, text: text, createdAt: createdAt}
+      //})
+      //const doc = await Message.create(
+          //{ _id: messageID, sender: sender, receiver: receiver, text: text, createdAt: createdAt}
+      //)
+       //return id
+    //},
     updateUserSports: async (parents, { _id, sportsList }, context, info) => {
       if (sportsList.length != 0) {
         const doc = await Squash.findOneAndUpdate(
