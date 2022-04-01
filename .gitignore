@@ -3,6 +3,8 @@ nodeLinker: node-modules
 #  sample data file
 backend/src/admin/createData/*
 *.csv
+# /serverless can be ignored since they get regenrates eveytime you deploy
+.serverless/
 # sensatvie file data
 API_KEY.ts
 .env
