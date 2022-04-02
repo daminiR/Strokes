@@ -1,10 +1,23 @@
 import { Document, Model} from 'mongoose'
+interface Data {
+  img_idx: number;
+  imageURL: string;
+  filePath: string;
+}
+interface DisplayData {
+  imageURL: string;
+  filePath: string;
+}
+interface MessageType {
+  sender: string
+  receiver: string
+  text: string;
+}
 export interface ImageSetT {
   imageURL: string;
   img_idx: number;
   filePath: string;
 }
-
 export interface DeleteT {
   isDeleted: boolean;
   deletedAt: ISODate;
@@ -65,3 +78,4 @@ export interface SquashDocument extends Document {
   visableLikePerDay : number
   sportChangesPerDay : number
 }
+
