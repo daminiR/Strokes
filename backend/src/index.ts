@@ -33,17 +33,17 @@ const startServer = async () => {
     resolvers
     //context: async ({ req, res }) => ({ req, res, pubsub }),
     //schema,
-    //plugins: [
-      //{
-        //async serverWillStart() {
-          //return {
-            //async drainServer() {
-              //subscriptionServer.close();
-            //},
-          //};
-        //},
-      //},
-    //],
+    plugins: [
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              subscriptionServer.close();
+            },
+          };
+        },
+      },
+    ],
   });
   //await server.start()
   server.createHandler()
@@ -80,9 +80,9 @@ const startServer = async () => {
   //)
   .catch((error) => {console.log(error)})
   ////////////////////////////////////////////
-  httpServer.listen({ port: 4000 }, () =>
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-  );
+  //httpServer.listen({ port: 4000 }, () =>
+    //console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+  //);
   exports.graphqlHandler = server.createHandler();
 };
 startServer();

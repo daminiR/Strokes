@@ -2,13 +2,16 @@
 service: apollo-lambda
 plugins:
   - serverless-plugin-typescript
-  #- serverless-dotenv-plugin
+  - serverless-dotenv-plugin
 #package:
   #exclude:
     #- node_modules/**
 provider:
   name: aws
   runtime: nodejs14.x
+  environment:
+    ATLAS_URI: ${env:ATLAS_URI}
+#useDotenv: true
 functions:
   graphql:
     # this is formatted as <FILENAME>.<HANDLER>
@@ -16,9 +19,9 @@ functions:
     handler: ./src/index.graphqlHandler
     vpc:
       securityGroupIds:
-        ${SecurityGroupIds}
+        - ${env:SG_ID}
       subnetIds:
-        ${SubnetIds}
+        - ${env:SN_ID}
     events:
     - http:
         path: /
