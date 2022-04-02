@@ -4,12 +4,24 @@ import  express from 'express';
 //import { ApolloServer, gql }  from 'apollo-server-express';
 import { ApolloServer, gql }  from 'apollo-server-lambda';
 import  mongoose, {ConnectOptions} from 'mongoose';
-import { resolvers } from './resolvers/resolvers'
+//import { resolvers } from './resolvers/resolvers'
+import merge from 'lodash'
+// resolver list modulerized
+import { mergeResolvers } from '@graphql-tools/merge';
+import {resolvers as deleteUser} from './resolvers/deleteUser'
+import {resolvers as createUser} from './resolvers/createUSer'
+import {resolvers as likesDislikes} from './resolvers/likesDislikes'
+import {resolvers as matches} from './resolvers/matches'
+import {resolvers as messaging} from './resolvers/messaging'
+import {resolvers as random} from './resolvers/random'
+import {resolvers as testResolvers} from './resolvers/testResolvers'
+import {resolvers as updateUser} from './resolvers/updateUser'
+import {resolvers as uploads} from './resolvers/uploads'
+
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
 import { Storage } from '@google-cloud/storage'
 import * as path from 'path'
-//import { pubsub } from './pubsub'
 import { PubSub } from 'graphql-subscriptions';
 import { createServer } from 'http';
 import { execute, subscribe } from 'graphql';
@@ -26,13 +38,29 @@ const startServer = async () => {
   const app = express()
   app.use(graphqlUploadExpress())
   const httpServer = createServer(app)
-  const schema = makeExecutableSchema({ typeDefs, resolvers });
+  const resolvers2 = mergeResolvers(
+    [
+      createUser,
+      deleteUser,
+      likesDislikes,
+      matches,
+      random,
+      testResolvers,
+      //messaging,
+      updateUser,
+      uploads,
+    ]
+  );
+  const schema = makeExecutableSchema({
+    typeDefs: typeDefs,
+    resolvers: resolvers2,
+  });
   //const pubsub = new PubSub()
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    //typeDefs,
+    //resolvers2,
     //context: async ({ req, res }) => ({ req, res, pubsub }),
-    //schema,
+    schema: schema,
     plugins: [
       {
         async serverWillStart() {

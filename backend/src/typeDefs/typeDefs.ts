@@ -1,133 +1,25 @@
 //import {gql} from 'apollo-server-express';
-import { gql }  from 'apollo-server-lambda';
+import { gql } from "apollo-server-lambda";
+import { MessageDocument} from '../types/Messages.d'
+import {
+  LocationType,
+  MessageType,
+  DeletedType,
+  SquashNodeType,
+  DataType,
+  ImageData,
+  ageRange,
+  PotentialMatchUserType,
+  LikedByUserType,
+  LikedByUserInputType,
+  userExistT,
+  PotentialMatchUserInputType,
+  SquashType,
+  SquashInputType
+} from '../types/UserDefs'
 //TODO: change inout ype for age to be Int! but after you configure the birthdate resolver
 //TODO: need to add apollo server error handling
 //TODO: ADD enum check for states and countt maybe
- const LocationType = `
-    city: String!,
-    state: String!,
-    country: String!
-`;
- const MessageType = `
- _id: ID!,
- sender: String!,
- receiver: String!,
- text: String!
- createdAt: String
-`;
- const DeletedType = `
- isDeleted: Boolean,
- deletedAt: String,
-`;
- const SquashNodeType = `
-    sport: String!,
-    game_level: String!,
-`
-  const DataType = `
-    img_idx: Int!,
-    imageURL: String!,
-    filePath: String!
-`
-  const ImageData = `
-    img_idx: Int!,
-    file: FileUpload!
-`
-  const ageRange = `
-    minAge: Int!,
-    maxAge: Int!
-`
-const PotentialMatchUserType = `
-    _id: ID!
-    first_name: String!
-    age: Int!
-    gender: String!
-    sports: [SquashNode!]!
-    description: String
-    location: LocationType!
-    image_set: [Data!]!
-`
-const LikedByUserType = `
-    _id: ID!
-    first_name: String!
-    age: Int!
-    gender: String!
-    sports: [SquashNode!]!
-    description: String
-    location: LocationType!
-    image_set: [Data!]!
-`
-const LikedByUserInputType = `
-    _id: ID!
-    first_name: String!
-    age: Int!
-    gender: String!
-    sports: [SquashNodeInput!]!
-    description: String
-    image_set: [DataInput!]!
-    location: LocationInput!
-`
-const userExistT = `
-    isPhoneExist: Boolean!
-    isDeleted: Boolean!
-`
-export const PotentialMatchUserInputType = `
-    _id: ID!
-    first_name: String!
-    age: Int!
-    gender: String!
-    sports: [SquashNodeInput!]!
-    description: String
-    image_set: [DataInput!]!
-    location: LocationInput!
-`
-const SquashType = `
-    first_name: String!
-    last_name: String!
-    _id: ID!
-    age: Int!
-    gender: String!
-    sports: [SquashNode!]!
-    location: Location!
-    description: String
-    image_set: [Data!]!
-    matches : [PotentialMatch!]
-    blocked_me : [PotentialMatch!]
-    i_blocked : [PotentialMatch!]
-    likes : [String!]
-    swipesPerDay: Int!
-    sportChangesPerDay: Int!
-    visableLikePerDay: Int!
-    dislikes : [String!]
-    likedByUSers: [LikedByUser!]
-    deleted: DeletedT
-    phoneNumber: String
-    email: String
-  `
-
-const SquashInputType = `
-    first_name: String!
-    last_name: String!
-    _id: ID!
-    age: Int!
-    gender: String!
-    sports: [SquashNodeInput!]!
-    location: LocationInput!
-    description: String
-    image_set: [DataInput!]!
-    deleted: DeletedInput
-    matches : [PotentialMatchInput!]
-    blocked_me : [PotentialMatchInput!]
-    i_blocked : [PotentialMatchInput!]
-    likes : [String!]
-    dislikes : [String!]
-    swipesPerDay: Int!
-    sportChangesPerDay: Int!
-    visableLikePerDay: Int!
-    likedByUSers: [LikedByUserInput!]
-    phoneNumber: String
-    email: String
-  `
-
 export const typeDefs = gql`
   type Message {
     ${MessageType}
