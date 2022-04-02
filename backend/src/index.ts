@@ -30,7 +30,7 @@ const startServer = async () => {
   //const pubsub = new PubSub()
   const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
     //context: async ({ req, res }) => ({ req, res, pubsub }),
     //schema,
     plugins: [
@@ -49,19 +49,19 @@ const startServer = async () => {
   server.createHandler()
   //server.applyMiddleware({ app });
   //console.log("path", server.graphqlPath)
-  //const subscriptionServer = SubscriptionServer.create({
-   //// This is the `schema` we just created.
-   //schema,
-   //// These are imported from `graphql`.
-   //execute,
-   //subscribe,
-//}, {
-   //// This is the `httpServer` we created in a previous step.
-   //server: httpServer,
-   //// This `server` is the instance returned from `new ApolloServer`.
-   //path: server.graphqlPath,
-   ////path: '/subscriptions',
-//});
+  const subscriptionServer = SubscriptionServer.create({
+   // This is the `schema` we just created.
+   schema,
+   // These are imported from `graphql`.
+   execute,
+   subscribe,
+}, {
+   // This is the `httpServer` we created in a previous step.
+   server: httpServer,
+   // This `server` is the instance returned from `new ApolloServer`.
+   path: server.graphqlPath,
+   //path: '/subscriptions',
+});
   //////////// cloud stuff //////////////
   googleCloud.getBuckets().then((x) => {
     console.log(x)
@@ -74,10 +74,6 @@ const startServer = async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   } as ConnectOptions)
-  //})
-  //.then(
-    //console.log("connected")
-  //)
   .catch((error) => {console.log(error)})
   ////////////////////////////////////////////
   //httpServer.listen({ port: 4000 }, () =>
