@@ -20,9 +20,6 @@ import {
   dest_gcs_images,
   POST_CHANNEL
 } from "../constants/";
-//import { PubSub } from 'graphql-subscriptions';
-import { pubsub } from '../pubsub'
-//const pubsub = new PubSub()
 export const resolvers = {
   Query: {
     matchesNotOptim: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange, dislikes}, context, info) => {

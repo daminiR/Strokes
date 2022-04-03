@@ -20,9 +20,6 @@ import {
   dest_gcs_images,
   POST_CHANNEL
 } from "../constants/";
-//import { PubSub } from 'graphql-subscriptions';
-import { pubsub } from '../pubsub'
-//const pubsub = new PubSub()
 export const resolvers = {
   Mutation: {
     createSquash2: async (

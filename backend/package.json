@@ -21,6 +21,7 @@
     "moment": "^2.29.1",
     "mongoose": "^6.1.4",
     "nodemon": "^2.0.12",
+    "serverless-plugin-pubsub": "^0.5.1",
     "subscriptions-transport-ws": "^0.11.0",
     "typescript": "^4.1.3"
   },

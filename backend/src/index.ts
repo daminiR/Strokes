@@ -46,7 +46,7 @@ const startServer = async () => {
       matches,
       random,
       testResolvers,
-      //messaging,
+      messaging,
       updateUser,
       uploads,
     ]
@@ -61,35 +61,50 @@ const startServer = async () => {
     //resolvers2,
     //context: async ({ req, res }) => ({ req, res, pubsub }),
     schema: schema,
-    plugins: [
-      {
-        async serverWillStart() {
-          return {
-            async drainServer() {
-              subscriptionServer.close();
-            },
-          };
-        },
-      },
-    ],
+    //context: async ({ req, connection }) => {
+      //if (connection) {
+        //return {
+          //...connection.context,
+          //pubsub,
+        //};
+      //} else {
+        //return { pubsub };
+      //}
+    //},
+    //subscriptions: {
+      //path: "/subscriptions",
+      //onConnect: () => console.log("Connected"),
+      //onDisconnect: () => console.log("Disconnected"),
+    //},
+    //plugins: [
+    //{
+    //async serverWillStart() {
+    //return {
+    //async drainServer() {
+    //subscriptionServer.close();
+    //},
+    //};
+    //},
+    //},
+    //],
   });
   //await server.start()
   server.createHandler()
   //server.applyMiddleware({ app });
   //console.log("path", server.graphqlPath)
-  const subscriptionServer = SubscriptionServer.create({
-   // This is the `schema` we just created.
-   schema,
-   // These are imported from `graphql`.
-   execute,
-   subscribe,
-}, {
-   // This is the `httpServer` we created in a previous step.
-   server: httpServer,
-   // This `server` is the instance returned from `new ApolloServer`.
-   path: server.graphqlPath,
-   //path: '/subscriptions',
-});
+  //const subscriptionServer = SubscriptionServer.create({
+   //// This is the `schema` we just created.
+   //schema,
+   //// These are imported from `graphql`.
+   //execute,
+   //subscribe,
+//}, {
+   //// This is the `httpServer` we created in a previous step.
+   //server: httpServer,
+   //// This `server` is the instance returned from `new ApolloServer`.
+   //path: server.graphqlPath,
+   ////path: '/subscriptions',
+//});
   //////////// cloud stuff //////////////
   googleCloud.getBuckets().then((x) => {
     console.log(x)
