@@ -1,0 +1,4 @@
+ATLAS_URI=mongodb+srv://damini:turing2030@cluster0.xmukg.mongodb.net/<dbname>?retryWrites=true&w=majority
+REDIS_DOMAIN_NAME='127.0.0.1'
+REDIS_AWS='chatcluster.kxyrsy.ng.0001.use1.cache.amazonaws.com'
+PORT_NUMBER='6379'
