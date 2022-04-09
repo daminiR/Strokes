@@ -14,4 +14,5 @@ const Chat  = ({ navigation }: ChatT ): ReactElement => {
     </>
   );
 }
+
 export { Chat }

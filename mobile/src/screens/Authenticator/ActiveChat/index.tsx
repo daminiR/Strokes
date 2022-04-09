@@ -81,13 +81,14 @@ const ActiveChat = ({ route, navigation}) => {
     <>
       <AppContainer loading={loadingDeleteChat}>
         <ActiveChatView/>
-        <ChatUserSettings
-          deleteButton={_onPressDelete}
-          setDisplayInput={setDisplayInput}
-          displayInput={displayInput}
-        />
       </AppContainer>
     </>
   );
 }
+        //<ActiveChatView/>
+        //<ChatUserSettings
+          //deleteButton={_onPressDelete}
+          //setDisplayInput={setDisplayInput}
+          //displayInput={displayInput}
+        ///>
 export {ActiveChat}

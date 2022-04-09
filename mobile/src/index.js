@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState, ReactElement } from 'react'
 import { Text} from 'react-native'
 import { cache, persist} from './cache'
 import {AuthNavigator} from '@screens'
+import { Platform } from 'react-native';
 import { from ,createHttpLink, ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
 import { FormProvider } from './Contexts/FormContext'
 import {split} from '@apollo/client'
@@ -12,13 +13,54 @@ import  { createUploadLink } from 'apollo-upload-client';
 import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { LogBox } from 'react-native'
+import SendBird from 'sendbird';
 import { AppContainer } from '@components'
+import messaging from '@react-native-firebase/messaging';
+import { onRemoteMessage } from './utils/SendBird'
 
 //TODO: async funtion persist check later
 
 export const RootRefreshContext = createContext(null);
+const sendbird = new SendBird({ appId });
+sendbird.setErrorFirstCallback(true);
 const App = () =>
+//const App = async () =>
 {
+  console.log("sendbird in auth", sendbird)
+  const savedUserKey = 'savedUser';
+  //await AsyncStorage.removeItem(savedUserKey)
+
+  useEffect(() => {
+    AsyncStorage.getItem(savedUserKey)
+      .then(async user => {
+        console.log("userrr", user)
+        try {
+          if (user) {
+            const authorizationStatus = await messaging().requestPermission();
+            if (
+              authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+              authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
+            ) {
+              if (Platform.OS === 'ios') {
+                const token = await messaging().getAPNSToken();
+                sendbird.registerAPNSPushTokenForCurrentUser(token);
+              } else {
+                const token = await messaging().getToken();
+                sendbird.registerGCMPushTokenForCurrentUser(token);
+              }
+            }
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })
+      .catch(err => console.error(err));
+
+    if (Platform.OS !== 'ios') {
+      const unsubscribeHandler = messaging().onMessage(onRemoteMessage);
+      return unsubscribeHandler;
+    }
+  }, []);
   const [client, setClient] = useState();
   const [persistor, setPersistor] = useState();
   const [loadingClient, setLoadingClient] = useState(true);
@@ -86,7 +128,7 @@ const App = () =>
     return (
       <AppContainer loading={loadingSignUpInRefresh}>
         <RootRefreshContext.Provider value={rootRefreshValues}>
-          <AuthNavigator/>
+          <AuthNavigator sendbird={sendbird}/>
         </RootRefreshContext.Provider>
       </AppContainer>
     );
@@ -104,7 +146,6 @@ const App = () =>
           </ApolloProvider>
       );
     }
-
   client.resetStore()
   client.resetStore()
   //just to reset cache for debugging
