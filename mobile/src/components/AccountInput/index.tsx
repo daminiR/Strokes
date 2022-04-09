@@ -20,7 +20,7 @@ import _  from 'lodash'
 const AccountDetails = ({signOut}) => {
   const client = useApolloClient();
   const [inputType, setInputType] = useState();
-  const {currentUser, currentUserData, userData, userLoading, refetchUserData} = useContext(UserContext)
+  const {currentUser, currentUserData, sendbird, userData, userLoading, refetchUserData} = useContext(UserContext)
   const [phoneNumber, setPhoneNumber] = useState(null)
   const [loading, setLoading] = useState(true)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -31,7 +31,7 @@ const AccountDetails = ({signOut}) => {
   const [softDeleteUser] = useMutation(SOFT_DELETE_PROFILE,{
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     onCompleted: () => {
-      _onPressSignOut(setDisplayInput, client)
+      _onPressSignOut(setDisplayInput, client, sendbird)
       console.log('Succesful signout, and soft delete');
     },
   });

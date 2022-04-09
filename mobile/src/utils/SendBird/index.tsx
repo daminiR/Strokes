@@ -7,6 +7,38 @@ const channelNameMaxMembers = 3;
 const channelNameEllipsisLength = 32;
 const maxUnreadMessageCount = 99;
 
+export const connect = (uid, nickname, dispatch, sendbird, start) => {
+    console.log('Connect Error nickname ....', uid);
+    dispatch({type: 'start-connection'});
+    sendbird.connect(uid, (err, user) => {
+      if (!err) {
+        console.log('Connect Error everyload', user.nickname);
+        console.log('Connect Error nickname ....', nickname);
+        if (user.nickname !== nickname) {
+            console.log('signup', user.nickname);
+            sendbird.updateCurrentUserInfo(nickname, '', (err, user) => {
+            dispatch({type: 'end-connection'});
+            if (!err) {
+              console.log("Connet Error: did we hit here")
+              start(user);
+            } else {
+              //showError(err.message);
+            }
+          });
+        } else {
+            console.log('signin', user.nickname);
+          dispatch({type: 'end-connection'});
+          start(user);
+        }
+      } else {
+        dispatch({type: 'end-connection'});
+        console.log('Connect Error error ....', err);
+        //showError(err.message);
+      }
+    });
+    //}
+  };
+
 export const ellipsis = (s, len) => {
   return s.length > len ? s.substring(0, len) + '..' : s;
 };

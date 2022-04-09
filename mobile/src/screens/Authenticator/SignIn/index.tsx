@@ -1,5 +1,6 @@
-import React, { useEffect, useContext, useState, ReactElement } from 'react'
+import React, { useReducer, useEffect, useContext, useState, ReactElement } from 'react'
 import auth from '@react-native-firebase/auth'
+import {connect} from '../../../utils/SendBird'
 import { useFormikContext, Formik} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
 import {signInSlides, iniitialSignInForm} from '@constants'
@@ -13,9 +14,11 @@ import { CHECK_PHONE_INPUT } from '@graphQL2'
 import {View, Keyboard} from 'react-native'
 import {styles }from '@styles'
 import  { signInSchema } from '@validation'
+import { UserContext} from '@UserContext'
 import {useLazyQuery, useQuery} from '@apollo/client'
 import {RootRefreshContext} from '../../../index.js'
 import  _ from 'lodash'
+import { loginReducer } from '../../../reducers/Login';
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
 type SignInT = {
@@ -37,6 +40,12 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
 }
 
 export const Slider =  ({changeEmail}) => {
+  const [state, dispatch] = useReducer(loginReducer, {
+    userId: '',
+    nickname: '',
+    error: '',
+    connecting: false,
+  });
   const {validateField, setTouched, values, errors, touched, setFieldTouched} = useFormikContext<ProfileFields>();
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -48,6 +57,7 @@ export const Slider =  ({changeEmail}) => {
   const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [isKeyboardShown, setIsKeyboardShown] = useState(undefined);
   const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
+  const {sendbird, onLogin, setIsUseOnMongoDb, setIsSignIn} = useContext(UserContext)
   const [checkPhoneInput, {data: userPhoneInfo}] = useLazyQuery(CHECK_PHONE_INPUT, {
     onCompleted: (data) => {
       if (
@@ -133,14 +143,21 @@ const _checkSignIn = () => {
     : /// user doesnt exist  so he CAN NOT sign in(firebase allwos autmatic phon sigin ) again, but msg is left vague to prevent
       setNoUserFoundMessage('invalid code or phone number');
 }
+const start = user => {
+    if (onLogin) {
+      onLogin(user);
+    }
+  };
 const [authMessage, setAuthMessage] = useState(null)
 const _confirmSignInGC = () => {
   //console.log("confirmation func", confirmationFunc)
   //setLoadingSubmit(true);
+  setIsSignIn(true)
   //setLoadingSignUInRefresh(true)
   confirmationFunc
     .confirm(values.confirmationCode)
     .then((userCredential) => {
+      //setLoadingSignUInRefresh(true)
       if (userCredential.additionalUserInfo.isNewUser){
         auth().currentUser.delete().then(() => {
           setLoadingSubmit(true);
@@ -148,7 +165,8 @@ const _confirmSignInGC = () => {
         })
       }
       //setLoadingSignUInRefresh(false)
-      console.log('logged in');
+      //setIsUseOnMongoDb(true);
+      //setLoadingSubmit(true);
       //if (changeEmail) {
       //setAuthOverlay(true)
       //console.log("changeemail here")

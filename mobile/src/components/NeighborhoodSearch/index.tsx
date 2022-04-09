@@ -18,8 +18,10 @@ const GooglePlacesInput = ({isSignUp = false}) => {
   //}
   const ref = useRef(null);
   useEffect(() => {
-    const GooglePlacesProps = ref.current;
-      GooglePlacesProps?.setAddressText(values?.location?.city);
+      const GooglePlacesProps = ref.current;
+      if (values?.location?.city) {
+        GooglePlacesProps?.setAddressText(values?.location?.city);
+      }
   }, []);
   const _onPressLocation = (data, details=null) => {
 //         'details' is provided when fetchDetails = true

@@ -1,7 +1,10 @@
 export const loginReducer = (state, action) => {
+  console.log("Connect Error action", action)
   switch (action.type) {
     case 'edit-userId': {
       const { content } = action.payload || {};
+      console.log("Connect Error edit-uihhhhhh", content)
+      console.log({ ...state, userId: content })
       return { ...state, userId: content };
     }
     case 'edit-nickname': {

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState, ReactElement } from 'react'
+import React, { useReducer, useEffect, useContext, useState, ReactElement } from 'react'
 import {useLazyQuery, useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
 import {useNavigation} from '@react-navigation/native';
@@ -8,6 +8,7 @@ import {  RootStackSignOutParamList } from 'src/navigation'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import {CHECK_PHONE_INPUT, ADD_PROFILE2 } from '@graphQL2'
 import {ProfileFields} from '@localModels';
+import { loginReducer } from '../../../reducers/Login';
 import {
   NeighborhoodSearch,
   ConfirmationCode,
@@ -24,6 +25,7 @@ import {
   PrevButton,
   AppContainer,
 } from '@components';
+import {connect} from '../../../utils/SendBird'
 import { registerOnFirebase, registerOnMongoDb} from '@utils'
 import { UserContext} from '@UserContext'
 import {Keyboard, View} from 'react-native'
@@ -51,9 +53,16 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
   );
 }
 const Slider =  () => {
+  //const { sendbird, onLogin } = props;
+  const [state, dispatch] = useReducer(loginReducer, {
+    userId: '',
+    nickname: '',
+    error: '',
+    connecting: false,
+  });
   const {values, errors, setFieldValue, setFieldTouched, touched} = useFormikContext<ProfileFields>();
   const [newLocation, setNewLocation] = useState(null)
-  const {setIsUseOnMongoDb} = useContext(UserContext)
+  const {setIsUseOnMongoDb, sendbird, onLogin} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -146,6 +155,12 @@ const _checkSignIn = () => {
     : setNoUserFoundMessage('invalid code or phone number');
 
 }
+  const start = user => {
+    if (onLogin) {
+      onLogin(user);
+    }
+  };
+
 const _confirmSignInGC = () => {
     // promise in parralell
       confirmationFunc
@@ -158,6 +173,8 @@ const _confirmSignInGC = () => {
           registerOnMongoDb(values, userCredential.user.uid, createSquash2)
             .then(() => {
               //setInitialFilters()
+              // register to sendbird
+              connect(userCredential.user.uid, values.first_name, dispatch, sendbird, start)
               console.log('logged in');
               setIsUseOnMongoDb(true);
               setLoadingSubmit(false);

@@ -13,7 +13,7 @@ import  { createUploadLink } from 'apollo-upload-client';
 import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { LogBox } from 'react-native'
-import SendBird from 'sendbird';
+import SendBird from 'sendbird'
 import { AppContainer } from '@components'
 import messaging from '@react-native-firebase/messaging';
 import { onRemoteMessage } from './utils/SendBird'

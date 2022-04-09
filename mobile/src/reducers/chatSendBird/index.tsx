@@ -25,6 +25,7 @@ export const chatReducer = (state, action) => {
         const message = distinctMessages[i];
         messageMap[message.reqId] = true;
       }
+      console.log("mergedM", mergedMessages)
       return {
         ...state,
         messages: mergedMessages,
