@@ -1,6 +1,7 @@
 import React from 'react'
 import {createStackNavigator } from '@react-navigation/stack'
-import {ActiveChat, Profile, Chat, Match, Likes} from '@screens'
+import {ActiveChat, Profile, Chat, Match, Likes, Login} from '@screens'
+import Lobby from '../../screens/Authenticator/Lobby'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {tabBarSize} from '@constants'
@@ -23,6 +24,8 @@ export type RootStackSignInParamList = {
   LAST_NAME: undefined
   GENDER: undefined
   LIKES: undefined
+  LOBBY: undefined
+  LOGIN: undefined
 }
  const ProfileStackScreen = () => {
   return (
@@ -34,8 +37,10 @@ export type RootStackSignInParamList = {
  const ChatStackScreen = () => {
   return (
     <ChatStack.Navigator>
+      <ProfileStack.Screen  options={{headerShown:true }} name="LOBBY" component={Lobby} />
       <ProfileStack.Screen options={{headerShown:false}} name="CHAT" component={Chat} />
       <ProfileStack.Screen  options={{headerShown:true }} name="ACTIVE_CHAT" component={ActiveChat} />
+      <ProfileStack.Screen  options={{headerShown:true }} name="LOGIN" component={Lobby} />
     </ChatStack.Navigator>
   );
 }
@@ -99,4 +104,3 @@ const customTabBarStyle = {
 
 
 export {MatchStackScreen, ChatStackScreen, ProfileStackScreen}
-

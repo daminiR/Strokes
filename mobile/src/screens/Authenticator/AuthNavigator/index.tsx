@@ -17,7 +17,7 @@ import {RootRefreshContext} from '../../../index.js'
 export const UserContext = createContext(null);
 import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} from '@utils'
 
-const AuthNavigator = () => {
+const AuthNavigator = ({sendbird}) => {
   //auth().currentUser.delete().then(() => {})
   const [currentUser, setCurrentUser ] = useState(null)
   const [isProfileComplete, setProfileState ] = useState(false)
@@ -196,7 +196,8 @@ const AuthNavigator = () => {
     imageErrorVisible: imageErrorVisible,
     setImageErrorVisible: setImageErrorVisible,
     changeSport: changeSport,
-    setChangeSport: setChangeSport
+    setChangeSport: setChangeSport,
+    sendbird: sendbird
   };
   const render2 = () =>{
     console.log(
