@@ -45,15 +45,19 @@ const Login = props => {
     ]).start();
   };
   const connect = () => {
-    if (!state.connecting) {
-      if (state.userId && state.nickname) {
+    //if (!state.connecting) {
+    const uid ="342834ekfsakdf"
+    const nickname ="checking"
+    //dispatch({type: 'edit-userId', payload: {content : uid}});
+    //dispatch({type: 'edit-nickname', payload: {content: nickname}});
+    //console.log("Connect Error dispathc ", state)
+       //if (state.userId && state.nickname) {
+        console.log("Connect Error, uidiside ")
         dispatch({ type: 'start-connection' });
-        Keyboard.dismiss();
-
-        sendbird.connect(state.userId, (err, user) => {
+        sendbird.connect(uid, (err, user) => {
           if (!err) {
-            if (user.nickname !== state.nickname) {
-              sendbird.updateCurrentUserInfo(state.nickname, '', (err, user) => {
+            if (user.nickname !== nickname) {
+              sendbird.updateCurrentUserInfo(nickname, '', (err, user) => {
                 dispatch({ type: 'end-connection' });
                 if (!err) {
                   start(user);
@@ -70,10 +74,8 @@ const Login = props => {
             showError(err.message);
           }
         });
-      } else {
-        showError('Please put your user ID and nickname.');
-      }
-    }
+      //}
+    //}
   };
   const start = user => {
     if (onLogin) {
@@ -95,13 +97,13 @@ const Login = props => {
           <TextInput
             placeholder={'User ID'}
             editable={!state.connecting}
-            onChangeText={content => dispatch({ type: 'edit-userId', payload: { content } })}
+            //onChangeText={content => dispatch({ type: 'edit-userId', payload: { content } })}
             style={style.loginInput}
           />
           <TextInput
             placeholder={'Nickname'}
             editable={!state.connecting}
-            onChangeText={content => dispatch({ type: 'edit-nickname', payload: { content } })}
+            //onChangeText={content => {}}
             style={style.loginInput}
           />
           <TouchableOpacity

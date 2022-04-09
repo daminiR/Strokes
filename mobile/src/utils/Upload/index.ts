@@ -25,18 +25,24 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     console.log("filevalue,",RNFile)
     uploadFile({variables: {file: RNFile}});
  }
-  const _onPressSignOut = async (setDisplayInput, client) : Promise<void> => {
+  const _onPressSignOut = async (
+    setDisplayInput,
+    client,
+    sendbird,
+  ): Promise<void> => {
+    const savedUserKey = 'savedUser';
     await auth()
       .signOut()
       .then((res) => {
-        AsyncStorage.clear()
-        setDisplayInput(false)
+        AsyncStorage.clear();
+        sendbird.disconnect();
+        setDisplayInput(false);
         client.resetStore();
         console.log('Succesful signout');
       })
       .catch((err) => {
         console.log(err.code);
       });
-  }
+  };
 
 export {_onPressSignOut}

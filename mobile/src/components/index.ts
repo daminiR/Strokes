@@ -51,3 +51,10 @@ export * from './Matches/'
 export * from './MatchList/'
 export * from './Patron/'
 export * from './MessagesList/'
+
+
+// messages
+export * from './SendBirdMessage/'
+export * from './SendBirdMessage/userMessage'
+export * from './SendBirdMessage/fileMessage'
+export * from './SendBirdMessage/adminMessage'

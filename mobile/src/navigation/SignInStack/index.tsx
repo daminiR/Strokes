@@ -1,6 +1,7 @@
 import React from 'react'
 import {createStackNavigator } from '@react-navigation/stack'
 import {ActiveChat, Profile, Chat, Match, Likes, Login} from '@screens'
+import {SendBirdChat} from '../../screens/Authenticator/SendBirdChat'
 import Lobby from '../../screens/Authenticator/Lobby'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -16,7 +17,6 @@ export type RootStackSignInParamList = {
   PROFILE: {data: number}
   EDIT_SPORTS: undefined
   EDIT_DESCRIPTION: undefined
-  CHAT: undefined
   ACTIVE_CHAT: undefined
   MATCH: undefined
   FIRST_NAME: undefined
@@ -26,6 +26,8 @@ export type RootStackSignInParamList = {
   LIKES: undefined
   LOBBY: undefined
   LOGIN: undefined
+  CHAT: undefined
+  SBCHAT: undefined
 }
  const ProfileStackScreen = () => {
   return (
@@ -38,6 +40,7 @@ export type RootStackSignInParamList = {
   return (
     <ChatStack.Navigator>
       <ProfileStack.Screen  options={{headerShown:true }} name="LOBBY" component={Lobby} />
+      <ProfileStack.Screen options={{headerShown:false}} name="SBCHAT" component={SendBirdChat} />
       <ProfileStack.Screen options={{headerShown:false}} name="CHAT" component={Chat} />
       <ProfileStack.Screen  options={{headerShown:true }} name="ACTIVE_CHAT" component={ActiveChat} />
       <ProfileStack.Screen  options={{headerShown:true }} name="LOGIN" component={Lobby} />

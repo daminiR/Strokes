@@ -1,9 +1,12 @@
-import React, {useContext, createContext, useRef, useEffect, useState} from "react";
+import React, {useReducer, useContext, createContext, useRef, useEffect, useState} from "react";
 import auth from '@react-native-firebase/auth'
+import messaging from '@react-native-firebase/messaging';
 import { Formik} from 'formik'
 import {byGameLevel} from '@utils'
+import { loginReducer } from '../../../reducers/Login';
 import {styles} from '@styles'
 import _ from 'lodash'
+import { Platform } from 'react-native';
 import FlashMessage from "react-native-flash-message";
 import { SignOutStack, MatchStackScreen} from '@NavStack'
 import { SWIPED_LEFT, READ_SQUASH, MESSAGE_POSTED, GET_POTENTIAL_MATCHES} from '@graphQL2'
@@ -13,12 +16,20 @@ import  {cityVar} from '@cache'
 import  {AppContainer} from '@components'
 import { useApolloClient} from '@apollo/client'
 import { showMessage, hideMessage } from "react-native-flash-message";
+import {connect} from '../../../utils/SendBird'
 import {RootRefreshContext} from '../../../index.js'
 export const UserContext = createContext(null);
 import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} from '@utils'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthNavigator = ({sendbird}) => {
   //auth().currentUser.delete().then(() => {})
+  const [state, dispatch] = useReducer(loginReducer, {
+    userId: '',
+    nickname: '',
+    error: '',
+    connecting: false,
+  });
   const [currentUser, setCurrentUser ] = useState(null)
   const [isProfileComplete, setProfileState ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(true);
@@ -34,8 +45,9 @@ const AuthNavigator = ({sendbird}) => {
   const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
   const [loadAllResults, setLoadAllResults] = useState(true)
+  const [isSignIn, setIsSignIn] = useState(false)
   const [initialValuesFormik, setInitialValuesFormik] = useState({});
-  //const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
+  const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const didMountRef = useRef(false)
   const [queryProssibleMatches, {data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
@@ -58,7 +70,12 @@ const AuthNavigator = ({sendbird}) => {
       if (data?.squash) {
         setDeleted(data.squash.deleted)
         setProfileState(true);
-        setData(data)
+        //setLoadingMatches(false)
+        setData(data);
+        if (isSignIn){
+          connect(data._id, data.first_name, dispatch, sendbird, start);
+          setIsSignIn(false)
+        }
       }
     },
     onError: (({graphQLErrors, networkError}) => {
@@ -112,8 +129,12 @@ const AuthNavigator = ({sendbird}) => {
     }
   }, [userLoading]);
   const client = useApolloClient();
+const start = user => {
+    if (login) {
+      login(user);
+    }
+  };
   const onAuthStateChanged = (currentUser) => {
-    console.log("do we make it here afte submit")
       setCurrentUser(currentUser);
       if (currentUser) {
         setLoadingMatches(true)
@@ -150,6 +171,31 @@ const AuthNavigator = ({sendbird}) => {
       console.log("figure logic for useRef")
     }
   }, [cityVar()])
+  const login = user => {
+    const savedUserKey = 'savedUser';
+    AsyncStorage.setItem(savedUserKey, JSON.stringify(user))
+      .then(async () => {
+        try {
+          setCurrentUser(user);
+          const authorizationStatus = await messaging().requestPermission();
+          if (
+            authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
+          ) {
+            if (Platform.OS === 'ios') {
+              const token = await messaging().getAPNSToken();
+              sendbird.registerAPNSPushTokenForCurrentUser(token);
+            } else {
+              const token = await messaging().getToken();
+              sendbird.registerGCMPushTokenForCurrentUser(token);
+            }
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })
+      .catch(err => console.error(err));
+  };
 
   //useEffect(() => {
     //// you have to add new alerts
@@ -197,7 +243,9 @@ const AuthNavigator = ({sendbird}) => {
     setImageErrorVisible: setImageErrorVisible,
     changeSport: changeSport,
     setChangeSport: setChangeSport,
-    sendbird: sendbird
+    sendbird: sendbird,
+    onLogin: login,
+    setIsSignIn: setIsSignIn
   };
   const render2 = () =>{
     console.log(
@@ -209,11 +257,12 @@ const AuthNavigator = ({sendbird}) => {
     if (userData?.squash && currentUser && (!deleted || !deleted.isDeleted)) {
       return !loadingSigning && !loadingMatches && <MatchStackScreen />;
     } else {
-      return !loadingUser && <SignOutStack />;
+      return !loadingUser && <SignOutStack/>;
     }
   }
 
   const renderRoot = () => {
+    console.log("renders root", loadingSigning, loadingUser, loadingMatches)
     return (
       <AppContainer loading={loadingSigning || loadingUser || loadingMatches}>
         <UserContext.Provider value={value}>

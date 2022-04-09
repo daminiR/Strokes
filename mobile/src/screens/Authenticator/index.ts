@@ -13,5 +13,7 @@ export * from './SignUp'
 export * from './ActiveChat'
 export * from './AuthNavigator'
 export * from './Channels'
+export * from './SendBirdChat'
+
 
 

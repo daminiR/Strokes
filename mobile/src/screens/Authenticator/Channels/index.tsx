@@ -26,7 +26,6 @@ const Channels = props => {
     empty: '',
     error: null,
   });
-
   console.log("states", state.channels)
   // on state change
   useEffect(() => {
@@ -138,23 +137,29 @@ const Channels = props => {
     }
   };
   const chat = channel => {
-    navigation.navigate('Chat', {
+    navigation.navigate('SBCHAT', {
       channel,
       currentUser,
     });
   };
   const refresh = () => {
     console.log("channesError: list of groupChannel", sendbird.GroupChannel)
-    setQuery(sendbird.GroupChannel.createMyGroupChannelListQuery());
-    console.log("query", query)
+    var q = sendbird.GroupChannel.createMyGroupChannelListQuery()
+    q.show_empty = true
+    q.includeEmpty = true
+    console.log("channesError: list of groupChannel", q)
+    //setQuery(sendbird.GroupChannel.createMyGroupChannelListQuery());
+    setQuery(q);
     dispatch({ type: 'refresh' });
   };
   const next = () => {
     if (query.hasNext) {
       console.log("channesError: list of quer", query)
       dispatch({ type: 'start-loading' });
-      query.limit = 20;
+      query.limit = 10;
       query.show_empty = true
+      query.includeEmpty = true
+      //query.include_empty = true
       query.next((err, fetchedChannels) => {
         console.log("channesError: list of fetched", fetchedChannels)
         console.log("channesError: list of err", err)

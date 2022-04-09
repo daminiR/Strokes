@@ -1,9 +1,11 @@
-import React, { useEffect, useState, useLayoutEffect, useContext} from 'react';
-import { Image, Text, TouchableOpacity, View, Platform } from 'react-native';
+import React, { useReducer, useEffect, useState, useLayoutEffect, useContext} from 'react';
+import { StyleSheet, Image, Text, TouchableOpacity, View, Platform } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { loginReducer } from '../../../reducers/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import {connect} from '../../../utils/SendBird'
 
 import { withAppContext } from '../../../AppContext';
 import {Login, Channels} from '@screens';
@@ -11,23 +13,36 @@ import {UserContext} from '@UserContext'
 import { handleNotificationAction } from '../../../utils/SendBird';
 
 const Lobby = props => {
-  const { navigation } = props;
-  const {sendbird} = useContext(UserContext)
+  const [state, dispatch] = useReducer(loginReducer, {
+    userId: '',
+    nickname: '',
+    error: '',
+    connecting: false,
+  });
+  const {navigation} = props;
+  const {data, sendbird} = useContext(UserContext);
   const [initialized, setInitialized] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const savedUserKey = 'savedUser';
-  //await AsyncStorage.removeItem('savedUser')
-
+  const start = (user) => {
+    if (login) {
+      login(user);
+    }
+  };
+  useLayoutEffect(() => {
+    connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start);
+  }, []);
   useLayoutEffect(() => {
     const title = currentUser ? (
-      <View style={style.headerLeftContainer}>
-      </View>
+      <View style={style.headerLeftContainer}></View>
     ) : null;
     //<Text style={style.headerTitle}>Channels</Text>
 
     const right = currentUser ? (
       <View style={style.headerRightContainer}>
-        <TouchableOpacity activeOpacity={0.85} style={style.profileButton} onPress={startChat}>
+        <TouchableOpacity
+          activeOpacity={0.85}
+          style={style.profileButton}
+          onPress={startChat}>
           <Icon name="chat" color="#fff" size={28} />
         </TouchableOpacity>
       </View>
@@ -40,76 +55,53 @@ const Lobby = props => {
     });
   }, [currentUser]);
 
-  useEffect(() => {
-    AsyncStorage.getItem(savedUserKey)
-      .then(user => {
-        if (user) {
-          setCurrentUser(JSON.parse(user));
+  const login = async (user) => {
+    try {
+      setCurrentUser(user);
+      const authorizationStatus = await messaging().requestPermission();
+      if (
+        authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
+      ) {
+        if (Platform.OS === 'ios') {
+          const token = await messaging().getAPNSToken();
+          sendbird.registerAPNSPushTokenForCurrentUser(token);
+        } else {
+          const token = await messaging().getToken();
+          sendbird.registerGCMPushTokenForCurrentUser(token);
         }
-        setInitialized(true);
-        return handleNotificationAction(navigation, sendbird, currentUser, 'lobby');
-      })
-      .catch(err => console.error(err));
-  }, []);
-
-  const login = user => {
-    AsyncStorage.setItem(savedUserKey, JSON.stringify(user))
-      .then(async () => {
-        try {
-          setCurrentUser(user);
-          const authorizationStatus = await messaging().requestPermission();
-          if (
-            authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-          ) {
-            if (Platform.OS === 'ios') {
-              const token = await messaging().getAPNSToken();
-              sendbird.registerAPNSPushTokenForCurrentUser(token);
-            } else {
-              const token = await messaging().getToken();
-              sendbird.registerGCMPushTokenForCurrentUser(token);
-            }
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      })
-      .catch(err => console.error(err));
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const logout = async () => {
-    await AsyncStorage.removeItem(savedUserKey);
     sendbird.disconnect();
     setCurrentUser(null);
   };
 
   const startChat = () => {
     if (currentUser) {
-      navigation.navigate('Invite', { currentUser });
+      navigation.navigate('Invite', {currentUser});
     }
   };
   const profile = () => {
     if (currentUser) {
-      navigation.navigate('Profile', { currentUser });
+      navigation.navigate('Profile', {currentUser});
     }
   };
 
   return (
     <>
-      {initialized ? (
-        currentUser ? (
-          <Channels {...props} sendbird={sendbird} currentUser={currentUser} />
-        ) : (
-          <Login {...props} sendbird={sendbird} onLogin={login} />
-        )
-      ) : (
-        <View />
+      {currentUser && (
+        <Channels {...props} sendbird={sendbird} currentUser={currentUser} />
       )}
     </>
   );
 };
 
-const style = {
+const style = StyleSheet.create({
   headerLeftContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -131,6 +123,6 @@ const style = {
   profileButton: {
     marginLeft: 10,
   },
-};
+})
 
 export default withAppContext(Lobby);
