@@ -90,6 +90,7 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
 
     // to slow ith liks condition
     const likedByIDs = _.map(currentUser.likedByUSers, likedByObj => {return likedByObj._id})
+    // if matched update matches and create a new group channel for two users from sb
     if (_.includes(likedByIDs, card._id)){
     const matchedUser = sanitizeCard(card)
     setMatched(true)

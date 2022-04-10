@@ -61,7 +61,6 @@ export const resolvers = {
       //// it is imperitive all the filter items are indexed!
       //just for testing!
       const matchingestingFIlter = [
-        "zlmfnsxombvhhgdaededeywqgrye",
         "rpdiszrxocuawphcjwfpfartqmjw",
         "bpikrcdgfptbmcfdxiuhsjtyixvw",
         "pkimewhaimvhcbffqeomhaxrvago",
