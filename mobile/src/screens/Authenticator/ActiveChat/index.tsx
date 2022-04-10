@@ -21,74 +21,74 @@ export type ActiveChatT = {
 }
 const ActiveChat = ({ route, navigation}) => {
   const [displayInput, setDisplayInput] = useState(false);
-  const {currentUserID, matchID, matchedUserProfileImage, matchedUserName} = route.params
+  //const {currentUserID, matchID, matchedUserProfileImage, matchedUserName} = route.params
+  const {currentUserID} = route.params
   const [loadingDeleteChat, setLoadinDeleteChat] = useState(false);
-  const [deleteChatUser] = useMutation(DELETE_CHAT_USER, {
-    onCompleted: () => {
-    },
-  })
-  useEffect(() => {
-    navigation.setOptions({
-      //title: matchedUserName,
-      headerRight: (props) => (
-        <View style={{flex: 1, justifyContent:'center', paddingHorizontal: 20}}>
-        <Icon
-          name="more-horiz"
-          type="material"
-          onPress={() => setDisplayInput(true)}
-        />
-        </View>
-      ),
-    });
-  }, [])
+  //const [deleteChatUser] = useMutation(DELETE_CHAT_USER, {
+    //onCompleted: () => {
+    //},
+  //})
+  //useEffect(() => {
+    //navigation.setOptions({
+      ////title: matchedUserName,
+      //headerRight: (props) => (
+        //<View style={{flex: 1, justifyContent:'center', paddingHorizontal: 20}}>
+        //<Icon
+          //name="more-horiz"
+          //type="material"
+          //onPress={() => setDisplayInput(true)}
+        ///>
+        //</View>
+      //),
+    //});
+  //}, [])
   const _onPressDelete = ()=> {
-    setLoadinDeleteChat(true)
-    deleteChatUser({variables: {
-      _idUser: currentUserID,
-       _idChatUser:matchID
-    }})
-    setDisplayInput(false)
-    navigation.goBack({loadingA: "AAAA"})
+    //setLoadinDeleteChat(true)
+    //deleteChatUser({variables: {
+      //_idUser: currentUserID,
+       //_idChatUser:matchID
+    //}})
+    //setDisplayInput(false)
+    //navigation.goBack({loadingA: "AAAA"})
 
-    setLoadinDeleteChat(true)
+    //setLoadinDeleteChat(true)
   }
-  useEffect(() => {
-    navigation.setOptions({
-      headerShown: true,
-      title: matchedUserName,
-      headerLeft: (props) => (
-        <View
-          style={{
-            flexDirection: 'row',
-          }}>
-          <HeaderBackButton
-            {...props}
-            onPress={() => {
-              navigation.goBack();
-            }}
-          />
-          <Avatar
-            avatarStyle={styles.avatarActiveChat}
-            size={'medium'}
-            rounded
-            source={{uri: matchedUserProfileImage}}
-          />
-        </View>
-      ),
-    });
-  }, [])
+  //useEffect(() => {
+    //navigation.setOptions({
+      //headerShown: true,
+      //title: matchedUserName,
+      //headerLeft: (props) => (
+        //<View
+          //style={{
+            //flexDirection: 'row',
+          //}}>
+          //<HeaderBackButton
+            //{...props}
+            //onPress={() => {
+              //navigation.goBack();
+            //}}
+          ///>
+          //<Avatar
+            //avatarStyle={styles.avatarActiveChat}
+            //size={'medium'}
+            //rounded
+            //source={{uri: matchedUserProfileImage}}
+          ///>
+        //</View>
+      //),
+    //});
+  //}, [])
   return (
     <>
       <AppContainer loading={loadingDeleteChat}>
+        <ChatUserSettings
+          deleteButton={_onPressDelete}
+          setDisplayInput={setDisplayInput}
+          displayInput={displayInput}
+        />
         <ActiveChatView/>
       </AppContainer>
     </>
   );
 }
-        //<ActiveChatView/>
-        //<ChatUserSettings
-          //deleteButton={_onPressDelete}
-          //setDisplayInput={setDisplayInput}
-          //displayInput={displayInput}
-        ///>
 export {ActiveChat}

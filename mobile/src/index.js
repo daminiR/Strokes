@@ -21,6 +21,8 @@ import { onRemoteMessage } from './utils/SendBird'
 //TODO: async funtion persist check later
 
 export const RootRefreshContext = createContext(null);
+const appId = 'F8478854-1145-4D6C-8733-0EBE87FEBFC7';
+//const appId = '9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23';
 const sendbird = new SendBird({ appId });
 sendbird.setErrorFirstCallback(true);
 const App = () =>

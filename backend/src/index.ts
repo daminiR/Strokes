@@ -69,6 +69,7 @@ const startServer = async () => {
   ////////// mongodb stuff //////////////////
   ////////////////////////////////////////////
   ////////// mongodb stuff //////////////////
+  const uri2 = "mongodb+srv://damini:turing2030@cluster0.xmukg.mongodb.net/<dbname>?retryWrites=true&w=majority"
   mongoose.connect(uri2, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
