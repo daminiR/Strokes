@@ -136,10 +136,17 @@ const Channels = props => {
       sendbird.setBackgroundState();
     }
   };
-  const chat = channel => {
+  const chat = (channel) => {
+    //navigation.navigate('ACTIVE_CHAT', {
+      //currentUserID: currentUser.uid,
+      ////matchID: item._id,
+      ////matchedUserProfileImage: profileImage,
+      ////matchedUserName: item.first_name,
+      ////profileViewData: item,
+    //});
     navigation.navigate('SBCHAT', {
-      channel,
-      currentUser,
+    channel,
+    currentUser,
     });
   };
   const refresh = () => {
