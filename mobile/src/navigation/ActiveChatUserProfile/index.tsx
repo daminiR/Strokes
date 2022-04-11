@@ -1,4 +1,5 @@
 import React from 'react'
+import {SendBirdChat} from '../../screens/Authenticator/SendBirdChat'
 import {ActiveChatProfileView, ActiveChatScreen} from '@components'
 import { createMaterialTopTabNavigator  } from '@react-navigation/material-top-tabs';
 import {tabBarSize} from '@constants'
@@ -52,19 +53,17 @@ const customTabBarStyle = {
       tabBarOptions={customTabBarStyle}
       initialRouteName="ProfileEdit">
       <ActiveChatTab.Screen
-        name="Chat Screen"
-        component={ActiveChatScreen}
+        name="Chat Profile Screen"
+        component={SendBirdChat}
         initialParams={route.params}
       />
       <ActiveChatTab.Screen
-        name="Chat Profile Screen"
+        name="Chat Screen"
         component={ActiveChatProfileView}
         initialParams={route.params}
       />
     </ActiveChatTab.Navigator>
   );
 }
-
-
 export {ActiveChatView}
 

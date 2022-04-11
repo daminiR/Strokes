@@ -172,6 +172,7 @@ var squashSchema = new Schema({
   matches: {
     type:<PotentialMatchT>{},
     required: false,
+    timestamps: true,
   },
   // new additions
   deleted: {

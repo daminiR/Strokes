@@ -1,4 +1,5 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useEffect, useContext, useReducer, useState} from 'react';
+import _ from 'lodash'
 import {
   StyleSheet,
   Text,
@@ -10,12 +11,14 @@ import {
   AppState,
 } from 'react-native';
 
+import {UserContext} from '@UserContext'
 import { channelsReducer } from '../../../reducers/Channels';
 import Channel from '../../../components/Channels';
 import { handleNotificationAction } from '../../../utils/SendBird';
 
 const Channels = props => {
   const { route, navigation, sendbird, currentUser } = props;
+  const {data: currentUserData} = useContext(UserContext)
   const [query, setQuery] = useState(null);
   const [state, dispatch] = useReducer(channelsReducer, {
     sendbird,
@@ -110,6 +113,9 @@ const Channels = props => {
     });
   };
 
+  // now that we have connection add all matches channels
+
+
   /// on channel event
   const channelHandler = new sendbird.ChannelHandler();
   channelHandler.onUserJoined = (channel, user) => {
@@ -137,17 +143,27 @@ const Channels = props => {
     }
   };
   const chat = (channel) => {
-    //navigation.navigate('ACTIVE_CHAT', {
-      //currentUserID: currentUser.uid,
-      ////matchID: item._id,
-      ////matchedUserProfileImage: profileImage,
-      ////matchedUserName: item.first_name,
-      ////profileViewData: item,
-    //});
-    navigation.navigate('SBCHAT', {
-    channel,
-    currentUser,
+    console.log("OPEN SB2", currentUser.userId)
+    console.log("OPEN SB2", channel.members[0].userId)
+    const other_user = _.filter(channel.members, (member)=> {return member.userId !== currentUser.userId})
+    const other_id = other_user[0].userId
+    //console.log("OPEN SB2 prof", currentUserData.squash.matches[0]._id)
+    const profileViewData = _.filter(currentUserData.squash.matches, (match)  => {return match._id === other_id})[0]
+    console.log("OPEN SB2 Prfo",profileViewData)
+    //const other_user = _.filter(channel.members, (member)=> {return member.userId !== currentUser.userId})
+    navigation.navigate('ACTIVE_CHAT', {
+      currentUserID: currentUser.uid,
+      channel: channel,
+      currentUser: currentUser,
+      //matchID: item._id,
+      //matchedUserProfileImage: profileImage,
+      //matchedUserName: item.first_name,
+      profileViewData: profileViewData,
     });
+    //navigation.navigate('SBCHAT', {
+    //channel,
+    //currentUser,
+    //});
   };
   const refresh = () => {
     console.log("channesError: list of groupChannel", sendbird.GroupChannel)
@@ -166,6 +182,22 @@ const Channels = props => {
       query.limit = 10;
       query.show_empty = true
       query.includeEmpty = true
+      // addd channels for ones that dont have any
+
+      _.map(currentUserData.squash.matches, (match) => {
+        var userIds = [currentUser.uid, match._id]
+        sendbird.GroupChannel.createChannelWithUserIds(
+          userIds,
+          true,
+          function (groupChannel, error) {
+            if (error) {
+              // Handle error.
+              console.log('SB_ERROR', error);
+            }
+            console.log('SB OPEN2', groupChannel);
+          },
+        );
+      })
       //query.include_empty = true
       query.next((err, fetchedChannels) => {
         console.log("channesError: list of fetched", fetchedChannels)

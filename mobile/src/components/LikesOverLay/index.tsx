@@ -18,7 +18,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
   const [profileTitle, setProfileTitle] = React.useState('')
   const [userProfile, setUserProfile] = React.useState(null)
   const [profileImageValue, setProfileImageValue] = React.useState(null)
-  const {currentUser, data, userData, setData, userLoading} = useContext(UserContext)
+  const {currentUser, data, userData, setData, userLoading, sendbird} = useContext(UserContext)
   const [matched, setMatched] = useState(false)
   const [updateLikes] = useMutation(UPDATE_LIKES, {
     onCompleted: () => {
@@ -44,8 +44,23 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     //awaitRefetchQueries: true,
-    onCompleted: () => {
+    onCompleted: (data) => {
       getSquashProfile({variables: {id: currentUser.uid}});
+      /// open channel with the two users
+      //if (data.updateMatches) {
+        //var userIds = [currentUser.uid, data.updateMatches._id];
+        //sendbird.GroupChannel.createChannelWithUserIds(
+          //userIds,
+          //true,
+          //function (groupChannel, error) {
+            //if (error) {
+              //// Handle error.
+              //console.log('SB_ERROR', error);
+            //}
+            //console.log('SB OPEN', groupChannel);
+          //},
+        //);
+      //}
     },
   })
   useEffect(() => {

@@ -79,9 +79,9 @@ const SendBirdChat = props => {
     }
 
     return () => {
-      sendbird.removeConnectionHandler('chat');
-      sendbird.removeChannelHandler('chat');
-      unsubscribe.remove();
+      //sendbird.removeConnectionHandler('chat');
+      //sendbird.removeChannelHandler('chat');
+      //unsubscribe.remove();
     };
   }, []);
 
