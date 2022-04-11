@@ -31,7 +31,7 @@ const MatchList = ({matches}) => {
   });
   const {setValues, setFieldValue, values: filterValues } = useFormikContext<FilterFields>();
   const [endingText, setEndingText] = useState(null)
-  const {currentUser, queryProssibleMatches , data, userData, setData, userLoading} = useContext(UserContext)
+  const {currentUser, queryProssibleMatches , data, userData, setData, userLoading, sendbird} = useContext(UserContext)
   console.log("user data vals here userData", userData)
   const [loadingFilters, setLoadingFilters] = useState(true)
   const [disableLikes, setDisableLikes] = useState(false)
@@ -42,9 +42,25 @@ const MatchList = ({matches}) => {
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     awaitRefetchQueries: true,
-    onCompleted: () => {
+    onCompleted: (data) => {
       getSquashProfile({variables: {id: currentUser.uid}});
       setDisableMatches(false)
+      // if matched update matches and create a new group channel for two users from sb
+      //if (data.updateMatches) {
+        //var userIds = [currentUser.uid, data.updateMatches._id];
+        //sendbird.GroupChannel.createChannelWithUserIds(
+          //userIds,
+          //true,
+          //function (groupChannel, error) {
+            //if (error) {
+              //// Handle error.
+              //console.log('SB_ERROR', error);
+            //}
+            //console.log('SB OPEN', groupChannel);
+          //},
+        //);
+      //}
+
     },
   })
   useEffect(() => {

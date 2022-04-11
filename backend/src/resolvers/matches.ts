@@ -61,34 +61,40 @@ export const resolvers = {
       //// it is imperitive all the filter items are indexed!
       //just for testing!
       const matchingestingFIlter = [
-        "rpdiszrxocuawphcjwfpfartqmjw",
-        "bpikrcdgfptbmcfdxiuhsjtyixvw",
-        "pkimewhaimvhcbffqeomhaxrvago",
-        "umfiemicigdyoewibrkdwcqvqllq",
-        "ezwviwnqurrlxkwfgoapxfsheluo",
-        "tqcnpdeqhnxwszstoqjzeytezloy",
-        "idzlmexjvinaeazrhtmtcikkzdae",
-        "eqiibyvrqlepzlszreecrlxnjmgb",
-        "vrgffumzkdkiqccwtmppfxqgkfuz",
-        "xbymfauwsmsxqiltefpifsewejsn",
-        "qydkdyxagzlmmwhwneysttezjtbc",
-        "tpxwhbgxczdchqtoctketztpxwvm",
-        "ppajvinskckeuuzpokvwbyuquxzl",
-        "nakikrbjpuebtczseojwtkancxki",
-        "onzhxkhugnsacdjlicyqnheprxsq",
-        "efvtocugfomuixmsjthqdglmfzsr",
-        "fmyuiatkqbnlspmtkgcdypwtwdls",
-        "mpmcgtuzyljycxqhtumrshvglnob",
-        "shfycwppdykpzlavlzohrszpnklw",
-        "onifaweiyfdmqnixzgfyqwmkotic",
-        "krnsxazpljpdkapztjvlxzsxnmkc",
-        "pejvchkzlidjyuzpqbgsgfgxqckp",
-        "esjcajqstsrbpyxqcbalypltaxli",
-        "tyhhqcivlnrjhboxfyeshxytgkdu",
-        "sckvatjzhcrxmjavtejhdzjlqwso",
-        "wbunwiospcfrjtzddydmgfzzqqfv",
-        "rqukfbpkivnkoazcesdfkstlstin",
-        "bmuvqdedmagznvvwkccwmsfpukzs",
+        "wLP3M9NMuVb0HZ6YgRflMlZZtZs1",
+        "PjLHYn4RGldeDEP4o5NSDFwgRaJ3",
+        "raFZfxCKnkPyLctuDScZZoPxg383",
+        "PjLHYn4RGldeDEP4o5NSDFwgRaJ3",
+        //"apGe4DCTAJMEK28yhjvycW0vwxt1",
+
+        //"rpdiszrxocuawphcjwfpfartqmjw",
+        //"bpikrcdgfptbmcfdxiuhsjtyixvw",
+        //"pkimewhaimvhcbffqeomhaxrvago",
+        //"umfiemicigdyoewibrkdwcqvqllq",
+        //"ezwviwnqurrlxkwfgoapxfsheluo",
+        //"tqcnpdeqhnxwszstoqjzeytezloy",
+        //"idzlmexjvinaeazrhtmtcikkzdae",
+        //"eqiibyvrqlepzlszreecrlxnjmgb",
+        //"vrgffumzkdkiqccwtmppfxqgkfuz",
+        //"xbymfauwsmsxqiltefpifsewejsn",
+        //"qydkdyxagzlmmwhwneysttezjtbc",
+        //"tpxwhbgxczdchqtoctketztpxwvm",
+        //"ppajvinskckeuuzpokvwbyuquxzl",
+        //"nakikrbjpuebtczseojwtkancxki",
+        //"onzhxkhugnsacdjlicyqnheprxsq",
+        //"efvtocugfomuixmsjthqdglmfzsr",
+        //"fmyuiatkqbnlspmtkgcdypwtwdls",
+        //"mpmcgtuzyljycxqhtumrshvglnob",
+        //"shfycwppdykpzlavlzohrszpnklw",
+        //"onifaweiyfdmqnixzgfyqwmkotic",
+        //"krnsxazpljpdkapztjvlxzsxnmkc",
+        //"pejvchkzlidjyuzpqbgsgfgxqckp",
+        //"esjcajqstsrbpyxqcbalypltaxli",
+        //"tyhhqcivlnrjhboxfyeshxytgkdu",
+        //"sckvatjzhcrxmjavtejhdzjlqwso",
+        //"wbunwiospcfrjtzddydmgfzzqqfv",
+        //"rqukfbpkivnkoazcesdfkstlstin",
+        //"bmuvqdedmagznvvwkccwmsfpukzs",
       ];
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
@@ -137,14 +143,14 @@ export const resolvers = {
           { $addToSet: { matches: potentialMatch } },
           { new: true }
         );
-        const doc2 = await Squash.findOneAndUpdate(
+        const potentialMatchDoc = await Squash.findOneAndUpdate(
           { _id: potentialMatchId },
           { $push: { matches: currentUser} },
           { new: true }
         );
         console.log("doc user", doc)
-        console.log("doc match", doc2)
-      return doc;
+        console.log("doc match", potentialMatchDoc)
+      return potentialMatchDoc;
     },
   }
 }

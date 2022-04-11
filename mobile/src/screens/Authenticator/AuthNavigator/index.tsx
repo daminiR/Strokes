@@ -24,12 +24,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthNavigator = ({sendbird}) => {
   //auth().currentUser.delete().then(() => {})
-  const [state, dispatch] = useReducer(loginReducer, {
-    userId: '',
-    nickname: '',
-    error: '',
-    connecting: false,
-  });
+  //const [state, dispatch] = useReducer(loginReducer, {
+    //userId: '',
+    //nickname: '',
+    //error: '',
+    //connecting: false,
+  //});
   const [currentUser, setCurrentUser ] = useState(null)
   const [isProfileComplete, setProfileState ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(true);
@@ -45,7 +45,7 @@ const AuthNavigator = ({sendbird}) => {
   const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
   const [loadAllResults, setLoadAllResults] = useState(true)
-  const [isSignIn, setIsSignIn] = useState(false)
+  //const [isSignIn, setIsSignIn] = useState(false)
   const [initialValuesFormik, setInitialValuesFormik] = useState({});
   const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const didMountRef = useRef(false)
@@ -72,10 +72,10 @@ const AuthNavigator = ({sendbird}) => {
         setProfileState(true);
         //setLoadingMatches(false)
         setData(data);
-        if (isSignIn){
-          connect(data._id, data.first_name, dispatch, sendbird, start);
-          setIsSignIn(false)
-        }
+        //if (isSignIn){
+          ////connect(data._id, data.first_name, dispatch, sendbird, start);
+          //setIsSignIn(false)
+        //}
       }
     },
     onError: (({graphQLErrors, networkError}) => {
@@ -245,7 +245,7 @@ const start = user => {
     setChangeSport: setChangeSport,
     sendbird: sendbird,
     onLogin: login,
-    setIsSignIn: setIsSignIn
+    //setIsSignIn: setIsSignIn
   };
   const render2 = () =>{
     console.log(

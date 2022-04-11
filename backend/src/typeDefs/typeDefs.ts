@@ -176,6 +176,10 @@ export const typeDefs = gql`
       _id1: String!
       _id2: String!
     ): Squash
+    testSb(
+      _id: String!
+      other_id: String!
+    ): Squash
     updateGameLevelsToStrings: String
     deleteSquash(_id: String, image_set: [DataInput!]): Boolean!
     softDeleteUser(_id: String): String

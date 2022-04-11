@@ -26,43 +26,7 @@ const appId = 'F8478854-1145-4D6C-8733-0EBE87FEBFC7';
 const sendbird = new SendBird({ appId });
 sendbird.setErrorFirstCallback(true);
 const App = () =>
-//const App = async () =>
 {
-  console.log("sendbird in auth", sendbird)
-  const savedUserKey = 'savedUser';
-  //await AsyncStorage.removeItem(savedUserKey)
-
-  useEffect(() => {
-    AsyncStorage.getItem(savedUserKey)
-      .then(async user => {
-        console.log("userrr", user)
-        try {
-          if (user) {
-            const authorizationStatus = await messaging().requestPermission();
-            if (
-              authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-              authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-            ) {
-              if (Platform.OS === 'ios') {
-                const token = await messaging().getAPNSToken();
-                sendbird.registerAPNSPushTokenForCurrentUser(token);
-              } else {
-                const token = await messaging().getToken();
-                sendbird.registerGCMPushTokenForCurrentUser(token);
-              }
-            }
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      })
-      .catch(err => console.error(err));
-
-    if (Platform.OS !== 'ios') {
-      const unsubscribeHandler = messaging().onMessage(onRemoteMessage);
-      return unsubscribeHandler;
-    }
-  }, []);
   const [client, setClient] = useState();
   const [persistor, setPersistor] = useState();
   const [loadingClient, setLoadingClient] = useState(true);

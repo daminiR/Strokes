@@ -50,11 +50,27 @@ export const resolvers = {
       return doc;
     },
     updateUserProfileTestSamples: async (parents, { _id1, _id2 }, context, info) => {
-        const doc = await Squash.updateMany(
-          {},
-          //{ $pull: { matches: {}, likes: {}, likedByUSers: {}} },
-          { $set: {"sports.$[].game_level": _.random(0,2).toString()}},
-          { new: true }
+        const doc = await Squash.findOneAndUpdate(
+          {_id: _id2},
+          { $pull: { matches: {}, likes: {}, likedByUSers: {}} },
+          //{ $set: {"sports.$[].game_level": _.random(0,2).toString()}},
+          //{ new: true }
+        );
+        console.log("tetsing", doc)
+      return doc;
+    },
+    testSb: async (parents, {_id, other_id}, context, info) => {
+        const doc = await Squash.findOneAndUpdate(
+          {_id: _id},
+          { $pull: { matches: {}, likes: {}} },
+          //{ $set: {"sports.$[].game_level": _.random(0,2).toString()}},
+          //{ new: true }
+        );
+        const doc2 = await Squash.findOneAndUpdate(
+          {_id: other_id},
+          { $pull: { matches: {}, likedByUSers: {}} },
+          //{ $set: {"sports.$[].game_level": _.random(0,2).toString()}},
+          //{ new: true }
         );
         console.log("tetsing", doc)
       return doc;
