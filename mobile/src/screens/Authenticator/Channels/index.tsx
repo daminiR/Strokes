@@ -143,27 +143,23 @@ const Channels = props => {
     }
   };
   const chat = (channel) => {
-    console.log("OPEN SB2", currentUser.userId)
-    console.log("OPEN SB2", channel.members[0].userId)
     const other_user = _.filter(channel.members, (member)=> {return member.userId !== currentUser.userId})
     const other_id = other_user[0].userId
-    //console.log("OPEN SB2 prof", currentUserData.squash.matches[0]._id)
-    const profileViewData = _.filter(currentUserData.squash.matches, (match)  => {return match._id === other_id})[0]
-    console.log("OPEN SB2 Prfo",profileViewData)
-    //const other_user = _.filter(channel.members, (member)=> {return member.userId !== currentUser.userId})
-    navigation.navigate('ACTIVE_CHAT', {
-      currentUserID: currentUser.uid,
-      channel: channel,
-      currentUser: currentUser,
-      //matchID: item._id,
-      //matchedUserProfileImage: profileImage,
-      //matchedUserName: item.first_name,
-      profileViewData: profileViewData,
-    });
-    //navigation.navigate('SBCHAT', {
-    //channel,
-    //currentUser,
-    //});
+    const profileViewData = _.filter(currentUserData.squash.matches, (match)  => {return match._id === other_id})
+
+    if (profileViewData === null) {
+      console.log("user doesnt exist anymore")
+    } else {
+      navigation.navigate('ACTIVE_CHAT', {
+        currentUserID: currentUser.uid,
+        channel: channel,
+        currentUser: currentUser,
+        //matchID: item._id,
+        //matchedUserProfileImage: profileImage,
+        //matchedUserName: item.first_name,
+        profileViewData: profileViewData,
+      });
+    }
   };
   const refresh = () => {
     console.log("channesError: list of groupChannel", sendbird.GroupChannel)
