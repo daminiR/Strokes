@@ -147,7 +147,7 @@ const Channels = props => {
     const other_id = other_user[0].userId
     const profileViewData = _.filter(currentUserData.squash.matches, (match)  => {return match._id === other_id})
 
-    if (profileViewData === null) {
+    if (profileViewData.length === 0) {
       console.log("user doesnt exist anymore")
     } else {
       navigation.navigate('ACTIVE_CHAT', {
