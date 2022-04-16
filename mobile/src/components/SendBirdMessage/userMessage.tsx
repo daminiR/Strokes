@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, Image, TouchableOpacity, View } from 'react-native';
 import * as Progress from 'react-native-progress';
+import {PRIMARY_COLOR, PRIMARY_THEME, SECONDARY_COLOR, SECONDARY_THEME} from '@styles'
 import moment from 'moment';
 
 import { withAppContext } from '../../AppContext';
@@ -38,7 +39,7 @@ const UserMessage = props => {
 
       <View style={{ ...style.content, alignItems: isMyMessage ? 'flex-end' : 'flex-start' }}>
         {!message.hasSameSenderAbove && <Text style={style.nickname}>{message.sender.nickname}</Text>}
-        <View style={{ ...style.messageBubble, backgroundColor: isMyMessage ? '#7b53ef' : '#ddd' }}>
+        <View style={{ ...style.messageBubble, backgroundColor: isMyMessage ? PRIMARY_THEME : '#ddd' }}>
           <Text style={{ ...style.message, color: isMyMessage ? '#fff' : '#333' }}>{message.message}</Text>
         </View>
       </View>

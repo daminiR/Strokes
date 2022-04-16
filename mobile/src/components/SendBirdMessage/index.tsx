@@ -9,11 +9,10 @@ import AdminMessage from './adminMessage';
 const SBMessage = props => {
   const {message} = props;
   let component = null;
-  console.log("message1", message)
   if (message.isUserMessage()) {
     component = <UserMessage {...props} />;
-  } else if (message.isFileMessage()) {
-    component = <FileMessage {...props} />;
+  //} else if (message.isFileMessage()) {
+    //component = <FileMessage {...props} />;
   } else if (message.isAdminMessage()) {
     component = <AdminMessage {...props} />;
   }
