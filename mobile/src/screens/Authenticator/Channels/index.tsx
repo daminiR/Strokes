@@ -145,11 +145,12 @@ const Channels = props => {
   const chat = (channel) => {
     const other_user = _.filter(channel.members, (member)=> {return member.userId !== currentUser.userId})
     const other_id = other_user[0].userId
-    const profileViewData = _.filter(currentUserData.squash.matches, (match)  => {return match._id === other_id})
+    const profileViewDataList = _.filter(currentUserData.squash.matches, (match)  => {return match._id === other_id})
 
-    if (profileViewData.length === 0) {
+    if (profileViewDataList.length === 0) {
       console.log("user doesnt exist anymore")
     } else {
+
       navigation.navigate('ACTIVE_CHAT', {
         currentUserID: currentUser.uid,
         channel: channel,
@@ -157,7 +158,7 @@ const Channels = props => {
         //matchID: item._id,
         //matchedUserProfileImage: profileImage,
         //matchedUserName: item.first_name,
-        profileViewData: profileViewData,
+        profileViewData: profileViewDataList[0],
       });
     }
   };
