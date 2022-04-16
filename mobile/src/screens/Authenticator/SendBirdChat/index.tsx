@@ -325,9 +325,6 @@ const SendBirdChat = props => {
           onEndReachedThreshold={0.5}
         />
         <View style={style.inputContainer}>
-          <TouchableOpacity activeOpacity={0.85} style={style.uploadButton} onPress={selectFile}>
-            <Icon name="insert-photo" color="#7b53ef" size={28} />
-          </TouchableOpacity>
           <TextInput
             value={state.input}
             style={style.input}
