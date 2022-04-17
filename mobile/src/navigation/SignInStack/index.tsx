@@ -63,50 +63,16 @@ export type RootStackSignInParamList = {
       login(user);
     }
   };
-  //useEffect(() => {
-    //connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start);
-    //console.log(" connect status: we did login")
-    //return () => {
-      //console.log("connect status: did we logout")
-      //logout();
-    //};
-//},
-  //[]);
   useFocusEffect(
     useCallback(() => {
       console.log("connect status: on chat")
       connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start, setSendbird);
       return () => {
-        //logout()
         sendbird.disconnect()
         console.log("connect status: not on chat", sendbird)
-        //unsubscribe()
       }
     }, [])
   );
-  //useLayoutEffect(() => {
-    //const title = currentUser ? (
-      //<View style={style.headerLeftContainer}></View>
-    //) : null;
-    ////<Text style={style.headerTitle}>Channels</Text>
-
-    //const right = currentUser ? (
-      //<View style={style.headerRightContainer}>
-        //<TouchableOpacity
-          //activeOpacity={0.85}
-          //style={style.profileButton}
-          //onPress={startChat}>
-          //<Icon name="chat" color="#fff" size={28} />
-        //</TouchableOpacity>
-      //</View>
-    //) : null;
-    //navigation.setOptions({
-      //headerShown: !!currentUser,
-      //headerTitle: () => title,
-      //headerRight: () => right,
-    //});
-  //}, [currentUser]);
-
   const login = async (user) => {
     try {
       setCurrentUser(user);
@@ -133,17 +99,6 @@ export type RootStackSignInParamList = {
     setCurrentUser(null);
   };
 
-  //const startChat = () => {
-    //if (currentUser) {
-      //navigation.navigate('Invite', {currentUser});
-    //}
-  //};
-  //const profile = () => {
-    //if (currentUser) {
-      //navigation.navigate('Profile', {currentUser});
-    //}
-  //};
-
   return (
     currentUser && (
       <ChatStack.Navigator>
@@ -157,11 +112,6 @@ export type RootStackSignInParamList = {
           options={{headerShown: false}}
           name="SBCHAT"
           component={SendBirdChat}
-        />
-        <ProfileStack.Screen
-          options={{headerShown: false}}
-          name="CHAT"
-          component={Chat}
         />
         <ProfileStack.Screen
           options={{headerShown: true}}
