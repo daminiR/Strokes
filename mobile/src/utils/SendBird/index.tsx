@@ -7,7 +7,7 @@ const channelNameMaxMembers = 3;
 const channelNameEllipsisLength = 32;
 const maxUnreadMessageCount = 99;
 
-export const connect = (uid, nickname, dispatch, sendbird, start) => {
+export const connect = (uid, nickname, dispatch, sendbird, start, setSendbird) => {
     console.log('Connect Error nickname ....', uid);
     dispatch({type: 'start-connection'});
     sendbird.connect(uid, (err, user) => {
@@ -36,6 +36,7 @@ export const connect = (uid, nickname, dispatch, sendbird, start) => {
         //showError(err.message);
       }
     });
+    setSendbird(sendbird)
     //}
   };
 

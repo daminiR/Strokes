@@ -44,6 +44,7 @@ const AuthNavigator = ({sendbird}) => {
   const [userDataDidMount, setUserDataDidMount] = useState(false)
   const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
+  const [sb, setSb] = useState(sendbird)
   const [loadAllResults, setLoadAllResults] = useState(true)
   //const [isSignIn, setIsSignIn] = useState(false)
   const [initialValuesFormik, setInitialValuesFormik] = useState({});
@@ -243,7 +244,8 @@ const start = user => {
     setImageErrorVisible: setImageErrorVisible,
     changeSport: changeSport,
     setChangeSport: setChangeSport,
-    sendbird: sendbird,
+    sendbird: sb,
+    setSendbird: setSb,
     onLogin: login,
     //setIsSignIn: setIsSignIn
   };

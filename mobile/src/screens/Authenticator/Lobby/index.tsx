@@ -1,9 +1,10 @@
-import React, { useReducer, useEffect, useState, useLayoutEffect, useContext} from 'react';
+import React, { useCallback, useReducer, useEffect, useState, useLayoutEffect, useContext} from 'react';
 import { StyleSheet, Image, Text, TouchableOpacity, View, Platform } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { loginReducer } from '../../../reducers/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {  useFocusEffect } from '@react-navigation/native'
 import messaging from '@react-native-firebase/messaging';
 import {connect} from '../../../utils/SendBird'
 
@@ -28,9 +29,30 @@ const Lobby = props => {
       login(user);
     }
   };
-  useLayoutEffect(() => {
+    //useCallback(() => {
+      //useFocusEffect(
+      //const val = navigation.state
+      //console.log("connect status: on chat", val)
+      ////connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start);
+      //return () => {
+        ////logout()
+      //console.log("connect status: not on chat")
+        ////unsubscribe()
+      //}
+    //}, [])
+  //);
+
+  useEffect(() => {
+    console.log(" connect status: we did login")
     connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start);
-  }, []);
+    return () => {
+      //console.log("connect status: did we logout")
+      //logout();
+    };
+},
+
+
+  []);
   useLayoutEffect(() => {
     const title = currentUser ? (
       <View style={style.headerLeftContainer}></View>
