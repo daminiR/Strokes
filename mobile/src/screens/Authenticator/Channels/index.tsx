@@ -17,8 +17,9 @@ import Channel from '../../../components/Channels';
 import { handleNotificationAction } from '../../../utils/SendBird';
 
 const Channels = props => {
-  const { route, navigation, sendbird, currentUser } = props;
-  const {data: currentUserData} = useContext(UserContext)
+  const { route, navigation} = props;
+  const {currentUser} = route.params
+  const {data: currentUserData, sendbird} = useContext(UserContext)
   const [query, setQuery] = useState(null);
   const [state, dispatch] = useReducer(channelsReducer, {
     sendbird,

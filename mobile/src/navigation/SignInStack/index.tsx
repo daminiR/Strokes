@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useCallback, useReducer, useEffect, useState, useLayoutEffect, useContext} from 'react';
 import {createStackNavigator } from '@react-navigation/stack'
-import {ActiveChat, Profile, Chat, Match, Likes, Login} from '@screens'
+import {  useFocusEffect } from '@react-navigation/native'
+import { StyleSheet, Image, Text, TouchableOpacity, View, Platform } from 'react-native';
+import {ActiveChat, Profile, Chat, Match, Likes, Login, Channels} from '@screens'
 import {SendBirdChat} from '../../screens/Authenticator/SendBirdChat'
 import Lobby from '../../screens/Authenticator/Lobby'
 import { NavigationContainer } from '@react-navigation/native'
@@ -8,6 +10,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {tabBarSize} from '@constants'
 import {Icon} from 'react-native-elements'
 import { HeaderBackButton } from '@react-navigation/elements'
+import {UserContext} from '@UserContext'
+import {connect} from '../../utils/SendBird'
+
+import { loginReducer } from '../../reducers/Login';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
+
+import { withAppContext } from '../../AppContext';
+import { handleNotificationAction } from '../../utils/SendBird';
 
 const ProfileStack = createStackNavigator()
 const ChatStack = createStackNavigator()
@@ -37,14 +48,128 @@ export type RootStackSignInParamList = {
   );
 }
  const ChatStackScreen = () => {
+  const [state, dispatch] = useReducer(loginReducer, {
+    userId: '',
+    nickname: '',
+    error: '',
+    connecting: false,
+  });
+  const {data, sendbird, setSendbird} = useContext(UserContext);
+  console.log("connect status in chatscreen", sendbird)
+  const [initialized, setInitialized] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const start = (user) => {
+    if (login) {
+      login(user);
+    }
+  };
+  //useEffect(() => {
+    //connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start);
+    //console.log(" connect status: we did login")
+    //return () => {
+      //console.log("connect status: did we logout")
+      //logout();
+    //};
+//},
+  //[]);
+  useFocusEffect(
+    useCallback(() => {
+      console.log("connect status: on chat")
+      connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start, setSendbird);
+      return () => {
+        //logout()
+        sendbird.disconnect()
+        console.log("connect status: not on chat", sendbird)
+        //unsubscribe()
+      }
+    }, [])
+  );
+  //useLayoutEffect(() => {
+    //const title = currentUser ? (
+      //<View style={style.headerLeftContainer}></View>
+    //) : null;
+    ////<Text style={style.headerTitle}>Channels</Text>
+
+    //const right = currentUser ? (
+      //<View style={style.headerRightContainer}>
+        //<TouchableOpacity
+          //activeOpacity={0.85}
+          //style={style.profileButton}
+          //onPress={startChat}>
+          //<Icon name="chat" color="#fff" size={28} />
+        //</TouchableOpacity>
+      //</View>
+    //) : null;
+    //navigation.setOptions({
+      //headerShown: !!currentUser,
+      //headerTitle: () => title,
+      //headerRight: () => right,
+    //});
+  //}, [currentUser]);
+
+  const login = async (user) => {
+    try {
+      setCurrentUser(user);
+      const authorizationStatus = await messaging().requestPermission();
+      if (
+        authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
+      ) {
+        if (Platform.OS === 'ios') {
+          const token = await messaging().getAPNSToken();
+          sendbird.registerAPNSPushTokenForCurrentUser(token);
+        } else {
+          const token = await messaging().getToken();
+          sendbird.registerGCMPushTokenForCurrentUser(token);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const logout = async () => {
+    sendbird.disconnect();
+    setCurrentUser(null);
+  };
+
+  //const startChat = () => {
+    //if (currentUser) {
+      //navigation.navigate('Invite', {currentUser});
+    //}
+  //};
+  //const profile = () => {
+    //if (currentUser) {
+      //navigation.navigate('Profile', {currentUser});
+    //}
+  //};
+
   return (
-    <ChatStack.Navigator>
-      <ProfileStack.Screen  options={{headerShown:true }} name="LOBBY" component={Lobby} />
-      <ProfileStack.Screen options={{headerShown:false}} name="SBCHAT" component={SendBirdChat} />
-      <ProfileStack.Screen options={{headerShown:false}} name="CHAT" component={Chat} />
-      <ProfileStack.Screen  options={{headerShown:true }} name="ACTIVE_CHAT" component={ActiveChat} />
-      <ProfileStack.Screen  options={{headerShown:true }} name="LOGIN" component={Lobby} />
-    </ChatStack.Navigator>
+    currentUser && (
+      <ChatStack.Navigator>
+        <ProfileStack.Screen
+          options={{headerShown: true}}
+          name="CHANNELS"
+          component={Channels}
+          initialParams={{currentUser}}
+        />
+        <ProfileStack.Screen
+          options={{headerShown: false}}
+          name="SBCHAT"
+          component={SendBirdChat}
+        />
+        <ProfileStack.Screen
+          options={{headerShown: false}}
+          name="CHAT"
+          component={Chat}
+        />
+        <ProfileStack.Screen
+          options={{headerShown: true}}
+          name="ACTIVE_CHAT"
+          component={ActiveChat}
+        />
+      </ChatStack.Navigator>
+    )
   );
 }
 const customTabBarStyle = {
