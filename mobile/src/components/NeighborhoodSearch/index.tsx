@@ -5,6 +5,7 @@ import { View} from 'react-native'
 import { EditFields, ProfileFields} from '@localModels'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import {API_KEY} from './API_KEY'
+import {CityInput} from '@components'
 import {DoneCancelContext} from '@Contexts'
 
 const GooglePlacesInput = ({isSignUp = false}) => {
@@ -82,10 +83,11 @@ const NeighborhoodSearch = ({isSignUp}) => {
   const { errors, touched} = useFormikContext<ProfileFields | EditFields>();
   return (
     <View style={{flex:1}}>
-      <GooglePlacesInput isSignUp={isSignUp}/>
+      <CityInput isSignUp={isSignUp}/>
     </View>
   );
   }
+      //<GooglePlacesInput isSignUp={isSignUp}/>
             //{errors.location && touched.location? (
               //<Text style={{alignSelf:'center'}}>{errors.location}</Text>
             //) : null}
