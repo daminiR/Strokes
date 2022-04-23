@@ -3,16 +3,17 @@ import Message from '../models/Messages';
 import { GraphQLUpload } from 'graphql-upload'
 import { ObjectId} from 'mongodb'
 import { sanitizeFile } from '../utils/fileNaming'
-import { acsport1 } from '../index'
+import { acsport1 } from '../indexDeploy'
 import * as path from 'path';
 import _ from 'lodash'
 import {Data, DisplayData} from '../types/Squash'
 import {
-  deleteAllUserImages,
-  creatGCUpload,
   deleteFilesFromGC,
-  deleteFromGC,
 } from "../utils/googleUpload";
+import {
+  deleteFilesFromAWS,
+  createAWSUpload,
+} from "../utils/awsUpload";
 import {
   SWIPIES_PER_DAY_LIMIT,
   LIKES_PER_DAY_LIMIT,
@@ -138,8 +139,10 @@ export const resolvers = {
       }
     ) => {
       // remove from gc
-      const removed_image_set = await deleteFilesFromGC(remove_uploaded_images, original_uploaded_image_set, add_local_images.length);
-      const data_set = await creatGCUpload(add_local_images, _id)
+      //const removed_image_set = await deleteFilesFromGC(remove_uploaded_images, original_uploaded_image_set, add_local_images.length);
+      const removed_image_set = await deleteFilesFromAWS(remove_uploaded_images, original_uploaded_image_set, add_local_images.length);
+      //const data_set = await creatGCUpload(add_local_images, _id)
+      const data_set = await createAWSUpload(add_local_images, _id)
       const final_image_set = removed_image_set.concat(data_set)
       // if sport changes decrement sportsPerDay
       const check_doc_sports = await Squash.findById( _id);

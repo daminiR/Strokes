@@ -77,7 +77,7 @@ const startServer = async () => {
   .catch((error) => {console.log(error)})
   ////////////////////////////////////////////
   httpServer.listen({ port: 4000 }, () =>
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+    console.log(`🚀  Is this still running Server ready at http://localhost:4000${server.graphqlPath}`)
   );
   //exports.graphqlHandler = server.createHandler();
 };

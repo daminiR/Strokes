@@ -3,7 +3,6 @@ import Message from '../models/Messages';
 import { GraphQLUpload } from 'graphql-upload'
 import { ObjectId} from 'mongodb'
 import { sanitizeFile } from '../utils/fileNaming'
-import { acsport1 } from '../index'
 import * as path from 'path';
 import _ from 'lodash'
 import {Data, DisplayData} from '../types/Squash'
@@ -13,6 +12,9 @@ import {
   deleteFilesFromGC,
   deleteFromGC,
 } from "../utils/googleUpload";
+import {
+  createAWSUpload,
+} from "../utils/awsUpload";
 import {
   SWIPIES_PER_DAY_LIMIT,
   LIKES_PER_DAY_LIMIT,
@@ -38,7 +40,8 @@ export const resolvers = {
         email,
       }
     ) => {
-      const data_set = await creatGCUpload(image_set, _id)
+      //const data_set = await creatGCUpload(image_set, _id)
+      const data_set = await createAWSUpload(image_set, _id)
       const doc = await Squash.create({
           _id: _id,
           image_set: data_set,

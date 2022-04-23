@@ -3,7 +3,6 @@ import Message from '../models/Messages';
 import { GraphQLUpload } from 'graphql-upload'
 import { ObjectId} from 'mongodb'
 import { sanitizeFile } from '../utils/fileNaming'
-import { acsport1 } from '../index'
 import * as path from 'path';
 import _ from 'lodash'
 import {Data, DisplayData} from '../types/Squash'
@@ -57,14 +56,14 @@ export const resolvers = {
       return users;
     },
     queryProssibleMatches: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange}, context, info) => {
-      //const users = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);
+      const usersFiltered = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);
       //// it is imperitive all the filter items are indexed!
       //just for testing!
       const matchingestingFIlter = [
-        "wLP3M9NMuVb0HZ6YgRflMlZZtZs1",
-        "PjLHYn4RGldeDEP4o5NSDFwgRaJ3",
-        "raFZfxCKnkPyLctuDScZZoPxg383",
-        "PjLHYn4RGldeDEP4o5NSDFwgRaJ3",
+        //"wLP3M9NMuVb0HZ6YgRflMlZZtZs1",
+        //"PjLHYn4RGldeDEP4o5NSDFwgRaJ3",
+        //"raFZfxCKnkPyLctuDScZZoPxg383",
+        //"PjLHYn4RGldeDEP4o5NSDFwgRaJ3",
         //"apGe4DCTAJMEK28yhjvycW0vwxt1",
 
         //"rpdiszrxocuawphcjwfpfartqmjw",
@@ -119,7 +118,7 @@ export const resolvers = {
           },
         ],
       };
-      const test_filter = { _id: { $in: matchingestingFIlter } };
+      const test_filter = { _id: { $in: usersFiltered } };
       const fieldsNeeded = {
         _id: 1,
         first_name: 1,
