@@ -88,7 +88,4 @@ const NeighborhoodSearch = ({isSignUp}) => {
   );
   }
       //<GooglePlacesInput isSignUp={isSignUp}/>
-            //{errors.location && touched.location? (
-              //<Text style={{alignSelf:'center'}}>{errors.location}</Text>
-            //) : null}
 export {NeighborhoodSearch};

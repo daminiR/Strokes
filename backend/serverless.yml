@@ -3,9 +3,11 @@ service: apollo-lambda
 plugins:
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
-#package:
-  #exclude:
-    #- node_modules/**
+package:
+  include:
+    - ./src/activitybook-a598b-782d9db5058e.json
+  exlude:
+    - ./src/index.js
 provider:
   name: aws
   runtime: nodejs14.x
@@ -14,9 +16,11 @@ provider:
 #useDotenv: true
 functions:
   graphql:
+    timeout: 120
     # this is formatted as <FILENAME>.<HANDLER>
+    #
     # hanlder needs js file, so provide the bbuild version of handler
-    handler: ./src/index.graphqlHandler
+    handler: ./src/indexDeploy.graphqlHandler
     vpc:
       securityGroupIds:
         - ${env:SG_ID}

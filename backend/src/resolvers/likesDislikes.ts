@@ -3,7 +3,6 @@ import Message from '../models/Messages';
 import { GraphQLUpload } from 'graphql-upload'
 import { ObjectId} from 'mongodb'
 import { sanitizeFile } from '../utils/fileNaming'
-import { acsport1 } from '../index'
 import * as path from 'path';
 import _ from 'lodash'
 import {Data, DisplayData} from '../types/Squash'

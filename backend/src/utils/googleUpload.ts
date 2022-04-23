@@ -1,5 +1,5 @@
 import { sanitizeFile } from '../utils/fileNaming'
-import { acsport1 } from '../index'
+import { acsport1 } from '../indexDeploy'
 import * as path from 'path';
 import _ from 'lodash'
 import { dest_gcs_images } from '../constants/'
