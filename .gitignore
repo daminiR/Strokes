@@ -8,6 +8,7 @@ backend/src/admin/createData/*
 # sensatvie file data
 API_KEY.ts
 .env
+.env.development
 #prettierrc
 .prettierrc.js
 
