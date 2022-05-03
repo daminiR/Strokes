@@ -8,17 +8,10 @@ import * as path from 'path';
 import _ from 'lodash'
 import {Data, DisplayData} from '../types/Squash'
 import {
-  deleteAllUserImages,
-  creatGCUpload,
-  deleteFilesFromGC,
   deleteFromGC,
 } from "../utils/googleUpload";
 import {
-  SWIPIES_PER_DAY_LIMIT,
-  LIKES_PER_DAY_LIMIT,
-  SPORT_CHANGES_PER_DAY,
   dest_gcs_images,
-  POST_CHANNEL
 } from "../constants/";
 
 export const resolvers = {

@@ -6,7 +6,7 @@ import {styles} from '@styles'
 const NextButton = () => {
   return (
     <View style={styles.city}>
-      <Icon  name='arrow-right-bold' type={'material-community'}/>
+     <Icon  name='arrow-right-bold' type={'material-community'}/>
     </View>
   );
 };
