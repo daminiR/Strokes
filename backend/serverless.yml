@@ -1,8 +1,15 @@
 # serverless.yml
 service: apollo-lambda
+custom:
+  apigwBinary:
+    types:
+      - image/jpeg
+      - image/jpg
+      - image/png
 plugins:
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
+  - serverless-apigw-binary
 package:
   include:
     - ./src/activitybook-a598b-782d9db5058e.json

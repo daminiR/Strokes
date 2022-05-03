@@ -72,8 +72,8 @@ const advanced = {
                titleStyle={styles.chipText}
                type="solid"
                icon={{
-                 name: 'bluetooth',
-                 type: 'font-awesome',
+                 name: 'fire',
+                 type: 'material-community',
                  size: 20,
                  color: 'black',
                }}
@@ -105,8 +105,8 @@ const advanced = {
            titleStyle={styles.chipText}
            type="solid"
            icon={{
-             name: 'bluetooth',
-             type: 'font-awesome',
+             name: 'fire',
+             type: 'material-community',
              size: 20,
              color: 'black',
            }}
