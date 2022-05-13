@@ -56,44 +56,7 @@ export const resolvers = {
       return users;
     },
     queryProssibleMatches: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange}, context, info) => {
-      const usersFiltered = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);
       //// it is imperitive all the filter items are indexed!
-      //just for testing!
-      const matchingestingFIlter = [
-        "wLP3M9NMuVb0HZ6YgRflMlZZtZs1",
-        "PjLHYn4RGldeDEP4o5NSDFwgRaJ3",
-        "raFZfxCKnkPyLctuDScZZoPxg383",
-        "PjLHYn4RGldeDEP4o5NSDFwgRaJ3",
-        "apGe4DCTAJMEK28yhjvycW0vwxt1",
-        "rpdiszrxocuawphcjwfpfartqmjw",
-        "bpikrcdgfptbmcfdxiuhsjtyixvw",
-        "pkimewhaimvhcbffqeomhaxrvago",
-        "umfiemicigdyoewibrkdwcqvqllq",
-        "ezwviwnqurrlxkwfgoapxfsheluo",
-        "tqcnpdeqhnxwszstoqjzeytezloy",
-        "idzlmexjvinaeazrhtmtcikkzdae",
-        "eqiibyvrqlepzlszreecrlxnjmgb",
-        "vrgffumzkdkiqccwtmppfxqgkfuz",
-        "xbymfauwsmsxqiltefpifsewejsn",
-        "qydkdyxagzlmmwhwneysttezjtbc",
-        "tpxwhbgxczdchqtoctketztpxwvm",
-        "ppajvinskckeuuzpokvwbyuquxzl",
-        "nakikrbjpuebtczseojwtkancxki",
-        "onzhxkhugnsacdjlicyqnheprxsq",
-        "efvtocugfomuixmsjthqdglmfzsr",
-        "fmyuiatkqbnlspmtkgcdypwtwdls",
-        "mpmcgtuzyljycxqhtumrshvglnob",
-        "shfycwppdykpzlavlzohrszpnklw",
-        "onifaweiyfdmqnixzgfyqwmkotic",
-        "krnsxazpljpdkapztjvlxzsxnmkc",
-        "pejvchkzlidjyuzpqbgsgfgxqckp",
-        "esjcajqstsrbpyxqcbalypltaxli",
-        "tyhhqcivlnrjhboxfyeshxytgkdu",
-        "sckvatjzhcrxmjavtejhdzjlqwso",
-        "wbunwiospcfrjtzddydmgfzzqqfv",
-        "rqukfbpkivnkoazcesdfkstlstin",
-        "bmuvqdedmagznvvwkccwmsfpukzs",
-      ];
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
       const filter = {
@@ -117,7 +80,6 @@ export const resolvers = {
           },
         ],
       };
-      const test_filter = { _id: { $in: matchingestingFIlter } };
       const fieldsNeeded = {
         _id: 1,
         first_name: 1,
@@ -128,7 +90,7 @@ export const resolvers = {
         image_set: 1,
         location: 1,
       };
-      const users = await Squash.find(test_filter, fieldsNeeded)
+      const users = await Squash.find(filter, fieldsNeeded)
         .skip(offset)
         .limit(limit);
       return users;

@@ -20,6 +20,10 @@ const imageArrayMinLimit = val => {
   return (Array.isArray(val) && val.length >= 1)
 }
 
+var validateEmail = (email) => {
+    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return re.test(email)
+};
 const _idValidator = _id => {
  return (_id === typeof(String))
 }
@@ -146,7 +150,12 @@ var squashSchema = new Schema({
   },
   email: {
     type:String,
-    required: false,
+     trim: true,
+     lowercase: true,
+     unique: true,
+     required: true,
+     validate: [validateEmail, 'Please fill a valid email address'],
+     match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
   },
   likes: {
     type:[String],
