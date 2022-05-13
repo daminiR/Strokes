@@ -4,6 +4,7 @@ import { GraphQLUpload } from 'graphql-upload'
 import { ObjectId} from 'mongodb'
 import { sanitizeFile } from '../utils/fileNaming'
 import * as path from 'path';
+import {validator} from '../validation'
 import _ from 'lodash'
 import {Data, DisplayData} from '../types/Squash'
 import {
@@ -40,8 +41,11 @@ export const resolvers = {
         email,
       }
     ) => {
-      //const data_set = await creatGCUpload(image_set, _id)
       const data_set = await createAWSUpload(image_set, _id)
+      ///////////////////////////////////validate data before input/////////////////////////////////////////
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////
+
       const doc = await Squash.create({
           _id: _id,
           image_set: data_set,
