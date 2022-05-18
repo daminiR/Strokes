@@ -6,22 +6,16 @@ import { sanitizeFile } from '../utils/fileNaming'
 import * as path from 'path';
 import _ from 'lodash'
 import {Data, DisplayData} from '../types/Squash'
-import {
-  deleteAllUserImages,
-  creatGCUpload,
-  deleteFilesFromGC,
-  deleteFromGC,
-} from "../utils/googleUpload";
-import {
-  SWIPIES_PER_DAY_LIMIT,
-  LIKES_PER_DAY_LIMIT,
-  SPORT_CHANGES_PER_DAY,
-  dest_gcs_images,
-  POST_CHANNEL
-} from "../constants/";
+import sanitize from 'mongo-sanitize'
 export const resolvers = {
   Query: {
-    matchesNotOptim: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange, dislikes}, context, info) => {
+    matchesNotOptim: async (
+      parents,
+      unSanitizedData,
+      context,
+      info
+    ) => {
+      const { _id, offset, limit, location, sport, game_levels, ageRange, dislikes } = sanitize(unSanitizedData)
       //const users = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);
       //// it is imperitive all the filter items are indexed!
       const minAge = ageRange.minAge;
@@ -35,7 +29,7 @@ export const resolvers = {
             "location.city": location.city,
           },
           {
-            "likes._id": {$ne: _id},
+            "likes._id": { $ne: _id },
           },
           {
             active: true,
@@ -52,10 +46,19 @@ export const resolvers = {
         ],
       };
       const users = await Squash.find(filter).skip(offset).limit(limit);
-      console.log("All users that are a potential match to current!", users.length);
+      console.log(
+        "All users that are a potential match to current!",
+        users.length
+      );
       return users;
     },
-    queryProssibleMatches: async (parents, { _id, offset, limit, location, sport, game_levels, ageRange}, context, info) => {
+    queryProssibleMatches: async (
+      parents,
+      unSanitizedData,
+      context,
+      info
+    ) => {
+      const { _id, offset, limit, location, sport, game_levels, ageRange } = sanitize(unSanitizedData)
       //// it is imperitive all the filter items are indexed!
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
@@ -97,20 +100,26 @@ export const resolvers = {
     },
   },
   Mutation: {
-    updateMatches: async (parents, { currentUserId, potentialMatchId, currentUser, potentialMatch}, context, info) => {
-        const doc = await Squash.findOneAndUpdate(
-          { _id: currentUserId },
-          { $addToSet: { matches: potentialMatch } },
-          { new: true }
-        );
-        const potentialMatchDoc = await Squash.findOneAndUpdate(
-          { _id: potentialMatchId },
-          { $push: { matches: currentUser} },
-          { new: true }
-        );
-        console.log("doc user", doc)
-        console.log("doc match", potentialMatchDoc)
+    updateMatches: async (
+      parents,
+      unSanitizedData,
+      context,
+      info
+    ) => {
+      const { currentUserId, potentialMatchId, currentUser, potentialMatch } = sanitize(unSanitizedData)
+      const doc = await Squash.findOneAndUpdate(
+        { _id: currentUserId },
+        { $addToSet: { matches: potentialMatch } },
+        { new: true }
+      );
+      const potentialMatchDoc = await Squash.findOneAndUpdate(
+        { _id: potentialMatchId },
+        { $push: { matches: currentUser } },
+        { new: true }
+      );
+      console.log("doc user", doc);
+      console.log("doc match", potentialMatchDoc);
       return potentialMatchDoc;
     },
-  }
-}
+  },
+};

@@ -2,6 +2,7 @@ import Squash from '../models/Squash';
 import Message from '../models/Messages';
 import { GraphQLUpload } from 'graphql-upload'
 import { ObjectId} from 'mongodb'
+import sanitize from 'mongo-sanitize'
 import { sanitizeFile } from '../utils/fileNaming'
 import { acsport1 } from '../index'
 import * as path from 'path';
@@ -17,7 +18,8 @@ import {
 export const resolvers = {
   FileUpload: GraphQLUpload,
   Mutation: {
-    deleteImage: async (parents, { _id, img_idx }, context, info) => {
+    deleteImage: async (parents, unSanitizedData, context, info) => {
+      const { _id, img_idx } = sanitize(unSanitizedData);
       const filter = { _id: _id };
       const update = { $pull: { image_set: { img_idx: img_idx } } };
       const squash_doc = await Squash.findOneAndUpdate(filter, update, {
@@ -29,7 +31,13 @@ export const resolvers = {
       await deleteFromGC(file_to_del);
       return squash_doc!.image_set;
     },
-    uploadFile: async (parents, { file, _id, img_idx }, context, info) => {
+    uploadFile: async (
+      parents,
+      unSanitizedData,
+      context,
+      info
+    ) => {
+      const { file, _id, img_idx } = sanitize(unSanitizedData)
       // TODO: add user id as a seprator
       const { filename, mimetype, encoding, createReadStream } = await file;
       const sanitizedFilename = sanitizeFile(filename, _id);
@@ -96,5 +104,5 @@ export const resolvers = {
       });
       return displayData;
     },
-  }
-}
+  },
+};
