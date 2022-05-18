@@ -1,129 +1,35 @@
 import Squash from '../models/Squash';
-import Message from '../models/Messages';
-import { GraphQLUpload } from 'graphql-upload'
-import { ObjectId} from 'mongodb'
-import { sanitizeFile } from '../utils/fileNaming'
-import { acsport1 } from '../indexDeploy'
-import * as path from 'path';
 import _ from 'lodash'
-import {Data, DisplayData} from '../types/Squash'
-import {
-  deleteFilesFromGC,
-} from "../utils/googleUpload";
 import {
   deleteFilesFromAWS,
   createAWSUpload,
 } from "../utils/awsUpload";
 import {
-  SWIPIES_PER_DAY_LIMIT,
-  LIKES_PER_DAY_LIMIT,
   SPORT_CHANGES_PER_DAY,
-  dest_gcs_images,
-  POST_CHANNEL
 } from "../constants/";
+import sanitize from 'mongo-sanitize'
 
 
 export const resolvers = {
   Query: {
-    squash: async (parents, args, context, info) => {
-      const squash_val = await Squash.findById(args.id)
+    squash: async (parents, unSanitizedId, context, info) => {
+      const {_id} = sanitize(unSanitizedId)
+      const squash_val = await Squash.findById(_id)
       console.log(squash_val);
       return squash_val;
     },
-    squashes: async (parents, args, context, info) => {
-      const squashes = await Squash.find({});
+    squashes: async (parents, unSanitizedId, context, info) => {
+      const {_id} =  sanitize(unSanitizedId)
+      const squashes = await Squash.find({_id});
       return squashes;
     },
   },
   Mutation: {
-    //////////////////////////////////////// JMETER Testing MUtations ////////////////////////////////////////////////
-    updateLocation: async (parents, {check}, context, info) => {
-      const locationAll = {
-        city: "Cambridge",
-        state: "MA",
-        country: "US"
-      }
-        const docs = await Squash.updateMany(
-          {},
-          { $set: { location: locationAll } },
-          { new: true }
-        );
-        console.log("Updated user location changes", docs);
-        return "Done";
-    },
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    updateUserSports: async (parents, { _id, sportsList }, context, info) => {
-      if (sportsList.length != 0) {
-        const doc = await Squash.findOneAndUpdate(
-          { _id: _id },
-          { $set: { sports: sportsList } },
-          { new: true }
-        );
-        console.log("Updated user squash changes");
-      }
-      return _id;
-    },
-    updateName: async (
-      parents,
-      { _id, first_name, last_name },
-      context,
-      info
-    ) => {
-      console.log("did we get here");
-      if (first_name.length != 0) {
-        const doc = await Squash.findOneAndUpdate(
-          { _id: _id },
-          { $set: { first_name: first_name, last_name: last_name } },
-          { new: true }
-        );
-        console.log("Updated user first name ", first_name, last_name);
-      } else {
-        console.log("Name cannot be no length");
-      }
-      return _id;
-    },
-    updateAge: async (parents, { _id, age }, context, info) => {
-      if (age != 0) {
-        const doc = await Squash.findOneAndUpdate(
-          { _id: _id },
-          { $set: { age: age } },
-          { new: true }
-        );
-        console.log("Updated user age ", age);
-      } else {
-        console.log("Age cannot be no length");
-      }
-      return _id;
-    },
-    updateGender: async (parents, { _id, gender }, context, info) => {
-      //if (gender != 0) {
-      const doc = await Squash.findOneAndUpdate(
-        { _id: _id },
-        { $set: { gender: gender } },
-        { new: true }
-      );
-      console.log("Updated user gender ", gender);
-      //} else {
-      //console.log("Age cannot be no length");
-      //}
-      return _id;
-    },
-    updateDescription: async (parents, { _id, description }, context, info) => {
-      //if (gender != 0) {
-      const doc = await Squash.findOneAndUpdate(
-        { _id: _id },
-        { $set: { description: description } },
-        { new: true }
-      );
-      console.log("Updated user description ", description);
-      //} else {
-      //console.log("Age cannot be no length");
-      //}
-      return _id;
-    },
     updateUserProfile: async (
       root,
-      {
+      unSanitizedData,
+    ) => {
+      const {
         _id,
         image_set,
         first_name,
@@ -136,9 +42,7 @@ export const resolvers = {
         remove_uploaded_images,
         add_local_images,
         original_uploaded_image_set,
-      }
-    ) => {
-      // remove from gc
+      } = sanitize(unSanitizedData)
       //const removed_image_set = await deleteFilesFromGC(remove_uploaded_images, original_uploaded_image_set, add_local_images.length);
       const removed_image_set = await deleteFilesFromAWS(remove_uploaded_images, original_uploaded_image_set, add_local_images.length);
       //const data_set = await creatGCUpload(add_local_images, _id)

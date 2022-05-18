@@ -6,23 +6,12 @@ import { sanitizeFile } from '../utils/fileNaming'
 import * as path from 'path';
 import _ from 'lodash'
 import {Data, DisplayData} from '../types/Squash'
-import {
-  deleteAllUserImages,
-  creatGCUpload,
-  deleteFilesFromGC,
-  deleteFromGC,
-} from "../utils/googleUpload";
-import {
-  SWIPIES_PER_DAY_LIMIT,
-  LIKES_PER_DAY_LIMIT,
-  SPORT_CHANGES_PER_DAY,
-  dest_gcs_images,
-  POST_CHANNEL
-} from "../constants/";
+import sanitize from 'mongo-sanitize'
 
 export const resolvers = {
   Query: {
-    getSwipesPerDay: async (parents, { _id }, context, info) => {
+    getSwipesPerDay: async (parents, unSanitizedId, context, info) => {
+      const _id = sanitize(unSanitizedId)
       const user = await Squash.findById(_id);
       return user ? user.swipesPerDay : 0;
     }
@@ -30,10 +19,11 @@ export const resolvers = {
     Mutation: {
       updateLikes: async (
         parents,
-        { _id, likes, currentUserData, isFromLikes },
+        unSanitizedData,
         context,
         info
       ) => {
+        const { _id, likes, currentUserData, isFromLikes } = sanitize(unSanitizedData)
         // the one who swiped get one less swipe so for _id, decease swipe
         // only upser documents if likes/dislikes are more than 0
         console.log("what is isFromLikes", isFromLikes);
@@ -98,10 +88,11 @@ export const resolvers = {
       },
       updateDislikes: async (
         parents,
-        { _id, dislikes, isFromLikes },
+        unSanitizedData,
         context,
         info
       ) => {
+        const { _id, dislikes, isFromLikes } = sanitize(unSanitizedData)
         // todo: create dilikedby users list, users that didnt like you so you done need to show these
         if (!isFromLikes) {
           const doc = await Squash.findOneAndUpdate(

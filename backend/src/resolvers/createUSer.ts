@@ -6,13 +6,8 @@ import { sanitizeFile } from '../utils/fileNaming'
 import * as path from 'path';
 import {validator} from '../validation'
 import _ from 'lodash'
+import sanitize from 'mongo-sanitize'
 import {Data, DisplayData} from '../types/Squash'
-import {
-  deleteAllUserImages,
-  creatGCUpload,
-  deleteFilesFromGC,
-  deleteFromGC,
-} from "../utils/googleUpload";
 import {
   createAWSUpload,
 } from "../utils/awsUpload";
@@ -20,14 +15,14 @@ import {
   SWIPIES_PER_DAY_LIMIT,
   LIKES_PER_DAY_LIMIT,
   SPORT_CHANGES_PER_DAY,
-  dest_gcs_images,
-  POST_CHANNEL
 } from "../constants/";
 export const resolvers = {
   Mutation: {
     createSquash2: async (
       root,
-      {
+      unSanitizedData
+    ) => {
+      const {
         _id,
         image_set,
         first_name,
@@ -39,13 +34,12 @@ export const resolvers = {
         description,
         phoneNumber,
         email,
-      }
-    ) => {
+      } = sanitize(unSanitizedData)
+
       const data_set = await createAWSUpload(image_set, _id)
       ///////////////////////////////////validate data before input/////////////////////////////////////////
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////
-
       const doc = await Squash.create({
           _id: _id,
           image_set: data_set,
