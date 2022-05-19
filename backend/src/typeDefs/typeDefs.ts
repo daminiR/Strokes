@@ -111,8 +111,6 @@ export const typeDefs = gql`
 
   type Mutation {
     deleteImage(_id: String, img_idx: Int): [Data!]!
-    uploadFile(file: FileUpload!, _id: String, img_idx: Int): DisplayImage
-
 
     updateLikes(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): Squash
     updateDislikes(_id: String!, dislikes: [String!], isFromLikes: Boolean!): Squash

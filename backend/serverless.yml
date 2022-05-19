@@ -11,10 +11,10 @@ plugins:
   - serverless-dotenv-plugin
   - serverless-apigw-binary
 package:
-  include:
-    - ./src/activitybook-a598b-782d9db5058e.json
+  #include:
   exlude:
     - ./src/index.js
+    - ./src/activitybook-a598b-782d9db5058e.json
 provider:
   name: aws
   runtime: nodejs14.x
