@@ -13,14 +13,15 @@ import sanitize from 'mongo-sanitize'
 export const resolvers = {
   Query: {
     squash: async (parents, unSanitizedId, context, info) => {
-      const {_id} = sanitize(unSanitizedId)
-      const squash_val = await Squash.findById(_id)
+      const {id} = sanitize(unSanitizedId)
+      console.log(id)
+      const squash_val = await Squash.findById(id)
       console.log(squash_val);
       return squash_val;
     },
     squashes: async (parents, unSanitizedId, context, info) => {
-      const {_id} =  sanitize(unSanitizedId)
-      const squashes = await Squash.find({_id});
+      const {id} =  sanitize(unSanitizedId)
+      const squashes = await Squash.find({id});
       return squashes;
     },
   },

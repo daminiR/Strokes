@@ -1,11 +1,5 @@
 import Squash from '../models/Squash';
-import Message from '../models/Messages';
-import { GraphQLUpload } from 'graphql-upload'
-import { ObjectId} from 'mongodb'
-import { sanitizeFile } from '../utils/fileNaming'
-import * as path from 'path';
 import _ from 'lodash'
-import {Data, DisplayData} from '../types/Squash'
 import sanitize from 'mongo-sanitize'
 export const resolvers = {
   Query: {
