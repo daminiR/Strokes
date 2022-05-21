@@ -11,6 +11,7 @@ import {CachePersistor, persistCache, AsyncStorageWrapper} from 'apollo3-cache-p
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import  { createUploadLink } from 'apollo-upload-client';
 import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
+import { setContext } from '@apollo/client/link/context'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { LogBox } from 'react-native'
 import SendBird from 'sendbird'
@@ -33,6 +34,7 @@ const App = () =>
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const uri_upload = process.env.React_App_UriUploadRemote
   const uri_ws = process.env.React_App_WSlinkRemote
+  console.log("uri currently", uri_upload)
   useEffect(() => {
     LogBox.ignoreLogs(['Warning: ...']);
     LogBox.ignoreAllLogs();
@@ -64,6 +66,19 @@ const App = () =>
       // * A function that's called for each operation to execute
       // * The Link to use for an operation if the function returns a "truthy" value
       // * The Link to use for an operation if the function returns a "falsy" value
+      //const link = ApolloLink.from([onErrorLink, uploadLink]);
+      //const uri = 'http://localhost:4000/graphql'
+      const token = await auth().currentUser.getIdToken(true);
+      const authLink = setContext((_, {headers}) => {
+        // get the authentication token from local storage if it exists
+        // return the headers to the context so httpLink can read them
+        return {
+          headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : '',
+          },
+        };
+      });
       const splitLink = split(
         ({query}) => {
           const definition = getMainDefinition(query);
@@ -73,14 +88,12 @@ const App = () =>
           );
         },
         wsLink,
+        //authLink,
         uploadLink,
       );
-      //const link = ApolloLink.from([onErrorLink, uploadLink]);
-      //const uri = 'http://localhost:4000/graphql'
-      const token = await auth.currentUser.getIdToken(true);
+
       var apolloClient = new ApolloClient({
-        link: splitLink,
-        headers: { token: token },
+        link: authLink.concat(splitLink),
         cache: cache,
       });
       setClient(apolloClient);
