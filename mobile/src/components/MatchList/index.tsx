@@ -143,6 +143,8 @@ const MatchList = ({matches}) => {
             onSwiped={(cardIndex) => {
               console.log(cardIndex);
             }}
+            ///time being solution to remove swiping drag
+            //horizontalSwipe={false}
             onSwipedLeft={(index) => {
               swipeLeftDisliked(
                 currentUser.uid,
