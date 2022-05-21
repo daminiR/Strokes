@@ -44,10 +44,8 @@ const App = () =>
       });
       await newPersistor.restore();
       setPersistor(newPersistor);
-      newPersistor.pause();
-      newPersistor.purge();
-      console.log('uri', uri_upload);
-      console.log('uri', uri_ws);
+      //newPersistor.pause();
+      //newPersistor.purge();
       const uploadLink = createUploadLink({
         uri: uri_upload,
         //uri: "http://169.254.63.0:4000/graphql"
@@ -111,8 +109,8 @@ const App = () =>
           </ApolloProvider>
       );
     }
-  client.resetStore()
-  client.resetStore()
+  //client.resetStore()
+  //client.resetStore()
   //just to reset cache for debugging
   //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
   //{ready && <AuthNavigator/>}

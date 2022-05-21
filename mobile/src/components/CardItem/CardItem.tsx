@@ -1,6 +1,6 @@
 import React from 'react';
 import { styles } from '@styles';
-import {TouchableWithoutFeedback, ScrollView, View, Image, Dimensions} from 'react-native';
+import {TouchableOpacity, TouchableWithoutFeedback, ScrollView, View, Image, Dimensions} from 'react-native';
 import {Text} from 'react-native-elements'
 import {SportChips} from '@components'
 
@@ -40,6 +40,7 @@ const CardItem = ({
   return (
     <>
       <ScrollView>
+        <TouchableWithoutFeedback>
         <View style={styles.containerCardItem}>
           {/* IMAGE */}
           {profileImage &&  <Image blurRadius={toBlur && variant ? 20 : 0} source={{uri: profileImage.imageURL}} style={variant ? styles.profileLikesContainer : styles.profileContainer}/>}
@@ -63,6 +64,7 @@ const CardItem = ({
           {image_set && image_set.map((imgObj, index) => renderImages(imgObj, index, image_set.length, isProfileView)
           )}
         </View>
+        </TouchableWithoutFeedback>
       </ScrollView>
     </>
   )

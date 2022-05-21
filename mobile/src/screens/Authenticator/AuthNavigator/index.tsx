@@ -67,7 +67,6 @@ const AuthNavigator = ({sendbird}) => {
     fetchPolicy: "network-only",
     onCompleted: async (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
-      console.log("data", data)
       if (data?.squash) {
         setDeleted(data.squash.deleted)
         setProfileState(true);
@@ -80,7 +79,7 @@ const AuthNavigator = ({sendbird}) => {
       }
     },
     onError: (({graphQLErrors, networkError}) => {
-      console.log("errors")
+      console.log("errors here")
       if (networkError){
         console.log(networkError)
       }
