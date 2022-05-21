@@ -13,11 +13,19 @@ import {resolvers as testResolvers} from './resolvers/testResolvers'
 import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
 
+import admin = require("firebase-admin")
+import {getAuth} from "firebase-admin/auth"
+//import { initializeApp } from 'firebase-admin/app';
+
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
 import { createServer } from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
+const serviceAccount = process.env.gcStorageKeyFilename as any
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 const startServer = async () => {
   const uri = process.env.ATLAS_URI as any
   const app = express()
@@ -42,6 +50,27 @@ const startServer = async () => {
   });
   const server = new ApolloServer({
     schema: schema,
+    context: ({ req }) => {
+      // Get the user token from the headers.
+      const authReq = req.headers.authorization || "";
+      const token = authReq.split('Bearer ')[1] || ""
+      // Try to retrieve a user with the token and verify
+      var user = null as any;
+      getAuth()
+      //admin
+        //.auth()
+        .verifyIdToken(token)
+        .then((decodedToken) => {
+          console.log("Token verified");
+          user = decodedToken
+        })
+        .catch((err) => {
+          console.log("Token Verification failed");
+          console.log(err);
+        });
+      // Add the user to the context
+      return { user };
+    },
   });
   await server.start()
   server.applyMiddleware({ app });
