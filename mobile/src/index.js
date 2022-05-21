@@ -15,6 +15,7 @@ import { WebSocketLink } from '@apollo/client/link/ws'
 import { LogBox } from 'react-native'
 import SendBird from 'sendbird'
 import { AppContainer } from '@components'
+import auth from '@react-native-firebase/auth'
 import messaging from '@react-native-firebase/messaging';
 import { onRemoteMessage } from './utils/SendBird'
 
@@ -76,8 +77,10 @@ const App = () =>
       );
       //const link = ApolloLink.from([onErrorLink, uploadLink]);
       //const uri = 'http://localhost:4000/graphql'
+      const token = await auth.currentUser.getIdToken(true);
       var apolloClient = new ApolloClient({
         link: splitLink,
+        headers: { token: token },
         cache: cache,
       });
       setClient(apolloClient);
