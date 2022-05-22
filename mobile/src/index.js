@@ -1,24 +1,18 @@
-import React, { createContext, useEffect, useState, ReactElement } from 'react'
-import { Text} from 'react-native'
-import { cache, persist} from './cache'
+import React, { createContext, useEffect, useState } from 'react'
+import { Text } from 'react-native'
+import { cache } from './cache'
 import {AuthNavigator} from '@screens'
-import { Platform } from 'react-native';
-import { from ,createHttpLink, ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client'
+import {ApolloClient, ApolloProvider} from '@apollo/client'
 import { FormProvider } from './Contexts/FormContext'
-import {split} from '@apollo/client'
-import { getMainDefinition } from '@apollo/client/utilities';
-import {CachePersistor, persistCache, AsyncStorageWrapper} from 'apollo3-cache-persist'
+import {CachePersistor, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import  { createUploadLink } from 'apollo-upload-client';
 import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { setContext } from '@apollo/client/link/context'
-import { WebSocketLink } from '@apollo/client/link/ws'
 import { LogBox } from 'react-native'
 import SendBird from 'sendbird'
 import { AppContainer } from '@components'
 import auth from '@react-native-firebase/auth'
-import messaging from '@react-native-firebase/messaging';
-import { onRemoteMessage } from './utils/SendBird'
 
 //TODO: async funtion persist check later
 
@@ -51,27 +45,9 @@ const App = () =>
       //newPersistor.purge();
       const uploadLink = createUploadLink({
         uri: uri_upload,
-        //uri: "http://169.254.63.0:4000/graphql"
-        //uri: 'http://192.168.1.12:4000/graphql',
       });
-      const wsLink = new WebSocketLink({
-        //uri: 'ws://192.168.1.12:4000/graphql',
-        uri: uri_ws,
-        options: {
-          reconnect: true,
-        },
-      });
-      // The split function takes three parameters:
-      //
-      // * A function that's called for each operation to execute
-      // * The Link to use for an operation if the function returns a "truthy" value
-      // * The Link to use for an operation if the function returns a "falsy" value
-      //const link = ApolloLink.from([onErrorLink, uploadLink]);
-      //const uri = 'http://localhost:4000/graphql'
       const token = await auth().currentUser.getIdToken(true);
       const authLink = setContext((_, {headers}) => {
-        // get the authentication token from local storage if it exists
-        // return the headers to the context so httpLink can read them
         return {
           headers: {
             ...headers,
@@ -79,21 +55,8 @@ const App = () =>
           },
         };
       });
-      const splitLink = split(
-        ({query}) => {
-          const definition = getMainDefinition(query);
-          return (
-            definition.kind === 'OperationDefinition' &&
-            definition.operation === 'subscription'
-          );
-        },
-        wsLink,
-        //authLink,
-        uploadLink,
-      );
-
       var apolloClient = new ApolloClient({
-        link: authLink.concat(splitLink),
+        link: authLink.concat(uploadLink),
         cache: cache,
       });
       setClient(apolloClient);
