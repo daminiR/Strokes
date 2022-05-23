@@ -1,7 +1,7 @@
 //#TODO: Why does ES6 syntax provide perfomrance benefits?
 import 'dotenv/config'
 import  express from 'express';
-import { ApolloServer, gql }  from 'apollo-server-express';
+import { ApolloServer, AuthenticationError }  from 'apollo-server-express';
 import  mongoose, {ConnectOptions} from 'mongoose';
 import { mergeResolvers } from '@graphql-tools/merge';
 import {resolvers as deleteUser} from './resolvers/deleteUser'
@@ -15,7 +15,6 @@ import {resolvers as uploads} from './resolvers/uploads'
 
 import admin = require("firebase-admin")
 import {getAuth} from "firebase-admin/auth"
-//import { initializeApp } from 'firebase-admin/app';
 
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
@@ -39,7 +38,6 @@ const startServer = async () => {
       matches,
       random,
       testResolvers,
-      //messaging,
       updateUser,
       uploads,
     ]
@@ -50,26 +48,15 @@ const startServer = async () => {
   });
   const server = new ApolloServer({
     schema: schema,
-    context: ({ req }) => {
+    context: async ({ req }) => {
       // Get the user token from the headers.
+      console.log("Token")
       const authReq = req.headers.authorization || "";
       const token = authReq.split('Bearer ')[1] || ""
       // Try to retrieve a user with the token and verify
-      var user = null as any;
-      getAuth()
-      //admin
-        //.auth()
-        .verifyIdToken(token)
-        .then((decodedToken) => {
-          console.log("Token verified");
-          user = decodedToken
-        })
-        .catch((err) => {
-          console.log("Token Verification failed");
-          console.log(err);
-        });
-      // Add the user to the context
-      return { user };
+      console.log("Token", token)
+      const user = await getAuth().verifyIdToken(token)
+      return { user }
     },
   });
   await server.start()

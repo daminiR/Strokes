@@ -24,10 +24,8 @@ const App = () =>
 {
   const [client, setClient] = useState();
   const [persistor, setPersistor] = useState();
-  const [loadingClient, setLoadingClient] = useState(true);
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const uri_upload = process.env.React_App_UriUploadRemote
-  const uri_ws = process.env.React_App_WSlinkRemote
   console.log("uri currently", uri_upload)
   useEffect(() => {
     LogBox.ignoreLogs(['Warning: ...']);
@@ -46,7 +44,14 @@ const App = () =>
       const uploadLink = createUploadLink({
         uri: uri_upload,
       });
-      const token = await auth().currentUser.getIdToken(true);
+      const user =  await auth().currentUser
+      console.log("logged user", user)
+      var token = null
+      if (user) {
+        token = await auth().currentUser.getIdToken(true);
+        console.log("whats the token here", token)
+      }
+      console.log("logged user token", token)
       const authLink = setContext((_, {headers}) => {
         return {
           headers: {
@@ -57,6 +62,7 @@ const App = () =>
       });
       var apolloClient = new ApolloClient({
         link: authLink.concat(uploadLink),
+        //link: uploadLink,
         cache: cache,
       });
       setClient(apolloClient);

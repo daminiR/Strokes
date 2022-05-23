@@ -60,12 +60,14 @@ export const Slider =  ({changeEmail}) => {
   const {sendbird, onLogin, setIsUseOnMongoDb, setIsSignIn} = useContext(UserContext)
   const [checkPhoneInput, {data: userPhoneInfo}] = useLazyQuery(CHECK_PHONE_INPUT, {
     onCompleted: (data) => {
+      console.log("Error gqlsecure: whats data here", data)
       if (
         data.checkPhoneInput.isPhoneExist == true &&
         data.checkPhoneInput.isDeleted == false
       ) {
         registerOnFirebase(values.phoneNumber)
           .then((confirmation: any) => {
+            console.log("does the confirmationfunction not exists", confirmation)
             setConfirmationFunc(confirmation);
             this.slider.goToSlide(2);
           })
@@ -123,7 +125,6 @@ export const Slider =  ({changeEmail}) => {
     const index = this.slider.state.activeIndex;
     const field = _.find(signInSlides, ['key', index.toString()]).inputLabel;
     setFieldTouched(field);
-
     if (index == 0) {
       //!errors[field] && touched[field] && this.slider.goToSlide(index + 1, true) && _signIn()
       !errors[field] && touched[field] &&  _signIn()
@@ -133,6 +134,34 @@ export const Slider =  ({changeEmail}) => {
         this.slider.goToSlide(index + 1, true);
     }
   };
+const _confirmSignInGC = () => {
+  //console.log("confirmation func", confirmationFunc)
+  //setLoadingSubmit(true);
+  //setLoadingSignUInRefresh(true)
+  confirmationFunc
+    .confirm(values.confirmationCode)
+    .then((userCredential) => {
+      //setLoadingSignUInRefresh(true)
+      if (userCredential.additionalUserInfo.isNewUser){
+        auth().currentUser.delete().then(() => {
+          setLoadingSubmit(true);
+          console.log("use needs to sign up")
+        })
+      }
+    })
+    .catch(async (err) => {
+      //await auth().currentUser.delete()
+      if (err.code === 'auth/invalid-verification-code') {
+        console.log(
+          'you provided incorrect verifcation code / phone number. Make sure phone number and code is valid',
+        );
+        setAuthMessage('invalid verification code');
+      } else if (err.code === 'auth/missing-verification-code') {
+        setAuthMessage('need to provide verification code');
+        console.log('did not provide verification code');
+      }
+    });
+};
 const _checkSignIn = () => {
   canSignIn
     ? _confirmSignInGC()
@@ -149,45 +178,6 @@ const start = user => {
     }
   };
 const [authMessage, setAuthMessage] = useState(null)
-const _confirmSignInGC = () => {
-  //console.log("confirmation func", confirmationFunc)
-  //setLoadingSubmit(true);
-  setIsSignIn(true)
-  //setLoadingSignUInRefresh(true)
-  confirmationFunc
-    .confirm(values.confirmationCode)
-    .then((userCredential) => {
-      //setLoadingSignUInRefresh(true)
-      if (userCredential.additionalUserInfo.isNewUser){
-        auth().currentUser.delete().then(() => {
-          setLoadingSubmit(true);
-          console.log("use needs to sign up")
-        })
-      }
-      //setLoadingSignUInRefresh(false)
-      //setIsUseOnMongoDb(true);
-      //setLoadingSubmit(true);
-      //if (changeEmail) {
-      //setAuthOverlay(true)
-      //console.log("changeemail here")
-      //}
-      //setIsUseOnMongoDb(true);
-    })
-    .catch(async (err) => {
-      //await auth().currentUser.delete()
-      if (err.code === 'auth/invalid-verification-code') {
-        console.log(
-          'you provided incorrect verifcation code / phone number. Make sure phone number and code is valid',
-        );
-        setAuthMessage('invalid verification code');
-      } else if (err.code === 'auth/missing-verification-code') {
-        setAuthMessage('need to provide verification code');
-        console.log('did not provide verification code');
-      }
-      //setLoadingSubmit(false);
-      //setLoadingSignUInRefresh(false)
-    });
-};
   const _onPressCancel = () => {
     navigation.navigate('HELLO');
   }
