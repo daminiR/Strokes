@@ -32,8 +32,8 @@ const Match =()  => {
   } = useContext(UserContext);
   useEffect(() => {
     setLoadingData(true);
-    if (data) setLoadingData(false);
-  }, [data.squash])
+    if (userData) setLoadingData(false);
+  }, [userData.squash])
   const renderPatron = () => {
     return <Patron />;
   };

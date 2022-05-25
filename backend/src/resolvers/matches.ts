@@ -1,6 +1,7 @@
 import Squash from '../models/Squash';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
+import { AuthenticationError }  from 'apollo-server-express';
 export const resolvers = {
   Query: {
     matchesNotOptim: async (
@@ -10,8 +11,8 @@ export const resolvers = {
       info
     ) => {
       const { _id, offset, limit, location, sport, game_levels, ageRange, dislikes } = sanitize(unSanitizedData)
-      //const users = await Squash.find({$and : [{ _id: { $ne: _id }}, {active: true}]}).limit(limit);
-      //// it is imperitive all the filter items are indexed!
+      const user = context.user;
+      if (user?.uid != _id) throw new AuthenticationError("not logged in");
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
       const filter = {
@@ -53,6 +54,8 @@ export const resolvers = {
       info
     ) => {
       const { _id, offset, limit, location, sport, game_levels, ageRange } = sanitize(unSanitizedData)
+      const user = context.user;
+      if (user?.uid != _id) throw new AuthenticationError("not logged in");
       //// it is imperitive all the filter items are indexed!
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
@@ -101,6 +104,8 @@ export const resolvers = {
       info
     ) => {
       const { currentUserId, potentialMatchId, currentUser, potentialMatch } = sanitize(unSanitizedData)
+      const user = context.user;
+      if (user?.uid != currentUserId) throw new AuthenticationError("not logged in");
       const doc = await Squash.findOneAndUpdate(
         { _id: currentUserId },
         { $addToSet: { matches: potentialMatch } },
@@ -111,8 +116,6 @@ export const resolvers = {
         { $push: { matches: currentUser } },
         { new: true }
       );
-      console.log("doc user", doc);
-      console.log("doc match", potentialMatchDoc);
       return potentialMatchDoc;
     },
   },

@@ -125,7 +125,7 @@ export type RootStackSignInParamList = {
 const customTabBarStyle = {
   showLabel: false,
   inactiveTintColor: 'gray',
-  style: {backgroundColor: '#2b1d08', height: 60},
+  style: {backgroundColor: '#2b1d08', height: Platform.OS === 'ios'? 100: 60},
   labelStyle: {
     color: '#242424',
     fontFamily: 'OpenSans-Regular',

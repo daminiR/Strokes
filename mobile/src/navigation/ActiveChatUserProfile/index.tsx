@@ -9,7 +9,6 @@ const ActiveChatTab  = createMaterialTopTabNavigator()
 export type RootStackProfileScreenParamList = {
   ACTIVE_CHAT_SCREEN: undefined
   ACTIVE_CHAT_PROFILE_SCREEN: undefined
-  //PROFILE_EDIT: undefined
 }
 const customTabBarStyle = {
   showLabel: false,

@@ -1,5 +1,4 @@
 import Squash from '../models/Squash';
-import Message from '../models/Messages';
 import { GraphQLUpload } from 'graphql-upload'
 import { ObjectId} from 'mongodb'
 import { sanitizeFile } from '../utils/fileNaming'
@@ -8,6 +7,7 @@ import {validator} from '../validation'
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 import {Data, DisplayData} from '../types/Squash'
+import { AuthenticationError }  from 'apollo-server-express';
 import {
   createAWSUpload,
 } from "../utils/awsUpload";
@@ -20,7 +20,8 @@ export const resolvers = {
   Mutation: {
     createSquash2: async (
       root,
-      unSanitizedData
+      unSanitizedData,
+      context,
     ) => {
       const {
         _id,
@@ -36,10 +37,9 @@ export const resolvers = {
         email,
       } = sanitize(unSanitizedData)
 
+      const user = context.user;
+      if (user?.uid != _id) throw new AuthenticationError("not logged in");
       const data_set = await createAWSUpload(image_set, _id)
-      ///////////////////////////////////validate data before input/////////////////////////////////////////
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////
       const doc = await Squash.create({
           _id: _id,
           image_set: data_set,

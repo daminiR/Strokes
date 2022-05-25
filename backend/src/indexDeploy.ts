@@ -9,15 +9,19 @@ import {resolvers as createUser} from './resolvers/createUSer'
 import {resolvers as likesDislikes} from './resolvers/likesDislikes'
 import {resolvers as matches} from './resolvers/matches'
 import {resolvers as random} from './resolvers/random'
-import {resolvers as testResolvers} from './resolvers/testResolvers'
 import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
 
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
-import * as path from 'path'
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import admin = require("firebase-admin")
+import {getAuth} from "firebase-admin/auth"
 
+//const serviceAccount = process.env.gcStorageKeyFilename as any
+//admin.initializeApp({
+  //credential: admin.credential.cert(serviceAccount)
+//});
 const startServer = async () => {
   const uri = process.env.ATLAS_URI as any
   const app = express()
@@ -29,7 +33,6 @@ const startServer = async () => {
       likesDislikes,
       matches,
       random,
-      testResolvers,
       updateUser,
       uploads,
     ]
@@ -40,6 +43,23 @@ const startServer = async () => {
   });
   const server = new ApolloServer({
     schema: schema,
+    context: async ({ event, context, express }) => {
+      // Get the user token from the headers.
+      console.log("context from lambda", context)
+      console.log("express from lambda", express)
+      const authReq = express.req.headers.authorization || "";
+      const token = authReq.split('Bearer ')[1] || ""
+      // Try to retrieve a user with the token and verify
+      console.log("Token", token)
+      const user = await getAuth().verifyIdToken(token)
+      return {
+        headers: event.headers,
+        functionName: context.functionName,
+        event,
+        context,
+        expressRequest: user,
+      };
+    },
   });
   server.createHandler()
   mongoose

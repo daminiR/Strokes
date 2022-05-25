@@ -137,7 +137,8 @@ export const Slider =  ({changeEmail}) => {
 const _confirmSignInGC = () => {
   //console.log("confirmation func", confirmationFunc)
   //setLoadingSubmit(true);
-  //setLoadingSignUInRefresh(true)
+  //setIsSignIn(true)
+  setLoadingSignUInRefresh(true)
   confirmationFunc
     .confirm(values.confirmationCode)
     .then((userCredential) => {
@@ -148,6 +149,14 @@ const _confirmSignInGC = () => {
           console.log("use needs to sign up")
         })
       }
+      setLoadingSignUInRefresh(false)
+      //setIsUseOnMongoDb(true);
+      //setLoadingSubmit(true);
+      //if (changeEmail) {
+      //setAuthOverlay(true)
+      //console.log("changeemail here")
+      //}
+      //setIsUseOnMongoDb(true);
     })
     .catch(async (err) => {
       //await auth().currentUser.delete()
@@ -160,6 +169,8 @@ const _confirmSignInGC = () => {
         setAuthMessage('need to provide verification code');
         console.log('did not provide verification code');
       }
+      //setLoadingSubmit(false);
+      //setLoadingSignUInRefresh(false)
     });
 };
 const _checkSignIn = () => {
