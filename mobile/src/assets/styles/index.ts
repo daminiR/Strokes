@@ -62,11 +62,6 @@ export const styles = StyleSheet.create({
 
   // Auth email overlay
 
-  //authEmailOverlay: {
-  //flex: 1,
-  //width: DIMENSION_WIDTH * .8,
-  //height: DIMENSION_HEIGHT * 0.5
-  //},
   // BUTTON STYLE
   buttonText: {
     color: 'white',
@@ -257,7 +252,7 @@ export const styles = StyleSheet.create({
   },
   profileContainer: {
     borderRadius: 8,
-    width: DIMENSION_WIDTH,
+    width: DIMENSION_WIDTH * 0.9,
     height: 350,
     margin: 0,
   },

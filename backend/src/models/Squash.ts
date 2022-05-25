@@ -4,7 +4,7 @@ import { DeleteT, SquashDocument, LikedByUserT, PotentialMatchT, LocationT} from
 //const Schema = mongoose.Schema;
 const GENDERS = ["Male", "Female"]
 const COUNTRY = ["US"]
-const SPORTS = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
+const SPORTS = ["Squash", "Tennis", "Soccer", "Badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
 //const LEVELS = ["beginer", "intermediate", "expert"]
 const LEVELS = ['0', '1', '2']
 const MAX_SPORTS_LIMIT = 5

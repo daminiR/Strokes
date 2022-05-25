@@ -68,7 +68,7 @@ const App = () =>
       setClient(apolloClient);
     }
     init();
-  }, []);
+  }, [loadingSignUpInRefresh]);
   const rootRefreshValues = {
     setLoadingSignUInRefresh: setLoadingSignUInRefresh,
   }

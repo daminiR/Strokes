@@ -9,7 +9,6 @@ import {resolvers as createUser} from './resolvers/createUSer'
 import {resolvers as likesDislikes} from './resolvers/likesDislikes'
 import {resolvers as matches} from './resolvers/matches'
 import {resolvers as random} from './resolvers/random'
-import {resolvers as testResolvers} from './resolvers/testResolvers'
 import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
 
@@ -37,7 +36,6 @@ const startServer = async () => {
       likesDislikes,
       matches,
       random,
-      testResolvers,
       updateUser,
       uploads,
     ]
@@ -51,12 +49,18 @@ const startServer = async () => {
     context: async ({ req }) => {
       // Get the user token from the headers.
       console.log("Token")
+      var user = null as any
       const authReq = req.headers.authorization || "";
       const token = authReq.split('Bearer ')[1] || ""
       // Try to retrieve a user with the token and verify
       console.log("Token", token)
-      const user = await getAuth().verifyIdToken(token)
+      if (token) {
+        user = await getAuth().verifyIdToken(token);
       return { user }
+      } else {
+        user = null;
+      return { user }
+      }
     },
   });
   await server.start()

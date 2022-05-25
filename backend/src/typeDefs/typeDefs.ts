@@ -1,6 +1,5 @@
 //import {gql} from 'apollo-server-express';
 import { gql } from "apollo-server-lambda";
-import { MessageDocument} from '../types/Messages.d'
 import {
   LocationType,
   MessageType,
@@ -152,32 +151,6 @@ export const typeDefs = gql`
       email: String
     ): Squash!
 
-    createSquashTestSamples(
-      _id: String!
-      first_name: String!
-      last_name: String!
-      age: Int!
-      gender: String!
-      sports: [SquashNodeInput!]!
-      location: LocationInput!
-      description: String!
-      image_set: [DataInput!]!
-    ): Squash!
-
-    updateUserProfileTestSamples(
-      _id1: String!
-      _id2: String!
-    ): Squash
-    testSb(
-      _id: String!
-      other_id: String!
-    ): Squash
-    updateGameLevelsToStrings: String
-    deleteSquash(_id: String, image_set: [DataInput!]): Boolean!
     softDeleteUser(_id: String): String
-    deleteChatUser(_idUser: String, _idChatUser: String): String
-    testMut(name: Int!):Int
-    updateLikesTestSamples(_id: String!, likes: [String!]): Squash
-    updateLikesCurrentUserTestSamples(_id: String!, likes: [LikedByUserInput!]): Squash
   }
 `;

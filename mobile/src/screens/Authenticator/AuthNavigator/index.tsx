@@ -23,13 +23,6 @@ import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} fr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthNavigator = ({sendbird}) => {
-  //auth().currentUser.delete().then(() => {})
-  //const [state, dispatch] = useReducer(loginReducer, {
-    //userId: '',
-    //nickname: '',
-    //error: '',
-    //connecting: false,
-  //});
   const [currentUser, setCurrentUser ] = useState(null)
   const [isProfileComplete, setProfileState ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(true);
@@ -38,7 +31,6 @@ const AuthNavigator = ({sendbird}) => {
   const [changeSport, setChangeSport] = useState(true)
   const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
-  const [loadingMatches, setLoadingMatches] = useState(false);
   const [data, setData] = useState(null);
   const [allUsers, setAllUsers] = useState(null)
   const [userDataDidMount, setUserDataDidMount] = useState(false)
@@ -46,22 +38,22 @@ const AuthNavigator = ({sendbird}) => {
   const [CacheVal, setCacheVal] = useState(null)
   const [sb, setSb] = useState(sendbird)
   const [loadAllResults, setLoadAllResults] = useState(true)
-  //const [isSignIn, setIsSignIn] = useState(false)
   const [initialValuesFormik, setInitialValuesFormik] = useState({});
   const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const didMountRef = useRef(false)
-  const [queryProssibleMatches, {data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
+  const [queryProssibleMatches, { loading: loadingMatches, data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
-      setLoadingMatches(true)
       console.log("check if fetch more updated any data", data)
-      const all_users = data.queryProssibleMatches;
-      console.log("............",all_users)
-      setAllUsers(all_users)
-      //setLoadingSignUInRefresh(false)
-      //setLoadAllResults(false)
-      setLoadingMatches(false)
-    }
+      if (data) {
+        const all_users = data.queryProssibleMatches;
+        console.log('............', all_users);
+        setAllUsers(all_users);
+      }
+    },
+    onError: (err) => {
+      console.log('Match query Errpr', err);
+    },
   });
   const [getSquashProfile, {data: userData, loading: userLoading, error, refetch: refetchUserData}] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
@@ -70,12 +62,7 @@ const AuthNavigator = ({sendbird}) => {
       if (data?.squash) {
         setDeleted(data.squash.deleted)
         setProfileState(true);
-        //setLoadingMatches(false)
         setData(data);
-        //if (isSignIn){
-          ////connect(data._id, data.first_name, dispatch, sendbird, start);
-          //setIsSignIn(false)
-        //}
       }
     },
     onError: (({graphQLErrors, networkError}) => {
@@ -137,7 +124,6 @@ const start = user => {
   const onAuthStateChanged = (currentUser) => {
       setCurrentUser(currentUser);
       if (currentUser) {
-        setLoadingMatches(true)
         if (!CacheVal) {
           // dta can be null for the first time users during sign up
           const data = client.readQuery({
@@ -150,6 +136,7 @@ const start = user => {
             setCacheVal(cachedUser);
           }
         }
+        console.log("do we have user", currentUser.uid)
         getSquashProfile({variables: {id: currentUser.uid}});
         setLoadingUser(false);
       } else {
@@ -197,29 +184,6 @@ const start = user => {
       .catch(err => console.error(err));
   };
 
-  //useEffect(() => {
-    //// you have to add new alerts
-    //if (userData) {
-      //const cachedMatches = calculateOfflineMatches(CacheVal);
-      //const totalMatches = calculateOfflineMatches(userData.squash);
-      //console.log('cached', cachedMatches);
-      //console.log('not cached', totalMatches);
-      //const cachedIDs = _.map(cachedMatches, (cachedObj) => {
-        //return cachedObj._id;
-      //});
-      //const matchedIDs = _.map(totalMatches, (matchObj) => {
-        //return matchObj._id;
-      //});
-      //if (!_.isEqual(cachedIDs, matchedIDs)) {
-        //showMessage({
-          //message: 'New matches!',
-          //type: 'info',
-          //titleStyle: styles.notificationText,
-          //style: styles.notificationStyle,
-        //});
-      //}
-    //}
-  //}, [userData.squash.matches]);
   if (loadingSigning) return null
   const value = {
     getSquashProfile: getSquashProfile,
@@ -246,15 +210,11 @@ const start = user => {
     sendbird: sb,
     setSendbird: setSb,
     onLogin: login,
-    //setIsSignIn: setIsSignIn
   };
   const render2 = () =>{
-    console.log(
-      'lis fo things htat gotrefreshed',
-      userData,
-      currentUser,
-      deleted,
-    );
+    console.log("currentUser Error", currentUser)
+    console.log("userData Error", userData)
+    //console.log("isDeleted Error", isDeleted)
     if (userData?.squash && currentUser && (!deleted || !deleted.isDeleted)) {
       return !loadingSigning && !loadingMatches && <MatchStackScreen />;
     } else {
