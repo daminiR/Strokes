@@ -32,7 +32,6 @@ const MatchList = ({matches}) => {
   const {setValues, setFieldValue, values: filterValues } = useFormikContext<FilterFields>();
   const [endingText, setEndingText] = useState(null)
   const {currentUser, queryProssibleMatches , data, userData, setData, userLoading, sendbird} = useContext(UserContext)
-  console.log("user data vals here userData", userData)
   const [loadingFilters, setLoadingFilters] = useState(true)
   const [disableLikes, setDisableLikes] = useState(false)
   const [disableDisLikes, setDisableDislikes] = useState(false)
@@ -40,27 +39,11 @@ const MatchList = ({matches}) => {
   const [matched, setMatched] = useState(false)
   const [lastMatch, setLastMatch] = useState(matches.length == 0)
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
-    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
+    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
     awaitRefetchQueries: true,
     onCompleted: (data) => {
-      getSquashProfile({variables: {id: currentUser.uid}});
+      getSquashProfile({variables: {id: currentUser.sub}});
       setDisableMatches(false)
-      // if matched update matches and create a new group channel for two users from sb
-      //if (data.updateMatches) {
-        //var userIds = [currentUser.uid, data.updateMatches._id];
-        //sendbird.GroupChannel.createChannelWithUserIds(
-          //userIds,
-          //true,
-          //function (groupChannel, error) {
-            //if (error) {
-              //// Handle error.
-              //console.log('SB_ERROR', error);
-            //}
-            //console.log('SB OPEN', groupChannel);
-          //},
-        //);
-      //}
-
     },
   })
   useEffect(() => {
@@ -84,7 +67,7 @@ const MatchList = ({matches}) => {
             }).sport;
             queryProssibleMatches({
               variables: {
-                _id: currentUser.uid,
+                _id: currentUser.sub,
                 offset: 0,
                 limit: limit,
                 location: _.omit(userData.squash.location, ['__typename']),
@@ -102,7 +85,6 @@ const MatchList = ({matches}) => {
   }, [userData?.squash.sports, isCityChangedVar()]);
 
   useEffect(() => {
-    console.log("swipes per day", userData.squash.swipesPerDay)
       if (matches?.length == 0 && userData.squash.swipesPerDay != 0) {
         setEndingText('no more matches left!');
       }
@@ -115,7 +97,7 @@ const MatchList = ({matches}) => {
       }
   }, [matches])
   const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
-    variables: {id: currentUser.uid},
+    variables: {id: currentUser.sub},
     //fetchPolicy:"cache-and-network",
     fetchPolicy: "network-only",
     onCompleted: (data) => {
@@ -147,7 +129,7 @@ const MatchList = ({matches}) => {
             //horizontalSwipe={false}
             onSwipedLeft={(index) => {
               swipeLeftDisliked(
-                currentUser.uid,
+                currentUser.sub,
                 matches[index],
                 updateDislikes,
                 false
@@ -156,7 +138,7 @@ const MatchList = ({matches}) => {
             onSwipedRight={(index) => {
               swipeRightLiked(
                 userData.squash,
-                currentUser.uid,
+                currentUser.sub,
                 matches[index],
                 updateLikes,
                 updateMatches,

@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { Text } from 'react-native'
+import {Text} from 'react-native';
+import {getAWSUser} from '@utils';
 import { cache } from './cache'
 import {AuthNavigator} from '@screens'
 import {ApolloClient, ApolloProvider} from '@apollo/client'
@@ -12,7 +13,6 @@ import { setContext } from '@apollo/client/link/context'
 import { LogBox } from 'react-native'
 import SendBird from 'sendbird'
 import { AppContainer } from '@components'
-import auth from '@react-native-firebase/auth'
 
 //TODO: async funtion persist check later
 
@@ -44,28 +44,29 @@ const App = () =>
       const uploadLink = createUploadLink({
         uri: uri_upload,
       });
-      const user =  await auth().currentUser
-      console.log("logged user", user)
       var token = null
-      if (user) {
-        token = await auth().currentUser.getIdToken(true);
-        console.log("whats the token here", token)
-      }
-      console.log("logged user token", token)
-      const authLink = setContext((_, {headers}) => {
-        return {
-          headers: {
-            ...headers,
-            authorization: token ? `Bearer ${token}` : '',
-          },
-        };
-      });
-      var apolloClient = new ApolloClient({
-        link: authLink.concat(uploadLink),
-        //link: uploadLink,
-        cache: cache,
-      });
-      setClient(apolloClient);
+      getAWSUser()
+        .then((args) => {
+          if (args) {
+            token = args.session.accessToken.jwtToken;
+          }
+          const authLink = setContext((_, {headers}) => {
+            return {
+              headers: {
+                ...headers,
+                authorization: token ? `Bearer ${token}` : '',
+              },
+            };
+          });
+          var apolloClient = new ApolloClient({
+            link: authLink.concat(uploadLink),
+            cache: cache,
+          });
+          setClient(apolloClient);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
     init();
   }, [loadingSignUpInRefresh]);
@@ -97,17 +98,6 @@ const App = () =>
   //client.resetStore()
   //client.resetStore()
   //just to reset cache for debugging
-  //TODO: high : need to figure out where to place Form provider that doesnt contradict user auth
-  //{ready && <AuthNavigator/>}
-  //return renderInitial();
-    //only in androik
   enableFlipperApolloDevtools(client)
-  //return (
-    //<ApolloProvider client={client}>
-      //<FormProvider>
-        //{<AuthNavigator />}
-      //</FormProvider>
-    //</ApolloProvider>
-  //);
 }
 export default App

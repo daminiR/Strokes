@@ -18,10 +18,10 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import admin = require("firebase-admin")
 import {getAuth} from "firebase-admin/auth"
 
-//const serviceAccount = process.env.gcStorageKeyFilename as any
-//admin.initializeApp({
-  //credential: admin.credential.cert(serviceAccount)
-//});
+const serviceAccount = process.env.gcStorageKeyFilename as any
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 const startServer = async () => {
   const uri = process.env.ATLAS_URI as any
   const app = express()
@@ -44,21 +44,22 @@ const startServer = async () => {
   const server = new ApolloServer({
     schema: schema,
     context: async ({ event, context, express }) => {
+      context.callbackWaitsForEmptyEventLoop = false;
       // Get the user token from the headers.
-      console.log("context from lambda", context)
-      console.log("express from lambda", express)
       const authReq = express.req.headers.authorization || "";
-      const token = authReq.split('Bearer ')[1] || ""
+      const token = authReq.split("Bearer ")[1] || "";
       // Try to retrieve a user with the token and verify
-      console.log("Token", token)
-      const user = await getAuth().verifyIdToken(token)
-      return {
-        headers: event.headers,
-        functionName: context.functionName,
-        event,
-        context,
-        expressRequest: user,
-      };
+      console.log("Token", token);
+      var user = null as any;
+      if (token) {
+        if (token) {
+          user = await admin.auth().verifyIdToken(token);
+          return { user };
+        } else {
+          user = null;
+          return { user };
+        }
+      }
     },
   });
   server.createHandler()

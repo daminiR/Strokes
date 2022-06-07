@@ -16,7 +16,6 @@ import {byGameLevel} from '@utils'
   //// TODO : this needs to update every time user changes list of activities
 const FilterOverlaySingle = ({filter, setFilter}) => {
   const {setValues, values: filterValues } = useFormikContext<FilterFields>();
-  console.log("filterValues",filterValues)
   const [multiSliderValue, setMultiSliderValue] = useState(defaultAgeRange);
 
   const [allUserSportsFilter, setAllUserSportsFilter] = useState(filterValues.sportFilters);
@@ -55,14 +54,12 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
     const sportFilter = _.find(allUserSportsFilter, ['filterSelected', true])
     _storeSportFilter(sportFilter)
     _storeGameLevelFilter(gameLevelObj);
-    console.log("new sotrage sports", sportFilter, gameLevelObj, multiSliderValue)
         const dislikes = userData.squash.dislikes ? userData.squash.dislikes.length : 0;
         const likes = userData.squash.likes ? userData.squash.likes.length : 0;
-        console.log(likes)
         const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
         queryProssibleMatches({
           variables: {
-            _id: currentUser.uid,
+            _id: currentUser.sub,
             offset: 0,
             limit: limit,
             location: _.omit(userData.squash.location, ['__typename']),

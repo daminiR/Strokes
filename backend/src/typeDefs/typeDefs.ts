@@ -149,6 +149,7 @@ export const typeDefs = gql`
       likedByUSers: [String!]
       phoneNumber: String
       email: String
+      newUserToken: String
     ): Squash!
 
     softDeleteUser(_id: String): String

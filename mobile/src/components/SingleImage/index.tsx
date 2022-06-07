@@ -84,14 +84,11 @@ const SingleImage = ({img_idx}) => {
             setFieldValue('add_local_images', currentLocals);
           }
         }
-        console.log("formik removed images", formikValues.remove_uploaded_images);
-        console.log("formik, add locals", formikValues.add_local_images);
         setDisplayImage(null);
         setLoading(false);
       } else {
         // this here means there is  only one image and it cannot be deleted
         setImageErrorVisible(true)
-        console.log('image connot be deleted, only one image left');
         setLoading(false);
       }
   }

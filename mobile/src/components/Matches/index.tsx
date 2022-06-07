@@ -42,7 +42,7 @@ const Matches = ({navigation}) => {
   })
   const appState = useRef(AppState.currentState)
   useEffect(() => {
-      getSquashProfile({variables: {id: currentUser.uid}});
+      getSquashProfile({variables: {id: currentUser.sub}});
   }, [currentUserData.squash.matches])
 
   //useEffect(() => {
@@ -64,7 +64,7 @@ const Matches = ({navigation}) => {
         console.log('App has come to the foreground!');
       }
       appState.current = nextAppState;
-      getSquashProfile({variables: {id: currentUser.uid}});
+      getSquashProfile({variables: {id: currentUser.sub}});
       console.log('AppState', appState.current);
     });
     return () => {

@@ -1,17 +1,16 @@
 import React, {useRef, useContext, useEffect, useState} from 'react'
-import { Card, ListItem, Overlay} from 'react-native-elements'
+import { Card, ListItem} from 'react-native-elements'
 import {GET_ACCOUNT_INPUT_TYPE} from '@graphQL2'
 import {UserContext} from '@UserContext'
 import {styles} from '@styles'
 import { EditFields} from '@localModels'
 import {Image, Modal, ScrollView, Text, View} from 'react-native';
-import { Cancel, Done, EditPencil, ConfirmationCode, EditAccountInput} from '@components';
-import auth from '@react-native-firebase/auth'
+import { Cancel, Done, EditPencil, EditAccountInput} from '@components';
 import {registerOnFirebase} from '@utils'
 import {_editAccount} from '../../InputsVar'
 import { useQuery} from '@apollo/client'
 import {EditAccountInputVar} from '@cache'
-import { useFormikContext, Formik} from 'formik';
+import { useFormikContext} from 'formik';
 import _ from 'lodash'
 
 const ProfileSettings = ({_editUserInfo, signOut, deleteAccount}) => {
@@ -31,29 +30,6 @@ const ProfileSettings = ({_editUserInfo, signOut, deleteAccount}) => {
   {title: 'Account', icon: 'flight-takeoff', subtitle: displayName, buttonPress: _editAccount},
 ]
 
-const confirmWithCode = async(code) => {
-  console.log("we are in codeing confir")
-    confirmationFunc
-      .confirm(code)
-      .then((userCredential) => {
-         auth()
-           .currentUser.updateEmail(formikValues.email)
-           .then(() => {
-             console.log('email changed');
-             EditAccountInputVar({inputType: '', displayInput: false});
-             setDisplayAuth(false)
-             setDisplayInput(false);
-             setFormikChanged(false);
-           })
-           .catch((error) => {
-             console.log(error);
-           });
-      })
-      .catch(async (err) => {
-        //await auth().currentUser.delete()
-        console.log(err);
-      });
-  };
   const _onPressCancelInput = () => {
     handleReset()
     setFormikChanged(false)

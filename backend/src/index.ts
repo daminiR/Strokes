@@ -12,17 +12,16 @@ import {resolvers as random} from './resolvers/random'
 import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
 
-import admin = require("firebase-admin")
-import {getAuth} from "firebase-admin/auth"
-
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
 import { createServer } from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { CognitoJwtVerifier } from "aws-jwt-verify"
 
-const serviceAccount = process.env.gcStorageKeyFilename as any
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+const verifier = CognitoJwtVerifier.create({
+  userPoolId: "us-east-1_idvRudgcB", // Your user pool id here
+  tokenUse: "access",
+  clientId: "5db5ndig7d4dei9eiviv06v59f", // Your client id here
 });
 const startServer = async () => {
   const uri = process.env.ATLAS_URI as any
@@ -55,8 +54,10 @@ const startServer = async () => {
       // Try to retrieve a user with the token and verify
       console.log("Token", token)
       if (token) {
-        user = await getAuth().verifyIdToken(token);
-      return { user }
+        console.log("did we make it here");
+        const payload = await verifier.verify(token)
+        user = payload
+        return {user}
       } else {
         user = null;
       return { user }

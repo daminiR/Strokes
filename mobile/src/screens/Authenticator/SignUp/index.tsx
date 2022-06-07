@@ -11,7 +11,9 @@ import {ProfileFields} from '@localModels';
 import { loginReducer } from '../../../reducers/Login';
 import {
   NeighborhoodSearch,
+  CityInput,
   ConfirmationCode,
+  PasswordInput,
   PhoneInput,
   GenderInput,
   EmailInput,
@@ -26,13 +28,19 @@ import {
   AppContainer,
 } from '@components';
 import {connect} from '../../../utils/SendBird'
-import { registerOnFirebase, registerOnMongoDb} from '@utils'
+import { registerOnFirebase, registerOnMongoDb, authenticateAWS} from '@utils'
 import { UserContext} from '@UserContext'
 import {Keyboard, View} from 'react-native'
 import  _ from 'lodash'
 import { styles } from '@styles'
 import  { signUpSchema} from '@validation'
 import {RootRefreshContext} from '../../../index.js'
+import {
+  AuthenticationDetails,
+  CognitoUserPool,
+  CognitoUserAttribute,
+  CognitoUser,
+} from 'amazon-cognito-identity-js';
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGNUP'>
 type SignUpT = {
@@ -62,10 +70,11 @@ const Slider =  () => {
   });
   const {values, errors, setFieldValue, setFieldTouched, touched} = useFormikContext<ProfileFields>();
   const [newLocation, setNewLocation] = useState(null)
-  const {setIsUseOnMongoDb, sendbird, onLogin} = useContext(UserContext)
+  const {setIsUseOnMongoDb, sendbird, onLogin, setSendbird} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const [loadingSubmit, setLoadingSubmit] = useState(false)
+  const [newUserToken, setNewUserToken] = useState(null)
   const [index, setIndex] = useState(0)
   const [showNextButton, setShowNextButton] = useState(true)
   const [canSignUp, setCanSignUp] = useState(false)
@@ -73,21 +82,15 @@ const Slider =  () => {
   const navigation = useNavigation()
   const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const [checkPhoneInput, {data: userPhoneInfo}] = useLazyQuery(CHECK_PHONE_INPUT, {
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
+      console.log("canSignIn", data)
       if (
         data.checkPhoneInput.isPhoneExist == false &&
         data.checkPhoneInput.isDeleted == false
       ) {
-        _.isEmpty(errors) &&
-          registerOnFirebase(values.phoneNumber, values.email)
-            .then((confirmation: any) => {
-              setConfirmationFunc(confirmation);
-              this.slider.goToSlide(TOTAL_SIGNUP_SLIDES - 1);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        !_.isEmpty(errors) && console.log(errors);
+        // TODO: fix logic!!
+        this.slider.goToSlide(index + 1, true);
         setCanSignUp(true);
       } else {
         this.slider.goToSlide(index + 1, true);
@@ -100,7 +103,16 @@ const Slider =  () => {
   });
   const [createSquash2, {client, data}] = useMutation(ADD_PROFILE2, {
     ignoreResults: false,
+    context:  {
+              headers: {
+                "authorization": newUserToken ? `Bearer ${newUserToken}` : 'nothin',
+              },
+    },
     onCompleted: (data) => {
+      console.log('createSquash2 no err', data);
+    },
+    onError: (err) => {
+      console.log('createSquash2 err', err);
     },
   });
   const [isKeyboardShown, setIsKeyboardShown] = useState(undefined);
@@ -145,6 +157,7 @@ const Slider =  () => {
   const [authMessage, setAuthMessage] = useState(null)
 const _checkSignIn = () => {
   //setAuthMessage('invalid verification code')
+  console.log("canSignUp", canSignUp)
   canSignUp
     ? _confirmSignInGC()
     : userPhoneInfo.checkPhoneInput.isDeleted
@@ -162,48 +175,101 @@ const _checkSignIn = () => {
   };
 
 const _confirmSignInGC = () => {
-    // promise in parralell
-      confirmationFunc
-        .confirm(values.confirmationCode)
-        .then((userCredential) => {
-          setLoadingSignUInRefresh(true)
-          setLoadingSubmit(true)
-          console.log('values before submit', values);
-          console.log(userCredential.additionalUserInfo);
-          registerOnMongoDb(values, userCredential.user.uid, createSquash2)
-            .then(() => {
-              //setInitialFilters()
-              // register to sendbird
-              connect(userCredential.user.uid, values.first_name, dispatch, sendbird, start)
-              console.log('logged in');
-              setIsUseOnMongoDb(true);
-              setLoadingSubmit(false);
-            })
-            .catch(async (err) => {
-              // else delete user as if not created
-              //await auth().currentUser.delete()
-              console.log(err);
-              // this error reallu shoudnt happen
-              setAuthMessage('unable to upload information to the cloud');
-              setLoadingSubmit(false);
-              setLoadingSignUInRefresh(false)
-            });
-        })
-        .catch(async (err) => {
-          console.log(err);
-          if (err.code === 'auth/invalid-verification-code') {
-            console.log(
-              'you provided incorrect verifcation code / phone number. Make sure phone number and code is valid',
-            );
-            setAuthMessage('invalid verification code');
-          } else if (err.code === 'auth/missing-verification-code') {
-            console.log('did not provide verification code');
-            setAuthMessage('need to provide verification code');
+  var poolData = {
+    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
+    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
+  };
+  var userPool = new CognitoUserPool(poolData);
+  var dataEmail = {
+    Name: 'email',
+    Value: 'daminirijhwani@gmail.com',
+  };
+  var dataPhoneNumber = {
+    Name: 'phone_number',
+    Value: '+17652500332',
+  };
+  var attributeEmail = new CognitoUserAttribute(dataEmail);
+var attributePhoneNumber = new CognitoUserAttribute(
+	dataPhoneNumber
+);
+var attributeList = [];
+attributeList.push(attributeEmail);
+attributeList.push(attributePhoneNumber);
+  userPool.signUp(
+    values.phoneNumber,
+    values.password,
+    attributeList,
+    null,
+    (err, result) => {
+      if (err) {
+        alert(err.message || JSON.stringify(err));
+        return;
+      }
+      var cognitoUser = result.user;
+      this.slider.goToSlide(index + 1, true);
+
+    },
+  );
+}
+  const _awsConfirmOTP = () => {
+  var poolData = {
+    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
+    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
+  };
+  var userPool = new CognitoUserPool(poolData);
+  var userData = {
+    Username: '+17652500332',
+    Pool: userPool,
+  };
+  var cognitoUser = new CognitoUser(userData);
+  cognitoUser.confirmRegistration(values.confirmationCode, true, function (err, result) {
+      if (err) {
+        alert(err.message || JSON.stringify(err));
+        return;
+      }
+      console.log('call result: ' + result);
+      authenticateAWS().then((userDetails) => {
+        userDetails.confirmedUser.getUserAttributes((err, attributes) => {
+          if (err) {
+            console.log('Attribute Error in signup', err);
+            return;
+          } else {
+
+            setNewUserToken(userDetails.session)
+
+            attributes = attributes;
+            const _id = _.find(attributes, {Name: 'sub'}).Value;
+            console.log('user name is ' + cognitoUser.getUsername());
+            setLoadingSignUInRefresh(true);
+            setLoadingSubmit(true);
+            console.log('values before submit', values);
+            registerOnMongoDb(values, _id, createSquash2, userDetails.session)
+              .then(() => {
+                connect(
+                  _id,
+                  values.first_name,
+                  dispatch,
+                  sendbird,
+                  start,
+                  setSendbird,
+                );
+                console.log('logged in');
+                setIsUseOnMongoDb(true);
+                setLoadingSubmit(false);
+              })
+              .catch(async (err) => {
+                console.log(err);
+                // this error reallu shoudnt happen
+                setAuthMessage('unable to upload information to the cloud');
+                setLoadingSubmit(false);
+                setLoadingSignUInRefresh(false);
+              });
           }
         });
-
-
+      });
+    });
   }
+
   const _onPrev = () => {
     const index = this.slider.state.activeIndex
     this.slider.goToSlide(index - 1, true)
@@ -313,7 +379,22 @@ const _confirmSignInGC = () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <NeighborhoodSearch isSignUp={true}/>
+                  <CityInput isSignUp={true}/>
+                </>
+              )
+              break
+            case 'Password':
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <PasswordInput
+                    authMessage={authMessage}
+                    noUserFoundMessage={noUserFoundMessage}
+                    isLastSlide={lastSlide}
+                    _confirmSignInGC={_checkSignIn}
+                  />
                 </>
               )
               break
@@ -327,7 +408,7 @@ const _confirmSignInGC = () => {
                     authMessage={authMessage}
                     noUserFoundMessage={noUserFoundMessage}
                     isLastSlide={lastSlide}
-                    _confirmSignInGC={_checkSignIn}
+                    _confirmSignInGC={_awsConfirmOTP}
                   />
                 </>
               )
