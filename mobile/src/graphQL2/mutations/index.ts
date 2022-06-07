@@ -38,6 +38,7 @@ const ADD_PROFILE2 = gql`
     $location: LocationInput!
     $phoneNumber: String
     $email: String
+    $newUserToken: String
   ) {
     createSquash2(
       _id: $_id
@@ -51,6 +52,7 @@ const ADD_PROFILE2 = gql`
       description: $description
       phoneNumber: $phoneNumber
       email: $email
+      newUserToken: $newUserToken
     ) {
       _id
       first_name

@@ -1,5 +1,5 @@
 import React, {useReducer, useContext, createContext, useRef, useEffect, useState} from "react";
-import auth from '@react-native-firebase/auth'
+import * as AWS from 'aws-sdk/global';
 import messaging from '@react-native-firebase/messaging';
 import { Formik} from 'formik'
 import {byGameLevel} from '@utils'
@@ -11,6 +11,12 @@ import FlashMessage from "react-native-flash-message";
 import { SignOutStack, MatchStackScreen} from '@NavStack'
 import { SWIPED_LEFT, READ_SQUASH, MESSAGE_POSTED, GET_POTENTIAL_MATCHES} from '@graphQL2'
 import { useSubscription, useQuery, useLazyQuery} from '@apollo/client'
+import {
+  AuthenticationDetails,
+  CognitoUserPool,
+  CognitoUserAttribute,
+  CognitoUser,
+} from 'amazon-cognito-identity-js';
 import {SWIPIES_PER_DAY_LIMIT} from '@constants'
 import  {cityVar} from '@cache'
 import  {AppContainer} from '@components'
@@ -19,7 +25,7 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import {connect} from '../../../utils/SendBird'
 import {RootRefreshContext} from '../../../index.js'
 export const UserContext = createContext(null);
-import {createInitialFilterFormik, createPatronList, calculateOfflineMatches} from '@utils'
+import {createInitialFilterFormik, createPatronList, calculateOfflineMatches, getAWSUser} from '@utils'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthNavigator = ({sendbird}) => {
@@ -44,10 +50,8 @@ const AuthNavigator = ({sendbird}) => {
   const [queryProssibleMatches, { loading: loadingMatches, data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
-      console.log("check if fetch more updated any data", data)
       if (data) {
         const all_users = data.queryProssibleMatches;
-        console.log('............', all_users);
         setAllUsers(all_users);
       }
     },
@@ -96,7 +100,7 @@ const AuthNavigator = ({sendbird}) => {
             byGameLevel(initialValues.gameLevels),
               queryProssibleMatches({
                 variables: {
-                  _id: currentUser.uid,
+                  _id: currentUser.sub,
                   offset: 0,
                   limit: limit,
                   location: _.omit(userData.squash.location, ['__typename']),
@@ -116,39 +120,29 @@ const AuthNavigator = ({sendbird}) => {
     }
   }, [userLoading]);
   const client = useApolloClient();
-const start = user => {
-    if (login) {
-      login(user);
-    }
-  };
-  const onAuthStateChanged = (currentUser) => {
-      setCurrentUser(currentUser);
-      if (currentUser) {
-        if (!CacheVal) {
-          // dta can be null for the first time users during sign up
-          const data = client.readQuery({
-            query: READ_SQUASH,
-            variables: {id: currentUser.uid},
-          });
-          if (data?.squash) {
-            const cachedUser = data.squash
-            console.log('cached', cachedUser.matches);
-            setCacheVal(cachedUser);
-          }
-        }
-        console.log("do we have user", currentUser.uid)
-        getSquashProfile({variables: {id: currentUser.uid}});
-        setLoadingUser(false);
-      } else {
-        setLoadingUser(false);
-      }
+const start = (user) => {
+  if (login) {
+    login(user);
   }
+};
   useEffect(() => {
-      setLoadingUser(true)
-      const unsubscribe = auth().onAuthStateChanged(onAuthStateChanged)
-      console.log(unsubscribe)
-      return unsubscribe
-  }, [])
+    setLoadingUser(true);
+    setLoadingUser(false);
+    const foo = async () => {
+      getAWSUser()
+        .then((args) => {
+          getSquashProfile({variables: {id: args.attributes.sub}});
+          //const awsUser =  _.chain(args.attributes).keyBy('Name').mapValues('Value').value()
+          setCurrentUser(args.attributes);
+          setLoadingUser(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    foo();
+
+  }, []);
   useEffect(() => {
     deleted && deleted.isDeleted &&
       console.log("user info must be erase from react native and soft deleted on database")
@@ -212,10 +206,7 @@ const start = user => {
     onLogin: login,
   };
   const render2 = () =>{
-    console.log("currentUser Error", currentUser)
-    console.log("userData Error", userData)
-    //console.log("isDeleted Error", isDeleted)
-    if (userData?.squash && currentUser && (!deleted || !deleted.isDeleted)) {
+    if (userData?.squash && (!deleted || !deleted?.isDeleted)) {
       return !loadingSigning && !loadingMatches && <MatchStackScreen />;
     } else {
       return !loadingUser && <SignOutStack/>;

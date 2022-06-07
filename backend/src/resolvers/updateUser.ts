@@ -15,7 +15,8 @@ export const resolvers = {
     squash: async (parents, unSanitizedId, context, info) => {
       const user = context.user;
       const { id } = sanitize(unSanitizedId);
-      if (user?.uid != id) throw new AuthenticationError("not logged in");
+      console.log("after signup", user.sub, id)
+      if (user?.sub != id) throw new AuthenticationError("not logged in");
       const squash_val = await Squash.findById(id);
       console.log(squash_val);
       return squash_val;
@@ -23,7 +24,7 @@ export const resolvers = {
     squashes: async (parents, unSanitizedId, context, info) => {
       const user = context.user;
       const { id } = sanitize(unSanitizedId);
-      if (user?.uid != id) throw new AuthenticationError("not logged in");
+      if (user?.sub != id) throw new AuthenticationError("not logged in");
       const squashes = await Squash.find({ id });
       return squashes;
     },
@@ -46,7 +47,7 @@ export const resolvers = {
       } = sanitize(unSanitizedData);
 
       const user = context.user;
-      if (user?.uid != _id) throw new AuthenticationError("not logged in");
+      if (user?.sub != _id) throw new AuthenticationError("not logged in");
 
       const removed_image_set = await deleteFilesFromAWS(
         remove_uploaded_images,

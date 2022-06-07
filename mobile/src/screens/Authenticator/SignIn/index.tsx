@@ -1,5 +1,4 @@
 import React, { useReducer, useEffect, useContext, useState, ReactElement } from 'react'
-import auth from '@react-native-firebase/auth'
 import {connect} from '../../../utils/SendBird'
 import { useFormikContext, Formik} from 'formik';
 import { StackNavigationProp } from '@react-navigation/stack'
@@ -7,8 +6,7 @@ import {signInSlides, iniitialSignInForm} from '@constants'
 import {  RootStackSignOutParamList } from '@navigationStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import {ProfileFields} from '@localModels';
-import {AppContainer, ConfirmationCode, Cancel, PhoneInput, NextButton} from '@components'
-import { registerOnFirebase} from '@utils'
+import {AppContainer, ConfirmationCode, PasswordInput, Cancel, PhoneInput, NextButton} from '@components'
 import {useNavigation} from '@react-navigation/native'
 import { CHECK_PHONE_INPUT } from '@graphQL2'
 import {View, Keyboard} from 'react-native'
@@ -18,7 +16,14 @@ import { UserContext} from '@UserContext'
 import {useLazyQuery, useQuery} from '@apollo/client'
 import {RootRefreshContext} from '../../../index.js'
 import  _ from 'lodash'
+import * as AWS from 'aws-sdk/global';
 import { loginReducer } from '../../../reducers/Login';
+import {
+  AuthenticationDetails,
+  CognitoUserPool,
+  CognitoUserAttribute,
+  CognitoUser,
+} from 'amazon-cognito-identity-js';
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'SIGN_IN'>
 type SignInT = {
@@ -39,6 +44,10 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
   );
 }
 
+var poolData = {
+	UserPoolId: '...', // Your user pool id here
+	ClientId: '...', // Your client id here
+};
 export const Slider =  ({changeEmail}) => {
   const [state, dispatch] = useReducer(loginReducer, {
     userId: '',
@@ -57,7 +66,6 @@ export const Slider =  ({changeEmail}) => {
   const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [isKeyboardShown, setIsKeyboardShown] = useState(undefined);
   const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
-  const {sendbird, onLogin, setIsUseOnMongoDb, setIsSignIn} = useContext(UserContext)
   const [checkPhoneInput, {data: userPhoneInfo}] = useLazyQuery(CHECK_PHONE_INPUT, {
     onCompleted: (data) => {
       console.log("Error gqlsecure: whats data here", data)
@@ -65,16 +73,8 @@ export const Slider =  ({changeEmail}) => {
         data.checkPhoneInput.isPhoneExist == true &&
         data.checkPhoneInput.isDeleted == false
       ) {
-        registerOnFirebase(values.phoneNumber)
-          .then((confirmation: any) => {
-            console.log("does the confirmationfunction not exists", confirmation)
-            setConfirmationFunc(confirmation);
-            this.slider.goToSlide(2);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        setCanSignIn(true);
+          this.slider.goToSlide(2);
+          setCanSignIn(true);
       } else {
         this.slider.goToSlide(index + 1, true);
         setCanSignIn(false);
@@ -100,8 +100,6 @@ export const Slider =  ({changeEmail}) => {
     };
   }, []);
   const _onSlideChange = (index, last_index) => {
-    console.log(index)
-    console.log("did we make it:w")
     setIndex(index)
     if (index == 1){
       setLastSlide(true)
@@ -127,7 +125,7 @@ export const Slider =  ({changeEmail}) => {
     setFieldTouched(field);
     if (index == 0) {
       //!errors[field] && touched[field] && this.slider.goToSlide(index + 1, true) && _signIn()
-      !errors[field] && touched[field] &&  _signIn()
+      !errors[field] && touched[field] && _signIn();
     } else {
       !errors[field] &&
         touched[field] &&
@@ -135,43 +133,68 @@ export const Slider =  ({changeEmail}) => {
     }
   };
 const _confirmSignInGC = () => {
-  //console.log("confirmation func", confirmationFunc)
-  //setLoadingSubmit(true);
-  //setIsSignIn(true)
-  setLoadingSignUInRefresh(true)
-  confirmationFunc
-    .confirm(values.confirmationCode)
-    .then((userCredential) => {
-      //setLoadingSignUInRefresh(true)
-      if (userCredential.additionalUserInfo.isNewUser){
-        auth().currentUser.delete().then(() => {
-          setLoadingSubmit(true);
-          console.log("use needs to sign up")
-        })
-      }
-      setLoadingSignUInRefresh(false)
-      //setIsUseOnMongoDb(true);
-      //setLoadingSubmit(true);
-      //if (changeEmail) {
-      //setAuthOverlay(true)
-      //console.log("changeemail here")
-      //}
-      //setIsUseOnMongoDb(true);
-    })
-    .catch(async (err) => {
-      //await auth().currentUser.delete()
-      if (err.code === 'auth/invalid-verification-code') {
-        console.log(
-          'you provided incorrect verifcation code / phone number. Make sure phone number and code is valid',
-        );
-        setAuthMessage('invalid verification code');
-      } else if (err.code === 'auth/missing-verification-code') {
-        setAuthMessage('need to provide verification code');
-        console.log('did not provide verification code');
-      }
-      //setLoadingSubmit(false);
-      //setLoadingSignUInRefresh(false)
-    });
+  setLoadingSignUInRefresh(true);
+
+  var poolData = {
+    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
+    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
+  };
+  var authenticationData = {
+    Username: values.phoneNumber,
+    //Username: '+12025550193',
+    //Passkord: 'Damini1993!',
+    Password: values.password,
+};
+  var authenticationDetails = new AuthenticationDetails(
+	authenticationData
+);
+  var userPool = new CognitoUserPool(poolData);
+
+  var userData = {
+    Username: values.phoneNumber,
+    Pool: userPool,
+  };
+  var cognitoUser = new CognitoUser(userData);
+  cognitoUser.authenticateUser(authenticationDetails, {
+    onSuccess: function(result) {
+        var accessToken = result.getAccessToken().getJwtToken();
+        //POTENTIAL: Region needs to be set if not already set previously elsewhere.
+        AWS.config.region = 'us-east-1';
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
+          Logins: {
+            // Change the key below according to the specific region your user pool is in.
+            'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': result
+              .getIdToken()
+              .getJwtToken(),
+          },
+        });
+        //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
+        AWS.config.credentials.refresh(error => {
+            if (error) {
+                console.error(error);
+            } else {
+              // Instantiate aws sdk service objects now that the credentials have been updated.
+              // example: var s3 = new AWS.S3();
+              console.log('Successfully logged!');
+              // on success remember device
+              cognitoUser.getCachedDeviceKeyAndPassword();
+              cognitoUser.setDeviceStatusRemembered({
+                onSuccess: function (result) {
+                  console.log('call result: ' + result);
+                },
+                onFailure: function (err) {
+                  alert(err.message || JSON.stringify(err));
+                },
+              });
+            }
+        });
+        setLoadingSignUInRefresh(false);
+    },
+    onFailure: function(err) {
+        alert(err.message || JSON.stringify(err));
+    }
+  })
 };
 const _checkSignIn = () => {
   canSignIn
@@ -183,11 +206,6 @@ const _checkSignIn = () => {
     : /// user doesnt exist  so he CAN NOT sign in(firebase allwos autmatic phon sigin ) again, but msg is left vague to prevent
       setNoUserFoundMessage('invalid code or phone number');
 }
-const start = user => {
-    if (onLogin) {
-      onLogin(user);
-    }
-  };
 const [authMessage, setAuthMessage] = useState(null)
   const _onPressCancel = () => {
     navigation.navigate('HELLO');
@@ -210,7 +228,7 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <ConfirmationCode
+                  <PasswordInput
                     authMessage={authMessage}
                     noUserFoundMessage={noUserFoundMessage}
                     isLastSlide={lastSlide}

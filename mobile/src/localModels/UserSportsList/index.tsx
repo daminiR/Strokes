@@ -72,6 +72,7 @@ export interface ProfileFields {
   sports: [{sport: string; game_level: number}];
   image_set: [{imageURL: string; img_idx: number; filePath: string}];
   confirmationCode: string;
+  password: string;
   description: string;
 }
 export interface EditFields {
@@ -94,6 +95,7 @@ export interface SignIn {
        email: string;
        phoneNumber: string;
        confirmationCode: string
+       password: string
 }
 export interface InputType {
        inputType: string;

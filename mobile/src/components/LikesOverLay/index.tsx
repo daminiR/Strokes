@@ -27,11 +27,11 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
   });
   const [updateDislikes] = useMutation(UPDATE_DISLIKES, {
     onCompleted: () => {
-      getSquashProfile({variables: {id: currentUser.uid}});
+      getSquashProfile({variables: {id: currentUser.sub}});
     },
   });
   const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
-    variables: {id: currentUser.uid},
+    variables: {id: currentUser.sub},
     //fetchPolicy:"cache-and-network",
     fetchPolicy: "network-only",
     onCompleted: (data) => {
@@ -45,7 +45,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     //awaitRefetchQueries: true,
     onCompleted: (data) => {
-      getSquashProfile({variables: {id: currentUser.uid}});
+      getSquashProfile({variables: {id: currentUser.sub}});
       /// open channel with the two users
       //if (data.updateMatches) {
         //var userIds = [currentUser.uid, data.updateMatches._id];
@@ -77,7 +77,6 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
       );
       setNewImageSet(newImageSet);
       const title = user.first_name + ', ' + user.age;
-      console.log("like", title)
       setProfileTitle(title);
       setLoading(false);
     }
@@ -122,7 +121,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
                 setLike(false);
                 swipeRightLiked(
                   userData.squash,
-                  currentUser.uid,
+                  currentUser.sub,
                   likeProfile,
                   updateLikes,
                   updateMatches,
@@ -146,7 +145,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
               //}
               onPress={() => {
                 swipeLeftDisliked(
-                  currentUser.uid,
+                  currentUser.sub,
                   likeProfile,
                   updateDislikes,
                   true

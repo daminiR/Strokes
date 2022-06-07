@@ -40,7 +40,6 @@ const Patron = ()  => {
     swipesLeft,
   } = useContext(UserContext);
   const [matches, setMatches] = useState(null)
-  //const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   useEffect(() => {
         cityVar(currentUserData?.squash.location.city)
   }, []);
@@ -54,7 +53,6 @@ const Patron = ()  => {
       );
       setMatches(patron_list);
       setLoadingMatches(false);
-      //setLoadAllResults(false)
     }
   }, [potentialMatches]);
   return (

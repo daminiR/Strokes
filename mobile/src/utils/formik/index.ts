@@ -20,7 +20,6 @@ const createInitialValuesFormik = (userData, phoneNumber) => {
         state: userData.squash.location.state,
         country: userData.squash.location.country,
       }
-      console.log("/////////////////// did we make it here when reintia", userData.image_set)
       const new_formik =  {
         email: userData.squash.email,
         phoneNumber: phoneNumber,
@@ -36,7 +35,6 @@ const createInitialValuesFormik = (userData, phoneNumber) => {
         add_local_images: [],
         original_uploaded_image_set: formik_images
       }
-      console.log("/////////////////// formik vals did we", new_formik)
       return new_formik
     }
 }
@@ -44,14 +42,10 @@ const createInitialFilterFormik = async (sports) => {
   const ageRange = await _retriveAgeRangeFilter()
   const sportFilter = await _retriveSportFilter()
   const gameLevelFilter = await _retriveGameLevel()
-
-  console.log(sportFilter)
-  console.log(sports)
   // cached values is not in current sports remove it and chosse any one in the sports filer
   const sportsList = _.map(sports, sportObj =>{return sportObj.sport})
   var defailtSportFilter  = null
   if (sportFilter && !_.includes(sportsList, sportFilter.sport)) {
-   console.log("inside cashe", sports, sportFilter.sport)
    filterSportChangedVar(true)
    defailtSportFilter = _.map(sports, (sportObj, key) => {
      if (key == '0') {
@@ -66,7 +60,6 @@ const createInitialFilterFormik = async (sports) => {
   else{
     filterSportChangedVar(false)
     defailtSportFilter = _.map(sports, (sportObj, key) => {
-      console.log(sportObj);
       if (sportFilter) {
         // is sport filter exists and in sports filter
         if (sportObj.sport == sportFilter.sport) {

@@ -1,6 +1,5 @@
 import React, { useRef, createContext, useEffect, useContext, useState, ReactElement } from 'react'
 import {StackNavigationProp, RouteProp} from '@react-navigation/stack'
-import auth from '@react-native-firebase/auth'
 import {View, Modal} from 'react-native';
 import {styles} from '@styles'
 import {SWIPIES_PER_DAY_LIMIT} from '@constants'
@@ -42,14 +41,13 @@ const EditProfile = () => {
   const {queryProssibleMatches, currentUser, setData, refetchUserData, data:userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
-    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
+    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
     awaitRefetchQueries: true,
     onCompleted: () => {
       // wow this was the missing peace, reset needed to be here for cancel and done to work properly with reintialization
       handleSubmit();
     },
   });
-  console.log("did we new formik values", formikValues)
   const [displayInput, setDisplayInput] = useState(false);
   const [formikChanged, setFormikChanged] = useState(false);
   const didMountRef = useRef(false)
@@ -71,13 +69,13 @@ const EditProfile = () => {
 const _onPressDoneProfile = () => {
   // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
     if (formikChanged) {
-      const RNLocalFiles = convertImagesToFormat(formikValues.add_local_images, currentUser.uid)
+      const RNLocalFiles = convertImagesToFormat(formikValues.add_local_images, currentUser.sub)
       ///// debug images
       console.log("formik remove", formikValues.remove_uploaded_images)
       console.log("formik add", formikValues.add_local_images)
       updateUserProfile({
         variables: {
-          _id: currentUser.uid,
+          _id: currentUser.sub,
           first_name: formikValues.first_name,
           last_name: formikValues.last_name,
           gender: formikValues.gender,
@@ -90,7 +88,6 @@ const _onPressDoneProfile = () => {
           description: formikValues.description,
         },
       });
-      // update firebase auth
       if (cityVar() != formikValues.location.city){
         cityVar(formikValues.location.city)
         isCityChangedVar(true)
@@ -191,7 +188,6 @@ const doneCancelValues = {
   setTempSports2: setTempSports2
 };
   useEffect(() => {
-    console.log(" input tyep", inputType)
     }, [inputType])
     return (
       <>
@@ -250,23 +246,21 @@ const doneCancelValues = {
     );
 }
 const Profile = (): ReactElement => {
-  // TODO: very hacky way to stop useEffect from firt render => need more elegant sol
   const [loadingFormikValues, setLoadingFormikValues] = useState(true)
-  const {data, userData, userLoading} = useContext(UserContext)
+  const {data, userData, userLoading, currentUser} = useContext(UserContext)
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   useEffect(() => {
-    console.log("did we reinittailiz", userData)
-    setLoadingFormikValues(true)
-    const userDetails = auth().currentUser
+    setLoadingFormikValues(true);
+    const userDetails = userData.squash.phoneNumber
     if (userDetails) {
-    const initialValues = createInitialValuesFormik(data, userDetails.phoneNumber)
-    setInitialValuesFormik(initialValues)
-    console.log("did we change initial values ////", initialValues)
-    setLoadingFormikValues(false)
+      const initialValues = createInitialValuesFormik(
+        data,
+        userDetails,
+      );
+      setInitialValuesFormik(initialValues);
+      setLoadingFormikValues(false);
     }
-    //}, [data])
-    }, [userData])
-    //}, [userLoading])
+  }, [userData]);
   return (
     <>
       {!userLoading && !loadingFormikValues && (
@@ -275,7 +269,7 @@ const Profile = (): ReactElement => {
           validationSchema={profileEditSchema}
           initialValues={initialValuesFormik}
           onSubmit={(values, {resetForm}) => {
-            const userDetails = auth().currentUser;
+            const userDetails = userData.squash.phoneNumber;
             const initialValues2 = createInitialValuesFormik(
               userData,
               userDetails.phoneNumber,

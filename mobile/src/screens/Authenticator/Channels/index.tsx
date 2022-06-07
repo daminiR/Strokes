@@ -153,7 +153,7 @@ const Channels = props => {
     } else {
 
       navigation.navigate('ACTIVE_CHAT', {
-        currentUserID: currentUser.uid,
+        currentUserID: currentUser.sub,
         channel: channel,
         currentUser: currentUser,
         //matchID: item._id,
@@ -183,7 +183,7 @@ const Channels = props => {
       // addd channels for ones that dont have any
 
       _.map(currentUserData.squash.matches, (match) => {
-        var userIds = [currentUser.uid, match._id]
+        var userIds = [currentUser.sub, match._id]
         sendbird.GroupChannel.createChannelWithUserIds(
           userIds,
           true,

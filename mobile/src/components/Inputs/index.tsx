@@ -277,7 +277,7 @@ const ImageInput = ({_submit, isSignUp}) => {
           </View>
         </DismissKeyboard>
       </>
-    );}
+    )}
   const BirthdayInput = ({isSignUp}) => {
     const { handleBlur, errors, touched, values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
    const [loadingTempValues, setLoadingTempValues] = useState(true);

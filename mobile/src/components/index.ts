@@ -1,5 +1,6 @@
 export * from './AppContainer'
 export * from './Channels'
+export * from './PasswordInput'
 export * from './Button'
 export * from './CityInput'
 export * from './ActiveChatScreen'

@@ -1,9 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import auth from '@react-native-firebase/auth'
-import  RNFetchBlob  from 'rn-fetch-blob'
 import * as mime from 'react-native-mime-types'
 import { ReactNativeFile, File } from 'apollo-upload-client'
-import {deleteChatUser} from '@utils'
+import {
+  AuthenticationDetails,
+  CognitoUserPool,
+  CognitoUserAttribute,
+  CognitoUser,
+} from 'amazon-cognito-identity-js';
 
 
 export  const generateRNFile =  (uri, name) => {
@@ -31,18 +34,18 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     sendbird,
   ): Promise<void> => {
     const savedUserKey = 'savedUser';
-    await auth()
-      .signOut()
-      .then((res) => {
-        AsyncStorage.clear();
-        sendbird.disconnect();
-        setDisplayInput(false);
-        client.resetStore();
-        console.log('Succesful signout');
-      })
-      .catch((err) => {
-        console.log(err.code);
-      });
+  var poolData = {
+    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
+    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
+  };
+  var userPool = new CognitoUserPool(poolData);
+  var cognitoUser = userPool.getCurrentUser();
+  cognitoUser.signOut();
+  AsyncStorage.clear();
+  sendbird.disconnect();
+  setDisplayInput(false);
+  client.resetStore();
+  console.log('Succesful signout');
   };
 
 export {_onPressSignOut}

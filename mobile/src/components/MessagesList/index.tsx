@@ -63,7 +63,7 @@ const MessagesList = () => {
             data={matches}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) =>
-              renderMessage(item, navigation, currentUser.uid, setLoading)
+              renderMessage(item, navigation, currentUser.sub, setLoading)
             }
           />
         )}

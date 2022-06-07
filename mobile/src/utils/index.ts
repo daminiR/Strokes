@@ -1,4 +1,5 @@
 export * from './formik'
+export * from './awsCognito'
 export * from './AsyncStorage'
 export * from './matching/patron_list'
 export * from './matching/dataManipulation'

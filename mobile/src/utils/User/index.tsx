@@ -1,22 +1,19 @@
-import * as Yup from 'yup'
 import {generateRNFile} from '../Upload'
-import auth from '@react-native-firebase/auth'
 import _ from 'lodash'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const registerOnFirebase = async (phoneNumber) => {
-const authorize = new Promise(async (resolve, reject) => {
-    await auth()
-      .signInWithPhoneNumber(phoneNumber)
-      .then((confirmation: any) => {
-        resolve(confirmation);
-      })
-      .catch((err) => {
-        console.log(err)
-        reject(err)
-      });
-})
-return authorize
+//const authorize = new Promise(async (resolve, reject) => {
+    //await auth()
+      //.signInWithPhoneNumber(phoneNumber)
+      //.then((confirmation: any) => {
+        //resolve(confirmation);
+      //})
+      //.catch((err) => {
+        //console.log(err)
+        //reject(err)
+      //});
+//})
+//return authorize
   }
  const convertImagesToFormat = (images, _id) => {
     const RNFiles = images.map(imageObj =>{
@@ -26,10 +23,8 @@ return authorize
     )
     return RNFiles
   }
- const registerOnMongoDb = async (values, _id, createSquash2) => {
-  console.log("values in mongo", values)
+ const registerOnMongoDb = async (values, _id, createSquash2, token) => {
   const rnfiles = convertImagesToFormat(values.image_set, _id)
-  console.log("rnfilel in mongo", rnfiles)
     await createSquash2({
       variables: {
         phoneNumber: values.phoneNumber,
@@ -42,7 +37,8 @@ return authorize
         gender: values.gender,
         sports: values.sports,
         description: values.description,
-        location: values.location
+        location: values.location,
+        newUserToken: token
       },
     });
   };
@@ -54,7 +50,6 @@ const deleteUser = async (_id, image_set, phoneNumber, setDisplayInput, deleteUs
   // remove all chats when user is send or receiver
   //console.log("in delete")
   //console.log("userID", image_set)
-  console.log("in delete")
   //const image_set_new = _.map(image_set, obj => {
     //return _.omit(obj, ['__typename'])
   //})

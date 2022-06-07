@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect} from 'react'
 import {View, Modal} from 'react-native';
+import {RootRefreshContext} from '../../index.js'
 import auth from '@react-native-firebase/auth'
 import {styles} from '@styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {READ_SQUASH, GET_ACCOUNT_DETAIL_INPUT_TYPE,SOFT_DELETE_PROFILE, DELETE_PROFILE} from '@graphQL2'
-import {Cancel, Done, ConfirmationCode, EditAccountDetailsInput} from '@components'
-import {Button, ListItem, Overlay} from 'react-native-elements';
+import {GET_ACCOUNT_DETAIL_INPUT_TYPE,SOFT_DELETE_PROFILE, DELETE_PROFILE} from '@graphQL2'
+import {Cancel, Done, EditAccountDetailsInput} from '@components'
+import {Button, ListItem} from 'react-native-elements';
 import { EditAccounDetailInputVar} from '@cache'
 import {AccountList} from '@constants'
 import {_confirmationCode} from '../../InputsVar'
@@ -27,6 +28,7 @@ const AccountDetails = ({signOut}) => {
   const [displayInput, setDisplayInput] = useState(false)
   const [email, setEmail] = useState(null)
   const {handleReset, setValues, values: formikValues } = useFormikContext<EditFields>();
+  const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const [deleteSquash] = useMutation(DELETE_PROFILE);
   const [softDeleteUser] = useMutation(SOFT_DELETE_PROFILE,{
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
@@ -90,9 +92,6 @@ const softDelete = async() => {
 }
 
 const confirmDelete = async() => {
-  //const image_set_new = _.map(userData.squash.image_set, obj => {
-    //return _.omit(obj, ['__typename'])
-  //})
   console.log("code", formikValues.confirmationCode)
   console.log("phone", formikValues.phoneNumber)
   console.log("ficn", confirmationFunc)
@@ -103,11 +102,8 @@ const confirmDelete = async() => {
            .currentUser.delete()
            .then(() => {
              // delete from mongodb
-             // soft delete fornow
+             // soft delete for now
               softDeleteUser({variables: {_id: userData.squash._id}})
-             //deleteSquash({
-               //variables: {_id: userData.squash._id, image_set: image_set_new},
-             //});
              AsyncStorage.clear();
              console.log('user has been deleted');
              EditAccountInputVar({inputType: '', displayInput: false});
@@ -136,8 +132,10 @@ const confirmDelete = async() => {
       <Button
         title="Sign Out"
         buttonStyle={styles.buttonStyle}
-        onPress={() => {
-          signOut(setDisplayInput, client)
+        onPress={async ()  => {
+          setLoadingSignUInRefresh(true)
+          await signOut(setDisplayInput, client, sendbird);
+          setLoadingSignUInRefresh(false)
         }}
       />
       <Button
@@ -149,9 +147,6 @@ const confirmDelete = async() => {
           animationType="slide"
           transparent={false}
           visible={displayInput}
-          //onRequestClose={() => {
-          //setDisplayInput(!displayInput);
-          //}}
         >
           <View style={{flex: 1}}>
             <View style={styles.top}>

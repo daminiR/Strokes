@@ -84,14 +84,12 @@ const createPatronList = (currentUser, allUsers, filters) => {
     //const currentUseLocation = currentUser.location
   // TODO: add a few more of likedBYusers to get some matches started
     const swipesLeft = currentUser.swipesPerDay
-    console.log("swipes",swipesLeft)
     const activeUsers = _.map(allUsers, (card) => {return patronCard(card)})
     const likes = currentUser?.likes ? currentUser.likes : []
     //const matches = currentUser?.matches ? currentUser.likes : []
     const dislikes = currentUser?.dislikes ? currentUser.dislikes : []
     const exclude = _.concat(likes, dislikes)
     const patron_list = _.slice(_.filter(activeUsers, userObj => !_.includes(exclude, userObj._id)), 0, swipesLeft)
-    console.log("swipes left", patron_list.length)
     //const newPatronList2 = _.slice(filterByFieldsByUser(patron_list  , filters), 0, SWIPIES_PER_DAY_LIMIT)
     //return newPatronList2
     return patron_list
