@@ -56,6 +56,7 @@ const Channels = props => {
       console.log("channesError: corret uSer")
     }
     return () => {
+      console.log("okay when does this sendbird chenels get run")
       dispatch({ type: 'end-loading' });
       sendbird.removeConnectionHandler('channels');
       sendbird.removeChannelHandler('channels');
@@ -89,7 +90,6 @@ const Channels = props => {
       next();
     }
   }, [query]);
-
   /// on connection event
   const connectionHandler = new sendbird.ConnectionHandler();
   connectionHandler.onReconnectStarted = () => {

@@ -1,4 +1,6 @@
 export * from './AppContainer'
+export * from './PasswordResetOverlay'
+export * from './PasswordResetInput'
 export * from './Channels'
 export * from './PasswordInput'
 export * from './Button'

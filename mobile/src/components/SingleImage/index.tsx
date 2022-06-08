@@ -114,7 +114,7 @@ const SingleImage = ({img_idx}) => {
       return (
         <Icon
           reverse
-          name="camera-enhance"
+         name="camera-enhance"
           type="material-community"
           color={SECONDARY_THEME}
         />

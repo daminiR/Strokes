@@ -61,6 +61,10 @@ export interface FilterFields {
   sportFilters: SportFilters;
   gameLevels: {gameLevel0: boolean, gameLevel1: boolean, gameLevel2: boolean};
 }
+export interface PasswordResetFields {
+  passwordResetCode: string;
+  newPassword: string;
+}
 export interface ProfileFields {
   email: string;
   phoneNumber: string;
