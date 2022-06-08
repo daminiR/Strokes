@@ -78,6 +78,7 @@ const SendBirdChat = props => {
       refresh();
     }
     return () => {
+      console.log("do we get out of here sendbird channel")
       //sendbird.removeConnectionHandler('chat');
       //sendbird.removeChannelHandler('chat');
       //unsubscribe.remove();

@@ -80,6 +80,11 @@ export const ChatUserSettingsList = [
    phoneNumber: '',
    confirmationCode: ''
  }
+// formik password reset if any
+ export const initialPasswordReset = {
+   newPassword: '',
+   passwordResetCode: ''
+ }
 
 // initialValuesFormik
  export const intitialFormikSignUp = {

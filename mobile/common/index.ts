@@ -26,6 +26,17 @@ const FilterSchema = yup.object().shape({
  });
 
 
+const passwordResetSchema = yup.object().shape({
+    newPassword: yup
+    .string()
+    //.matches(phoneRegExp, 'Phone number is not valid use format (xxx) xxx-xxxx')
+    .required('password new is required'),
+    passwordResetCode: yup
+    .string()
+    .length(6, "code must be 6 digits long")
+    .required('code is required')
+    .matches(/^\d+$/, "only digits")
+})
 const signInSchema = yup.object().shape({
     phoneNumber: yup
     .string()
@@ -252,6 +263,7 @@ const sanitizePhone = (text) => {
    )}-${phoneNumber.slice(6, 10)}`;
  };
  export {
+   passwordResetSchema,
    profileEditSchema,
    FilterSchema,
    signUpSchema,
