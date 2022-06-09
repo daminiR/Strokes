@@ -8,11 +8,13 @@ import {
   CognitoUserAttribute,
   CognitoUser,
 } from 'amazon-cognito-identity-js';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const authenticateAWS = async ()  => {
+const authenticateAWS = async (username, password)  => {
+  console.log("do we pass the correct info", username, password)
 var authenticationData = {
-	Username: '+17652500332',
-	Password: 'Computer1993!',
+	Username: username,
+	Password: password,
 };
 var authenticationDetails = new AuthenticationDetails(
 	authenticationData
@@ -23,7 +25,7 @@ var authenticationDetails = new AuthenticationDetails(
   };
 var userPool = new CognitoUserPool(poolData);
   var userData = {
-    Username: '+17652500332',
+    Username: username,
     Pool: userPool,
   };
 var cognitoUser = new CognitoUser(userData);

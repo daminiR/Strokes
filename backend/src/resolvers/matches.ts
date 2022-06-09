@@ -71,14 +71,14 @@ export const resolvers = {
           {
             active: true,
           },
-          {
-            sports: {
-              $elemMatch: { sport: sport, game_level: { $in: game_levels } },
-            },
-          },
-          {
-            age: { $gt: minAge, $lt: maxAge },
-          },
+          //{
+            //sports: {
+              //$elemMatch: { sport: sport, game_level: { $in: game_levels } },
+            //},
+          //},
+          //{
+            //age: { $gt: minAge, $lt: maxAge },
+          //},
         ],
       };
       const fieldsNeeded = {

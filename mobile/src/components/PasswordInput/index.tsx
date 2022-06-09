@@ -22,7 +22,7 @@ const PasswordInput = ({
   isSignIn = true
 }) => {
   const {values, setFieldValue, errors, touched, handleBlur, handleChange} =
-    useFormikContext<ProfileFields>();
+  useFormikContext<ProfileFields>();
   const didMountRef = useRef(false);
   const [delayed, setDelayed] = useState(false);
   const [passwordReset, setPasswordReset] = useState(false);
