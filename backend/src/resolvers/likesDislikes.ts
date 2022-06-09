@@ -84,7 +84,7 @@ export const resolvers = {
     updateDislikes: async (parents, unSanitizedData, context, info) => {
       const user = context.user;
       const { _id, dislikes, isFromLikes } = sanitize(unSanitizedData);
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
+      if (user?.sub != _id) throw new AuthenticationError("not logged in");
       if (!isFromLikes) {
         const doc = await Squash.findOneAndUpdate(
           { $and: [{ _id: _id }, { $gt: { swipesPerDay: 0 } }] },
