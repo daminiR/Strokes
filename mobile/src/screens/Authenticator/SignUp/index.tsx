@@ -182,11 +182,11 @@ const _confirmSignInGC = () => {
   var userPool = new CognitoUserPool(poolData);
   var dataEmail = {
     Name: 'email',
-    Value: 'daminirijhwani@gmail.com',
+    Value: values.email,
   };
   var dataPhoneNumber = {
     Name: 'phone_number',
-    Value: '+17652500332',
+    Value: values.phoneNumber,
   };
   var attributeEmail = new CognitoUserAttribute(dataEmail);
 var attributePhoneNumber = new CognitoUserAttribute(
@@ -218,7 +218,7 @@ attributeList.push(attributePhoneNumber);
   };
   var userPool = new CognitoUserPool(poolData);
   var userData = {
-    Username: '+17652500332',
+    Username: values.phoneNumber,
     Pool: userPool,
   };
   var cognitoUser = new CognitoUser(userData);
@@ -228,7 +228,7 @@ attributeList.push(attributePhoneNumber);
         return;
       }
       console.log('call result: ' + result);
-      authenticateAWS().then((userDetails) => {
+      authenticateAWS(values.phoneNumber, values.password).then((userDetails) => {
         userDetails.confirmedUser.getUserAttributes((err, attributes) => {
           if (err) {
             console.log('Attribute Error in signup', err);

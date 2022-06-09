@@ -8,7 +8,7 @@ export const resolvers = {
     getSwipesPerDay: async (parents, unSanitizedId, context, info) => {
       const _id = sanitize(unSanitizedId);
       const user = context.user;
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
+      if (user?.sub != _id) throw new AuthenticationError("not logged in");
       const userData = await Squash.findById(_id);
       return userData ? userData.swipesPerDay : 0;
     },
@@ -19,7 +19,7 @@ export const resolvers = {
         unSanitizedData
       );
       const user = context.user;
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
+      if (user?.sub != _id) throw new AuthenticationError("not logged in");
       // the one who swiped get one less swipe so for _id, decease swipe
       // only upser documents if likes/dislikes are more than 0
       if (!isFromLikes) {
