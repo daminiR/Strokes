@@ -45,16 +45,6 @@ const Matches = ({navigation}) => {
       getSquashProfile({variables: {id: currentUser.sub}});
   }, [currentUserData.squash.matches])
 
-  //useEffect(() => {
-    //setLoading(true)
-    //const user = currentUserData.squash
-    //setTitle(title)
-    //// set total likes to be local and database likes
-    //setMatches(user.matches)
-    //setLoading(false)
-  //}, [currentUserData.squash.matches])
-  //useEffect(() => {
-    //}, [currentUserData.squash.matches, currentUserData.squash.likedByUSers])
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (

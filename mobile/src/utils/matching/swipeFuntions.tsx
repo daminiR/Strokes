@@ -19,6 +19,7 @@ const renderMatchCard = (card, setLike, setIndex, index, likesLeft) => {
       const profileImage = createProfileImage( card.image_set)
       const title = card.first_name +', ' + card.age
       const _onPress = () => {
+        console.log("i dont think we make it here")
         setLike(true)
         setIndex(index)
       }

@@ -44,10 +44,6 @@ const SignIn = ({ navigation }: SignInT): ReactElement => {
   );
 }
 
-var poolData = {
-	UserPoolId: '...', // Your user pool id here
-	ClientId: '...', // Your client id here
-};
 export const Slider =  ({changeEmail}) => {
   const [state, dispatch] = useReducer(loginReducer, {
     userId: '',
@@ -100,6 +96,8 @@ export const Slider =  ({changeEmail}) => {
     };
   }, []);
   const _onSlideChange = (index, last_index) => {
+    console.log(index)
+    console.log("did we make it:w")
     setIndex(index)
     if (index == 1){
       setLastSlide(true)
@@ -145,6 +143,7 @@ const _confirmSignInGC = () => {
     //Passkord: 'Damini1993!',
     Password: values.password,
 };
+console.log("are these correct", values.phoneNumber, values.password)
   var authenticationDetails = new AuthenticationDetails(
 	authenticationData
 );
@@ -173,6 +172,7 @@ const _confirmSignInGC = () => {
         AWS.config.credentials.refresh(error => {
             if (error) {
                 console.error(error);
+                setLoadingSignUInRefresh(false);
             } else {
               // Instantiate aws sdk service objects now that the credentials have been updated.
               // example: var s3 = new AWS.S3();
@@ -182,14 +182,16 @@ const _confirmSignInGC = () => {
               cognitoUser.setDeviceStatusRemembered({
                 onSuccess: function (result) {
                   console.log('call result: ' + result);
+                  setLoadingSignUInRefresh(false);
                 },
                 onFailure: function (err) {
                   alert(err.message || JSON.stringify(err));
+                  setLoadingSignUInRefresh(false);
                 },
               });
             }
         });
-        setLoadingSignUInRefresh(false);
+        //setLoadingSignUInRefresh(false);
     },
     onFailure: function(err) {
         alert(err.message || JSON.stringify(err));

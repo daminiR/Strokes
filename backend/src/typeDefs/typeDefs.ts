@@ -153,6 +153,5 @@ export const typeDefs = gql`
     ): Squash!
 
     softDeleteUser(_id: String): String
-    updateLikesCurrentUserTestSamples(_id: String!, likes: [LikedByUserInput!]): Squash
   }
 `;
