@@ -56,7 +56,7 @@ export const Slider =  ({changeEmail}) => {
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const navigation = useNavigation()
   const [index, setIndex] = useState(0)
-  const [canSignIn, setCanSignIn] = useState(false)
+  const [canSignIn, setCanSignIn] = useState(true)
   const [noUserFoundMessage, setNoUserFoundMessage] = useState(null)
   const [showNextButton, setShowNextButton] = useState(true)
   const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -108,7 +108,9 @@ export const Slider =  ({changeEmail}) => {
     }
   }
   const _signIn = () => {
-    checkPhoneInput({variables: {phoneNumber: values.phoneNumber}});
+    this.slider.goToSlide(2);
+    // here see from cognito is user exists if not -> i mean i dont think you need to check anymore!!
+    //checkPhoneInput({variables: {phoneNumber: values.phoneNumber}});
   }
   const renderNext = () => {
     return <NextButton />;

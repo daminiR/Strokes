@@ -34,6 +34,7 @@ return await new Promise((resolve, reject) => {
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: function (result) {
       var accessToken = result.getAccessToken().getJwtToken();
+      var idToken = result.getIdToken().getJwtToken();
       //POTENTIAL: Region needs to be set if not already set previously elsewhere.
       AWS.config.region = 'us-east-1';
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -98,7 +99,7 @@ const getAWSUser = async () => {
       if (cognitoUser != null) {
         //cognitoUser.signOut();
         //AsyncStorage.clear();
-        console.log('Succesful signout');
+        //console.log('Succesful signout');
         cognitoUser.getSession(function (err, session) {
           if (err) {
             alert(err.message || JSON.stringify(err));
@@ -134,6 +135,7 @@ const getAWSUser = async () => {
         });
       } else if (cognitoUser == null) {
         // no user loaded from local storage
+        console.log("no user loaded")
         resolve(null);
       }
     }

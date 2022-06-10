@@ -13,18 +13,19 @@ import { AuthenticationError }  from 'apollo-server-express';
 export const resolvers = {
   Query: {
     squash: async (parents, unSanitizedId, context, info) => {
-      const user = context.user;
+      //const user = context.user;
       const { id } = sanitize(unSanitizedId);
-      console.log("after signup", user.sub, id)
-      if (user?.sub != id) throw new AuthenticationError("not logged in");
+      //console.log("aws user issue", user)
+      //console.log("after signup", user.sub, id)
+      //if (user?.sub != id) throw new AuthenticationError("not logged in");
       const squash_val = await Squash.findById(id);
       console.log(squash_val);
       return squash_val;
     },
     squashes: async (parents, unSanitizedId, context, info) => {
-      const user = context.user;
+      //const user = context.user;
       const { id } = sanitize(unSanitizedId);
-      if (user?.sub != id) throw new AuthenticationError("not logged in");
+      //if (user?.sub != id) throw new AuthenticationError("not logged in");
       const squashes = await Squash.find({ id });
       return squashes;
     },

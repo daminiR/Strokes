@@ -46,7 +46,7 @@ const signInSchema = yup.object().shape({
     confirmationCode: yup
     .string()
     .length(6, "code must be 6 digits long")
-    .required('code is required')
+    //.required('code is required')
     .matches(/^\d+$/, "only digits")
 })
 const signUpSchema = yup.object().shape({

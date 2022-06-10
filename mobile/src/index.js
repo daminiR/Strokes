@@ -24,6 +24,7 @@ const App = () =>
 {
   const [client, setClient] = useState();
   const [persistor, setPersistor] = useState();
+  const [currentUser, setCurrentUser] = useState(null);
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const uri_upload = process.env.React_App_UriUploadRemote
   console.log("uri currently", uri_upload)
@@ -45,16 +46,22 @@ const App = () =>
         uri: uri_upload,
       });
       var token = null
+      var idToken = null
       getAWSUser()
         .then((args) => {
           if (args) {
-            token = args.session.accessToken.jwtToken;
+            if (args) {
+              token = args.session.getAccessToken().getJwtToken();
+              idToken = args.session.getIdToken().getJwtToken();
+              console.log('id from client', idToken);
+              setCurrentUser(args.attributes)
+            }
           }
           const authLink = setContext((_, {headers}) => {
             return {
               headers: {
                 ...headers,
-                authorization: token ? `Bearer ${token}` : '',
+                authorization: idToken ? `Bearer ${idToken}` : '',
               },
             };
           });
@@ -65,6 +72,7 @@ const App = () =>
           setClient(apolloClient);
         })
         .catch((err) => {
+          console.log("getAWS Error")
           console.log(err);
         });
     }
@@ -77,7 +85,7 @@ const App = () =>
     return (
       <AppContainer loading={loadingSignUpInRefresh}>
         <RootRefreshContext.Provider value={rootRefreshValues}>
-          <AuthNavigator sendbird={sendbird}/>
+          <AuthNavigator sendbird={sendbird} currentUser={currentUser}/>
         </RootRefreshContext.Provider>
       </AppContainer>
     );
