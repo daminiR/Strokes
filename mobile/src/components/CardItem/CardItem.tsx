@@ -4,6 +4,16 @@ import {TouchableOpacity, TouchableWithoutFeedback, ScrollView, View, Image, Dim
 import {Text} from 'react-native-elements'
 import {SportChips} from '@components'
 
+const Wrapper = (props) => {
+  if (!props.variant) {
+    return (
+      <TouchableWithoutFeedback>
+        <View>{props.children}</View>
+      </TouchableWithoutFeedback>
+    );
+  }
+  return props.children;
+};
 
 const CardItem = ({
   toBlur=null,
@@ -40,35 +50,60 @@ const CardItem = ({
   return (
     <>
       <ScrollView>
-        <TouchableWithoutFeedback>
-        <View style={styles.containerCardItem}>
-          {/* IMAGE */}
-          {profileImage &&  <Image blurRadius={toBlur && variant ? 20 : 0} source={{uri: profileImage.imageURL}} style={variant ? styles.profileLikesContainer : styles.profileContainer}/>}
-          {/* NAME */}
-          {profileTitle && (<Text style={variant? styles.nameStyleLikes :styles.nameStyle }>{profileTitle}</Text>)}
-          {/* DESCRIPTION */}
-          {description && (
-            <Text style={styles.descriptionCardItem}>{description}</Text>
-          )}
-          {/* SPORTS List */}
-          { sportsList && <View style={{marginVertical: 10}}>
-            <View style={styles.sportChipSet}>
-              {sportsList.map((sport, i) => (
-                  <SportChips key={i} sport={sport.sport} gameLevel={sport.game_level.toString()} isDisplay={true} />
-                ))}
-            </View>
-          </View>}
-          {location && (
-            <Text style={styles.descriptionCardItem}>{location}</Text>
-          )}
-          {image_set && image_set.map((imgObj, index) => renderImages(imgObj, index, image_set.length, isProfileView)
-          )}
-        </View>
-        </TouchableWithoutFeedback>
+        <Wrapper variant={variant}>
+          <View style={styles.containerCardItem}>
+            {/* IMAGE */}
+            {profileImage && (
+              <Image
+                blurRadius={toBlur && variant ? 20 : 0}
+                source={{uri: profileImage.imageURL}}
+                style={
+                  variant
+                    ? styles.profileLikesContainer
+                    : styles.profileContainer
+                }
+              />
+            )}
+            {/* NAME */}
+            {profileTitle && (
+              <Text style={variant ? styles.nameStyleLikes : styles.nameStyle}>
+                {profileTitle}
+              </Text>
+            )}
+            {/* DESCRIPTION */}
+            {description && (
+              <Text style={styles.descriptionCardItem}>{description}</Text>
+            )}
+            {/* SPORTS List */}
+            {sportsList && (
+              <View style={{marginVertical: 10}}>
+                <View style={styles.sportChipSet}>
+                  {sportsList.map((sport, i) => (
+                    <SportChips
+                      key={i}
+                      sport={sport.sport}
+                      gameLevel={sport.game_level.toString()}
+                      isDisplay={true}
+                    />
+                  ))}
+                </View>
+              </View>
+            )}
+            {location && (
+              <Text style={styles.descriptionCardItem}>{location}</Text>
+            )}
+            {image_set &&
+              image_set.map((imgObj, index) =>
+                renderImages(imgObj, index, image_set.length, isProfileView),
+              )}
+          </View>
+        </Wrapper>
       </ScrollView>
     </>
-  )
+  );
 }
+
+
 
 const renderImages = (imgObj, index, numImages, isProfileView) => {
             var imageStyle = styles.imageContainer as any

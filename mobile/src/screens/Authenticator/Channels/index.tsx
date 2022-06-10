@@ -19,7 +19,7 @@ import { handleNotificationAction } from '../../../utils/SendBird';
 const Channels = props => {
   const { route, navigation} = props;
   const {currentUser} = route.params
-  const {data: currentUserData, sendbird} = useContext(UserContext)
+  const {data: currentUserData, sendbird, setSendbird} = useContext(UserContext)
   const [query, setQuery] = useState(null);
   const [state, dispatch] = useReducer(channelsReducer, {
     sendbird,
@@ -35,7 +35,8 @@ const Channels = props => {
   useEffect(() => {
     sendbird.addConnectionHandler('channels', connectionHandler);
     sendbird.addChannelHandler('channels', channelHandler);
-    const unsubscribe = AppState.addEventListener('change', handleStateChange);
+    console.log("sbError chennel errors", sendbird.channelHandlers)
+    //const unsubscribe = AppState.addEventListener('change', handleStateChange);
     if (!sendbird.currentUser) {
       console.log("channesError: not corret uSer")
       sendbird.connect(currentUser.userId, (err, _) => {
@@ -56,11 +57,11 @@ const Channels = props => {
       console.log("channesError: corret uSer")
     }
     return () => {
-      console.log("okay when does this sendbird chenels get run")
+      console.log("sbError channel error")
       dispatch({ type: 'end-loading' });
       sendbird.removeConnectionHandler('channels');
       sendbird.removeChannelHandler('channels');
-      unsubscribe.remove();
+      //unsubscribe.remove();
     };
   }, []);
 

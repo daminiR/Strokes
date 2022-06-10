@@ -24,7 +24,7 @@ import { createChannelName } from '../../../utils/SendBird/index';
 
 const SendBirdChat = props => {
   const { route, navigation} = props;
-  const {sendbird} = useContext(UserContext);
+  const {sendbird, setSendbird} = useContext(UserContext);
   const { currentUser, channel } = route.params;
   const [query, setQuery] = useState(null);
   const [state, dispatch] = useReducer(chatReducer, {
@@ -59,7 +59,10 @@ const SendBirdChat = props => {
   useEffect(() => {
     sendbird.addConnectionHandler('chat', connectionHandler);
     sendbird.addChannelHandler('chat', channelHandler);
-    const unsubscribe = AppState.addEventListener('change', handleStateChange);
+    console.log("sbError connectionass chennels", sendbird)
+    console.log("sbError connectionass chennels", sendbird.channelHandlers)
+    console.log("sbError was this added")
+    //const unsubscribe = AppState.addEventListener('change', handleStateChange);
 
     if (!sendbird.currentUser) {
       sendbird.connect(currentUser.userId, (err, _) => {
@@ -78,9 +81,10 @@ const SendBirdChat = props => {
       refresh();
     }
     return () => {
-      console.log("do we get out of here sendbird channel")
-      //sendbird.removeConnectionHandler('chat');
-      //sendbird.removeChannelHandler('chat');
+      console.log("sbError connection chat error", sendbird.connectionHandlers)
+      console.log("number of runs")
+      sendbird.removeConnectionHandler('chat');
+      sendbird.removeChannelHandler('chat');
       //unsubscribe.remove();
     };
   }, []);

@@ -1,19 +1,19 @@
-import Squash from '../models/Squash';
-import { GraphQLUpload } from 'graphql-upload'
-import { ObjectId} from 'mongodb'
-import { sanitizeFile } from '../utils/fileNaming'
-import * as path from 'path';
-import _ from 'lodash'
-import {Data, DisplayData} from '../types/Squash'
-import {
-  SWIPIES_PER_DAY_LIMIT,
-  LIKES_PER_DAY_LIMIT,
-  SPORT_CHANGES_PER_DAY,
-} from "../constants/";
-//import { PubSub } from 'graphql-subscriptions';
-//const pubsub = new PubSub()
-export const resolvers = {
-  Mutation: {
+//import Squash from '../models/Squash';
+//import { GraphQLUpload } from 'graphql-upload'
+//import { ObjectId} from 'mongodb'
+//import { sanitizeFile } from '../utils/fileNaming'
+//import * as path from 'path';
+//import _ from 'lodash'
+//import {Data, DisplayData} from '../types/Squash'
+//import {
+  //SWIPIES_PER_DAY_LIMIT,
+  //LIKES_PER_DAY_LIMIT,
+  //SPORT_CHANGES_PER_DAY,
+//} from "../constants/";
+////import { PubSub } from 'graphql-subscriptions';
+////const pubsub = new PubSub()
+//export const resolvers = {
+  //Mutation: {
     //updateGameLevelsToStrings: async (parents, context, info) => {
         ////const doc = await Squash.updateMany(
           ////{ _id: ["aoshwaakxrywljjshsgxuvytfzlm"]},
@@ -41,21 +41,21 @@ export const resolvers = {
       //await Squash.updateMany(filter, update)
       //return doc;
     //},
-    updateLikesCurrentUserTestSamples: async (parents, { _id, likesdID}, context, info) => {
-      /// function different from the pther updateLikes
-      const likeIDs = _.map(likes, likeObj => {
-        return likeObj._id
-      })
-      const likedDocs = await Squash.updateMany(
-        { _id: {$in : likeIDs} },
-        { $addToSet: { likes:  _id } },
-        { new: true }
-      );
-      const filter = {_id: _id}
-      const update = { $addToSet: { likedByUSers: {$each : likes}}}
-      const doc = await Squash.findOneAndUpdate(filter, update)
-      return doc;
-    },
+    //updateLikesCurrentUserTestSamples: async (parents, { _id, likesdID}, context, info) => {
+      ///// function different from the pther updateLikes
+      //const likeIDs = _.map(likes, likeObj => {
+        //return likeObj._id
+      //})
+      //const likedDocs = await Squash.updateMany(
+        //{ _id: {$in : likeIDs} },
+        //{ $addToSet: { likes:  _id } },
+        //{ new: true }
+      //);
+      //const filter = {_id: _id}
+      //const update = { $addToSet: { likedByUSers: {$each : likes}}}
+      //const doc = await Squash.findOneAndUpdate(filter, update)
+      //return doc;
+    //},
     //updateUserProfileTestSamples: async (parents, { _id1, _id2 }, context, info) => {
         //const doc = await Squash.updateMany(
           //{},
@@ -105,5 +105,5 @@ export const resolvers = {
     //testMut(root, args){
       //return args.name
     //},
-  }
-}
+  //}
+//}

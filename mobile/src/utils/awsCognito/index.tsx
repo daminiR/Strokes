@@ -130,12 +130,7 @@ const getAWSUser = async () => {
               'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': session
                 .getIdToken()
                 .getJwtToken(),
-            },
-          });
-          // get user profile
-          // Instantiate aws sdk service objects now that the credentials have been updated.
-          // example: var s3 = new AWS.S3();
-          return;
+            }, }); // get user profile Instantiate aws sdk service objects now that the credentials have been updated.  example: var s3 = new AWS.S3(); return;
         });
       } else if (cognitoUser == null) {
         // no user loaded from local storage
