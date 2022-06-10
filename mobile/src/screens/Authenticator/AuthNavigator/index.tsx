@@ -28,8 +28,8 @@ export const UserContext = createContext(null);
 import {createInitialFilterFormik, createPatronList, calculateOfflineMatches, getAWSUser} from '@utils'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const AuthNavigator = ({sendbird}) => {
-  const [currentUser, setCurrentUser ] = useState(null)
+const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
+  const [currentUser, setCurrentUser ] = useState(newUserSub)
   const [isProfileComplete, setProfileState ] = useState(false)
   const [loadingSigning, setLoadingSiginig] = useState(true);
   const [deleted, setDeleted] = useState({isDeleted: false});
@@ -128,21 +128,12 @@ const start = (user) => {
   useEffect(() => {
     setLoadingUser(true);
     setLoadingUser(false);
-    const foo = async () => {
-      getAWSUser()
-        .then((args) => {
-          getSquashProfile({variables: {id: args.attributes.sub}});
-          //const awsUser =  _.chain(args.attributes).keyBy('Name').mapValues('Value').value()
-          setCurrentUser(args.attributes);
-          setLoadingUser(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    foo();
-
+    if (currentUser) {
+      getSquashProfile({variables: {id: currentUser.sub}});
+      setLoadingUser(false);
+    }
   }, []);
+
   useEffect(() => {
     deleted && deleted.isDeleted &&
       console.log("user info must be erase from react native and soft deleted on database")

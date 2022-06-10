@@ -7,8 +7,8 @@ export const resolvers = {
   Query: {
     getSwipesPerDay: async (parents, unSanitizedId, context, info) => {
       const _id = sanitize(unSanitizedId);
-      const user = context.user;
-      if (user?.sub != _id) throw new AuthenticationError("not logged in");
+      //const user = context.user;
+      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       const userData = await Squash.findById(_id);
       return userData ? userData.swipesPerDay : 0;
     },
@@ -18,8 +18,8 @@ export const resolvers = {
       const { _id, likes, currentUserData, isFromLikes } = sanitize(
         unSanitizedData
       );
-      const user = context.user;
-      if (user?.sub != _id) throw new AuthenticationError("not logged in");
+      //const user = context.user;
+      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       // the one who swiped get one less swipe so for _id, decease swipe
       // only upser documents if likes/dislikes are more than 0
       if (!isFromLikes) {
@@ -82,9 +82,9 @@ export const resolvers = {
       }
     },
     updateDislikes: async (parents, unSanitizedData, context, info) => {
-      const user = context.user;
+      //const user = context.user;
       const { _id, dislikes, isFromLikes } = sanitize(unSanitizedData);
-      if (user?.sub != _id) throw new AuthenticationError("not logged in");
+      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       if (!isFromLikes) {
         const doc = await Squash.findOneAndUpdate(
           { $and: [{ _id: _id }, { $gt: { swipesPerDay: 0 } }] },

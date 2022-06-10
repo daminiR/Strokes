@@ -11,7 +11,6 @@ import {resolvers as matches} from './resolvers/matches'
 import {resolvers as random} from './resolvers/random'
 import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
-//import {resolvers as testResolvers} from './resolvers/testResolvers'
 
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
@@ -38,7 +37,6 @@ const startServer = async () => {
       random,
       updateUser,
       uploads,
-      //testResolvers
     ]
   );
   const schema = makeExecutableSchema({
