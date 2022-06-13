@@ -120,11 +120,11 @@ export const Slider =  ({changeEmail}) => {
     errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
   };
   const _onNext = () => {
+    console.log("signin slides", signInSlides)
     const index = this.slider.state.activeIndex;
     const field = _.find(signInSlides, ['key', index.toString()]).inputLabel;
     setFieldTouched(field);
     if (index == 0) {
-      //!errors[field] && touched[field] && this.slider.goToSlide(index + 1, true) && _signIn()
       !errors[field] && touched[field] && _signIn();
     } else {
       !errors[field] &&

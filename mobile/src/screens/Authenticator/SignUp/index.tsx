@@ -135,9 +135,9 @@ const Slider =  () => {
       setLastSlide(true)
       setShowNextButton(false)
     }
-    else if (index == TOTAL_SIGNUP_SLIDES - 2){
-      setShowNextButton(false)
-    }
+    //else if (index == TOTAL_SIGNUP_SLIDES - 2){
+      //setShowNextButton(false)
+    //}
     else {
       setShowNextButton(true)
     }
@@ -177,6 +177,7 @@ const clientId = process.env.React_App_AWS_Client_Id
   var poolData = {
     UserPoolId: userPoolId, // Your user pool id here
     ClientId: clientId, // Your client id here
+    groupName: 'users_v1',
   };
   var userPool = new CognitoUserPool(poolData);
   var dataEmail = {
@@ -273,19 +274,26 @@ const clientId = process.env.React_App_AWS_Client_Id
 
   const _onPrev = () => {
     const index = this.slider.state.activeIndex
-    this.slider.goToSlide(index - 1, true)
+    console.log("whyyyyyyyyyyyyy", index)
+    this.slider.goToSlide(index - 2, true)
   };
   const _onNext = () => {
-    console.log("erros location", errors.gender)
-    console.log("erros location", errors.location)
     const index = this.slider.state.activeIndex
     console.log(index)
     const field = _.find(signUpSlides, ['key', index.toString()]).inputLabel
+    //console.log(signUpSlides)
     console.log(field)
+    console.log(touched)
     //setFieldTouched(field)
-    !errors[field] &&
-    touched[field] &&
-    this.slider.goToSlide(index + 1, true)
+    if (field == 'image_set') {
+      !errors[field] &&
+        this.slider.goToSlide(index + 1, true);
+    } else {
+      !errors[field] &&
+        touched[field] &&
+        this.slider.goToSlide(index + 1, true);
+    }
+
   };
   const _onPressCancel = () => {
     navigation.navigate('HELLO');
