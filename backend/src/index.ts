@@ -34,7 +34,6 @@ const startServer = async () => {
       deleteUser,
       likesDislikes,
       matches,
-      random,
       updateUser,
       uploads,
     ]

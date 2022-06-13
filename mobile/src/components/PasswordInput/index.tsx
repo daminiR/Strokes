@@ -39,10 +39,12 @@ const PasswordInput = ({
       didMountRef.current = true;
     }
   }, [isLastSlide]);
-  const _forgotPassword = () => {
+  const _noSignInPassword = () => {
+const userPoolId = process.env.React_App_UserPoolId
+const clientId = process.env.React_App_AWS_Client_Id
   var poolData = {
-    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
-    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
+    UserPoolId: userPoolId, // Your user pool id here
+    ClientId: clientId, // Your client id here
   };
   var userPool = new CognitoUserPool(poolData);
   var userData = {
@@ -59,7 +61,10 @@ const PasswordInput = ({
 		alert(err.message || JSON.stringify(err));
 	},
 });
-setPasswordReset(true)
+    setPasswordReset(true)
+  }
+  const forgotPassword = () =>{
+    isSignIn && _noSignInPassword()
   }
 
   return (
@@ -82,14 +87,7 @@ setPasswordReset(true)
               label="Password"
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
               onChangeText={handleChange('password')}
-              //onEndEditing={() => _onDoneEditing()}
-              //onChangeText={(text) => {
-              //handleInput(text);
-              //}}
-              //value={values.confirmationCode}
-              //value={inputValue}
               value={values.password}
-              //onBlur={handleBlur('confirmationCode')}
               keyboardType={'phone-pad'}
             />
           </View>
@@ -109,12 +107,14 @@ setPasswordReset(true)
               onPress={() => _confirmSignInGC(values.password)}
               title="Confirm"
             />
-            <Button
-              buttonStyle={styles.buttonStyle}
-              titleStyle={styles.buttonText}
-              onPress={() =>_forgotPassword()}
-              title="Forgot Password"
-            />
+            {isSignIn && (
+              <Button
+                buttonStyle={styles.buttonStyle}
+                titleStyle={styles.buttonText}
+                onPress={() => _forgotPassword()}
+                title="Forgot Password"
+              />
+            )}
           </View>
         </View>
       </DismissKeyboard>

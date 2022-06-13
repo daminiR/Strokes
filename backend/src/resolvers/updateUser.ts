@@ -13,13 +13,9 @@ import { AuthenticationError }  from 'apollo-server-express';
 export const resolvers = {
   Query: {
     squash: async (parents, unSanitizedId, context, info) => {
-      //const user = context.user;
       const { id } = sanitize(unSanitizedId);
-      //console.log("aws user issue", user)
-      //console.log("after signup", user.sub, id)
-      //if (user?.sub != id) throw new AuthenticationError("not logged in");
+      console.log("id in sqash", id)
       const squash_val = await Squash.findById(id);
-      console.log(squash_val);
       return squash_val;
     },
     squashes: async (parents, unSanitizedId, context, info) => {
@@ -47,8 +43,8 @@ export const resolvers = {
         original_uploaded_image_set,
       } = sanitize(unSanitizedData);
 
-      const user = context.user;
-      if (user?.sub != _id) throw new AuthenticationError("not logged in");
+      //const user = context.user;
+      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
 
       const removed_image_set = await deleteFilesFromAWS(
         remove_uploaded_images,

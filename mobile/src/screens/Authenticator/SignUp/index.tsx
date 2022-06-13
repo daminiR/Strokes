@@ -10,7 +10,6 @@ import {CHECK_PHONE_INPUT, ADD_PROFILE2 } from '@graphQL2'
 import {ProfileFields} from '@localModels';
 import { loginReducer } from '../../../reducers/Login';
 import {
-  NeighborhoodSearch,
   CityInput,
   ConfirmationCode,
   PasswordInput,
@@ -36,7 +35,6 @@ import { styles } from '@styles'
 import  { signUpSchema} from '@validation'
 import {RootRefreshContext} from '../../../index.js'
 import {
-  AuthenticationDetails,
   CognitoUserPool,
   CognitoUserAttribute,
   CognitoUser,
@@ -61,7 +59,6 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
   );
 }
 const Slider =  () => {
-  //const { sendbird, onLogin } = props;
   const [state, dispatch] = useReducer(loginReducer, {
     userId: '',
     nickname: '',
@@ -175,9 +172,11 @@ const _checkSignIn = () => {
   };
 
 const _confirmSignInGC = () => {
+const userPoolId = process.env.React_App_UserPoolId
+const clientId = process.env.React_App_AWS_Client_Id
   var poolData = {
-    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
-    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
+    UserPoolId: userPoolId, // Your user pool id here
+    ClientId: clientId, // Your client id here
   };
   var userPool = new CognitoUserPool(poolData);
   var dataEmail = {
@@ -212,9 +211,11 @@ attributeList.push(attributePhoneNumber);
   );
 }
   const _awsConfirmOTP = () => {
+const userPoolId = process.env.React_App_UserPoolId
+const clientId = process.env.React_App_AWS_Client_Id
   var poolData = {
-    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
-    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
+    UserPoolId: userPoolId, // Your user pool id here
+    ClientId: clientId, // Your client id here
   };
   var userPool = new CognitoUserPool(poolData);
   var userData = {
@@ -394,6 +395,7 @@ attributeList.push(attributePhoneNumber);
                     noUserFoundMessage={noUserFoundMessage}
                     isLastSlide={lastSlide}
                     _confirmSignInGC={_checkSignIn}
+                    isSignIn={false}
                   />
                 </>
               )
@@ -426,9 +428,6 @@ const [visible, setVisible] = useState(false);
           showPrevButton={true && !isKeyboardShown}
           showDoneButton={false}
           onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-          //onDone={() => {
-            //_confirmSignInGC();
-          //}}
           showNextButton={showNextButton && !isKeyboardShown}
           renderNextButton={renderNext}
           renderPrevButton={renderPrev}

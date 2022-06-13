@@ -157,9 +157,6 @@ const Channels = props => {
         currentUserID: currentUser.sub,
         channel: channel,
         currentUser: currentUser,
-        //matchID: item._id,
-        //matchedUserProfileImage: profileImage,
-        //matchedUserName: item.first_name,
         profileViewData: profileViewDataList[0],
       });
     }
