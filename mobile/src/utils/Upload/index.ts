@@ -34,9 +34,11 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     sendbird,
   ): Promise<void> => {
     const savedUserKey = 'savedUser';
+const userPoolId = process.env.React_App_UserPoolId
+const clientId = process.env.React_App_AWS_Client_Id
   var poolData = {
-    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
-    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
+    UserPoolId: userPoolId, // Your user pool id here
+    ClientId: clientId, // Your client id here
   };
   var userPool = new CognitoUserPool(poolData);
   var cognitoUser = userPool.getCurrentUser();

@@ -152,6 +152,6 @@ export const typeDefs = gql`
       newUserToken: String
     ): Squash!
 
-    softDeleteUser(_id: String): String
+    softDeleteUser(_id: String): String!
   }
 `;

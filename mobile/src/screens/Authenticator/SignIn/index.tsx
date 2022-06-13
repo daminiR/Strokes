@@ -134,21 +134,18 @@ export const Slider =  ({changeEmail}) => {
   };
 const _confirmSignInGC = () => {
   setLoadingSignUInRefresh(true);
-
+  const userPoolId = process.env.React_App_UserPoolId;
+  const clientId = process.env.React_App_AWS_Client_Id;
   var poolData = {
-    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
-    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
+    UserPoolId: userPoolId, // Your user pool id here
+    ClientId: clientId, // Your client id here
   };
   var authenticationData = {
     Username: values.phoneNumber,
-    //Username: '+12025550193',
-    //Passkord: 'Damini1993!',
     Password: values.password,
-};
-console.log("are these correct", values.phoneNumber, values.password)
-  var authenticationDetails = new AuthenticationDetails(
-	authenticationData
-);
+  };
+  console.log('are these correct', values.phoneNumber, values.password);
+  var authenticationDetails = new AuthenticationDetails(authenticationData);
   var userPool = new CognitoUserPool(poolData);
 
   var userData = {
@@ -157,48 +154,48 @@ console.log("are these correct", values.phoneNumber, values.password)
   };
   var cognitoUser = new CognitoUser(userData);
   cognitoUser.authenticateUser(authenticationDetails, {
-    onSuccess: function(result) {
-        var accessToken = result.getAccessToken().getJwtToken();
-        //POTENTIAL: Region needs to be set if not already set previously elsewhere.
-        AWS.config.region = 'us-east-1';
-        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-          IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
-          Logins: {
-            // Change the key below according to the specific region your user pool is in.
-            'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': result
-              .getIdToken()
-              .getJwtToken(),
-          },
-        });
-        //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
-        AWS.config.credentials.refresh(error => {
-            if (error) {
-                console.error(error);
-                setLoadingSignUInRefresh(false);
-            } else {
-              // Instantiate aws sdk service objects now that the credentials have been updated.
-              // example: var s3 = new AWS.S3();
-              console.log('Successfully logged!');
-              // on success remember device
-              cognitoUser.getCachedDeviceKeyAndPassword();
-              cognitoUser.setDeviceStatusRemembered({
-                onSuccess: function (result) {
-                  console.log('call result: ' + result);
-                  setLoadingSignUInRefresh(false);
-                },
-                onFailure: function (err) {
-                  alert(err.message || JSON.stringify(err));
-                  setLoadingSignUInRefresh(false);
-                },
-              });
-            }
-        });
-        //setLoadingSignUInRefresh(false);
+    onSuccess: function (result) {
+      var accessToken = result.getAccessToken().getJwtToken();
+      //POTENTIAL: Region needs to be set if not already set previously elsewhere.
+      AWS.config.region = 'us-east-1';
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
+        Logins: {
+          // Change the key below according to the specific region your user pool is in.
+          'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': result
+            .getIdToken()
+            .getJwtToken(),
+        },
+      });
+      //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
+      AWS.config.credentials.refresh((error) => {
+        if (error) {
+          console.error(error);
+          setLoadingSignUInRefresh(false);
+        } else {
+          // Instantiate aws sdk service objects now that the credentials have been updated.
+          // example: var s3 = new AWS.S3();
+          console.log('Successfully logged!');
+          // on success remember device
+          cognitoUser.getCachedDeviceKeyAndPassword();
+          cognitoUser.setDeviceStatusRemembered({
+            onSuccess: function (result) {
+              console.log('call result: ' + result);
+              setLoadingSignUInRefresh(false);
+            },
+            onFailure: function (err) {
+              alert(err.message || JSON.stringify(err));
+              setLoadingSignUInRefresh(false);
+            },
+          });
+        }
+      });
+      //setLoadingSignUInRefresh(false);
     },
-    onFailure: function(err) {
-        alert(err.message || JSON.stringify(err));
-    }
-  })
+    onFailure: function (err) {
+      alert(err.message || JSON.stringify(err));
+    },
+  });
 };
 const _checkSignIn = () => {
   canSignIn
@@ -253,9 +250,6 @@ const [authMessage, setAuthMessage] = useState(null)
         showPrevButton={true}
         showDoneButton={false}
         onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-        //onDone={() => {
-          //_confirmSignInGC();
-        //}}
         showNextButton={showNextButton && !isKeyboardShown}
         dotClickEnabled={false}
         renderNextButton={renderNext}

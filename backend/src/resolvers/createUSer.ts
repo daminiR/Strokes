@@ -39,18 +39,6 @@ export const resolvers = {
         newUserToken,
       } = sanitize(unSanitizedData);
 
-      // TODO: this is being done indivisually here because dynamically updateing context, idk yet!
-      //const user = context.user;
-      //const verifier = CognitoJwtVerifier.create({
-        //userPoolId: "us-east-1_idvRudgcB", // Your user pool id here
-        //tokenUse: "access",
-        //clientId: "5db5ndig7d4dei9eiviv06v59f", // Your client id here
-      //});
-      //const user = await verifier.verify(newUserToken);
-      //console.log("user is", user);
-      //console.log("did we make it to the backend", user.sub, _id);
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
-      console.log("did we make it to the backend after user sub");
       const data_set = await createAWSUpload(image_set, _id);
       const doc = await Squash.create({
         _id: _id,

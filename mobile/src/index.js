@@ -27,7 +27,6 @@ const App = () =>
   const [currentUser, setCurrentUser] = useState(null);
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const uri_upload = process.env.React_App_UriUploadRemote
-  console.log("uri currently", uri_upload)
   useEffect(() => {
     LogBox.ignoreLogs(['Warning: ...']);
     LogBox.ignoreAllLogs();
@@ -91,7 +90,6 @@ const App = () =>
     );
   };
     if (!client) {
-      // TODO : MAKE FANCY loadin gwhile app is intiializing// som eanimatioin preferable
     console.log(' still no clinet');
     return <Text>Initializing app...</Text>;
     }

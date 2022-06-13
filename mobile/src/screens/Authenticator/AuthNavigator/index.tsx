@@ -1,31 +1,19 @@
-import React, {useReducer, useContext, createContext, useRef, useEffect, useState} from "react";
-import * as AWS from 'aws-sdk/global';
+import React, {useContext, createContext, useRef, useEffect, useState} from "react";
 import messaging from '@react-native-firebase/messaging';
 import { Formik} from 'formik'
 import {byGameLevel} from '@utils'
-import { loginReducer } from '../../../reducers/Login';
-import {styles} from '@styles'
 import _ from 'lodash'
 import { Platform } from 'react-native';
-import FlashMessage from "react-native-flash-message";
 import { SignOutStack, MatchStackScreen} from '@NavStack'
-import { SWIPED_LEFT, READ_SQUASH, MESSAGE_POSTED, GET_POTENTIAL_MATCHES} from '@graphQL2'
-import { useSubscription, useQuery, useLazyQuery} from '@apollo/client'
-import {
-  AuthenticationDetails,
-  CognitoUserPool,
-  CognitoUserAttribute,
-  CognitoUser,
-} from 'amazon-cognito-identity-js';
+import { READ_SQUASH, GET_POTENTIAL_MATCHES} from '@graphQL2'
+import { useLazyQuery} from '@apollo/client'
 import {SWIPIES_PER_DAY_LIMIT} from '@constants'
 import  {cityVar} from '@cache'
 import  {AppContainer} from '@components'
 import { useApolloClient} from '@apollo/client'
-import { showMessage, hideMessage } from "react-native-flash-message";
-import {connect} from '../../../utils/SendBird'
 import {RootRefreshContext} from '../../../index.js'
 export const UserContext = createContext(null);
-import {createInitialFilterFormik, createPatronList, calculateOfflineMatches, getAWSUser} from '@utils'
+import {createInitialFilterFormik} from '@utils'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
@@ -35,11 +23,9 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [deleted, setDeleted] = useState({isDeleted: false});
   const [imageErrorVisible, setImageErrorVisible] = useState(false)
   const [changeSport, setChangeSport] = useState(true)
-  const [isUserOnmongoDb, setIsUseOnMongoDb] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
   const [data, setData] = useState(null);
   const [allUsers, setAllUsers] = useState(null)
-  const [userDataDidMount, setUserDataDidMount] = useState(false)
   const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
   const [sb, setSb] = useState(sendbird)
@@ -109,7 +95,6 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
                   ageRange: initialValues.ageRange,
                 },
               });
-            setUserDataDidMount(true);
           })
           .catch((err) => {
             console.log(err);
@@ -197,15 +182,18 @@ const start = (user) => {
     onLogin: login,
   };
   const render2 = () =>{
-    if (userData?.squash && (!deleted || !deleted?.isDeleted)) {
-      return !loadingSigning && !loadingMatches && <MatchStackScreen />;
+    if (userData?.squash) {
+      // found user squash data
+      if (!deleted || !deleted?.isDeleted) {
+        // user is not a soft deleted user
+        return !loadingSigning && !loadingMatches && <MatchStackScreen />;
+      }
     } else {
       return !loadingUser && <SignOutStack/>;
     }
   }
 
   const renderRoot = () => {
-    console.log("renders root", loadingSigning, loadingUser, loadingMatches)
     return (
       <AppContainer loading={loadingSigning || loadingUser || loadingMatches}>
         <UserContext.Provider value={value}>
