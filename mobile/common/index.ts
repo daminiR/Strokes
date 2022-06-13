@@ -106,7 +106,7 @@ const signUpSchema = yup.object().shape({
         filePath: yup.string().required(),
       }),
     )
-    .min(1, 'you must have atleast 1 image')
+    .min(1, 'you must have atleast 2 image')
     .nullable(false)
     .required(),
   description: yup
@@ -183,7 +183,7 @@ const profileEditSchema = yup.object().shape({
         filePath: yup.string().required(),
       }),
     )
-    .min(1, 'you must have atleast 1 image')
+    .min(1, 'you must have atleast 2 image')
     .nullable(false)
     .required(),
   remove_uploaded_images: yup.array().of(

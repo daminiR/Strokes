@@ -44,17 +44,14 @@ const App = () =>
       const uploadLink = createUploadLink({
         uri: uri_upload,
       });
-      var token = null
-      var idToken = null
+      var token = null;
+      var idToken = null;
       getAWSUser()
         .then((args) => {
           if (args) {
-            if (args) {
-              token = args.session.getAccessToken().getJwtToken();
-              idToken = args.session.getIdToken().getJwtToken();
-              console.log('id from client', idToken);
-              setCurrentUser(args.attributes)
-            }
+            token = args.session.getAccessToken().getJwtToken();
+            idToken = args.session.getIdToken().getJwtToken();
+            setCurrentUser(args.attributes);
           }
           const authLink = setContext((_, {headers}) => {
             return {
@@ -71,7 +68,7 @@ const App = () =>
           setClient(apolloClient);
         })
         .catch((err) => {
-          console.log("getAWS Error")
+          console.log('getAWS Error');
           console.log(err);
         });
     }

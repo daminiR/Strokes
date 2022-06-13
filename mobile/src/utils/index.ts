@@ -1,6 +1,7 @@
 export * from './formik'
 export * from './awsCognito'
 export * from './AsyncStorage'
+export * from './ApolloClient'
 export * from './matching/patron_list'
 export * from './matching/dataManipulation'
 export * from './matching/swipeFuntions'

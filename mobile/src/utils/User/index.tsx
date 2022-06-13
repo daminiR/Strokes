@@ -23,7 +23,7 @@ const registerOnFirebase = async (phoneNumber) => {
     )
     return RNFiles
   }
- const registerOnMongoDb = async (values, _id, createSquash2, token) => {
+ const registerOnMongoDb = async (values, _id, createSquash2, token, client) => {
   const rnfiles = convertImagesToFormat(values.image_set, _id)
     await createSquash2({
       variables: {
@@ -40,6 +40,7 @@ const registerOnFirebase = async (phoneNumber) => {
         location: values.location,
         newUserToken: token
       },
+      //client: client
     });
   };
 

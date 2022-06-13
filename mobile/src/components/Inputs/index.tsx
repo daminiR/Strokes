@@ -11,7 +11,7 @@ import {sanitizePhone, formatPhoneNumber} from '@validation'
 import _ from 'lodash'
 
 
-const ImageInput = ({_submit, isSignUp}) => {
+const ImageInput = ({isSignUp}) => {
   const { values, errors, touched,  setValues, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
     return (
       <>
@@ -21,12 +21,6 @@ const ImageInput = ({_submit, isSignUp}) => {
             {errors.image_set ? (
               <Text style={{alignSelf:'center'}}>{errors.image_set}</Text>
             ) : null}
-          <Button
-            buttonStyle={styles.buttonStyle}
-            titleStyle={styles.buttonText}
-            onPress={() => _submit()}
-            title="Submit"
-          />
       </View>
         </View>
       </>
