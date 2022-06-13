@@ -84,6 +84,8 @@ const clientId = process.env.React_App_AWS_Client_Id
           <View style={styles.emailInput}>
             <Input
               placeholder="Password"
+              multiline={false}
+              secureTextEntry={true}
               label="Password"
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
               onChangeText={handleChange('password')}

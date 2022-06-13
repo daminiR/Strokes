@@ -3,10 +3,12 @@ import {useLazyQuery, useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
 import {useNavigation} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
+import {ApolloClient, ApolloProvider} from '@apollo/client'
 import {signUpSlides, intitialFormikSignUp, TOTAL_SIGNUP_SLIDES} from '@constants'
 import {  RootStackSignOutParamList } from 'src/navigation'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import {CHECK_PHONE_INPUT, ADD_PROFILE2 } from '@graphQL2'
+import {ADD_PROFILE2 } from '@graphQL2'
+import  { createUploadLink } from 'apollo-upload-client';
 import {ProfileFields} from '@localModels';
 import { loginReducer } from '../../../reducers/Login';
 import {
@@ -27,12 +29,14 @@ import {
   AppContainer,
 } from '@components';
 import {connect} from '../../../utils/SendBird'
-import { registerOnFirebase, registerOnMongoDb, authenticateAWS} from '@utils'
+import { setContext } from '@apollo/client/link/context'
+import { registerOnFirebase, registerOnMongoDb, authenticateAWS, initializeClient} from '@utils'
 import { UserContext} from '@UserContext'
 import {Keyboard, View} from 'react-native'
 import  _ from 'lodash'
 import { styles } from '@styles'
 import  { signUpSchema} from '@validation'
+import {getAWSUser} from '@utils';
 import {RootRefreshContext} from '../../../index.js'
 import {
   CognitoUserPool,
@@ -66,43 +70,28 @@ const Slider =  () => {
     connecting: false,
   });
   const {values, errors, setFieldValue, setFieldTouched, touched} = useFormikContext<ProfileFields>();
-  const [newLocation, setNewLocation] = useState(null)
   const {setIsUseOnMongoDb, sendbird, onLogin, setSendbird} = useContext(UserContext)
   const [lastSlide, setLastSlide] = useState(false)
-  const [confirmationFunc, setConfirmationFunc] = useState(null)
   const [loadingSubmit, setLoadingSubmit] = useState(false)
+  const [AWSCognitoUser, setAWSCogUserUser] = useState(null)
+  const [newAuthClient, setAuthClient] = useState(null)
   const [newUserToken, setNewUserToken] = useState(null)
   const [index, setIndex] = useState(0)
   const [showNextButton, setShowNextButton] = useState(true)
-  const [canSignUp, setCanSignUp] = useState(false)
+  const [canSignUp, setCanSignUp] = useState(true)
   const [noUserFoundMessage, setNoUserFoundMessage] = useState(null)
   const navigation = useNavigation()
   const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
-  const [checkPhoneInput, {data: userPhoneInfo}] = useLazyQuery(CHECK_PHONE_INPUT, {
-    fetchPolicy: "network-only",
-    onCompleted: (data) => {
-      console.log("canSignIn", data)
-      if (
-        data.checkPhoneInput.isPhoneExist == false &&
-        data.checkPhoneInput.isDeleted == false
-      ) {
-        // TODO: fix logic!!
-        this.slider.goToSlide(index + 1, true);
-        setCanSignUp(true);
-      } else {
-        this.slider.goToSlide(index + 1, true);
-        setCanSignUp(false);
-      }
-    },
-    onError: (err) => {
-      console.log('phone query', err);
-    },
-  });
-  const [createSquash2, {client, data}] = useMutation(ADD_PROFILE2, {
+  //const [createSquash2, {client, data}] = useMutation(ADD_PROFILE2, {
+  const [createSquash2] = useMutation(ADD_PROFILE2, {
     ignoreResults: false,
+    //client: newAuthClient,
     context:  {
               headers: {
-                "authorization": newUserToken ? `Bearer ${newUserToken}` : 'nothin',
+                //"authorization": newUserToken ? `Bearer ${newUserToken}` : 'nothin',
+                //"authorization": newUserToken ? `Bearer ${newUserToken}` : 'nothin',
+                //authorization: newUserToken ? `Bearer ${newUserToken}` : '',
+                authorization: 'sdfalfdajlfas',
               },
     },
     onCompleted: (data) => {
@@ -148,23 +137,11 @@ const Slider =  () => {
   const renderPrev = () => {
     return <PrevButton />;
   };
-  const _submit = ( value ) => {
-    checkPhoneInput({variables: {phoneNumber: values.phoneNumber}});
-  }
-  const [authMessage, setAuthMessage] = useState(null)
-const _checkSignIn = () => {
-  //setAuthMessage('invalid verification code')
-  console.log("canSignUp", canSignUp)
-  canSignUp
-    ? _confirmSignInGC()
-    : userPhoneInfo.checkPhoneInput.isDeleted
-    ? setNoUserFoundMessage(
-        'User was deleted in the past few months, cannot sign up again just yet',
-      )
-    /// user already exixts so he CAN NOT sign up again, but msg is left vague to prevent
-    : setNoUserFoundMessage('invalid code or phone number');
-
-}
+  const [authMessage, setAuthMessage] = useState(null);
+  const _checkSignIn = () => {
+    // TODO: need to disable user in aws and prevent signup as well
+    _confirmSignInGC();
+  };
   const start = user => {
     if (onLogin) {
       onLogin(user);
@@ -172,12 +149,12 @@ const _checkSignIn = () => {
   };
 
 const _confirmSignInGC = () => {
-const userPoolId = process.env.React_App_UserPoolId
-const clientId = process.env.React_App_AWS_Client_Id
+  const userPoolId = process.env.React_App_UserPoolId;
+  const clientId = process.env.React_App_AWS_Client_Id;
   var poolData = {
     UserPoolId: userPoolId, // Your user pool id here
     ClientId: clientId, // Your client id here
-    groupName: 'users_v1',
+    //groupName: 'users_v1',
   };
   var userPool = new CognitoUserPool(poolData);
   var dataEmail = {
@@ -189,12 +166,10 @@ const clientId = process.env.React_App_AWS_Client_Id
     Value: values.phoneNumber,
   };
   var attributeEmail = new CognitoUserAttribute(dataEmail);
-var attributePhoneNumber = new CognitoUserAttribute(
-	dataPhoneNumber
-);
-var attributeList = [];
-attributeList.push(attributeEmail);
-attributeList.push(attributePhoneNumber);
+  var attributePhoneNumber = new CognitoUserAttribute(dataPhoneNumber);
+  var attributeList = [];
+  attributeList.push(attributeEmail);
+  attributeList.push(attributePhoneNumber);
   userPool.signUp(
     values.phoneNumber,
     values.password,
@@ -207,13 +182,12 @@ attributeList.push(attributePhoneNumber);
       }
       var cognitoUser = result.user;
       this.slider.goToSlide(index + 1, true);
-
     },
   );
-}
-  const _awsConfirmOTP = () => {
-const userPoolId = process.env.React_App_UserPoolId
-const clientId = process.env.React_App_AWS_Client_Id
+};
+const _awsConfirmOTP =  () => {
+  const userPoolId = process.env.React_App_UserPoolId;
+  const clientId = process.env.React_App_AWS_Client_Id;
   var poolData = {
     UserPoolId: userPoolId, // Your user pool id here
     ClientId: clientId, // Your client id here
@@ -224,76 +198,107 @@ const clientId = process.env.React_App_AWS_Client_Id
     Pool: userPool,
   };
   var cognitoUser = new CognitoUser(userData);
-  cognitoUser.confirmRegistration(values.confirmationCode, true, function (err, result) {
+  setAWSCogUserUser(cognitoUser);
+  cognitoUser.confirmRegistration(
+    values.confirmationCode,
+    true,
+    function (err, result) {
       if (err) {
         alert(err.message || JSON.stringify(err));
         return;
       }
       console.log('call result: ' + result);
-      authenticateAWS(values.phoneNumber, values.password).then((userDetails) => {
-        userDetails.confirmedUser.getUserAttributes((err, attributes) => {
-          if (err) {
-            console.log('Attribute Error in signup', err);
-            return;
-          } else {
-
-            setNewUserToken(userDetails.session)
-
-            attributes = attributes;
-            const _id = _.find(attributes, {Name: 'sub'}).Value;
-            console.log('user name is ' + cognitoUser.getUsername());
-            setLoadingSignUInRefresh(true);
-            setLoadingSubmit(true);
-            console.log('values before submit', values);
-            registerOnMongoDb(values, _id, createSquash2, userDetails.session)
-              .then(() => {
-                connect(
+      authenticateAWS(values.phoneNumber, values.password).then(
+        (userDetails) => {
+          userDetails.confirmedUser.getUserAttributes( (err, attributes) => {
+            if (err) {
+              console.log('Attribute Error in signup', err);
+              return;
+            } else {
+              setNewUserToken(userDetails.session);
+              attributes = attributes;
+              const _id = _.find(attributes, {Name: 'sub'}).Value;
+              setLoadingSignUInRefresh(true);
+              setLoadingSubmit(true);
+              initializeClient().then((newClient) => {
+                console.log('so we changed the client with token correct?', newClient);
+                registerOnMongoDb(
+                  values,
                   _id,
-                  values.first_name,
-                  dispatch,
-                  sendbird,
-                  start,
-                  setSendbird,
-                );
-                console.log('logged in');
-                setIsUseOnMongoDb(true);
-                setLoadingSubmit(false);
-              })
-              .catch(async (err) => {
-                console.log(err);
-                // this error reallu shoudnt happen
-                setAuthMessage('unable to upload information to the cloud');
-                setLoadingSubmit(false);
-                setLoadingSignUInRefresh(false);
+                  createSquash2,
+                  userDetails.session,
+                  newClient
+                )
+                  .then(() => {
+                    connect(
+                      _id,
+                      values.first_name,
+                      dispatch,
+                      sendbird,
+                      start,
+                      setSendbird,
+                    );
+                    console.log('logged in');
+                    setIsUseOnMongoDb(true);
+                    setLoadingSubmit(false);
+                    setLoadingSignUInRefresh(false);
+                  })
+                  .catch(async (err) => {
+                    console.log(err);
+                    // this error reallu shoudnt happen
+                    setAuthMessage('unable to upload information to the cloud');
+                    setLoadingSignUInRefresh(false);
+                    setLoadingSubmit(false);
+                  });
               });
-          }
-        });
-      });
-    });
-  }
+            }
+          });
+        },
+      );
+    },
+  );
+};
 
   const _onPrev = () => {
     const index = this.slider.state.activeIndex
-    console.log("whyyyyyyyyyyyyy", index)
-    this.slider.goToSlide(index - 2, true)
+    this.slider.goToSlide(index - 1, true)
   };
   const _onNext = () => {
-    const index = this.slider.state.activeIndex
-    console.log(index)
-    const field = _.find(signUpSlides, ['key', index.toString()]).inputLabel
+    const index = this.slider.state.activeIndex;
+    console.log(index);
+    const field = _.find(signUpSlides, ['key', index.toString()]).inputLabel;
     //console.log(signUpSlides)
-    console.log(field)
-    console.log(touched)
+    console.log(field);
+    console.log(touched);
     //setFieldTouched(field)
     if (field == 'image_set') {
-      !errors[field] &&
-        this.slider.goToSlide(index + 1, true);
+      !errors[field] && this.slider.goToSlide(index + 1, true);
     } else {
       !errors[field] &&
-        touched[field] &&
+        //touched[field] &&
         this.slider.goToSlide(index + 1, true);
     }
-
+  };
+  const resendCode = () => {
+    const userPoolId = process.env.React_App_UserPoolId;
+    const clientId = process.env.React_App_AWS_Client_Id;
+    var poolData = {
+      UserPoolId: userPoolId, // Your user pool id here
+      ClientId: clientId, // Your client id here
+    };
+    var userPool = new CognitoUserPool(poolData);
+    var userData = {
+      Username: values.phoneNumber,
+      Pool: userPool,
+    };
+    var cognitoUser = new CognitoUser(userData);
+    cognitoUser.resendConfirmationCode(function (err, result) {
+      if (err) {
+        alert(err.message || JSON.stringify(err));
+        return;
+      }
+      console.log('call result: ' + result);
+    });
   };
   const _onPressCancel = () => {
     navigation.navigate('HELLO');
@@ -367,7 +372,7 @@ const clientId = process.env.React_App_AWS_Client_Id
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
                   <View style={{alignSelf:'center'}}>
-                    <ImageInput isSignUp={true} _submit={_submit} />
+                    <ImageInput isSignUp={true} />
                   </View>
                 </>
               );
@@ -419,6 +424,8 @@ const clientId = process.env.React_App_AWS_Client_Id
                     noUserFoundMessage={noUserFoundMessage}
                     isLastSlide={lastSlide}
                     _confirmSignInGC={_awsConfirmOTP}
+                    resendConfirmation={resendCode}
+                    isSignUp={true}
                   />
                 </>
               )

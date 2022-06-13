@@ -13,13 +13,14 @@ const ConfirmationCode = ({
   isLastSlide,
   _confirmSignInGC,
   noUserFoundMessage = null,
+  resendConfirmation,
+  isSignUp=false
 }) => {
   const {
     values,
     setFieldValue,
     errors,
     touched,
-    handleBlur,
     handleChange,
   } = useFormikContext<ProfileFields>();
   const didMountRef = useRef(false);
@@ -81,6 +82,12 @@ const ConfirmationCode = ({
               onPress={() => _confirmSignInGC(values.confirmationCode)}
               title="Confirm"
             />
+            {isSignUp && (<Button
+              buttonStyle={styles.buttonStyle}
+              titleStyle={styles.buttonText}
+              onPress={() => resendConfirmation()}
+              title="Resend Code"
+            />)}
           </View>
         </View>
       </DismissKeyboard>

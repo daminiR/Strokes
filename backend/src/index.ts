@@ -53,7 +53,6 @@ const startServer = async () => {
       // Try to retrieve a user with the token and verify
       console.log("Token", token)
       if (token) {
-        console.log("did we make it here");
         const payload = await verifier.verify(token)
         user = payload
         return {user}

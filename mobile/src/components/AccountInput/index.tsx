@@ -103,7 +103,7 @@ const confirmDelete = async() => {
            .then(() => {
              // delete from mongodb
              // soft delete for now
-              softDeleteUser({variables: {_id: userData.squash._id}})
+            softDeleteUser({variables: {_id: userData.squash._id}})
              AsyncStorage.clear();
              console.log('user has been deleted');
              EditAccountInputVar({inputType: '', displayInput: false});
