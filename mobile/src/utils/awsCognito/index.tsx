@@ -25,14 +25,15 @@ const clientId = process.env.React_App_AWS_Client_Id
   };
 var userPool = new CognitoUserPool(poolData);
   var userData = {
-    Username: username,
+    //Username: username,
+    preferred_username: username,
     Pool: userPool,
   };
-var cognitoUser = new CognitoUser(userData);
 var cognitoUser = new CognitoUser(userData);
 return await new Promise((resolve, reject) => {
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: function (result) {
+      console.log("i dont think we make it here")
       var accessToken = result.getAccessToken().getJwtToken();
       var idToken = result.getIdToken().getJwtToken();
           cognitoUser.getCachedDeviceKeyAndPassword();
