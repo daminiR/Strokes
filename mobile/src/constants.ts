@@ -189,13 +189,13 @@ export const signUpSlides = [
     inputLabel: 'confirmationCode',
     backgroundColor: '#59b2ab',
   },
-  {
-    key: '10',
-    type: 'Confirmation Code',
-    title: 'Confirmation Code',
-    inputLabel: 'confirmationCode',
-    backgroundColor: '#59b2ab',
-  },
+  //{
+    //key: '10',
+    //type: 'Confirmation Code',
+    //title: 'Confirmation Code',
+    //inputLabel: 'confirmationCode',
+    //backgroundColor: '#59b2ab',
+  //},
 ];
 export const likeIconStyle= {
     type: 'material-community',
