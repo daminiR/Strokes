@@ -15,13 +15,13 @@ import {resolvers as uploads} from './resolvers/uploads'
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { CognitoJwtVerifier } from "aws-jwt-verify"
+//import { CognitoJwtVerifier } from "aws-jwt-verify"
 
-const verifier = CognitoJwtVerifier.create({
-  userPoolId: "us-east-1_idvRudgcB", // Your user pool id here
-  tokenUse: "access",
-  clientId: "5db5ndig7d4dei9eiviv06v59f", // Your client id here
-});
+//const verifier = CognitoJwtVerifier.create({
+  //userPoolId: "us-east-1_idvRudgcB", // Your user pool id here
+  //tokenUse: "access",
+  //clientId: "5db5ndig7d4dei9eiviv06v59f", // Your client id here
+//});
 
 const startServer = async () => {
   const uri = process.env.ATLAS_URI as any

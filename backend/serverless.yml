@@ -15,12 +15,13 @@ package:
     - ./src/activitybook-a598b-782d9db5058e.json
   exclude:
     - ./src/index.ts
+    - ./.yarn/**
 provider:
   name: aws
   runtime: nodejs14.x
   environment:
     ATLAS_URI: ${env:ATLAS_URI}
-#useDotenv: true
+useDotenv: true
 functions:
   graphql:
     timeout: 120
