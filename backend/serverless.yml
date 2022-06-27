@@ -1,5 +1,6 @@
 # serverless.yml
 service: apollo-lambda
+useDotenv: true
 custom:
   apigwBinary:
     types:

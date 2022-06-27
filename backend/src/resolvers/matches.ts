@@ -1,7 +1,6 @@
 import Squash from '../models/Squash';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
-import { AuthenticationError }  from 'apollo-server-express';
 export const resolvers = {
   Query: {
     matchesNotOptim: async (
