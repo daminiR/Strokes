@@ -1,6 +1,5 @@
 import Squash from '../models/Squash';
 import { GraphQLUpload } from 'graphql-upload'
-import { CognitoJwtVerifier } from "aws-jwt-verify"
 import { ObjectId} from 'mongodb'
 import { sanitizeFile } from '../utils/fileNaming'
 import * as path from 'path';
