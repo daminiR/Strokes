@@ -56,7 +56,7 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
       }
     },
     onError: (({graphQLErrors, networkError}) => {
-      console.log("errors here")
+      console.log("errors here2")
       if (networkError){
         console.log(networkError)
       }
@@ -140,8 +140,8 @@ const start = (user) => {
             authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
           ) {
             if (Platform.OS === 'ios') {
-              const token = await messaging().getAPNSToken();
-              sendbird.registerAPNSPushTokenForCurrentUser(token);
+              //const token = await messaging().getAPNSToken();
+              //sendbird.registerAPNSPushTokenForCurrentUser(token);
             } else {
               const token = await messaging().getToken();
               sendbird.registerGCMPushTokenForCurrentUser(token);

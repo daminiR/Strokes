@@ -82,8 +82,8 @@ export type RootStackSignInParamList = {
         authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
       ) {
         if (Platform.OS === 'ios') {
-          const token = await messaging().getAPNSToken();
-          sendbird.registerAPNSPushTokenForCurrentUser(token);
+          //const token = await messaging().getAPNSToken();
+          //sendbird.registerAPNSPushTokenForCurrentUser(token);
         } else {
           const token = await messaging().getToken();
           sendbird.registerGCMPushTokenForCurrentUser(token);

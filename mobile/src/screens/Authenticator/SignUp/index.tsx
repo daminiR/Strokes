@@ -177,6 +177,7 @@ const _confirmSignInGC = () => {
     null,
     (err, result) => {
       if (err) {
+        console.log("in signup")
         alert(err.message || JSON.stringify(err));
         return;
       }

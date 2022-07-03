@@ -33,7 +33,6 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     client,
     sendbird,
   ): Promise<void> => {
-    const savedUserKey = 'savedUser';
     const userPoolId = process.env.React_App_UserPoolId;
     const clientId = process.env.React_App_AWS_Client_Id;
     var poolData = {
