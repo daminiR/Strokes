@@ -7,6 +7,7 @@ import {
   CognitoUserAttribute,
   CognitoUser,
 } from 'amazon-cognito-identity-js';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const authenticateAWS = async (username, password)  => {
   console.log("do we pass the correct info", username, password)
@@ -25,8 +26,8 @@ const clientId = process.env.React_App_AWS_Client_Id
   };
 var userPool = new CognitoUserPool(poolData);
   var userData = {
-    //Username: username,
-    preferred_username: username,
+    Username: username,
+    //preferred_username: username,
     Pool: userPool,
   };
 var cognitoUser = new CognitoUser(userData);
@@ -43,6 +44,7 @@ return await new Promise((resolve, reject) => {
               resolve({session: accessToken, confirmedUser: cognitoUser});
             },
             onFailure: function (err) {
+            console.log("on failure")
               alert(err.message || JSON.stringify(err));
               reject(err);
               return;
@@ -74,6 +76,7 @@ return await new Promise((resolve, reject) => {
       //});
     },
     onFailure: function (err) {
+      console.log("on failure 2:w ")
       alert(err.message || JSON.stringify(err));
       reject(err);
       return;
@@ -82,10 +85,12 @@ return await new Promise((resolve, reject) => {
   })
 }
 const getAWSUser = async () => {
-  var poolData = {
-    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
-    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
-  };
+    const userPoolId = process.env.React_App_UserPoolId;
+    const clientId = process.env.React_App_AWS_Client_Id;
+    var poolData = {
+      UserPoolId: userPoolId, // Your user pool id here
+      ClientId: clientId, // Your client id here
+    };
   var userPool = new CognitoUserPool(poolData);
   var attributes = null as any
   return await new Promise((resolve, reject) => {
