@@ -90,7 +90,6 @@ const clientId = process.env.React_App_AWS_Client_Id
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
               onChangeText={handleChange('password')}
               value={values.password}
-              //keyboardType={'phone-pad'}
             />
           </View>
           {errors.password && touched.password ? (
