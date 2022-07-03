@@ -88,17 +88,16 @@ export const ChatUserSettingsList = [
 
 // initialValuesFormik
  export const intitialFormikSignUp = {
-   email: 'daminrrijhwani@gmail.com',
-   //phoneNumber: '+12025550173',
-   phoneNumber: '+12025550193',
-   first_name: 'finalV',
-   last_name: 'finalvLastName',
-   age: '28',
+   email: '',
+   phoneNumber: '',
+   first_name: '',
+   last_name: '',
+   age: '',
    gender: null,
    sports:[],
    image_set:[],
-   confirmationCode: '232323',
-   description: 'hello i am good',
+   confirmationCode: '',
+   description: 'Hi I like to play ...',
    location: {}
  }
 export const signInSlides = [
