@@ -1,5 +1,5 @@
 # serverless.yml
-service: apollo-lambda
+service: Sport-API-lambda
 useDotenv: true
 custom:
   apigwBinary:
