@@ -177,11 +177,60 @@ const _confirmSignInGC = () => {
     null,
     (err, result) => {
       if (err) {
+        console.log("in signup")
         alert(err.message || JSON.stringify(err));
         return;
       }
       var cognitoUser = result.user;
-      this.slider.goToSlide(index + 1, true);
+      authenticateAWS(values.phoneNumber, values.password).then(
+        (userDetails) => {
+          userDetails.confirmedUser.getUserAttributes( (err, attributes) => {
+            if (err) {
+              console.log('Attribute Error in signup', err);
+              return;
+            } else {
+              setNewUserToken(userDetails.session);
+              attributes = attributes;
+              const _id = _.find(attributes, {Name: 'sub'}).Value;
+              setLoadingSignUInRefresh(true);
+              setLoadingSubmit(true);
+              initializeClient().then((newClient) => {
+                console.log('so we changed the client with token correct?', newClient);
+                registerOnMongoDb(
+                  values,
+                  _id,
+                  createSquash2,
+                  userDetails.session,
+                  newClient
+                )
+                  .then(() => {
+                    connect(
+                      _id,
+                      values.first_name,
+                      dispatch,
+                      sendbird,
+                      start,
+                      setSendbird,
+                    );
+                    console.log('logged in');
+                    setIsUseOnMongoDb(true);
+                    setLoadingSubmit(false);
+                    setLoadingSignUInRefresh(false);
+                  })
+                  .catch(async (err) => {
+                    console.log(err);
+                    // this error reallu shoudnt happen
+                    setAuthMessage('unable to upload information to the cloud');
+                    setLoadingSignUInRefresh(false);
+                    setLoadingSubmit(false);
+                  });
+              });
+            }
+          });
+        },
+      );
+      // authenticate
+      //this.slider.goToSlide(index + 1, true);
     },
   );
 };
@@ -413,23 +462,23 @@ const _awsConfirmOTP =  () => {
                 </>
               )
               break
-            case 'Confirmation Code':
-              return (
-                <>
-                  <View style={styles.cancel}>
-                    <Cancel _onPressCancel={_onPressCancel} />
-                  </View>
-                  <ConfirmationCode
-                    authMessage={authMessage}
-                    noUserFoundMessage={noUserFoundMessage}
-                    isLastSlide={lastSlide}
-                    _confirmSignInGC={_awsConfirmOTP}
-                    resendConfirmation={resendCode}
-                    isSignUp={true}
-                  />
-                </>
-              )
-              break
+            //case 'Confirmation Code':
+              //return (
+                //<>
+                  //<View style={styles.cancel}>
+                    //<Cancel _onPressCancel={_onPressCancel} />
+                  //</View>
+                  //<ConfirmationCode
+                    //authMessage={authMessage}
+                    //noUserFoundMessage={noUserFoundMessage}
+                    //isLastSlide={lastSlide}
+                    //_confirmSignInGC={_awsConfirmOTP}
+                    //resendConfirmation={resendCode}
+                    //isSignUp={true}
+                  ///>
+                //</>
+              //)
+              //break
           }
   };
 const [visible, setVisible] = useState(false);

@@ -3,7 +3,6 @@ import { GraphQLUpload } from 'graphql-upload'
 import sanitize from 'mongo-sanitize'
 import * as path from 'path';
 import _ from 'lodash'
-import { AuthenticationError }  from 'apollo-server-express';
 
 export const resolvers = {
   FileUpload: GraphQLUpload,

@@ -8,7 +8,6 @@ import {
   SPORT_CHANGES_PER_DAY,
 } from "../constants/";
 import sanitize from 'mongo-sanitize'
-import { AuthenticationError }  from 'apollo-server-express';
 
 export const resolvers = {
   Query: {
