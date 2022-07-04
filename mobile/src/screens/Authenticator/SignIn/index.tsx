@@ -205,6 +205,7 @@ const _confirmSignInGC = () => {
     },
     onFailure: function (err) {
       alert(err.message || JSON.stringify(err));
+      setLoadingSignUInRefresh(false);
     },
   });
 };

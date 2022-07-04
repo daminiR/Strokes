@@ -9,8 +9,6 @@ import stream from 'stream'
 const s3 = new AWS.S3({region: 'us-east-1'});
 const uploadStream = ({ Bucket, Key, encoding, mimetype}) => {
   //const s3 = new AWS.S3({region: 'us-east-1'});
-  console.log("contentyoe:",  mimetype)
-  console.log("contentyoe:", encoding)
   const pass = new stream.PassThrough();
   return {
     writeStream: pass,
