@@ -58,6 +58,7 @@ const App = () =>
           else {
             setCurrentUser(null);
           }
+          ///// when and if user is found
           const authLink = setContext((_, {headers}) => {
             return {
               headers: {
@@ -76,6 +77,20 @@ const App = () =>
         .catch((err) => {
           console.log('getAWS Error');
           console.log(err);
+          // if user not found
+          const authLink = setContext((_, {headers}) => {
+            return {
+              headers: {
+                ...headers,
+                authorization: idToken ? `Bearer ${idToken}` : '',
+              },
+            };
+          });
+          var apolloClient = new ApolloClient({
+            link: authLink.concat(uploadLink),
+            cache: cache,
+          });
+          setClient(apolloClient);
           setLoadingApp(false)
         });
     }
