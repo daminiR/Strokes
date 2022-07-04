@@ -90,6 +90,7 @@ const App = () =>
             link: authLink.concat(uploadLink),
             cache: cache,
           });
+          AsyncStorage.clear();
           setClient(apolloClient);
           setLoadingApp(false)
         });
