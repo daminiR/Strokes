@@ -115,6 +115,14 @@ Please take a look at the [contributing guidelines](./CONTRIBUTING.md) for a det
 - `yarn run dev` run locally
 
 
+##  FAQ of problems faced
+
+##
+**Q:** Error with currput images when sending multiple images on signup.
+
+**A:** Ans: check if multipart/form-data is set in binary media types -> needs to be set
+##
+
 
 <table>
   <tr>
