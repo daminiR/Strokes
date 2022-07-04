@@ -29,14 +29,12 @@ import {
   AppContainer,
 } from '@components';
 import {connect} from '../../../utils/SendBird'
-import { setContext } from '@apollo/client/link/context'
-import { registerOnFirebase, registerOnMongoDb, authenticateAWS, initializeClient} from '@utils'
+import {registerOnMongoDb, authenticateAWS, initializeClient} from '@utils'
 import { UserContext} from '@UserContext'
 import {Keyboard, View} from 'react-native'
 import  _ from 'lodash'
 import { styles } from '@styles'
 import  { signUpSchema} from '@validation'
-import {getAWSUser} from '@utils';
 import {RootRefreshContext} from '../../../index.js'
 import {
   CognitoUserPool,

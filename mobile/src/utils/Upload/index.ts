@@ -32,6 +32,9 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     setDisplayInput,
     client,
     sendbird,
+    setLoadingSignUInRefresh,
+    setCurrentUser,
+    setClient
   ): Promise<void> => {
     const userPoolId = process.env.React_App_UserPoolId;
     const clientId = process.env.React_App_AWS_Client_Id;
@@ -46,6 +49,8 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     sendbird.disconnect();
     setDisplayInput(false);
     client.resetStore();
+    setClient(null)
+    setCurrentUser(null)
     console.log('Succesful signout');
   };
 

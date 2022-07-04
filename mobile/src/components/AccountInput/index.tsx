@@ -21,20 +21,29 @@ import _  from 'lodash'
 const AccountDetails = ({signOut}) => {
   const client = useApolloClient();
   const [inputType, setInputType] = useState();
-  const {currentUser, currentUserData, sendbird, userData, userLoading, refetchUserData} = useContext(UserContext)
+  const {currentUser, currentUserData, sendbird, userData, userLoading, refetchUserData, setCurrentUser} = useContext(UserContext)
   const [phoneNumber, setPhoneNumber] = useState(null)
   const [loading, setLoading] = useState(true)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const [displayInput, setDisplayInput] = useState(false)
   const [email, setEmail] = useState(null)
   const {handleReset, setValues, values: formikValues } = useFormikContext<EditFields>();
-  const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
+  const {setLoadingSignUInRefresh, setClient} = useContext(RootRefreshContext)
   const [deleteSquash] = useMutation(DELETE_PROFILE);
   const [softDeleteUser] = useMutation(SOFT_DELETE_PROFILE,{
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
-    onCompleted: () => {
-      _onPressSignOut(setDisplayInput, client, sendbird)
+    onCompleted: async () => {
+        setLoadingSignUInRefresh(true);
+        await _onPressSignOut(
+          setDisplayInput,
+          client,
+          sendbird,
+          setLoadingSignUInRefresh,
+          setCurrentUser,
+          setClient,
+        );
       console.log('Succesful signout, and soft delete');
+          setLoadingSignUInRefresh(false)
     },
   });
   const {data:InputTypeData } = useQuery(GET_ACCOUNT_DETAIL_INPUT_TYPE);
@@ -134,7 +143,8 @@ const confirmDelete = async() => {
         buttonStyle={styles.buttonStyle}
         onPress={async ()  => {
           setLoadingSignUInRefresh(true)
-          await signOut(setDisplayInput, client, sendbird);
+          await signOut(setDisplayInput, client, sendbird, setLoadingSignUInRefresh, setCurrentUser, setClient);
+          console.log("did we make it to signitn outtttttttt")
           setLoadingSignUInRefresh(false)
         }}
       />

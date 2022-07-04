@@ -23,7 +23,7 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [deleted, setDeleted] = useState({isDeleted: false});
   const [imageErrorVisible, setImageErrorVisible] = useState(false)
   const [changeSport, setChangeSport] = useState(true)
-  const [loadingUser, setLoadingUser] = useState(true);
+  const [loadingUser, setLoadingUser] = useState(false);
   const [data, setData] = useState(null);
   const [allUsers, setAllUsers] = useState(null)
   const [offlineMatches, setOfflineMatches] = useState(null)
@@ -31,7 +31,7 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [sb, setSb] = useState(sendbird)
   const [loadAllResults, setLoadAllResults] = useState(true)
   const [initialValuesFormik, setInitialValuesFormik] = useState({});
-  const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
+  const {loadingSignUpInRefresh, setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const didMountRef = useRef(false)
   const [queryProssibleMatches, { loading: loadingMatches, data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
@@ -49,7 +49,9 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
     fetchPolicy: "network-only",
     onCompleted: async (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
+      setLoadingUser(false);
       if (data?.squash) {
+        console.log("did we make it here", data)
         setDeleted(data.squash.deleted)
         setProfileState(true);
         setData(data);
@@ -111,13 +113,15 @@ const start = (user) => {
   }
 };
   useEffect(() => {
-    setLoadingUser(true);
-    setLoadingUser(false);
+    //setLoadingUser(true);
+    //setLoadingUser(false);
+    console.log("what is current user", currentUser)
     if (currentUser) {
+      setLoadingUser(true);
       getSquashProfile({variables: {id: currentUser.sub}});
-      setLoadingUser(false);
+      //setLoadingUser(false);
     }
-  }, []);
+  }, [loadingSignUpInRefresh, currentUser]);
 
   useEffect(() => {
     deleted && deleted.isDeleted &&
@@ -163,6 +167,7 @@ const start = (user) => {
     data: data,
     userLoading: userLoading,
     currentUser: currentUser,
+    setCurrentUser: setCurrentUser,
     isProfileComplete: isProfileComplete,
     setProfileState: setProfileState,
     potentialMatches: allUsers,
@@ -182,7 +187,7 @@ const start = (user) => {
     onLogin: login,
   };
   const render2 = () =>{
-    if (userData?.squash) {
+    if (userData?.squash && currentUser) {
       // found user squash data
       if (!deleted || !deleted?.isDeleted) {
         // user is not a soft deleted user
@@ -195,7 +200,7 @@ const start = (user) => {
 
   const renderRoot = () => {
     return (
-      <AppContainer loading={loadingSigning || loadingUser || loadingMatches}>
+      <AppContainer loading={loadingSigning || loadingUser || loadingMatches || userLoading}>
         <UserContext.Provider value={value}>
           {initialValuesFormik && (
             <Formik
