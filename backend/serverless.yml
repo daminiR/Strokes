@@ -1,5 +1,6 @@
 # serverless.yml
-service: apollo-lambda
+service: Sport-API-lambda
+useDotenv: true
 custom:
   apigwBinary:
     types:
@@ -23,6 +24,8 @@ provider:
     ATLAS_URI: ${env:ATLAS_URI}
 useDotenv: true
 functions:
+  confirmSignUp:
+    handler: ./src/confirmSignUp.handler
   graphql:
     timeout: 120
     # this is formatted as <FILENAME>.<HANDLER>

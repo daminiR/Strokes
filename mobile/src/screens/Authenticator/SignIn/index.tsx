@@ -156,27 +156,6 @@ const _confirmSignInGC = () => {
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: function (result) {
       var accessToken = result.getAccessToken().getJwtToken();
-      //POTENTIAL: Region needs to be set if not already set previously elsewhere.
-      AWS.config.region = 'us-east-1';
-      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
-        Logins: {
-          // Change the key below according to the specific region your user pool is in.
-          'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': result
-            .getIdToken()
-            .getJwtToken(),
-        },
-      });
-      //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
-      AWS.config.credentials.refresh((error) => {
-        if (error) {
-          console.error(error);
-          setLoadingSignUInRefresh(false);
-        } else {
-          // Instantiate aws sdk service objects now that the credentials have been updated.
-          // example: var s3 = new AWS.S3();
-          console.log('Successfully logged!');
-          // on success remember device
           cognitoUser.getCachedDeviceKeyAndPassword();
           cognitoUser.setDeviceStatusRemembered({
             onSuccess: function (result) {
@@ -188,8 +167,40 @@ const _confirmSignInGC = () => {
               setLoadingSignUInRefresh(false);
             },
           });
-        }
-      });
+      //POTENTIAL: Region needs to be set if not already set previously elsewhere.
+      //AWS.config.region = 'us-east-1';
+      //AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        //IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
+        //Logins: {
+          //// Change the key below according to the specific region your user pool is in.
+          //'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': result
+            //.getIdToken()
+            //.getJwtToken(),
+        //},
+      //});
+      //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
+      //AWS.config.credentials.refresh((error) => {
+        //if (error) {
+          //console.error(error);
+          //setLoadingSignUInRefresh(false);
+        //} else {
+          //// Instantiate aws sdk service objects now that the credentials have been updated.
+          //// example: var s3 = new AWS.S3();
+          //console.log('Successfully logged!');
+          //// on success remember device
+          //cognitoUser.getCachedDeviceKeyAndPassword();
+          //cognitoUser.setDeviceStatusRemembered({
+            //onSuccess: function (result) {
+              //console.log('call result: ' + result);
+              //setLoadingSignUInRefresh(false);
+            //},
+            //onFailure: function (err) {
+              //alert(err.message || JSON.stringify(err));
+              //setLoadingSignUInRefresh(false);
+            //},
+          //});
+        //}
+      //});
       //setLoadingSignUInRefresh(false);
     },
     onFailure: function (err) {

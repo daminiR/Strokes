@@ -1,7 +1,6 @@
-import React, {useReducer, useContext, createContext, useRef, useEffect, useState} from "react";
+import React from "react";
 import * as AWS from 'aws-sdk/global';
 import _ from 'lodash'
-import { Platform } from 'react-native';
 import {
   AuthenticationDetails,
   CognitoUserPool,
@@ -28,37 +27,16 @@ const clientId = process.env.React_App_AWS_Client_Id
 var userPool = new CognitoUserPool(poolData);
   var userData = {
     Username: username,
+    //preferred_username: username,
     Pool: userPool,
   };
-var cognitoUser = new CognitoUser(userData);
 var cognitoUser = new CognitoUser(userData);
 return await new Promise((resolve, reject) => {
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: function (result) {
+      console.log("i dont think we make it here")
       var accessToken = result.getAccessToken().getJwtToken();
       var idToken = result.getIdToken().getJwtToken();
-      //POTENTIAL: Region needs to be set if not already set previously elsewhere.
-      AWS.config.region = 'us-east-1';
-      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
-        Logins: {
-          // Change the key below according to the specific region your user pool is in.
-          'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': result
-            .getIdToken()
-            .getJwtToken(),
-        },
-      });
-      //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
-      AWS.config.credentials.refresh((error) => {
-        if (error) {
-          console.error(error);
-          reject(error);
-          return;
-        } else {
-          // Instantiate aws sdk service objects now that the credentials have been updated.
-          // example: var s3 = new AWS.S3();
-          console.log('Successfully logged!');
-          // on success remember device
           cognitoUser.getCachedDeviceKeyAndPassword();
           cognitoUser.setDeviceStatusRemembered({
             onSuccess: function (result) {
@@ -66,15 +44,39 @@ return await new Promise((resolve, reject) => {
               resolve({session: accessToken, confirmedUser: cognitoUser});
             },
             onFailure: function (err) {
+            console.log("on failure")
               alert(err.message || JSON.stringify(err));
               reject(err);
               return;
             },
           });
-        }
-      });
+      ////POTENTIAL: Region needs to be set if not already set previously elsewhere.
+      //AWS.config.region = 'us-east-1';
+      //AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        //IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
+        //Logins: {
+          //// Change the key below according to the specific region your user pool is in.
+          //'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': result
+            //.getIdToken()
+            //.getJwtToken(),
+        //},
+      //});
+      ////refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
+      //AWS.config.credentials.refresh((error) => {
+        //if (error) {
+          //console.error(error);
+          //reject(error);
+          //return;
+        //} else {
+          //// Instantiate aws sdk service objects now that the credentials have been updated.
+          //// example: var s3 = new AWS.S3();
+          //console.log('Successfully logged!');
+          //// on success remember device
+        //}
+      //});
     },
     onFailure: function (err) {
+      console.log("on failure 2:w ")
       alert(err.message || JSON.stringify(err));
       reject(err);
       return;
@@ -83,10 +85,12 @@ return await new Promise((resolve, reject) => {
   })
 }
 const getAWSUser = async () => {
-  var poolData = {
-    UserPoolId: 'us-east-1_idvRudgcB', // Your user pool id here
-    ClientId: '5db5ndig7d4dei9eiviv06v59f', // Your client id here
-  };
+    const userPoolId = process.env.React_App_UserPoolId;
+    const clientId = process.env.React_App_AWS_Client_Id;
+    var poolData = {
+      UserPoolId: userPoolId, // Your user pool id here
+      ClientId: clientId, // Your client id here
+    };
   var userPool = new CognitoUserPool(poolData);
   var attributes = null as any
   return await new Promise((resolve, reject) => {
@@ -126,14 +130,14 @@ const getAWSUser = async () => {
               resolve({session: session, attributes: awsUser});
             }
           });
-          AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-            IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
-            Logins: {
-              // Change the key below according to the specific region your user pool is in.
-              'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': session
-                .getIdToken()
-                .getJwtToken(),
-            }, }); // get user profile Instantiate aws sdk service objects now that the credentials have been updated.  example: var s3 = new AWS.S3(); return;
+          //AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            //IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
+            //Logins: {
+              //// Change the key below according to the specific region your user pool is in.
+              //'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': session
+                //.getIdToken()
+                //.getJwtToken(),
+            //}, }); // get user profile Instantiate aws sdk service objects now that the credentials have been updated.  example: var s3 = new AWS.S3(); return;
         });
       } else if (cognitoUser == null) {
         // no user loaded from local storage
