@@ -103,6 +103,7 @@ const getAWSUser = async () => {
       var cognitoUser = userPool.getCurrentUser();
       // Continue with steps in Use case 16
       if (cognitoUser != null) {
+        // TODO: signout when user tolen saved but can't be found on device -> dispaly white screen
         //cognitoUser.signOut();
         //AsyncStorage.clear();
         //console.log('Succesful signout');

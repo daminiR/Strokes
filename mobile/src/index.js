@@ -26,8 +26,10 @@ const App = () =>
   const [persistor, setPersistor] = useState();
   const [currentUser, setCurrentUser] = useState(null);
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
+  const [loadingApp, setLoadingApp ] = useState(false)
   const uri_upload = process.env.React_App_UriUploadRemote
   useEffect(() => {
+    setLoadingApp(true)
     LogBox.ignoreLogs(['Warning: ...']);
     LogBox.ignoreAllLogs();
     async function init() {
@@ -53,6 +55,9 @@ const App = () =>
             idToken = args.session.getIdToken().getJwtToken();
             setCurrentUser(args.attributes);
           }
+          else {
+            setCurrentUser(null);
+          }
           const authLink = setContext((_, {headers}) => {
             return {
               headers: {
@@ -66,32 +71,34 @@ const App = () =>
             cache: cache,
           });
           setClient(apolloClient);
+          setLoadingApp(false)
         })
         .catch((err) => {
           console.log('getAWS Error');
           console.log(err);
+          setLoadingApp(false)
         });
     }
     init();
   }, [loadingSignUpInRefresh]);
+
   const rootRefreshValues = {
     setLoadingSignUInRefresh: setLoadingSignUInRefresh,
+    setClient: setClient
   }
   const renderAuth = () => {
     return (
-      <AppContainer loading={loadingSignUpInRefresh}>
+      <AppContainer loading={loadingSignUpInRefresh || loadingApp}>
         <RootRefreshContext.Provider value={rootRefreshValues}>
-          <AuthNavigator sendbird={sendbird} currentUser={currentUser}/>
+            <AuthNavigator sendbird={sendbird} currentUser={currentUser}/>
         </RootRefreshContext.Provider>
       </AppContainer>
     );
   };
     if (!client) {
-    console.log(' still no clinet');
     return <Text>Initializing app...</Text>;
     }
     if (client) {
-      console.log('clinet found');
       return (
           <ApolloProvider client={client}>
             <FormProvider>{renderAuth()}</FormProvider>
