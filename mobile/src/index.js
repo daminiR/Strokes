@@ -32,8 +32,8 @@ const App = () =>
     setLoadingApp(true)
     LogBox.ignoreLogs(['Warning: ...']);
     LogBox.ignoreAllLogs();
+    console.log(uri_upload)
     async function init() {
-      console.log('getting fired up');
       let newPersistor = new CachePersistor({
         cache,
         storage: new AsyncStorageWrapper(AsyncStorage),
@@ -75,7 +75,6 @@ const App = () =>
           setLoadingApp(false)
         })
         .catch((err) => {
-          console.log('getAWS Error');
           console.log(err);
           // if user not found
           const authLink = setContext((_, {headers}) => {
