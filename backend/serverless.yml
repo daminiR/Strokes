@@ -22,7 +22,6 @@ provider:
   runtime: nodejs14.x
   environment:
     ATLAS_URI: ${env:ATLAS_URI}
-useDotenv: true
 functions:
   confirmSignUp:
     handler: ./src/confirmSignUp.handler

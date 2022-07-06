@@ -20,10 +20,13 @@ const uploadStream = ({ Bucket, Key, encoding, mimetype}) => {
           Body: pass,
           ContentType: mimetype,
           ContentEncoding: encoding,
-          //ContentEncoding: 'base64',
+        },
+        {
+          partSize: 10 * 1024 * 1024,
+          queueSize: 5,
         }
       )
-      .promise()
+      .promise(),
   };
 }
 
@@ -51,6 +54,7 @@ const createAWSUpload = (image_set, _id) => {
               filePath: "",
             };
             const { writeStream, promise } = uploadStream({
+            //const { writeStream, promise } = multipPartUploadStream({
               Bucket: "sport-aws-images",
               Key: fileLocation,
               encoding: encoding,
