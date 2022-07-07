@@ -41,8 +41,8 @@ const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValue
   const {queryProssibleMatches, currentUser, setData, refetchUserData, userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
-    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
-    awaitRefetchQueries: true,
+    //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
+    //awaitRefetchQueries: true,
     onCompleted: (data) => {
       // wow this was the missing peace, reset needed to be here for cancel and done to work properly with reintialization
       if (data?.updateUserProfile){
@@ -51,13 +51,14 @@ const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValue
                                   )
         setFieldValue('image_set', new_image_set);
       }
-      handleSubmit();
-      setIsVisible(false);
-      setFormikChanged(false)
+      //handleSubmit();
       //TODO: manual addition
-      setFieldValue('remove_uploaded_images', []);
-      setFieldValue('add_local_images', []);
+      //setFieldValue('remove_uploaded_images', []);
+      //setFieldValue('add_local_images', []);
+      _onPressCancelProfile()
       setLoadingUserUpload(false)
+      setFormikChanged(false)
+      setIsVisible(false);
     },
     onError: (err) => {
       setLoadingUserUpload(false)
@@ -134,6 +135,9 @@ const _onPressDoneProfile = () => {
         cityVar(formikValues.location.city)
         isCityChangedVar(true)
       }
+    }
+    else{
+      _onPressCancelProfile()
     }
     //setIsVisible(false);
     setFormikChanged(false)
@@ -298,6 +302,7 @@ const Profile = (): ReactElement => {
   const [loadingUserUpload, setLoadingUserUpload] = useState(false);
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   useEffect(() => {
+    console.log("this should be run every time done", userData)
     setLoadingFormikValues(true);
     const userDetails = userData.squash.phoneNumber
     if (userDetails) {
@@ -311,8 +316,8 @@ const Profile = (): ReactElement => {
   }, [userData]);
   return (
     <>
-      <AppContainer loading={loadingUserUpload}>
-      {!userLoading && !loadingFormikValues && (
+      <AppContainer loading={loadingUserUpload || userLoading }>
+      { initialValuesFormik && !userLoading && !loadingFormikValues && (
         <Formik
           //enableReinitialize={true}
           validationSchema={profileEditSchema}
