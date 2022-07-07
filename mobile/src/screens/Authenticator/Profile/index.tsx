@@ -27,7 +27,7 @@ type ProfileT = {
   navigation: ProfileScreenNavigationProp
   route: ProfileScreenRouteProp
 }
-const EditProfile = () => {
+const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValuesFormik}) => {
   const [isVisible, setIsVisible] = useState(false);
   const {
     setValues: setFilterVals,
@@ -36,7 +36,6 @@ const EditProfile = () => {
   } = useFormikContext<FilterFields>();
   const [inputType, setInputType] = useState();
   const {setFieldValue, touched, initialValues: formikInitialValues, setValues, values: formikValues,resetForm, handleReset, errors: validationErrors, handleSubmit} = useFormikContext<EditFields>();
-  const [loadingUserUpload, setLoadingUserUpload] = useState(false);
   const [tempInputValues, setTempInputValues] = useState(null);
   const [cityChanged, setCityChanged] = useState(false);
   const {queryProssibleMatches, currentUser, setData, refetchUserData, userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport} = useContext(UserContext)
@@ -46,14 +45,16 @@ const EditProfile = () => {
     awaitRefetchQueries: true,
     onCompleted: (data) => {
       // wow this was the missing peace, reset needed to be here for cancel and done to work properly with reintialization
-      setLoadingUserUpload(false)
+      //setLoadingUserUpload(false)
       if (data?.updateUserProfile){
         const new_image_set =_.map(data.updateUserProfile.image_set, (imgObj) => {
           return _.omit(imgObj, '__typename')}
                                   )
         setFieldValue('image_set', new_image_set);
       }
-      handleSubmit();
+      //handleSubmit();
+      setIsVisible(false);
+      setFormikChanged(false)
     },
     onError: (err) => {
       setLoadingUserUpload(false)
@@ -62,30 +63,65 @@ const EditProfile = () => {
   });
   const [displayInput, setDisplayInput] = useState(false);
   const [formikChanged, setFormikChanged] = useState(false);
-  const didMountRef = useRef(false)
+  const compareQueryFormik = (a, b) =>
+    {
+  const keys = [
+  'email',
+  'phoneNumber',
+  'first_name',
+  'last_name',
+  'age',
+  'gender',
+  'location',
+  'sports',
+  'description'
+    ]
+    console.log("compare quer", a.image_set)
+    console.log("compare residual", b.add_local_images)
+    console.log("compare add local", b.add_local_images)
+    console.log("compare residual", b.remove_uploaded_images)
+const noChange =  _.isMatch( // check deep equality
+  a, // get properties from a
+  _.pick(b, keys), // get properties from b
+)
+
+
+return noChange && _.isEmpty(b.add_local_images) &&_.isEmpty(b.remove_uploaded_images)
+
+  }
+
+  //const compareQueryFormik = (queryData, formikData) => {
+    //console.log("query compare Data", queryData)
+    //console.log("formik compare Data", formikData)
+  //}
   useEffect(() => {
     if( InputTypeData.inputItems.displayInput == true){
     setInputType(InputTypeData.inputItems.inputType)
     setDisplayInput(InputTypeData.inputItems.displayInput)
     }
     }, [InputTypeData])
-  useEffect(() => {
-    if (didMountRef.current){
-      setFormikChanged(true)
-    }
-    else {
-      didMountRef.current = true
-    }
-    }, [formikValues])
+  //useEffect(() => {
+    //const val = compareQueryFormik(userData.squash, initialValuesFormik)
+    //if (val){
+      //setFormikChanged(false)
+    //}
+    //else {
+      //setFormikChanged(true)
+    //}
+    //}, [formikValues])
 
 const _onPressDoneProfile = () => {
   // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
-    if (formikChanged) {
+    console.log("make sure formik not chnaged", formikChanged)
+    console.log("compare vale")
+    const val = compareQueryFormik(userData.squash, formikValues)
+    console.log("compare vale", val)
+    if (!val) {
       const RNLocalFiles = convertImagesToFormat(formikValues.add_local_images, currentUser.sub)
       ///// debug images
       console.log("formik remove", formikValues.remove_uploaded_images)
       console.log("formik add", formikValues.add_local_images)
-      setLoadingUserUpload(true)
+      //setLoadingUserUpload(true)
       updateUserProfile({
         variables: {
           _id: currentUser.sub,
@@ -101,25 +137,36 @@ const _onPressDoneProfile = () => {
           description: formikValues.description,
         },
       });
-      setLoadingUserUpload(false)
+      //setLoadingUserUpload(false)
       if (cityVar() != formikValues.location.city){
         cityVar(formikValues.location.city)
         isCityChangedVar(true)
       }
       //// as soon as done new data needs to be grabbed and replaced
+      //setFieldValue('remove_uploaded_images', []);
+      //setFieldValue('add_local_images', []);
+            //const userDetails = userData.squash.phoneNumber;
+            //const initialValues2 = createInitialValuesFormik(
+              //userData,
+              //userDetails.phoneNumber,
+            //);
+            //setInitialValuesFormik(initialValues2);
+            //resetForm({values: {...initialValues2}})
+
     }
-    setIsVisible(false);
+    //setIsVisible(false);
     setFormikChanged(false)
 }
 const _onPressCancelProfile = () => {
     //handleReset()
+    setFormikChanged(false)
     const initialValues2 = createInitialValuesFormik(
       userData,
-      userData.phoneNumber,
+      userData.squash.phoneNumber,
     );
-    //setInitialValuesFormik(initialValues2);
+    console.log("check initial values to make sure images are not set!", initialValues2)
+    handleReset()
     resetForm({values: {...initialValues2}})
-    setFormikChanged(false)
     setIsVisible(false);
 }
   const [field, meta, helpers] = useField('age');
@@ -210,7 +257,6 @@ const doneCancelValues = {
     }, [inputType])
     return (
       <>
-      <AppContainer loading={loadingUserUpload}>
         <ProfileSettings
           _editUserInfo={_editDisplay2}
           signOut={_onPressSignOut}
@@ -262,13 +308,13 @@ const doneCancelValues = {
             </View>
           </Modal>
         </Modal>
-      </AppContainer>
       </>
     );
 }
 const Profile = (): ReactElement => {
   const [loadingFormikValues, setLoadingFormikValues] = useState(true)
   const {data, userData, userLoading, currentUser} = useContext(UserContext)
+  const [loadingUserUpload, setLoadingUserUpload] = useState(false);
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   useEffect(() => {
     setLoadingFormikValues(true);
@@ -284,6 +330,7 @@ const Profile = (): ReactElement => {
   }, [userData]);
   return (
     <>
+      <AppContainer loading={loadingUserUpload}>
       {!userLoading && !loadingFormikValues && (
         <Formik
           //enableReinitialize={true}
@@ -298,9 +345,10 @@ const Profile = (): ReactElement => {
             setInitialValuesFormik(initialValues2);
             resetForm({values: {...initialValues2}})
           }}>
-          <View>{!loadingFormikValues && <EditProfile/>}</View>
+          <View>{!loadingFormikValues && <EditProfile setLoadingUserUpload={setLoadingUserUpload} setInitialValuesFormik={setInitialValuesFormik} initialValuesFormik={initialValuesFormik}/>}</View>
         </Formik>
       )}
+      </AppContainer>
     </>
   );
 }
