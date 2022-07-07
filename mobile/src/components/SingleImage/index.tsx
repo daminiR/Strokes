@@ -18,6 +18,7 @@ const SingleImage = ({img_idx}) => {
   const {setImageErrorVisible} = useContext(UserContext)
 
   useEffect(() => {
+    console.log("display, displayImage", formikValues.image_set)
     const display = formikValues.image_set?.find(imgObj => imgObj.img_idx == img_idx)
     setDisplayObj(display)
     setDisplayImage(display?.imageURL);
@@ -28,7 +29,7 @@ const SingleImage = ({img_idx}) => {
       } else {
         // localimage is gettign set => add to uplaod images formik
         setDisplayImage(Image.assets[0].uri);
-        console.log("what are the images in uri")
+        console.log("what are the images in uriiiiiiiiiiiiiiiii")
         const imageObj = [
           {
             imageURL: Image.assets[0].uri,
@@ -63,6 +64,8 @@ const SingleImage = ({img_idx}) => {
           (imgObj) => imgObj.img_idx != img_idx,
         );
         setFieldValue('image_set', new_values);
+        // two senarios if starts wth https or right when someone loads file update profile with https images and not local
+        // breaks with case when image uploaded and imeditaely removes(doesnt delete old image"
         if (displayImage.startsWith('https')) {
           const remove_uploaded_images = formikValues.remove_uploaded_images;
           if (remove_uploaded_images != null) {
