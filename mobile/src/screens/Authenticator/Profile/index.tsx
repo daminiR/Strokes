@@ -45,7 +45,6 @@ const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValue
     awaitRefetchQueries: true,
     onCompleted: (data) => {
       // wow this was the missing peace, reset needed to be here for cancel and done to work properly with reintialization
-      //setLoadingUserUpload(false)
       if (data?.updateUserProfile){
         const new_image_set =_.map(data.updateUserProfile.image_set, (imgObj) => {
           return _.omit(imgObj, '__typename')}
@@ -58,6 +57,7 @@ const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValue
       //TODO: manual addition
       setFieldValue('remove_uploaded_images', []);
       setFieldValue('add_local_images', []);
+      setLoadingUserUpload(false)
     },
     onError: (err) => {
       setLoadingUserUpload(false)
@@ -113,7 +113,7 @@ const _onPressDoneProfile = () => {
       ///// debug images
       console.log("formik remove", formikValues.remove_uploaded_images)
       console.log("formik add", formikValues.add_local_images)
-      //setLoadingUserUpload(true)
+      setLoadingUserUpload(true)
       updateUserProfile({
         variables: {
           _id: currentUser.sub,
@@ -134,15 +134,6 @@ const _onPressDoneProfile = () => {
         cityVar(formikValues.location.city)
         isCityChangedVar(true)
       }
-      //// as soon as done new data needs to be grabbed and replaced
-            //const userDetails = userData.squash.phoneNumber;
-            //const initialValues2 = createInitialValuesFormik(
-              //userData,
-              //userDetails.phoneNumber,
-            //);
-            //setInitialValuesFormik(initialValues2);
-            //resetForm({values: {...initialValues2}})
-
     }
     //setIsVisible(false);
     setFormikChanged(false)
