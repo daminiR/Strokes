@@ -51,7 +51,6 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
       //TODO: if data doesnt exists input is incorrect => add checks
       setLoadingUser(false);
       if (data?.squash) {
-        console.log("did we make it here", data)
         setDeleted(data.squash.deleted)
         setProfileState(true);
         setData(data);
@@ -122,6 +121,9 @@ const start = (user) => {
       //setLoadingUser(false);
     }
   }, [loadingSignUpInRefresh, currentUser]);
+  useEffect(() => {
+        console.log("did a refetch occur", userData)
+  }, [userData]);
 
   useEffect(() => {
     deleted && deleted.isDeleted &&

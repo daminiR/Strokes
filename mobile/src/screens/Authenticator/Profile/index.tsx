@@ -9,8 +9,8 @@ import {Overlay, Text} from 'react-native-elements'
 import { useFormikContext, Formik, useField} from 'formik';
 import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
 import {GET_INPUT_TYPE, READ_SQUASH, UPDATE_USER_PROFILE} from '@graphQL2'
-import {ProfileSettings, EditInput, Done, Cancel} from '@components'
-import { EditFields, FilterFields} from '@localModels'
+import {ProfileSettings, EditInput, Done, Cancel, AppContainer} from '@components'
+import { EditFields, FilterFields, ImageSetT} from '@localModels'
 import { isCityChangedVar, cityVar, EditInputVar} from '@cache'
 import {convertImagesToFormat, createInitialValuesFormik, _onPressSignOut, deleteUser} from '@utils'
 import {DoneCancelContext} from '@Contexts'
@@ -32,21 +32,33 @@ const EditProfile = () => {
   const {
     setValues: setFilterVals,
     values: filterValues,
-    setFieldValue,
+    //setFieldValue,
   } = useFormikContext<FilterFields>();
   const [inputType, setInputType] = useState();
-  const {touched, initialValues: formikInitialValues, setValues, values: formikValues,handleReset, errors: validationErrors, handleSubmit} = useFormikContext<EditFields>();
+  const {setFieldValue, touched, initialValues: formikInitialValues, setValues, values: formikValues,resetForm, handleReset, errors: validationErrors, handleSubmit} = useFormikContext<EditFields>();
+  const [loadingUserUpload, setLoadingUserUpload] = useState(false);
   const [tempInputValues, setTempInputValues] = useState(null);
   const [cityChanged, setCityChanged] = useState(false);
-  const {queryProssibleMatches, currentUser, setData, refetchUserData, data:userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport} = useContext(UserContext)
+  const {queryProssibleMatches, currentUser, setData, refetchUserData, userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
     refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
     awaitRefetchQueries: true,
-    onCompleted: () => {
+    onCompleted: (data) => {
       // wow this was the missing peace, reset needed to be here for cancel and done to work properly with reintialization
+      setLoadingUserUpload(false)
+      if (data?.updateUserProfile){
+        const new_image_set =_.map(data.updateUserProfile.image_set, (imgObj) => {
+          return _.omit(imgObj, '__typename')}
+                                  )
+        setFieldValue('image_set', new_image_set);
+      }
       handleSubmit();
     },
+    onError: (err) => {
+      setLoadingUserUpload(false)
+      console.log("onErroe", err)
+    }
   });
   const [displayInput, setDisplayInput] = useState(false);
   const [formikChanged, setFormikChanged] = useState(false);
@@ -73,6 +85,7 @@ const _onPressDoneProfile = () => {
       ///// debug images
       console.log("formik remove", formikValues.remove_uploaded_images)
       console.log("formik add", formikValues.add_local_images)
+      setLoadingUserUpload(true)
       updateUserProfile({
         variables: {
           _id: currentUser.sub,
@@ -88,6 +101,7 @@ const _onPressDoneProfile = () => {
           description: formikValues.description,
         },
       });
+      setLoadingUserUpload(false)
       if (cityVar() != formikValues.location.city){
         cityVar(formikValues.location.city)
         isCityChangedVar(true)
@@ -98,7 +112,13 @@ const _onPressDoneProfile = () => {
     setFormikChanged(false)
 }
 const _onPressCancelProfile = () => {
-    handleReset()
+    //handleReset()
+    const initialValues2 = createInitialValuesFormik(
+      userData,
+      userData.phoneNumber,
+    );
+    //setInitialValuesFormik(initialValues2);
+    resetForm({values: {...initialValues2}})
     setFormikChanged(false)
     setIsVisible(false);
 }
@@ -123,7 +143,6 @@ const _onPressCancelProfile = () => {
         break;
       case 'Neighborhood Input':
         if (_.isEmpty(validationErrors.age) && touched.location) {
-          console.log("fromik values locatio", formikValues.location)
           setFieldValue('location', formikValues.location);
           EditInputVar({inputType: '', displayInput: false}) &&
           setDisplayInput(false);
@@ -191,6 +210,7 @@ const doneCancelValues = {
     }, [inputType])
     return (
       <>
+      <AppContainer loading={loadingUserUpload}>
         <ProfileSettings
           _editUserInfo={_editDisplay2}
           signOut={_onPressSignOut}
@@ -242,6 +262,7 @@ const doneCancelValues = {
             </View>
           </Modal>
         </Modal>
+      </AppContainer>
       </>
     );
 }
