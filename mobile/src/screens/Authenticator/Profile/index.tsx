@@ -52,9 +52,12 @@ const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValue
                                   )
         setFieldValue('image_set', new_image_set);
       }
-      //handleSubmit();
+      handleSubmit();
       setIsVisible(false);
       setFormikChanged(false)
+      //TODO: manual addition
+      setFieldValue('remove_uploaded_images', []);
+      setFieldValue('add_local_images', []);
     },
     onError: (err) => {
       setLoadingUserUpload(false)
@@ -65,50 +68,39 @@ const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValue
   const [formikChanged, setFormikChanged] = useState(false);
   const compareQueryFormik = (a, b) =>
     {
-  const keys = [
-  'email',
-  'phoneNumber',
-  'first_name',
-  'last_name',
-  'age',
-  'gender',
-  'location',
-  'sports',
-  'description'
-    ]
-    console.log("compare quer", a.image_set)
-    console.log("compare residual", b.add_local_images)
-    console.log("compare add local", b.add_local_images)
-    console.log("compare residual", b.remove_uploaded_images)
-const noChange =  _.isMatch( // check deep equality
-  a, // get properties from a
-  _.pick(b, keys), // get properties from b
-)
+      const keys = [
+        'email',
+        'first_name',
+        'last_name',
+        'age',
+        'gender',
+        'location',
+        'sports',
+        'description',
+      ];
+      console.log('compare quer', a.image_set);
+      console.log('compare residual', b.add_local_images);
+      console.log('compare add local', b.add_local_images);
+      console.log('compare residual', b.remove_uploaded_images);
+      const noChange = _.isMatch(
+        // check deep equality
+        a, // get properties from a
+        _.pick(b, keys), // get properties from b
+      );
 
+      return (
+        noChange &&
+        _.isEmpty(b.add_local_images) &&
+        _.isEmpty(b.remove_uploaded_images)
+      );
+    }
 
-return noChange && _.isEmpty(b.add_local_images) &&_.isEmpty(b.remove_uploaded_images)
-
-  }
-
-  //const compareQueryFormik = (queryData, formikData) => {
-    //console.log("query compare Data", queryData)
-    //console.log("formik compare Data", formikData)
-  //}
   useEffect(() => {
     if( InputTypeData.inputItems.displayInput == true){
     setInputType(InputTypeData.inputItems.inputType)
     setDisplayInput(InputTypeData.inputItems.displayInput)
     }
     }, [InputTypeData])
-  //useEffect(() => {
-    //const val = compareQueryFormik(userData.squash, initialValuesFormik)
-    //if (val){
-      //setFormikChanged(false)
-    //}
-    //else {
-      //setFormikChanged(true)
-    //}
-    //}, [formikValues])
 
 const _onPressDoneProfile = () => {
   // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
@@ -143,8 +135,6 @@ const _onPressDoneProfile = () => {
         isCityChangedVar(true)
       }
       //// as soon as done new data needs to be grabbed and replaced
-      //setFieldValue('remove_uploaded_images', []);
-      //setFieldValue('add_local_images', []);
             //const userDetails = userData.squash.phoneNumber;
             //const initialValues2 = createInitialValuesFormik(
               //userData,
