@@ -7,6 +7,7 @@ custom:
       - image/jpeg
       - image/jpg
       - image/png
+      - multipart/form-data
 plugins:
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
