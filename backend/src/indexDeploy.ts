@@ -84,6 +84,6 @@ const startServer = async () => {
       return app;
     },
   });
-  console.log(`🚀 Server ready at aws only ts`)
+  console.log(`🚀 Server ready at aws only ts new changes to  test`)
 };
 startServer();

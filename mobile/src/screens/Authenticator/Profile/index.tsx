@@ -105,10 +105,7 @@ const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValue
 
 const _onPressDoneProfile = () => {
   // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
-    console.log("make sure formik not chnaged", formikChanged)
-    console.log("compare vale")
     const val = compareQueryFormik(userData.squash, formikValues)
-    console.log("compare vale", val)
     if (!val) {
       const RNLocalFiles = convertImagesToFormat(formikValues.add_local_images, currentUser.sub)
       ///// debug images
