@@ -24,6 +24,7 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [imageErrorVisible, setImageErrorVisible] = useState(false)
   const [changeSport, setChangeSport] = useState(true)
   const [loadingUser, setLoadingUser] = useState(false);
+  const [loadingMatches, setLoadinMatches] = useState(false);
   const [data, setData] = useState(null);
   const [allUsers, setAllUsers] = useState(null)
   const [offlineMatches, setOfflineMatches] = useState(null)
@@ -33,15 +34,18 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [initialValuesFormik, setInitialValuesFormik] = useState({});
   const {loadingSignUpInRefresh, setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const didMountRef = useRef(false)
-  const [queryProssibleMatches, { loading: loadingMatches, data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
+  const [queryProssibleMatches, { loading: loadingMatches2, data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
+        setLoadinMatches(false)
       if (data) {
+        setLoadinMatches(false)
         const all_users = data.queryProssibleMatches;
         setAllUsers(all_users);
       }
     },
     onError: (err) => {
+      setLoadinMatches(false)
       console.log('Match query Errpr', err);
     },
   });
@@ -84,7 +88,8 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
             const sport = _.find(initialValues.sportFilters, (sportObj) => {
               return sportObj.filterSelected == true;
             }).sport;
-            byGameLevel(initialValues.gameLevels),
+            setLoadinMatches(false)
+            byGameLevel(initialValues.gameLevels)
               queryProssibleMatches({
                 variables: {
                   _id: currentUser.sub,
@@ -200,6 +205,7 @@ const start = (user) => {
     }
   }
 
+  console.log("one of these are stil trueeeeee", loadingSigning, loadingUser, loadingMatches, userLoading)
   const renderRoot = () => {
     return (
       <AppContainer loading={loadingSigning || loadingUser || loadingMatches || userLoading}>
