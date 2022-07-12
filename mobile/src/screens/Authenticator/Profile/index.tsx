@@ -39,6 +39,7 @@ const EditProfile = () => {
     awaitRefetchQueries: true,
     //////// refetching is necessary because without this the update happens on cancel/done"
     onCompleted: (data) => {
+      setLoadingUserUpload(false)
       if (cityVar() != formikValues.location.city){
         cityVar(formikValues.location.city)
         isCityChangedVar(true)
@@ -50,7 +51,6 @@ const EditProfile = () => {
                                   )
         setFieldValue('image_set', new_image_set);
       }
-      setLoadingUserUpload(false)
       handleSubmit();
       handleReset()
       setIsVisible(false);
@@ -128,7 +128,6 @@ const doneCancelValues = {
     }, [inputType])
     return (
       <>
-      <AppContainer loading={ loadingUserUpload }>
         <ProfileSettings
           _editUserInfo={_editDisplay2}
           signOut={_onPressSignOut}
@@ -180,7 +179,6 @@ const doneCancelValues = {
             </View>
           </Modal>
         </Modal>
-      </AppContainer>
       </>
     );
 }
