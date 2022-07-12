@@ -1,24 +1,22 @@
-import React, { useRef, createContext, useEffect, useContext, useState, ReactElement } from 'react'
+import React, {createContext, useEffect, useContext, useState, ReactElement } from 'react'
 import {StackNavigationProp, RouteProp} from '@react-navigation/stack'
 import {View, Modal} from 'react-native';
 import {styles} from '@styles'
-import {SWIPIES_PER_DAY_LIMIT} from '@constants'
 import { RootStackSignInParamList, ProfileInputEdits} from '@NavStack'
 import {UserContext} from '@UserContext'
 import {Overlay, Text} from 'react-native-elements'
 import { useFormikContext, Formik, useField} from 'formik';
-import { useLazyQuery, useQuery, useMutation} from '@apollo/client'
+import {useQuery, useMutation} from '@apollo/client'
 import {GET_INPUT_TYPE, READ_SQUASH, UPDATE_USER_PROFILE} from '@graphQL2'
 import {ProfileSettings, EditInput, Done, Cancel, AppContainer} from '@components'
-import { EditFields, FilterFields, ImageSetT} from '@localModels'
+import { EditFields} from '@localModels'
 import { isCityChangedVar, cityVar, EditInputVar} from '@cache'
-import {convertImagesToFormat, createInitialValuesFormik, _onPressSignOut, deleteUser} from '@utils'
+import {convertImagesToFormat, createInitialValuesFormik, _onPressSignOut, deleteUser, compareQueryFormik, switchInputOnCancel, switchInputOnDone} from '@utils'
 import {DoneCancelContext} from '@Contexts'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import  { profileEditSchema} from '@validation'
 import _ from 'lodash'
 
-const Tab  = createBottomTabNavigator()
 
 export type ProfileScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, 'PROFILE'>
 export type ProfileScreenRouteProp = RouteProp<RootStackSignInParamList, 'PROFILE'>;
@@ -27,29 +25,24 @@ type ProfileT = {
   navigation: ProfileScreenNavigationProp
   route: ProfileScreenRouteProp
 }
-const EditProfile = ({ setInitialValuesFormik, initialValuesFormik}) => {
+const EditProfile = () => {
   const [loadingUserUpload, setLoadingUserUpload] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const {
-    setValues: setFilterVals,
-    values: filterValues,
-    //setFieldValue,
-  } = useFormikContext<FilterFields>();
   const [inputType, setInputType] = useState();
   const {setFieldValue, touched, initialValues: formikInitialValues, setValues, values: formikValues,resetForm, handleReset, errors: validationErrors, handleSubmit} = useFormikContext<EditFields>();
   const [tempInputValues, setTempInputValues] = useState(null);
-  const [cityChanged, setCityChanged] = useState(false);
-  const {queryProssibleMatches, currentUser, setData, refetchUserData, userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport, userLoading} = useContext(UserContext)
+  const {currentUser,userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
-    //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
-    //awaitRefetchQueries: true,
+    //////// refetching is necessary because without this the update happens on cancel/done"
+    refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
+    awaitRefetchQueries: true,
+    //////// refetching is necessary because without this the update happens on cancel/done"
     onCompleted: (data) => {
       if (cityVar() != formikValues.location.city){
         cityVar(formikValues.location.city)
         isCityChangedVar(true)
       }
-      setLoadingUserUpload(false)
       // wow this was the missing peace, reset needed to be here for cancel and done to work properly with reintialization
       if (data?.updateUserProfile){
         const new_image_set =_.map(data.updateUserProfile.image_set, (imgObj) => {
@@ -57,13 +50,10 @@ const EditProfile = ({ setInitialValuesFormik, initialValuesFormik}) => {
                                   )
         setFieldValue('image_set', new_image_set);
       }
-      //handleSubmit();
-      //TODO: manual addition
-      //setFieldValue('remove_uploaded_images', []);
-      //setFieldValue('add_local_images', []);
-      setFormikChanged(false)
-      _onPressCancelProfile()
-      //setIsVisible(false);
+      setLoadingUserUpload(false)
+      handleSubmit();
+      handleReset()
+      setIsVisible(false);
     },
     onError: (err) => {
       setLoadingUserUpload(false)
@@ -71,36 +61,6 @@ const EditProfile = ({ setInitialValuesFormik, initialValuesFormik}) => {
     }
   });
   const [displayInput, setDisplayInput] = useState(false);
-  const [formikChanged, setFormikChanged] = useState(false);
-  const compareQueryFormik = (a, b) =>
-    {
-      const keys = [
-        'email',
-        'first_name',
-        'last_name',
-        'age',
-        'gender',
-        'location',
-        'sports',
-        'description',
-      ];
-      console.log('compare quer', a.image_set);
-      console.log('compare residual', b.add_local_images);
-      console.log('compare add local', b.add_local_images);
-      console.log('compare residual', b.remove_uploaded_images);
-      const noChange = _.isMatch(
-        // check deep equality
-        a, // get properties from a
-        _.pick(b, keys), // get properties from b
-      );
-
-      return (
-        noChange &&
-        _.isEmpty(b.add_local_images) &&
-        _.isEmpty(b.remove_uploaded_images)
-      );
-    }
-
   useEffect(() => {
     if( InputTypeData.inputItems.displayInput == true){
     setInputType(InputTypeData.inputItems.inputType)
@@ -132,100 +92,27 @@ const _onPressDoneProfile = () => {
           description: formikValues.description,
         },
       });
-      //setLoadingUserUpload(false)
     }
     else{
-      //setLoadingUserUpload(false)
-      //_onPressCancelProfile()
+      setLoadingUserUpload(false)
     }
-    //setIsVisible(false);
-    setFormikChanged(false)
 }
 const _onPressCancelProfile = () => {
-    //handleReset()
-    setFormikChanged(false)
+    handleReset()
     const initialValues2 = createInitialValuesFormik(
       userData,
       userData.squash.phoneNumber,
     );
-    console.log("check initial values to make sure images are not set!", initialValues2)
     handleReset()
     resetForm({values: {...initialValues2}})
     setIsVisible(false);
 }
-  const [field, meta, helpers] = useField('age');
   const [temptSports2, setTempSports2] = useState(formikValues.sports)
   const _onPressDoneInput = async () => {
-    switch (inputType) {
-      case 'Name Input':
-        if (_.isEmpty(validationErrors.first_name) && _.isEmpty(validationErrors.last_name)) {
-          setFieldValue('first_name', formikValues.first_name);
-          setFieldValue('last_name', formikValues.last_name);
-          EditInputVar({inputType: '', displayInput: false}) &&
-          setDisplayInput(false);
-        }
-        break;
-      case 'Birthday Input':
-        if (_.isEmpty(validationErrors.age)) {
-          setFieldValue('age', formikValues.age);
-          EditInputVar({inputType: '', displayInput: false}) &&
-          setDisplayInput(false);
-        }
-        break;
-      case 'Neighborhood Input':
-        if (_.isEmpty(validationErrors.age) && touched.location) {
-          setFieldValue('location', formikValues.location);
-          EditInputVar({inputType: '', displayInput: false}) &&
-          setDisplayInput(false);
-        }
-        break;
-      case 'Gender Input':
-        if (_.isEmpty(validationErrors.age)) {
-          setFieldValue('gender', formikValues.gender);
-          EditInputVar({inputType: '', displayInput: false}) &&
-          setDisplayInput(false);
-        }
-        break;
-      case 'Description Input':
-        if (_.isEmpty(validationErrors.description)) {
-          setFieldValue('description', formikValues.description);
-          EditInputVar({inputType: '', displayInput: false}) &&
-          setDisplayInput(false);
-        }
-        break;
-      case 'Sports Input':
-        if (_.isEmpty(validationErrors.sports)) {
-          setFieldValue('sports', formikValues.sports);
-          EditInputVar({inputType: '', displayInput: false}) &&
-          setDisplayInput(false);
-        }
-        break;
-    }
+    switchInputOnDone(touched, formikValues, inputType, validationErrors, setFieldValue, setDisplayInput)
   }
 const _onPressCancelInput = () => {
-    switch (inputType) {
-      case 'Name Input':
-        setFieldValue('first_name', formikInitialValues.first_name)
-        setFieldValue('last_name', formikInitialValues.last_name)
-        break;
-      case 'Birthday Input':
-        setFieldValue('age', formikInitialValues.age)
-        break;
-      case 'Neighborhood Input':
-        setFieldValue('location', formikInitialValues.location)
-        break;
-      case 'Gender Input':
-        setFieldValue('gender', formikInitialValues.gender)
-        break;
-      case 'Description Input':
-        setFieldValue('description', formikInitialValues.description)
-        break;
-      case 'Sports Input':
-        setFieldValue('sports', formikInitialValues.sports)
-        break;
-    }
-    EditInputVar({inputType: '', displayInput: false})
-    setDisplayInput(false);
+  switchInputOnCancel(formikInitialValues, setFieldValue, inputType, setDisplayInput)
 }
 const _editDisplay2 = (display) => {
     setIsVisible(true)
@@ -241,6 +128,7 @@ const doneCancelValues = {
     }, [inputType])
     return (
       <>
+      <AppContainer loading={ loadingUserUpload }>
         <ProfileSettings
           _editUserInfo={_editDisplay2}
           signOut={_onPressSignOut}
@@ -292,16 +180,16 @@ const doneCancelValues = {
             </View>
           </Modal>
         </Modal>
+      </AppContainer>
       </>
     );
 }
-const Profile = (): ReactElement => {
-  const [loadingFormikValues, setLoadingFormikValues] = useState(true)
+const Profile = () => {
   const {data, userData, userLoading, currentUser} = useContext(UserContext)
-  //const [loadingUserUpload, setLoadingUserUpload] = useState(false);
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
+  const [loadingFormikValues, setLoadingFormikValues] = useState(true)
   useEffect(() => {
-    console.log("this should be run every time done", userData)
+    if (!userLoading){
     setLoadingFormikValues(true);
     const userDetails = userData.squash.phoneNumber
     if (userDetails) {
@@ -312,29 +200,43 @@ const Profile = (): ReactElement => {
       setInitialValuesFormik(initialValues);
       setLoadingFormikValues(false);
     }
+    }
   }, [userData]);
+  const renderFormikProfile = () => {
+    return (
+      <>
+        <AppContainer loading={userLoading || loadingFormikValues}>
+          {!userLoading && !loadingFormikValues && (
+            <Formik
+              enableReinitialize={true}
+              validationSchema={profileEditSchema}
+              initialValues={loadingFormikValues ? initialValuesFormik : initialValuesFormik}
+              onSubmit={(values, {resetForm}) => {
+                // do not remove this code this helps update when press done
+                const userDetails = userData.squash.phoneNumber;
+                const initialValues2 = createInitialValuesFormik(
+                  userData,
+                  userDetails,
+                );
+                setInitialValuesFormik(initialValues2);
+                resetForm({values: {...initialValues2}});
+              }}>
+              <View>
+                {!loadingFormikValues && initialValuesFormik?.location && (
+                  <EditProfile />
+                )}
+              </View>
+            </Formik>
+          )}
+        </AppContainer>
+      </>
+    );
+  };
   return (
     <>
-      <AppContainer loading={ userLoading }>
-      { initialValuesFormik && !userLoading && !loadingFormikValues && (
-        <Formik
-          //enableReinitialize={true}
-          validationSchema={profileEditSchema}
-          initialValues={initialValuesFormik}
-          onSubmit={(values, {resetForm}) => {
-            const userDetails = userData.squash.phoneNumber;
-            const initialValues2 = createInitialValuesFormik(
-              userData,
-              userDetails.phoneNumber,
-            );
-            setInitialValuesFormik(initialValues2);
-            resetForm({values: {...initialValues2}})
-          }}>
-          <View>{!loadingFormikValues && <EditProfile setInitialValuesFormik={setInitialValuesFormik} initialValuesFormik={initialValuesFormik}/>}</View>
-        </Formik>
-      )}
-      </AppContainer>
+      {renderFormikProfile()}
     </>
   );
+
 }
 export { Profile }
