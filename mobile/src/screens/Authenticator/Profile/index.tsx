@@ -27,7 +27,8 @@ type ProfileT = {
   navigation: ProfileScreenNavigationProp
   route: ProfileScreenRouteProp
 }
-const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValuesFormik}) => {
+const EditProfile = ({ setInitialValuesFormik, initialValuesFormik}) => {
+  const [loadingUserUpload, setLoadingUserUpload] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const {
     setValues: setFilterVals,
@@ -44,6 +45,7 @@ const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValue
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
     //awaitRefetchQueries: true,
     onCompleted: (data) => {
+      setLoadingUserUpload(false)
       // wow this was the missing peace, reset needed to be here for cancel and done to work properly with reintialization
       if (data?.updateUserProfile){
         const new_image_set =_.map(data.updateUserProfile.image_set, (imgObj) => {
@@ -55,10 +57,9 @@ const EditProfile = ({setLoadingUserUpload, setInitialValuesFormik, initialValue
       //TODO: manual addition
       //setFieldValue('remove_uploaded_images', []);
       //setFieldValue('add_local_images', []);
-      _onPressCancelProfile()
-      setLoadingUserUpload(false)
       setFormikChanged(false)
-      setIsVisible(false);
+      _onPressCancelProfile()
+      //setIsVisible(false);
     },
     onError: (err) => {
       setLoadingUserUpload(false)
@@ -128,13 +129,14 @@ const _onPressDoneProfile = () => {
         },
       });
       //setLoadingUserUpload(false)
-      if (cityVar() != formikValues.location.city){
-        cityVar(formikValues.location.city)
-        isCityChangedVar(true)
-      }
+      //if (cityVar() != formikValues.location.city){
+        //cityVar(formikValues.location.city)
+        //isCityChangedVar(true)
+      //}
     }
     else{
-      _onPressCancelProfile()
+      //setLoadingUserUpload(false)
+      //_onPressCancelProfile()
     }
     //setIsVisible(false);
     setFormikChanged(false)
@@ -296,7 +298,7 @@ const doneCancelValues = {
 const Profile = (): ReactElement => {
   const [loadingFormikValues, setLoadingFormikValues] = useState(true)
   const {data, userData, userLoading, currentUser} = useContext(UserContext)
-  const [loadingUserUpload, setLoadingUserUpload] = useState(false);
+  //const [loadingUserUpload, setLoadingUserUpload] = useState(false);
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   useEffect(() => {
     console.log("this should be run every time done", userData)
@@ -313,7 +315,7 @@ const Profile = (): ReactElement => {
   }, [userData]);
   return (
     <>
-      <AppContainer loading={loadingUserUpload || userLoading }>
+      <AppContainer loading={ userLoading }>
       { initialValuesFormik && !userLoading && !loadingFormikValues && (
         <Formik
           //enableReinitialize={true}
@@ -328,7 +330,7 @@ const Profile = (): ReactElement => {
             setInitialValuesFormik(initialValues2);
             resetForm({values: {...initialValues2}})
           }}>
-          <View>{!loadingFormikValues && <EditProfile setLoadingUserUpload={setLoadingUserUpload} setInitialValuesFormik={setInitialValuesFormik} initialValuesFormik={initialValuesFormik}/>}</View>
+          <View>{!loadingFormikValues && <EditProfile setInitialValuesFormik={setInitialValuesFormik} initialValuesFormik={initialValuesFormik}/>}</View>
         </Formik>
       )}
       </AppContainer>
