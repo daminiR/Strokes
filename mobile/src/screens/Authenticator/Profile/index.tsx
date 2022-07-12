@@ -39,12 +39,16 @@ const EditProfile = ({ setInitialValuesFormik, initialValuesFormik}) => {
   const {setFieldValue, touched, initialValues: formikInitialValues, setValues, values: formikValues,resetForm, handleReset, errors: validationErrors, handleSubmit} = useFormikContext<EditFields>();
   const [tempInputValues, setTempInputValues] = useState(null);
   const [cityChanged, setCityChanged] = useState(false);
-  const {queryProssibleMatches, currentUser, setData, refetchUserData, userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport} = useContext(UserContext)
+  const {queryProssibleMatches, currentUser, setData, refetchUserData, userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport, userLoading} = useContext(UserContext)
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
     //awaitRefetchQueries: true,
     onCompleted: (data) => {
+      if (cityVar() != formikValues.location.city){
+        cityVar(formikValues.location.city)
+        isCityChangedVar(true)
+      }
       setLoadingUserUpload(false)
       // wow this was the missing peace, reset needed to be here for cancel and done to work properly with reintialization
       if (data?.updateUserProfile){
@@ -129,10 +133,6 @@ const _onPressDoneProfile = () => {
         },
       });
       //setLoadingUserUpload(false)
-      //if (cityVar() != formikValues.location.city){
-        //cityVar(formikValues.location.city)
-        //isCityChangedVar(true)
-      //}
     }
     else{
       //setLoadingUserUpload(false)
