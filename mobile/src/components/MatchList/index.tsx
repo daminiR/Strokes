@@ -47,6 +47,11 @@ const MatchList = ({matches}) => {
     },
   })
   useEffect(() => {
+    console.log("matches have changeddd")
+    setLastMatch(matches.length == 0)
+  }, [matches])
+
+  useEffect(() => {
     setLoadingFilters(true);
     userData?.squash &&
       createInitialFilterFormik(userData.squash.sports).then(
