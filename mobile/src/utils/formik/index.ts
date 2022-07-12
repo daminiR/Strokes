@@ -38,6 +38,82 @@ const createInitialValuesFormik = (userData, phoneNumber) => {
       return new_formik
     }
 }
+import { isCityChangedVar, cityVar, EditInputVar} from '@cache'
+const switchInputOnDone= (touched, formikValues, inputType, validationErrors, setFieldValue, setDisplayInput) => {
+    switch (inputType) {
+      case 'Name Input':
+        if (_.isEmpty(validationErrors.first_name) && _.isEmpty(validationErrors.last_name)) {
+          setFieldValue('first_name', formikValues.first_name);
+          setFieldValue('last_name', formikValues.last_name);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Birthday Input':
+        if (_.isEmpty(validationErrors.age)) {
+          setFieldValue('age', formikValues.age);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Neighborhood Input':
+        if (_.isEmpty(validationErrors.age) && touched.location) {
+          setFieldValue('location', formikValues.location);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Gender Input':
+        if (_.isEmpty(validationErrors.age)) {
+          setFieldValue('gender', formikValues.gender);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Description Input':
+        if (_.isEmpty(validationErrors.description)) {
+          setFieldValue('description', formikValues.description);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+      case 'Sports Input':
+        if (_.isEmpty(validationErrors.sports)) {
+          setFieldValue('sports', formikValues.sports);
+          EditInputVar({inputType: '', displayInput: false}) &&
+          setDisplayInput(false);
+        }
+        break;
+    }
+
+}
+const switchInputOnCancel = (formikInitialValues, setFieldValue, inputType, setDisplayInput) => {
+    switch (inputType) {
+      case 'Name Input':
+        setFieldValue('first_name', formikInitialValues.first_name)
+        setFieldValue('last_name', formikInitialValues.last_name)
+        break;
+      case 'Birthday Input':
+        setFieldValue('age', formikInitialValues.age)
+        break;
+      case 'Neighborhood Input':
+        setFieldValue('location', formikInitialValues.location)
+        break;
+      case 'Gender Input':
+        setFieldValue('gender', formikInitialValues.gender)
+        break;
+      case 'Description Input':
+        setFieldValue('description', formikInitialValues.description)
+        break;
+      case 'Sports Input':
+        setFieldValue('sports', formikInitialValues.sports)
+        break;
+    }
+    EditInputVar({inputType: '', displayInput: false})
+    setDisplayInput(false);
+
+
+}
 const createInitialFilterFormik = async (sports) => {
   const ageRange = await _retriveAgeRangeFilter()
   const sportFilter = await _retriveSportFilter()
@@ -83,4 +159,4 @@ const createInitialFilterFormik = async (sports) => {
     gameLevels: gameLevelFilter ? gameLevelFilter :defaultGameLevel,
   };
 };
-export {createInitialValuesFormik, createInitialFilterFormik}
+export {switchInputOnCancel, switchInputOnDone, createInitialValuesFormik, createInitialFilterFormik}
