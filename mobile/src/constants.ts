@@ -1,6 +1,6 @@
 import { Dimensions, Platform } from 'react-native'
 import {DIMENSION_HEIGHT} from '@styles'
-import { _email, _phone_number, _neighborhood, _gender, _age, _first_name} from './InputsVar'
+import { _privacyPolicy, _email, _phone_number, _neighborhood, _gender, _age, _first_name} from './InputsVar'
 
 export const primary = '#50E3C2'
 export const secondary = '#ff06f4'
@@ -63,6 +63,7 @@ export const goHome = (navigation: any) => () => navigation.popToTop()()
 export const AccountList = [
   {title: 'Phone Number', icon: 'av-timer', subtitle: '', buttonPress: null},
   {title: 'Email', icon: 'flight-takeoff', subtitle: '',buttonPress: _email},
+  {title: 'Privacy Policy + Terms & Conditions', icon: 'flight-takeoff', subtitle: '',buttonPress: _privacyPolicy},
 ]
 
 export const settingsFlatList = [
@@ -97,7 +98,8 @@ export const ChatUserSettingsList = [
    sports:[],
    image_set:[],
    confirmationCode: '',
-   description: 'Hi I like to play ...',
+
+   description: 'Hi I like to play soccer',
    location: {}
  }
 export const signInSlides = [

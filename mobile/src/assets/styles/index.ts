@@ -226,6 +226,22 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 10,
   },
+  link: {
+    fontSize: 22,
+    color: 'blue',
+    textDecorationLine: 'underline',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  privacy: {
+    fontSize: 22,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
   nameContainer: {
     flex: 1,
     alignItems: 'center',
