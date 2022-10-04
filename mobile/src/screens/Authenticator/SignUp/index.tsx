@@ -11,6 +11,8 @@ import {ADD_PROFILE2 } from '@graphQL2'
 import  { createUploadLink } from 'apollo-upload-client';
 import {ProfileFields} from '@localModels';
 import { loginReducer } from '../../../reducers/Login';
+import * as Keychain from 'react-native-keychain';
+
 import {
   CityInput,
   ConfirmationCode,
@@ -182,7 +184,7 @@ const _confirmSignInGC = () => {
       }
       var cognitoUser = result.user;
       authenticateAWS(values.phoneNumber, values.password).then(
-        (userDetails) => {
+         ( userDetails) => {
           userDetails.confirmedUser.getUserAttributes( (err, attributes) => {
             if (err) {
               console.log('Attribute Error in signup', err);
@@ -202,7 +204,7 @@ const _confirmSignInGC = () => {
                   userDetails.session,
                   newClient
                 )
-                  .then(() => {
+                  .then(async () => {
                     connect(
                       _id,
                       values.first_name,
@@ -211,11 +213,21 @@ const _confirmSignInGC = () => {
                       start,
                       setSendbird,
                     );
-                    console.log('logged in');
-                    setIsUseOnMongoDb(true);
-                    setLoadingSubmit(false);
-                    setLoadingSignUInRefresh(false);
-                  })
+                    Keychain.setGenericPassword(values.phoneNumber, values.password, {
+                          accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
+                          accessible: Keychain.ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
+                          authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
+                        }).then(() => {
+                          setIsUseOnMongoDb(true);
+                          setLoadingSubmit(false);
+                          setLoadingSignUInRefresh(false);
+                        }).catch((error) => {
+                      console.log(error)
+                        })
+                    }).catch((err) => {
+                      console.log(err)
+                    })
+                  //})
                   .catch(async (err) => {
                     console.log(err);
                     // this error reallu shoudnt happen

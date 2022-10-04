@@ -1,8 +1,8 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { useFormikContext} from 'formik';
 import { genderRadioObject } from '../../constants'
-import { Text,Card, Input, Button, Icon, CheckBox} from 'react-native-elements'
-import { View, TouchableWithoutFeedback, Keyboard} from 'react-native'
+import { Card, Input, Button, Icon, CheckBox} from 'react-native-elements'
+import { Text, View, TouchableWithoutFeedback, Keyboard, Linking} from 'react-native'
 import {styles} from '@styles'
 import {ChooseSportsChips, Pictures, DismissKeyboard} from '@components'
 import { EditFields, ProfileFields, SignIn} from '@localModels'
@@ -196,6 +196,22 @@ const ImageInput = ({isSignUp}) => {
       </>
     );
   }
+  const PrivacyInput = () => {
+    return (
+      <>
+        <View >
+          <Text style={styles.privacy}>
+            Please visit
+          </Text>
+          <Text style={styles.link} onPress={() => Linking.openURL('https://daminir.github.io/Playarmo/')}>
+            https://daminir.github.io/Playarmo/
+          </Text>
+          <Text style={styles.privacy}>
+            for privacy details
+          </Text>
+        </View>
+      </>
+    );}
   const EmailInput = ({isSignUp, _signIn=null, getData=null}) => {
     const { handleBlur, values, errors, touched, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
     const [email, setEmail] = useState(values.email)
@@ -236,7 +252,7 @@ const ImageInput = ({isSignUp}) => {
     );}
 
 
-  const PhoneInput = () => {
+  const PhoneInput = ({faceID=false}) => {
     const { values, handleBlur, setFieldValue, submitForm, handleChange, errors, touched} = useFormikContext<ProfileFields | SignIn | EditFields>();
     const [inputValue, setDisplayInputValue] = useState("")
     const handleInput = (text) => {
@@ -263,7 +279,7 @@ const ImageInput = ({isSignUp}) => {
               }}
               keyboardType={'phone-pad'}
               onBlur={handleBlur('phoneNumber')}
-              value={inputValue}
+              value={faceID? values.phoneNumber : inputValue}
             />
             {errors.phoneNumber && touched.phoneNumber ? (
               <Text>{errors.phoneNumber}</Text>
@@ -377,4 +393,4 @@ const DescriptionInput = ({isSignUp}) => {
     );
   };
 
-  export {DescriptionInput, EmailInput, ImageInput, SportsInput, GenderInput, PhoneInput, NameInput, BirthdayInput}
+  export {PrivacyInput, DescriptionInput, EmailInput, ImageInput, SportsInput, GenderInput, PhoneInput, NameInput, BirthdayInput}

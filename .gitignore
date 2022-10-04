@@ -15,6 +15,9 @@ backend/.env.development
 # lint ignores
 .eslintrc.js
 
+# sensitive lelgal stuff
+mobile/legal/*
+
 build/
 
 # google auth file

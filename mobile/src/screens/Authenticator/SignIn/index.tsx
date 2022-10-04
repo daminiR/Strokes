@@ -1,12 +1,13 @@
 import React, { useReducer, useEffect, useContext, useState, ReactElement } from 'react'
 import {connect} from '../../../utils/SendBird'
 import { useFormikContext, Formik} from 'formik';
+import * as Keychain from 'react-native-keychain';
 import { StackNavigationProp } from '@react-navigation/stack'
 import {signInSlides, iniitialSignInForm} from '@constants'
 import {  RootStackSignOutParamList } from '@navigationStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import {ProfileFields} from '@localModels';
-import {AppContainer, ConfirmationCode, PasswordInput, Cancel, PhoneInput, NextButton} from '@components'
+import {AppContainer, ConfirmationCode, PasswordInput, Cancel, PhoneInput, NextButton, PrevButton} from '@components'
 import {useNavigation} from '@react-navigation/native'
 import { CHECK_PHONE_INPUT } from '@graphQL2'
 import {View, Keyboard} from 'react-native'
@@ -51,14 +52,16 @@ export const Slider =  ({changeEmail}) => {
     error: '',
     connecting: false,
   });
-  const {validateField, setTouched, values, errors, touched, setFieldTouched} = useFormikContext<ProfileFields>();
+  const {validateField, setTouched, values, handleChange, errors, touched, setFieldTouched, setFieldValue} = useFormikContext<ProfileFields>();
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
   const navigation = useNavigation()
   const [index, setIndex] = useState(0)
   const [canSignIn, setCanSignIn] = useState(true)
   const [noUserFoundMessage, setNoUserFoundMessage] = useState(null)
+  const [credentials, setCredentials] = useState(null)
   const [showNextButton, setShowNextButton] = useState(true)
+  const [isFaceID, setIsFaceID] = useState(false)
   const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [isKeyboardShown, setIsKeyboardShown] = useState(undefined);
   const {setLoadingSignUInRefresh} = useContext(RootRefreshContext)
@@ -80,6 +83,29 @@ export const Slider =  ({changeEmail}) => {
       console.log('phone query', err);
     },
   });
+  // show keychain if in values first
+  //
+
+  useEffect(() => {
+    try {
+        Keychain.getGenericPassword().then((credentials) => {
+        console.log(credentials)
+           if (credentials) {
+            //setValues({... values, 'phoneNumber': credentials.username})
+            setCredentials(credentials)
+            setFieldValue( 'phoneNumber', credentials.username)
+            setFieldValue( 'password', credentials.password)
+            setIsFaceID(true)
+            this.slider.goToSlide(index + 1, true);
+
+           }
+         }).catch(() => {
+         })
+
+  } catch (error) {
+    console.log("Keychain couldn't be accessed!", error);
+  }
+  }, []);
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setIsKeyboardShown(true);
@@ -116,9 +142,9 @@ export const Slider =  ({changeEmail}) => {
     return <NextButton />;
   };
 
-  const _onPrev = () => {
-    errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
-  };
+  //const _onPrev = () => {
+    //errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
+  //};
   const _onNext = () => {
     console.log("signin slides", signInSlides)
     const index = this.slider.state.activeIndex;
@@ -133,6 +159,19 @@ export const Slider =  ({changeEmail}) => {
     }
   };
 const _confirmSignInGC = () => {
+    //ask if apssword show be reset in keychain
+  //if (touched.password){
+    //Keychain.setGenericPassword(values.phoneNumber, values.password, {
+      //accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
+                          //accessible: Keychain.ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
+      //authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
+    //}).then(() => {
+                        //}).catch((error) => {
+                          //console.log(error)
+                        //})
+
+
+  //}
   setLoadingSignUInRefresh(true);
   const userPoolId = process.env.React_App_UserPoolId;
   const clientId = process.env.React_App_AWS_Client_Id;
@@ -140,11 +179,17 @@ const _confirmSignInGC = () => {
     UserPoolId: userPoolId, // Your user pool id here
     ClientId: clientId, // Your client id here
   };
+  console.log("whats auth data 1", credentials)
+
+  //var authenticationData = {
+    //Username: isFaceID ? credentials.username : values.phoneNumber,
+    //Password: isFaceID ? credentials.password  : values.password,
+  //};
   var authenticationData = {
     Username: values.phoneNumber,
     Password: values.password,
   };
-  console.log('are these correct', values.phoneNumber, values.password);
+  console.log("whats auth data 1", authenticationData)
   var authenticationDetails = new AuthenticationDetails(authenticationData);
   var userPool = new CognitoUserPool(poolData);
 
@@ -231,7 +276,7 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <PhoneInput />
+                  <PhoneInput faceID={isFaceID}/>
                 </>
               );
               break
@@ -253,6 +298,13 @@ const [authMessage, setAuthMessage] = useState(null)
           }
   };
 
+  const renderPrev = () => {
+    return <PrevButton />;
+  };
+  const _onPrev = () => {
+    const index = this.slider.state.activeIndex
+    this.slider.goToSlide(index - 1, true)
+  };
   return (
     <AppContainer loading={loadingSubmit}>
       <AppIntroSlider
@@ -265,7 +317,9 @@ const [authMessage, setAuthMessage] = useState(null)
         showNextButton={showNextButton && !isKeyboardShown}
         dotClickEnabled={false}
         renderNextButton={renderNext}
+        renderPrevButton={renderPrev}
         onNext={() => _onNext()}
+        onPrev={() => _onPrev()}
         ref={(ref) => (this.slider = ref!)}
       />
     </AppContainer>

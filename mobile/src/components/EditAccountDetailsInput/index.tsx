@@ -1,7 +1,7 @@
 import React  from 'react'
 import {View} from 'react-native';
 import {_onPressSignOut} from '@utils'
-import { EmailInput, PhoneInput, ConfirmationCode} from '@components'
+import { EmailInput, PhoneInput, PrivacyInput, ConfirmationCode} from '@components'
 
 const EditAccountDetailsInput = ({inputType= null, signOut = null, getData=null, confirmDelete=null}) => {
   const renderInput = () => {
@@ -11,6 +11,9 @@ const EditAccountDetailsInput = ({inputType= null, signOut = null, getData=null,
         break;
       case 'Phone Input':
         return <PhoneInput/>;
+        break;
+      case 'Privacy Input':
+        return <PrivacyInput/>;
         break;
       case 'Confirmation Code Input':
         //return <PhoneInput/>;

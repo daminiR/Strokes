@@ -45,7 +45,8 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     var userPool = new CognitoUserPool(poolData);
     var cognitoUser = userPool.getCurrentUser();
     cognitoUser.signOut();
-    AsyncStorage.clear();
+    //todo find all storages that indvidually need to be cleared
+    //AsyncStorage.clear();
     sendbird.disconnect();
     setDisplayInput(false);
     client.resetStore();
