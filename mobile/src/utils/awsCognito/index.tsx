@@ -2,6 +2,19 @@ import React from "react";
 import * as AWS from 'aws-sdk/global';
 import _ from 'lodash'
 import {
+  StyleSheet,
+  Text,
+  StatusBar,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+  FlatList,
+  AppState,
+  TextInput,
+  Alert,
+  Platform,
+} from 'react-native';
+import {
   AuthenticationDetails,
   CognitoUserPool,
   CognitoUserAttribute,
@@ -150,4 +163,89 @@ const getAWSUser = async () => {
   })
 };
 
-export {getAWSUser, authenticateAWS}
+const VerificationAlert = (phoneNumber, password) => {
+        Alert.prompt(
+            "Enter Verification Code",
+              "Code?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "OK",
+          onPress: code =>
+            {
+            console.log("did weeeeeeeee amke is in cooooooooodddddddd")
+            confirmPassword(phoneNumber, code, "Turing123!")
+            //.then(() => console.log("correct?"))
+            //.catch((err) => console.log(err))
+          },
+        }
+      ],
+      "secure-text"
+    );
+
+}
+// confirmPassword can be separately built out as follows...
+const  confirmPassword = (username, verificationCode, newPassword) => {
+const userPoolId = process.env.React_App_UserPoolId
+const clientId = process.env.React_App_AWS_Client_Id
+  var poolData = {
+    UserPoolId: userPoolId, // Your user pool id here
+    ClientId: clientId, // Your client id here
+  };
+var userPool = new CognitoUserPool(poolData);
+  var userData = {
+    Username: username,
+    //: username,
+    Pool: userPool,
+  };
+var cognitoUser = new CognitoUser(userData);
+
+    return new Promise((resolve, reject) => {
+        cognitoUser.confirmPassword(verificationCode, newPassword, {
+            onFailure(err) {
+                reject(err);
+            },
+            onSuccess() {
+                resolve();
+            },
+        });
+    });
+}
+const forgotPassword =(username, newPassword, setPassword, setCode) => {
+    // const poolData = { UserPoolId: xxxx, ClientId: xxxx };
+    // userPool is const userPool = new AWSCognito.CognitoUserPool(poolData);
+
+    // setup cognitoUser first
+const userPoolId = process.env.React_App_UserPoolId
+const clientId = process.env.React_App_AWS_Client_Id
+  var poolData = {
+    UserPoolId: userPoolId, // Your user pool id here
+    ClientId: clientId, // Your client id here
+  };
+var userPool = new CognitoUserPool(poolData);
+  var userData = {
+    Username: username,
+    //: username,
+    Pool: userPool,
+  };
+var cognitoUser = new CognitoUser(userData);
+    // call forgotPassword on cognitoUser
+    cognitoUser.forgotPassword({
+        onSuccess: function(result) {
+            console.log('call result: ' + result);
+        },
+        onFailure: function(err) {
+            alert(err);
+        },
+      inputVerificationCode: (data) => { // this is optional, and likely won't be implemented as in AWS's example (i.e, prompt to get info)
+        console.log("data", data)
+        VerificationAlert(username, newPassword)
+        //cognitoUser.confirmPassword(code, password, this);
+        }
+    });
+}
+export {getAWSUser, authenticateAWS, forgotPassword}

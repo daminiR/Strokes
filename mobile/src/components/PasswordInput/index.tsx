@@ -19,7 +19,8 @@ const PasswordInput = ({
   isLastSlide,
   _confirmSignInGC,
   noUserFoundMessage = null,
-  isSignIn = true
+  isSignIn = true,
+  _forgotPassword=null
 }) => {
   const {values, setFieldValue, errors, touched, handleBlur, handleChange} =
   useFormikContext<ProfileFields>();

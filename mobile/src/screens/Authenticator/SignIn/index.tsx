@@ -1,5 +1,6 @@
 import React, { useReducer, useEffect, useContext, useState, ReactElement } from 'react'
 import {connect} from '../../../utils/SendBird'
+import {getPassword, setNewKeychain} from '@utils'
 import { useFormikContext, Formik} from 'formik';
 import * as Keychain from 'react-native-keychain';
 import { StackNavigationProp } from '@react-navigation/stack'
@@ -10,7 +11,7 @@ import {ProfileFields} from '@localModels';
 import {AppContainer, ConfirmationCode, PasswordInput, Cancel, PhoneInput, NextButton, PrevButton} from '@components'
 import {useNavigation} from '@react-navigation/native'
 import { CHECK_PHONE_INPUT } from '@graphQL2'
-import {View, Keyboard} from 'react-native'
+import {View, Keyboard, Alert} from 'react-native'
 import {styles }from '@styles'
 import  { signInSchema } from '@validation'
 import { UserContext} from '@UserContext'
@@ -55,6 +56,7 @@ export const Slider =  ({changeEmail}) => {
   const {validateField, setTouched, values, handleChange, errors, touched, setFieldTouched, setFieldValue} = useFormikContext<ProfileFields>();
   const [lastSlide, setLastSlide] = useState(false)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
+  const [overLayIsNewPassword, setOverLayPassword] = useState(false)
   const navigation = useNavigation()
   const [index, setIndex] = useState(0)
   const [canSignIn, setCanSignIn] = useState(true)
@@ -87,24 +89,9 @@ export const Slider =  ({changeEmail}) => {
   //
 
   useEffect(() => {
-    try {
-        Keychain.getGenericPassword().then((credentials) => {
-        console.log(credentials)
-           if (credentials) {
-            //setValues({... values, 'phoneNumber': credentials.username})
-            setCredentials(credentials)
-            setFieldValue( 'phoneNumber', credentials.username)
-            setFieldValue( 'password', credentials.password)
-            setIsFaceID(true)
-            this.slider.goToSlide(index + 1, true);
-
-           }
-         }).catch(() => {
-         })
-
-  } catch (error) {
-    console.log("Keychain couldn't be accessed!", error);
-  }
+    //setNewKeychain("+17652500332","Wrong123!")
+    getPassword(setCredentials, setFieldValue, setIsFaceID)
+    this.slider.goToSlide(index + 1, true);
   }, []);
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -158,20 +145,11 @@ export const Slider =  ({changeEmail}) => {
         this.slider.goToSlide(index + 1, true);
     }
   };
+const _forgotPassword = () => {
+  navigation.navigate('FORGOT_PASSWORD', {phoneNumber: values.phoneNumber});
+
+}
 const _confirmSignInGC = () => {
-    //ask if apssword show be reset in keychain
-  //if (touched.password){
-    //Keychain.setGenericPassword(values.phoneNumber, values.password, {
-      //accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
-                          //accessible: Keychain.ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
-      //authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
-    //}).then(() => {
-                        //}).catch((error) => {
-                          //console.log(error)
-                        //})
-
-
-  //}
   setLoadingSignUInRefresh(true);
   const userPoolId = process.env.React_App_UserPoolId;
   const clientId = process.env.React_App_AWS_Client_Id;
@@ -179,17 +157,10 @@ const _confirmSignInGC = () => {
     UserPoolId: userPoolId, // Your user pool id here
     ClientId: clientId, // Your client id here
   };
-  console.log("whats auth data 1", credentials)
-
-  //var authenticationData = {
-    //Username: isFaceID ? credentials.username : values.phoneNumber,
-    //Password: isFaceID ? credentials.password  : values.password,
-  //};
   var authenticationData = {
     Username: values.phoneNumber,
     Password: values.password,
   };
-  console.log("whats auth data 1", authenticationData)
   var authenticationDetails = new AuthenticationDetails(authenticationData);
   var userPool = new CognitoUserPool(poolData);
 
@@ -206,6 +177,22 @@ const _confirmSignInGC = () => {
             onSuccess: function (result) {
               console.log('call result: ' + result);
               setLoadingSignUInRefresh(false);
+              if (values.password != credentials.password)
+              Alert.alert(
+                "Add new password to keychain?",
+                "Do you want to replace existing password with new password",
+                [
+                  {
+                    text: "yes",
+                    onPress: () => setNewKeychain(values.phoneNumber, values.password)
+                  },
+                  {
+                    text: "no",
+                    onPress: () => {}
+                  }
+                ]
+              )
+              //setNewKeychain(values.phoneNumber, values.password)
             },
             onFailure: function (err) {
               alert(err.message || JSON.stringify(err));
@@ -291,6 +278,7 @@ const [authMessage, setAuthMessage] = useState(null)
                     noUserFoundMessage={noUserFoundMessage}
                     isLastSlide={lastSlide}
                     _confirmSignInGC={_checkSignIn}
+                    _forgotPassword={_forgotPassword}
                   />
                 </>
               );
