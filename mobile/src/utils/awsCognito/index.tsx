@@ -163,31 +163,6 @@ const getAWSUser = async () => {
   })
 };
 
-const VerificationAlert = (phoneNumber, password) => {
-        Alert.prompt(
-            "Enter Verification Code",
-              "Code?",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        {
-          text: "OK",
-          onPress: code =>
-            {
-            console.log("did weeeeeeeee amke is in cooooooooodddddddd")
-            confirmPassword(phoneNumber, code, "Turing123!")
-            //.then(() => console.log("correct?"))
-            //.catch((err) => console.log(err))
-          },
-        }
-      ],
-      "secure-text"
-    );
-
-}
 // confirmPassword can be separately built out as follows...
 const  confirmPassword = (username, verificationCode, newPassword) => {
 const userPoolId = process.env.React_App_UserPoolId
@@ -215,7 +190,7 @@ var cognitoUser = new CognitoUser(userData);
         });
     });
 }
-const forgotPassword =(username, newPassword, setPassword, setCode) => {
+const forgotPassword =(username) => {
     // const poolData = { UserPoolId: xxxx, ClientId: xxxx };
     // userPool is const userPool = new AWSCognito.CognitoUserPool(poolData);
 
@@ -241,11 +216,6 @@ var cognitoUser = new CognitoUser(userData);
         onFailure: function(err) {
             alert(err);
         },
-      inputVerificationCode: (data) => { // this is optional, and likely won't be implemented as in AWS's example (i.e, prompt to get info)
-        console.log("data", data)
-        VerificationAlert(username, newPassword)
-        //cognitoUser.confirmPassword(code, password, this);
-        }
     });
 }
-export {getAWSUser, authenticateAWS, forgotPassword}
+export {confirmPassword, getAWSUser, authenticateAWS, forgotPassword}
