@@ -1,9 +1,11 @@
 import React, {useState, ReactElement } from 'react'
 import {Input, Button, Text} from 'react-native-elements'
+import {Alert} from 'react-native'
+import {AppContainer, Cancel} from '@components'
 import { StackNavigationProp, RouteProp} from '@react-navigation/stack'
 import { RootStackSignOutParamList } from '@navigationStack'
 import { RootStackSignUpParamList } from '@NavStack'
-import { forgotPassword } from '@utils'
+import { confirmPassword, forgotPassword, setNewKeychain} from '@utils'
 import  {styles}  from '@styles'
 import { View} from 'react-native'
 export type ForgotPasswordTScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList, 'FORGOT_PASSWORD'>
@@ -17,15 +19,42 @@ const ForgotPassword = ({route, navigation}: ForgotPasswordT): ReactElement => {
   console.log(route.params.phoneNumber)
   const [phoneNumber, setPhonNumber] = useState(route.params.phoneNumber)
   const [newPassword, setNewPassword] = useState("")
-  const [code, setCode] = useState("")
-  const [password, setPassword] = useState("")
   const [verification, setVerification] = useState("")
+  const [loadingPassword, setLoadingPassword] = useState(false)
+  const goToHello = () => {
+      navigation.navigate('HELLO', {phoneNumber: phoneNumber});
+  }
   const _onPresSetNewPassword = () => {
-    forgotPassword(phoneNumber, newPassword, setCode, setPassword)
+    setLoadingPassword(true)
+    confirmPassword(phoneNumber, verification, newPassword).then(() => {
+      // ask to change password in keychain
+              Alert.alert(
+                "Add new password to keychain?",
+                "Do you want to replace existing password with new password",
+                [
+                  {
+                    text: "yes",
+                    onPress: () => setNewKeychain(phoneNumber, newPassword)
+                  },
+                  {
+                    text: "no",
+                    onPress: () => {}
+                  }
+                ]
+              )
+
+      setLoadingPassword(false)
+      //navigation.navigate('HELLO', {phoneNumber: phoneNumber});
+      navigation.navigate('HELLO');
+    })
   };
   return (
     <>
-      <View style={styles.helloContainer}>
+      <AppContainer loading={loadingPassword}>
+        <View style={styles.top}>
+          <Cancel _onPressCancel={() => goToHello()} />
+        </View>
+      <View style={styles.emailContainer}>
           <View style={styles.emailInput}>
             <Input
               placeholder="Phone Number"
@@ -39,7 +68,7 @@ const ForgotPassword = ({route, navigation}: ForgotPasswordT): ReactElement => {
               placeholder="Verification Code"
               multiline={false}
               secureTextEntry={true}
-              label="New Password"
+              label="Verification Code"
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
               onChangeText={(text) => setVerification(text)}
               value={verification}
@@ -56,7 +85,7 @@ const ForgotPassword = ({route, navigation}: ForgotPasswordT): ReactElement => {
           </View>
         <View style={styles.helloButtons}>
           <Button
-            title="Sign In"
+            title="Reset Password"
             titleStyle={styles.buttonText}
             onPress={() => _onPresSetNewPassword()}
             style={styles.buttonIndStyle}
@@ -64,6 +93,7 @@ const ForgotPassword = ({route, navigation}: ForgotPasswordT): ReactElement => {
           />
         </View>
       </View>
+      </AppContainer>
     </>
   );
 }

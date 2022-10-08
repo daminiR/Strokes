@@ -15,6 +15,7 @@ import {View, Keyboard, Alert} from 'react-native'
 import {styles }from '@styles'
 import  { signInSchema } from '@validation'
 import { UserContext} from '@UserContext'
+import { forgotPassword } from '@utils'
 import {useLazyQuery, useQuery} from '@apollo/client'
 import {RootRefreshContext} from '../../../index.js'
 import  _ from 'lodash'
@@ -146,6 +147,7 @@ export const Slider =  ({changeEmail}) => {
     }
   };
 const _forgotPassword = () => {
+  forgotPassword(values.phoneNumber)
   navigation.navigate('FORGOT_PASSWORD', {phoneNumber: values.phoneNumber});
 
 }
