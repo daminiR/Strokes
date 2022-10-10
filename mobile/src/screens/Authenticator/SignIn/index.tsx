@@ -90,9 +90,10 @@ export const Slider =  ({changeEmail}) => {
   //
 
   useEffect(() => {
-    //setNewKeychain("+17652500332","Wrong123!")
-    getPassword(setCredentials, setFieldValue, setIsFaceID)
+    getPassword(setCredentials, setFieldValue, setIsFaceID).then( () => {
     this.slider.goToSlide(index + 1, true);
+
+    })
   }, []);
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -179,6 +180,7 @@ const _confirmSignInGC = () => {
             onSuccess: function (result) {
               console.log('call result: ' + result);
               setLoadingSignUInRefresh(false);
+              // this should work when credenital is null and undefined, so also when logingin into a new device
               if (values.password != credentials.password)
               Alert.alert(
                 "Add new password to keychain?",

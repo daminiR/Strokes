@@ -93,7 +93,7 @@ const clientId = process.env.React_App_AWS_Client_Id
               value={values.password}
             />
           </View>
-          {errors.password && touched.password ? (
+          {errors.password ? (
             <Text style={{alignSelf: 'center'}}>{errors.password}</Text>
           ) : null}
           {noUserFoundMessage && (

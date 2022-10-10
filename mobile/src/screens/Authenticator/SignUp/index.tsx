@@ -48,6 +48,13 @@ type SignUpScreenNavigationProp = StackNavigationProp<RootStackSignOutParamList,
 type SignUpT = {
   navigation: SignUpScreenNavigationProp
 }
+const fullValidatorForSchema = (schema) => (values) => schema.validate(values, {
+  abortEarly: false,
+  strict: false,
+}).then(() => ({})).catch(({inner}) => inner.reduce((memo, {path, message}) => ({
+  ...memo,
+  [path]: (memo[path] || []).concat(message),
+}), {}))
 const SignUp = ({ navigation }: SignUpT): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [error2, setError] = useState('');
@@ -55,6 +62,7 @@ const SignUp = ({ navigation }: SignUpT): ReactElement => {
   return (
     <Formik
       validationSchema={signUpSchema}
+      //validate={fullValidatorForSchema(signUpSchema)}
       initialValues={intitialFormikSignUp}
       onSubmit={(values) =>
       console.log()}>
@@ -140,6 +148,7 @@ const Slider =  () => {
   const [authMessage, setAuthMessage] = useState(null);
   const _checkSignIn = () => {
     // TODO: need to disable user in aws and prevent signup as well
+  !errors['password'] &&
     _confirmSignInGC();
   };
   const start = user => {
@@ -180,6 +189,7 @@ const _confirmSignInGC = () => {
       if (err) {
         console.log("in signup")
         alert(err.message || JSON.stringify(err));
+        setLoadingSubmit(true);
         return;
       }
       var cognitoUser = result.user;
@@ -196,7 +206,6 @@ const _confirmSignInGC = () => {
               setLoadingSignUInRefresh(true);
               setLoadingSubmit(true);
               initializeClient().then((newClient) => {
-                console.log('so we changed the client with token correct?', newClient);
                 registerOnMongoDb(
                   values,
                   _id,
@@ -214,11 +223,13 @@ const _confirmSignInGC = () => {
                       setSendbird,
                     );
                     Keychain.setGenericPassword(values.phoneNumber, values.password, {
+                          service: 'org.reactjs.native.example.sports-app-keychain-password',
                           accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
                           accessible: Keychain.ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
                           authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
-                        }).then(() => {
-                          setIsUseOnMongoDb(true);
+                        }).then((data) => {
+                          console.log("data", data)
+                          //setIsUseOnMongoDb(true);
                           setLoadingSubmit(false);
                           setLoadingSignUInRefresh(false);
                         }).catch((error) => {

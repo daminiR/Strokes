@@ -1,6 +1,8 @@
 import * as yup from 'yup'
+import YupPassword from 'yup-password'
 import {sportsList, CODE_LENGTH } from '../src/constants'
 
+YupPassword(yup)
 const GENDER = ["Female", "Male"]
 const phoneRegExp = /^[0-9]+$/
 const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -50,6 +52,13 @@ const signInSchema = yup.object().shape({
     .matches(/^\d+$/, "only digits")
 })
 const signUpSchema = yup.object().shape({
+  password: yup
+    .string()
+    .password()
+    //.required(),
+    //.matches(phoneRegExp, 'Phone number is not valid use format (xxx) xxx-xxxx')
+    //.length(8, 'Password must be 8 digits long')
+    .required(' password  is required'),
   phoneNumber: yup
     .string()
     //.matches(phoneRegExp, 'Phone number is not valid use format (xxx) xxx-xxxx')
