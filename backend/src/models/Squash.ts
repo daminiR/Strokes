@@ -31,10 +31,8 @@ const SPORTS = [
   "Power Lifting",
   "Body Building",
   "Surfing",
-  "Golf",
   "Cheerleading",
   "Ultimate Frisbee",
-  "Cricket",
   "Cycling",
   "Dance",
   "Dodgeball",
@@ -42,6 +40,7 @@ const SPORTS = [
   "Figure Skating",
   "Wrestling",
   "Gymnastics",
+  "Paddleboarding"
 ];
 const LEVELS = ['0', '1', '2']
 const MAX_SPORTS_LIMIT = 5

@@ -517,7 +517,7 @@ const [visible, setVisible] = useState(false);
           showNextButton={showNextButton && !isKeyboardShown}
           renderNextButton={renderNext}
           renderPrevButton={renderPrev}
-          dotClickEnabled={false}
+          dotClickEnabled={true}
           keyboardShouldPersistTaps="always"
           onNext={() => _onNext()}
           onPrev={() => _onPrev()}

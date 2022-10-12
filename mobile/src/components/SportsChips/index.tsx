@@ -1,5 +1,7 @@
 import {Chip } from 'react-native-elements'
+import {Image, TouchableOpacity } from 'react-native-elements'
 import { useFormikContext} from 'formik';
+import { sportIconMap} from '@constants';
 import React, {useEffect,useState} from 'react'
 import {styles} from '@styles'
 import LinearGradient from 'react-native-linear-gradient'
@@ -24,10 +26,12 @@ const advanced = {
 }
 
  const SportChips = ({sport, removeSport=null, gameLevel = null, isSelected = false, isDisplay, getData=null, isSignUp}) => {
+   console.log(sport)
    const [dynamicStyle, setDynamicStyle] = useState(styles.ChipButton);
    const [loadingGameStyle, setLoadingGameStyle] = useState(true);
    const [gameLevelStyle, setGameLevelStyle] = useState(null);
    const [gameLevelVisible, setGameLevelVisible] = useState(false)
+   const [sportIcon, setSportIcon] = useState(sportIconMap[sport])
    const [gameLevelInput, setGameLevelInput] = useState(gameLevel)
    const [isDisplayInput, setIsDisplayInput] = useState(isDisplay)
    const {setFieldTouched, touched} = useFormikContext<ProfileFields | EditFields>();
@@ -60,6 +64,17 @@ const advanced = {
      //}
    }, [gameLevelInput]);
 
+  const renderCustomIconA = () => {
+    return(
+      <TouchableOpacity onPress={() => {console.log('A Pressed!')}}>
+        <Image
+          style={{width: 50, height: 50}}
+          source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+         />
+       </TouchableOpacity>
+    );
+  };
+
    const renderColored = () => {
      return (
        <>
@@ -80,11 +95,11 @@ const advanced = {
                buttonStyle={dynamicStyle}
                containerStyle={styles.singleChip}
                onPress={() => {
-
-               if(!touched.sports) {
-                 setFieldTouched('sports')
-               }
-               setGameLevelVisible(true)}}
+                 if (!touched.sports) {
+                   setFieldTouched('sports');
+                 }
+                 setGameLevelVisible(true);
+               }}
                disabled={isDisplayInput}
                disabledTitleStyle={styles.chipText}
                disabledStyle={styles.ChipButton}
@@ -104,12 +119,7 @@ const advanced = {
            title={sport}
            titleStyle={styles.chipText}
            type="solid"
-           icon={{
-             name: 'fire',
-             type: 'material-community',
-             size: 20,
-             color: 'black',
-           }}
+           icon={sportIcon}
            buttonStyle={dynamicStyle}
            containerStyle={styles.singleChip}
            onPress={() => {

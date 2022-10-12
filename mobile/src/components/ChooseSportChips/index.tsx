@@ -1,4 +1,5 @@
 import {Card} from 'react-native-elements'
+import {ScrollView} from 'react-native'
 import React, {useContext, useState} from 'react'
 import {DoneCancelContext} from '@Contexts'
 import {View} from 'react-native';
@@ -106,35 +107,39 @@ const ChooseSportsChips = ({isSignUp}) => {
   const renderFormikSports = () => {
     return (
       <>
-        <Card containerStyle={styles.CardStyle}>
-          <Card.Title> List of Acitivities</Card.Title>
-          <Card.Divider />
-          <View style={styles.sportChipSet}>
-            {sportsList.map((sport, i) => {
-              return (
-                <SportChips
-                  key={i}
-                  sport={sport}
-                  isDisplay={false}
-                  isSignUp={isSignUp}
-                  gameLevel={_.find(temptSports, [
-                    'sport',
-                    sport,
-                  ])?.game_level.toString()}
-                  isSelected={
-                    formikValues.sports
-                      ? formikValues.sports.some(
-                          (currSport) => currSport.sport === sport,
-                        )
-                      : false
-                  }
-                  getData={getData}
-                  removeSport={_removeSport}
-                />
-              );
-            })}
-          </View>
-        </Card>
+        <View style={{paddingBottom: 120}}>
+          <Card containerStyle={styles.CardStyle}>
+            <ScrollView style={{paddingBottom: 50}}>
+              <Card.Title> List of Acitivities</Card.Title>
+              <Card.Divider />
+              <View style={styles.sportChipSet}>
+                {sportsList.map((sport, i) => {
+                  return (
+                    <SportChips
+                      key={i}
+                      sport={sport}
+                      isDisplay={false}
+                      isSignUp={isSignUp}
+                      gameLevel={_.find(temptSports, [
+                        'sport',
+                        sport,
+                      ])?.game_level.toString()}
+                      isSelected={
+                        formikValues.sports
+                          ? formikValues.sports.some(
+                              (currSport) => currSport.sport === sport,
+                            )
+                          : false
+                      }
+                      getData={getData}
+                      removeSport={_removeSport}
+                    />
+                  );
+                })}
+              </View>
+            </ScrollView>
+          </Card>
+        </View>
       </>
     );
   };
