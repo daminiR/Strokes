@@ -268,7 +268,7 @@ const ImageInput = ({isSignUp}) => {
     return (
       <>
         <DismissKeyboard>
-          <View style={styles.phoneNumberContainer}>
+          <View style={styles.emailContainer}>
             <Input
               placeholder="Phone Number"
               label="Phone Number"
