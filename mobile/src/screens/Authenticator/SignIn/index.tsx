@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useContext, useState, ReactElement } from 'react'
 import {connect} from '../../../utils/SendBird'
-import {getPassword, setNewKeychain} from '@utils'
+import {getPassword, setNewKeychain, confirmPassword} from '@utils'
 import { useFormikContext, Formik} from 'formik';
 import * as Keychain from 'react-native-keychain';
 import { StackNavigationProp } from '@react-navigation/stack'
@@ -8,7 +8,7 @@ import {signInSlides, iniitialSignInForm} from '@constants'
 import {  RootStackSignOutParamList } from '@navigationStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import {ProfileFields} from '@localModels';
-import {AppContainer, ConfirmationCode, PasswordInput, Cancel, PhoneInput, NextButton, PrevButton} from '@components'
+import {AppContainer, ConfirmationCode, PasswordInput, Cancel, PhoneInput, NextButton, PrevButton, ResetPassword, ForgotPassword} from '@components'
 import {useNavigation} from '@react-navigation/native'
 import { CHECK_PHONE_INPUT } from '@graphQL2'
 import {View, Keyboard, Alert} from 'react-native'
@@ -24,7 +24,6 @@ import { loginReducer } from '../../../reducers/Login';
 import {
   AuthenticationDetails,
   CognitoUserPool,
-  CognitoUserAttribute,
   CognitoUser,
 } from 'amazon-cognito-identity-js';
 
@@ -54,10 +53,8 @@ export const Slider =  ({changeEmail}) => {
     error: '',
     connecting: false,
   });
-  const {validateField, setTouched, values, handleChange, errors, touched, setFieldTouched, setFieldValue} = useFormikContext<ProfileFields>();
+  const {values, errors, touched, setFieldTouched, setFieldValue} = useFormikContext();
   const [lastSlide, setLastSlide] = useState(false)
-  const [confirmationFunc, setConfirmationFunc] = useState(null)
-  const [overLayIsNewPassword, setOverLayPassword] = useState(false)
   const navigation = useNavigation()
   const [index, setIndex] = useState(0)
   const [canSignIn, setCanSignIn] = useState(true)
@@ -75,10 +72,8 @@ export const Slider =  ({changeEmail}) => {
         data.checkPhoneInput.isPhoneExist == true &&
         data.checkPhoneInput.isDeleted == false
       ) {
-          this.slider.goToSlide(2);
           setCanSignIn(true);
       } else {
-        this.slider.goToSlide(index + 1, true);
         setCanSignIn(false);
       }
     },
@@ -91,8 +86,7 @@ export const Slider =  ({changeEmail}) => {
 
   useEffect(() => {
     getPassword(setCredentials, setFieldValue, setIsFaceID).then( () => {
-    this.slider.goToSlide(index + 1, true);
-
+    //this.slider.goToSlide(index + 1, true);
     })
   }, []);
   useEffect(() => {
@@ -110,9 +104,35 @@ export const Slider =  ({changeEmail}) => {
       hideSubscription.remove();
     };
   }, []);
+  const _resetPassword = () => {
+    confirmPassword(
+      values.phoneNumber,
+      values.verificationCode,
+      values.newPassword,
+    ).then(() => {
+      // ask to change password in keychain
+      this.slider.goToSlide(0);
+      Alert.alert(
+        'Add new password to keychain?',
+        'Do you want to replace existing password with new password',
+        [
+          {
+            text: 'yes',
+            onPress: () => setNewKeychain(values.phoneNumber, values.newPassword),
+          },
+          {
+            text: 'no',
+            onPress: () => {},
+          },
+        ],
+      );
+    });
+  }
+  const _onPresSetNewPassword = () => {
+    this.slider.goToSlide(3);
+    forgotPassword(values.phoneNumber)
+  };
   const _onSlideChange = (index, last_index) => {
-    console.log(index)
-    console.log("did we make it:w")
     setIndex(index)
     if (index == 1){
       setLastSlide(true)
@@ -124,16 +144,11 @@ export const Slider =  ({changeEmail}) => {
   }
   const _signIn = () => {
     this.slider.goToSlide(2);
-    // here see from cognito is user exists if not -> i mean i dont think you need to check anymore!!
-    //checkPhoneInput({variables: {phoneNumber: values.phoneNumber}});
   }
   const renderNext = () => {
     return <NextButton />;
   };
 
-  //const _onPrev = () => {
-    //errors && touched && this.slider.goToSlide(this.slider.state.activeIndex - 1, true)
-  //};
   const _onNext = () => {
     console.log("signin slides", signInSlides)
     const index = this.slider.state.activeIndex;
@@ -148,9 +163,8 @@ export const Slider =  ({changeEmail}) => {
     }
   };
 const _forgotPassword = () => {
-  forgotPassword(values.phoneNumber)
-  navigation.navigate('FORGOT_PASSWORD', {phoneNumber: values.phoneNumber});
-
+  console.log(index)
+  this.slider.goToSlide(1, true)
 }
 const _confirmSignInGC = () => {
   setLoadingSignUInRefresh(true);
@@ -181,7 +195,7 @@ const _confirmSignInGC = () => {
               console.log('call result: ' + result);
               setLoadingSignUInRefresh(false);
               // this should work when credenital is null and undefined, so also when logingin into a new device
-              if (values.password != credentials.password)
+              if (values.password != credentials?.password)
               Alert.alert(
                 "Add new password to keychain?",
                 "Do you want to replace existing password with new password",
@@ -203,41 +217,6 @@ const _confirmSignInGC = () => {
               setLoadingSignUInRefresh(false);
             },
           });
-      //POTENTIAL: Region needs to be set if not already set previously elsewhere.
-      //AWS.config.region = 'us-east-1';
-      //AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        //IdentityPoolId: 'us-east-1:5861edfa-f218-44ee-bbd7-34fd89e151f6', // your identity pool id here
-        //Logins: {
-          //// Change the key below according to the specific region your user pool is in.
-          //'cognito-idp.us-east-1.amazonaws.com/us-east-1_idvRudgcB': result
-            //.getIdToken()
-            //.getJwtToken(),
-        //},
-      //});
-      //refreshes credentials using AWS.CognitoIdentity.getCredentialsForIdentity()
-      //AWS.config.credentials.refresh((error) => {
-        //if (error) {
-          //console.error(error);
-          //setLoadingSignUInRefresh(false);
-        //} else {
-          //// Instantiate aws sdk service objects now that the credentials have been updated.
-          //// example: var s3 = new AWS.S3();
-          //console.log('Successfully logged!');
-          //// on success remember device
-          //cognitoUser.getCachedDeviceKeyAndPassword();
-          //cognitoUser.setDeviceStatusRemembered({
-            //onSuccess: function (result) {
-              //console.log('call result: ' + result);
-              //setLoadingSignUInRefresh(false);
-            //},
-            //onFailure: function (err) {
-              //alert(err.message || JSON.stringify(err));
-              //setLoadingSignUInRefresh(false);
-            //},
-          //});
-        //}
-      //});
-      //setLoadingSignUInRefresh(false);
     },
     onFailure: function (err) {
       alert(err.message || JSON.stringify(err));
@@ -267,35 +246,46 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <PhoneInput faceID={isFaceID}/>
+                  <View style={styles.emailContainer}>
+                    <View style={styles.forgotPasswordContainer1}>
+                      <PhoneInput faceID={true} />
+                    </View>
+                    <View style={styles.forgotPasswordContainer2}>
+                      <PasswordInput
+                        authMessage={authMessage}
+                        noUserFoundMessage={noUserFoundMessage}
+                        isLastSlide={lastSlide}
+                        _confirmSignInGC={_checkSignIn}
+                        _forgotPassword={_forgotPassword}
+                      />
+                    </View>
+                  </View>
                 </>
               );
               break
-            case 'Confirmation Code':
+            case 'Send Verification':
               return (
                 <>
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <PasswordInput
-                    authMessage={authMessage}
-                    noUserFoundMessage={noUserFoundMessage}
-                    isLastSlide={lastSlide}
-                    _confirmSignInGC={_checkSignIn}
-                    _forgotPassword={_forgotPassword}
-                  />
+                    <ForgotPassword
+                      _onPresSetNewPassword={_onPresSetNewPassword}
+                    />
+                </>
+              );
+              break
+            case 'Reset Password':
+              return (
+                <>
+                  <View style={styles.cancel}>
+                    <Cancel _onPressCancel={_onPressCancel} />
+                  </View>
+                  <ResetPassword _resetPassword={_resetPassword}/>
                 </>
               );
               break;
           }
-  };
-
-  const renderPrev = () => {
-    return <PrevButton />;
-  };
-  const _onPrev = () => {
-    const index = this.slider.state.activeIndex
-    this.slider.goToSlide(index - 1, true)
   };
   return (
     <AppContainer loading={loadingSubmit}>
@@ -303,15 +293,8 @@ const [authMessage, setAuthMessage] = useState(null)
         renderItem={renderInputForm}
         data={signInSlides}
         scrollEnabled={false}
-        showPrevButton={true}
-        showDoneButton={false}
         onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-        showNextButton={showNextButton && !isKeyboardShown}
         dotClickEnabled={false}
-        renderNextButton={renderNext}
-        renderPrevButton={renderPrev}
-        onNext={() => _onNext()}
-        onPrev={() => _onPrev()}
         ref={(ref) => (this.slider = ref!)}
       />
     </AppContainer>

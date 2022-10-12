@@ -49,16 +49,29 @@ const signInSchema = yup.object().shape({
     .string()
     .length(6, "code must be 6 digits long")
     //.required('code is required')
+    .matches(/^\d+$/, "only digits"),
+  password: yup
+    .string()
+    .password()
+    .required(),
+  newPassword: yup
+    .string()
+    .password()
+    .required(),
+  verificationCode: yup
+    .string()
+    .length(6, "code must be 6 digits long")
+    .required('code is required')
     .matches(/^\d+$/, "only digits")
 })
 const signUpSchema = yup.object().shape({
   password: yup
     .string()
     .password()
-    //.required(),
+    .required(),
     //.matches(phoneRegExp, 'Phone number is not valid use format (xxx) xxx-xxxx')
     //.length(8, 'Password must be 8 digits long')
-    .required(' password  is required'),
+    //.required(' password  is required'),
   phoneNumber: yup
     .string()
     //.matches(phoneRegExp, 'Phone number is not valid use format (xxx) xxx-xxxx')
@@ -281,5 +294,4 @@ const sanitizePhone = (text) => {
    formatPhoneNumber,
    formatCode,
  };
-
 

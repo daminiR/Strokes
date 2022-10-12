@@ -79,7 +79,9 @@ export const ChatUserSettingsList = [
 // Sign Up Slide Labels
  export const iniitialSignInForm = {
    phoneNumber: '',
-   confirmationCode: ''
+   password: '',
+   newPassword: '',
+   verificationCode: ''
  }
 // formik password reset if any
  export const initialPasswordReset = {
@@ -112,8 +114,15 @@ export const signInSlides = [
   },
   {
     key: '1',
-    type: 'Confirmation Code',
-    title: 'Confirmation Code',
+    type: 'Send Verification',
+    title: 'Send Verification',
+    inputLabel: 'confirmationCode',
+    backgroundColor: '#59b2ab',
+  },
+  {
+    key: '2',
+    type: 'Reset Password',
+    title: 'Reset Password',
     inputLabel: 'confirmationCode',
     backgroundColor: '#59b2ab',
   },

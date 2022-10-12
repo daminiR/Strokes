@@ -96,10 +96,10 @@ export interface EditFields {
        description: string,
 }
 export interface SignIn {
-       email: string;
        phoneNumber: string;
-       confirmationCode: string
        password: string
+       newPassword: string
+       verificationCode: string
 }
 export interface InputType {
        inputType: string;

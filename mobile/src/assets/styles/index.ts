@@ -218,8 +218,19 @@ export const styles = StyleSheet.create({
 
   phoneNumberContainer: {
     flex: 1,
-    justifyContent: 'center',
     paddingHorizontal: 10,
+  },
+  forgotPasswordContainer1: {
+    flex: 0,
+    flexBasis: 90,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+  },
+  forgotPasswordContainer2: {
+    flex: 0,
+    flexBasis: 200,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
   },
   emailContainer: {
     flex: 1,
@@ -454,6 +465,11 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     //fontFamily: ICON_FONT,
     color: WHITE,
+  },
+  titleFontStyle: {
+    fontSize: 25,
+    padding: 10,
+    textAlign: 'center',
   },
   descriptionFontStyle: {
     fontSize: 15,
