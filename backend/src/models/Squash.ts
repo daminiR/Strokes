@@ -3,9 +3,46 @@ import { DeleteT, SquashDocument, LikedByUserT, PotentialMatchT, LocationT} from
 //const mongoose = require('mongoose');
 //const Schema = mongoose.Schema;
 const GENDERS = ["Male", "Female"]
-const COUNTRY = ["US"]
-const SPORTS = ["Squash", "Tennis", "Soccer", "Badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
-//const LEVELS = ["beginer", "intermediate", "expert"]
+const COUNTRY = ["US"];
+const SPORTS = [
+  "Softball",
+  "Kickball",
+  "Pickleball",
+  "Hiking",
+  "Swimming",
+  "Kick boxing",
+  "Bouldering",
+  "Squash",
+  "Tennis",
+  "Soccer",
+  "Badminton",
+  "Hockey",
+  "Volleyball",
+  "Basketball",
+  "Cricket",
+  "Table Tennis",
+  "Baseball",
+  "Golf",
+  "American Football",
+  "Skating",
+  "Snowbording",
+  "Ice Skating",
+  "Ice Hockey",
+  "Power Lifting",
+  "Body Building",
+  "Surfing",
+  "Golf",
+  "Cheerleading",
+  "Ultimate Frisbee",
+  "Cricket",
+  "Cycling",
+  "Dance",
+  "Dodgeball",
+  "Fencing",
+  "Figure Skating",
+  "Wrestling",
+  "Gymnastics",
+];
 const LEVELS = ['0', '1', '2']
 const MAX_SPORTS_LIMIT = 5
 

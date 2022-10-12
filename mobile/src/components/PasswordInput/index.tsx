@@ -102,6 +102,15 @@ const clientId = process.env.React_App_AWS_Client_Id
           {authMessage && (
             <Text style={{alignSelf: 'center'}}>{authMessage}</Text>
           )}
+            {isSignIn && (
+              <Button
+                type='clear'
+                //buttonStyle={styles.buttonStyle}
+                //titleStyle={styles.buttonText}
+                onPress={() => _forgotPassword()}
+                title="Forgot Password?"
+              />
+            )}
           <View style={styles.helloButtons}>
             <Button
               buttonStyle={styles.buttonStyle}
@@ -109,14 +118,6 @@ const clientId = process.env.React_App_AWS_Client_Id
               onPress={() => _confirmSignInGC(values.password)}
               title="Confirm"
             />
-            {isSignIn && (
-              <Button
-                buttonStyle={styles.buttonStyle}
-                titleStyle={styles.buttonText}
-                onPress={() => _forgotPassword()}
-                title="Forgot Password"
-              />
-            )}
           </View>
         </View>
       </DismissKeyboard>
