@@ -25,18 +25,21 @@ export const defaultAgeRange = { minAge: 18, maxAge: 118 }
 export const defaultGameLevel = {gameLevel0: true, gameLevel1: false, gameLevel2: false}
 // sports type and level information
 export const sportIconMap = {
+  //not found
   Softball: {
     name: 'fencing',
     type: 'material-community',
     size: 20,
     color: 'black',
   },
+  //not found
   Kickball: {
     name: 'fencing',
     type: 'material-community',
     size: 20,
     color: 'black',
   },
+  //not found
   Pickleball: {
     name: 'fencing',
     type: 'material-community',
@@ -55,18 +58,21 @@ export const sportIconMap = {
     size: 20,
     color: 'black',
   },
+  //not found
   'Kick boxing': {
     name: 'fencing',
     type: 'material-community',
     size: 20,
     color: 'black',
   },
+  //not found
   Bouldering: {
     name: 'fencing',
     type: 'material-community',
     size: 20,
     color: 'black',
   },
+  //not found
   Squash: {
     name: 'fencing',
     type: 'material-community',
@@ -115,7 +121,7 @@ export const sportIconMap = {
     size: 20,
     color: 'black',
   },
-  'Table Tennis': {
+  TableTennis: {
     name: 'table-tennis',
     type: 'material-community',
     size: 20,
@@ -169,6 +175,7 @@ export const sportIconMap = {
     size: 20,
     color: 'black',
   },
+  //not found
   'Body Building': {
     name: 'heart',
     type: 'material-community',
@@ -181,6 +188,7 @@ export const sportIconMap = {
     size: 20,
     color: 'black',
   },
+  //not found
   Cheerleading: {
     name: 'golf',
     type: 'material-community',
@@ -205,6 +213,7 @@ export const sportIconMap = {
     size: 20,
     color: 'black',
   },
+  //not found
   Dodgeball: {
     name: 'frisbee',
     type: 'material-community',
@@ -218,23 +227,26 @@ export const sportIconMap = {
     color: 'black',
   },
   'Figure Skating': {
-    name: 'fencing',
-    type: 'material-community',
+    name: 'skating',
+    type: 'font-awesome',
     size: 20,
     color: 'black',
   },
+  //not found
   Wrestling: {
     name: 'fencing',
     type: 'material-community',
     size: 20,
     color: 'black',
   },
+  //not found
   Gymnastics: {
     name: 'fencing',
     type: 'material-community',
     size: 20,
     color: 'black',
   },
+  //not found
   Paddleboarding: {
     name: 'fencing',
     type: 'material-community',
