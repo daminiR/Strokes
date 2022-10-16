@@ -351,8 +351,7 @@ export const styles = StyleSheet.create({
   chipText: {
     color: '#242424',
     fontFamily: 'OpenSans-Regular',
-    fontSize: 16,
-    fontWeight: 'normal',
+    fontSize: 18,
   },
   ChipButtonSelected: {
     borderColor: 'grey',

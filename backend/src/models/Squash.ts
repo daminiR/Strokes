@@ -21,6 +21,7 @@ const SPORTS = [
   "Basketball",
   "Cricket",
   "Table Tennis",
+  "Skateboarding",
   "Baseball",
   "Golf",
   "American Football",
@@ -33,14 +34,15 @@ const SPORTS = [
   "Surfing",
   "Cheerleading",
   "Ultimate Frisbee",
+  "Cricket",
   "Cycling",
   "Dance",
   "Dodgeball",
   "Fencing",
-  "Figure Skating",
   "Wrestling",
   "Gymnastics",
-  "Paddleboarding"
+  "Paddleboarding",
+  "Boxing"
 ];
 const LEVELS = ['0', '1', '2']
 const MAX_SPORTS_LIMIT = 5

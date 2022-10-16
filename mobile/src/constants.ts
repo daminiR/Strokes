@@ -25,223 +25,92 @@ export const defaultAgeRange = { minAge: 18, maxAge: 118 }
 export const defaultGameLevel = {gameLevel0: true, gameLevel1: false, gameLevel2: false}
 // sports type and level information
 export const sportIconMap = {
-  //not found
-  Softball: {
-    name: 'fencing',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  Kickball: {
-    name: 'fencing',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  Pickleball: {
-    name: 'fencing',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
   Hiking: {
     name: 'hiking',
     type: 'material-community',
-    size: 20,
+    size: 25,
     color: 'black',
   },
   Swimming: {
     name: 'swim',
     type: 'material-community',
-    size: 20,
+    size: 25,
     color: 'black',
   },
   //not found
   'Kick boxing': {
     name: 'fencing',
     type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  Bouldering: {
-    name: 'fencing',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  Squash: {
-    name: 'fencing',
-    type: 'material-community',
-    size: 20,
+    size: 25,
     color: 'black',
   },
   Tennis: {
     name: 'tennisball',
     type: 'ionicon',
-    size: 20,
+    size: 25,
     color: 'black',
   },
   Soccer: {
     name: 'soccer-ball-o',
     type: 'font-awesome',
-    size: 20,
+    size: 25,
     color: 'black',
   },
   Badminton: {
     name: 'badminton',
     type: 'material-community',
-    size: 20,
+    size: 25,
     color: 'black',
   },
-  Hockey: {
-    name: 'hockey-sticks',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //Volleyball: {
-    //name: 'volleyball',
-    //type: 'material-community',
-    //size: 20,
-    //color: 'black',
-  //},
   Basketball: {
     name: 'basketball',
     type: 'material-community',
-    size: 20,
     color: 'black',
+    size: 25,
   },
   Cricket: {
     name: 'cricket',
     type: 'material-community',
-    size: 20,
     color: 'black',
+    size: 25,
   },
   'Table Tennis': {
     name: 'table-tennis',
     type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  'Skateboarding': {
-    name: 'table-tennis',
-    type: 'material-community',
-    size: 20,
+    size: 25,
     color: 'black',
   },
   Baseball: {
     name: 'baseball',
     type: 'material-community',
-    size: 20,
+    size: 25,
     color: 'black',
   },
   Golf: {
     name: 'golf',
     type: 'material-community',
-    size: 20,
+    size: 25,
     color: 'black',
   },
   'American Football': {
     name: 'football',
     type: 'material-community',
-    size: 20,
     color: 'black',
-  },
-  Snowbording: {
-    name: 'snowboarding',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  'Power Lifting': {
-    name: 'lifting',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  'Body Building': {
-    name: 'heart',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  Surfing: {
-    name: 'surfing',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  Cheerleading: {
-    name: 'golf',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  'Ultimate Frisbee': {
-    name: 'frisbee',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
+    size: 25,
   },
   Cycling: {
     name: 'cycling',
     type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  Dance: {
-    name: 'dance',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  Dodgeball: {
-    name: 'frisbee',
-    type: 'material-community',
-    size: 20,
+    size: 25,
     color: 'black',
   },
   Fencing: {
     name: 'fencing',
     type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  Wrestling: {
-    name: 'fencing',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  Gymnastics: {
-    name: 'fencing',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  //not found
-  Paddleboarding: {
-    name: 'fencing',
-    type: 'material-community',
-    size: 20,
+    size: 25,
     color: 'black',
   },
 };
-
-// left
-// squash
-// bouldering
-// volleyball
-// // frisbee
 
 export const customIconMap = {
   "Squash":"squash",
@@ -257,6 +126,7 @@ export const customIconMap = {
   "Softball": "baseball",
   "Kickball": "kickball",
   "Kick boxing":"kickboxing",
+  "Boxing":"boxing",
   "Hockey": "puck",
   "Ice Hockey": "puck",
   "Skateboarding": "skateboard",
@@ -307,7 +177,8 @@ export const sportsList = [
   "Fencing",
   "Wrestling",
   "Gymnastics",
-  "Paddleboarding"
+  "Paddleboarding",
+  "Boxing"
 ];
 export const sportLevelList = ["beginners", "intermediate", "advanced"]
 export const profileSettingsLabels = ["first name", "last name", "age", "gender"]
@@ -483,13 +354,6 @@ export const signUpSlides = [
     inputLabel: 'confirmationCode',
     backgroundColor: '#59b2ab',
   },
-  //{
-    //key: '10',
-    //type: 'Confirmation Code',
-    //title: 'Confirmation Code',
-    //inputLabel: 'confirmationCode',
-    //backgroundColor: '#59b2ab',
-  //},
 ];
 export const likeIconStyle= {
     type: 'material-community',
