@@ -17,6 +17,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* sports_appTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* sports_appTests.m */; };
 		75EDC4F5ADCF2EFB584D5D53 /* libPods-sports_app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77BAE9A78FD685DC26D37F0C /* libPods-sports_app.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		824DBB7F28FBA54500E3C6D4 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 824DBB7E28FBA54500E3C6D4 /* icomoon.ttf */; };
 		82553ACD278CBC9D007E974D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		825A4F4B276920E700B33D67 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82F803EF26BB4AC0000C8F5A /* GoogleService-Info.plist */; };
 		82E1C551271CB84E002C00B1 /* tinderclone.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82E1C550271CB84E002C00B1 /* tinderclone.ttf */; };
@@ -68,6 +69,7 @@
 		77BAE9A78FD685DC26D37F0C /* libPods-sports_app.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sports_app.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E8183FB3D1442169BF5CB8D /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = sports_app/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		824DBB7E28FBA54500E3C6D4 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = ../src/assets/fonts/icomoon.ttf; sourceTree = "<group>"; };
 		828F4F55287E32260051D7FB /* sports_app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = sports_app.entitlements; path = sports_app/sports_app.entitlements; sourceTree = "<group>"; };
 		82E1C550271CB84E002C00B1 /* tinderclone.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = tinderclone.ttf; path = ../src/assets/fonts/tinderclone.ttf; sourceTree = "<group>"; };
 		82F8039526BB448C000C8F5A /* sports_app-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sports_app-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 		2F5ADD6B95D5471AB13CE641 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				824DBB7E28FBA54500E3C6D4 /* icomoon.ttf */,
 				8D2BE619E3E54D998051EA17 /* KLMN-Flash-Pix.ttf */,
 				7E8183FB3D1442169BF5CB8D /* OpenSans-Regular.ttf */,
 				38E537C3B9DC4125AE9E68AC /* AntDesign.ttf */,
@@ -385,6 +388,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				824DBB7F28FBA54500E3C6D4 /* icomoon.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				82E1C551271CB84E002C00B1 /* tinderclone.ttf in Resources */,
 				83E6B70E3EA0411FA04CFB1E /* KLMN-Flash-Pix.ttf in Resources */,
