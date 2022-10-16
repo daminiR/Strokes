@@ -68,10 +68,15 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'OpenSans-Regular',
     alignSelf: 'stretch',
+    justifyContent: 'center'
   },
   buttonIndStyle: {
     padding: 20,
     paddingHorizontal: 10,
+  },
+  descriptionContainer: {
+    //flex: 1,
+    justifyContent: 'center',
   },
   helloContainer: {
     backgroundColor: SECONDARY_THEME,
@@ -110,6 +115,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: DIMENSION_WIDTH * 0.8,
     height: DIMENSION_HEIGHT * 0.8,
+  },
+  DescriptionInput: {
+    borderBottomWidth: 0,
+    justifyContent: 'flex-start',
+    paddingHorizontal: 10,
+    width: DIMENSION_WIDTH * 0.8,
+    height: DIMENSION_HEIGHT * 0.5,
   },
 
   // IMAGE PLACEHOLDER COMPONENET
@@ -220,22 +232,28 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
   },
+  signUpContainer: {
+    paddingHorizontal: 50
+  },
+
   forgotPasswordContainer1: {
     flex: 0,
     flexBasis: 90,
-    paddingHorizontal: 10,
     justifyContent: 'center',
   },
   forgotPasswordContainer2: {
     flex: 0,
     flexBasis: 200,
-    paddingHorizontal: 10,
+    justifyContent: 'center',
+  },
+  phoneContainer: {
+    flex: 1,
     justifyContent: 'center',
   },
   emailContainer: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 30,
   },
   link: {
     fontSize: 22,
@@ -257,13 +275,13 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 30,
   },
   ageContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
   },
   genderContainer: {
     flex: 1,
@@ -471,8 +489,9 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   descriptionFontStyle: {
-    fontSize: 15,
+    fontSize: 18,
     padding: 10,
+    paddingTop: 20,
     textAlign: 'center',
   },
   descriptionCardItem: {

@@ -71,7 +71,7 @@ const clientId = process.env.React_App_AWS_Client_Id
   return (
     <>
       <DismissKeyboard>
-        <View style={styles.confirmationCodeContainer}>
+        <View style={styles.emailContainer}>
           <Formik
             validationSchema={passwordResetSchema}
             initialValues={initialPasswordReset}

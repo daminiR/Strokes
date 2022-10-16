@@ -217,7 +217,6 @@ const ImageInput = ({isSignUp}) => {
     const [email, setEmail] = useState(values.email)
     useEffect(() => {
       if (getData){
-        console.log("//////////////////emai",values.email)
       getData(email, 'Email Input');
       }
     }, [email])
@@ -237,6 +236,7 @@ const ImageInput = ({isSignUp}) => {
             {errors.email && touched.email ? (
               <Text>{errors.email}</Text>
             ) : null}
+          <View style={styles.helloButtons}>
             {!isSignUp && _signIn && (
               <Button
                 buttonStyle={styles.buttonStyle}
@@ -245,6 +245,7 @@ const ImageInput = ({isSignUp}) => {
                 title="Submit"
               />
             )}
+          </View>
           </View>
         </View>
       </DismissKeyboard>
@@ -350,39 +351,22 @@ const ImageInput = ({isSignUp}) => {
   };
 const DescriptionInput = ({isSignUp}) => {
   const { handleBlur, errors, touched, values, setValues, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
-    //var setTempInputValues = null;
-    //var tempInputValues = null;
-   //if (!isSignUp){
-    //var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
-   //}
-   //const [loadingTempValues, setLoadingTempValues] = useState(true);
-    //useEffect(() => {
-        //setLoadingTempValues(true)
-      //if (!isSignUp ){
-        //setTempInputValues((prevState) => {return {...prevState, 'description' : values.description}})
-      //}
-        //setLoadingTempValues(false)
-    //}, [])
     return (
       <>
         <DismissKeyboard>
-          <View style={{flex: 1}}>
+          <View>
             <Card containerStyle={styles.CardStyle}>
-              <Card.Title> Description </Card.Title>
+                <Card.Title style={styles.descriptionFontStyle}>  Tell people more about your activties and sports ...  </Card.Title>
               <Card.Divider />
-              <View style={styles.sportChipSet}>
                 <Input
                   onBlur={handleBlur('description')}
                   multiline={true}
-                  inputContainerStyle={{borderBottomWidth: 0}}
-                  placeholder="Descriptionn"
-                  label="Description"
-                  leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
+                  inputContainerStyle={styles.DescriptionInput}
+                  placeholder="Description"
                   maxLength={300}
                   onChangeText={handleChange('description')}
                   value={values.description}
                 />
-              </View>
             </Card>
             {errors.description && touched.description ? (
               <Text style={{alignSelf: 'center'}}>{errors.description}</Text>
