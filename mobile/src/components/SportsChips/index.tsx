@@ -68,23 +68,12 @@ const advanced = {
      //}
    }, [gameLevelInput]);
 
-  const renderCustomIconA = () => {
-    return(
-      <TouchableOpacity onPress={() => {console.log('A Pressed!')}}>
-        <Image
-          style={{width: 50, height: 50}}
-          source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
-         />
-       </TouchableOpacity>
-    );
-  };
-
    const renderIcon = () => {
      const customIcon = customIconMap[sport]
      console.log("sport log", customIcon)
      return (
        <>
-          <Icon name={customIcon} size={20}/>
+          <Icon name={customIcon} size={25}/>
        </>
      );
    };
@@ -100,12 +89,7 @@ const advanced = {
                title={sport}
                titleStyle={styles.chipText}
                type="solid"
-               icon={{
-                 name: 'fire',
-                 type: 'material-community',
-                 size: 20,
-                 color: 'black',
-               }}
+               icon={_.has(customIconMap, sport) ? renderIcon : sportIcon}
                buttonStyle={dynamicStyle}
                containerStyle={styles.singleChip}
                onPress={() => {
@@ -133,7 +117,6 @@ const advanced = {
            title={sport}
            titleStyle={styles.chipText}
            type="solid"
-           //icon={sportIcon}
            icon={_.has(customIconMap, sport) ? renderIcon : sportIcon}
            buttonStyle={dynamicStyle}
            containerStyle={styles.singleChip}
