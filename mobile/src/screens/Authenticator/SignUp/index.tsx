@@ -33,7 +33,7 @@ import {
 import {connect} from '../../../utils/SendBird'
 import {registerOnMongoDb, authenticateAWS, initializeClient} from '@utils'
 import { UserContext} from '@UserContext'
-import {Keyboard, View} from 'react-native'
+import {Keyboard, View, KeyboardAvoidingView, Platform} from 'react-native'
 import  _ from 'lodash'
 import { styles } from '@styles'
 import  { signUpSchema} from '@validation'
@@ -395,7 +395,9 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                   <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                     <PhoneInput />
+        </KeyboardAvoidingView>
                 </>
               )
               break
@@ -405,7 +407,9 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                   <EmailInput isSignUp={true}/>
+        </KeyboardAvoidingView>
                 </>
               )
               break
@@ -415,7 +419,9 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                   <NameInput isSignUp={true}/>
+        </KeyboardAvoidingView>
                 </>
               )
               break
@@ -425,7 +431,9 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                   <BirthdayInput isSignUp={true}/>
+        </KeyboardAvoidingView>
                 </>
               )
               break
@@ -435,7 +443,9 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                   <GenderInput isSignUp={true}/>
+        </KeyboardAvoidingView>
                 </>
               )
               break
@@ -467,7 +477,9 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                   <DescriptionInput isSignUp={true}/>
+        </KeyboardAvoidingView>
                 </>
               )
               break
@@ -488,6 +500,7 @@ const _awsConfirmOTP =  () => {
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
                     <View style={styles.emailContainer}>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                   <PasswordInput
                     authMessage={authMessage}
                     noUserFoundMessage={noUserFoundMessage}
@@ -495,6 +508,7 @@ const _awsConfirmOTP =  () => {
                     _confirmSignInGC={_checkSignIn}
                     isSignIn={false}
                   />
+        </KeyboardAvoidingView>
                     </View>
                 </>
               )

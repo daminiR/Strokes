@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from 'react'
 import { useFormikContext} from 'formik';
 import { genderRadioObject } from '../../constants'
 import { Card, Input, Button, Icon, CheckBox} from 'react-native-elements'
-import { Text, View, TouchableWithoutFeedback, Keyboard, Linking} from 'react-native'
+import { Text, View, TouchableWithoutFeedback, Keyboard, Linking, KeyboardAvoidingView, Platform} from 'react-native'
 import {styles} from '@styles'
 import {ChooseSportsChips, Pictures, DismissKeyboard} from '@components'
 import { EditFields, ProfileFields, SignIn} from '@localModels'
@@ -280,7 +280,7 @@ const ImageInput = ({isSignUp}) => {
               }}
               keyboardType={'phone-pad'}
               onBlur={handleBlur('phoneNumber')}
-              value={faceID? values.phoneNumber : inputValue}
+              value={faceID ? values.phoneNumber : inputValue}
             />
             {errors.phoneNumber && touched.phoneNumber ? (
               <Text>{errors.phoneNumber}</Text>
