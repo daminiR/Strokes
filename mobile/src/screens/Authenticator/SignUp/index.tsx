@@ -211,7 +211,7 @@ const _confirmSignInGC = () => {
                   _id,
                   createSquash2,
                   userDetails.session,
-                  newClient
+                  newClient,
                 )
                   .then(async () => {
                     connect(
@@ -222,22 +222,35 @@ const _confirmSignInGC = () => {
                       start,
                       setSendbird,
                     );
-                    Keychain.setGenericPassword(values.phoneNumber, values.password, {
-                          service: 'org.reactjs.native.example.sports-app-keychain-password',
-                          accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
-                          accessible: Keychain.ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
-                          authenticationType: Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
-                        }).then((data) => {
-                          console.log("data", data)
-                          //setIsUseOnMongoDb(true);
-                          setLoadingSubmit(false);
-                          setLoadingSignUInRefresh(false);
-                        }).catch((error) => {
-                      console.log(error)
-                        })
-                    }).catch((err) => {
-                      console.log(err)
-                    })
+                    Keychain.setGenericPassword(
+                      values.phoneNumber,
+                      values.password,
+                      {
+                        service:
+                          'org.reactjs.native.example.sports-app-keychain-password',
+                        accessControl:
+                          Keychain.ACCESS_CONTROL
+                            .BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE,
+                        accessible:
+                          Keychain.ACCESSIBLE
+                            .WHEN_PASSCODE_SET_THIS_DEVICE_ONLY,
+                        authenticationType:
+                          Keychain.AUTHENTICATION_TYPE
+                            .DEVICE_PASSCODE_OR_BIOMETRICS,
+                      },
+                    )
+                      .then((data) => {
+                        //setIsUseOnMongoDb(true);
+                        setLoadingSubmit(false);
+                        setLoadingSignUInRefresh(false);
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  })
                   //})
                   .catch(async (err) => {
                     console.log(err);
