@@ -393,13 +393,15 @@ const _awsConfirmOTP =  () => {
               return (
                 <>
                   <View style={styles.cancel}>
-                  <Cancel _onPressCancel={_onPressCancel} />
+                    <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{flex: 1}}>
                     <PhoneInput />
-        </KeyboardAvoidingView>
+                  </KeyboardAvoidingView>
                 </>
-              )
+              );
               break
             case 'Email Input':
               return (
@@ -407,11 +409,13 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
-                  <EmailInput isSignUp={true}/>
-        </KeyboardAvoidingView>
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{flex: 1}}>
+                    <EmailInput isSignUp={true} />
+                  </KeyboardAvoidingView>
                 </>
-              )
+              );
               break
             case 'Name Input':
               return (
@@ -419,11 +423,13 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
-                  <NameInput isSignUp={true}/>
-        </KeyboardAvoidingView>
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{flex: 1}}>
+                    <NameInput isSignUp={true} />
+                  </KeyboardAvoidingView>
                 </>
-              )
+              );
               break
             case 'Birthday Input':
               return (
@@ -443,11 +449,13 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
-                  <GenderInput isSignUp={true}/>
-        </KeyboardAvoidingView>
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{flex: 1}}>
+                    <GenderInput isSignUp={true} />
+                  </KeyboardAvoidingView>
                 </>
-              )
+              );
               break
             case 'Sports Input':
               return (
@@ -477,11 +485,13 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
-                  <DescriptionInput isSignUp={true}/>
-        </KeyboardAvoidingView>
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{flex: 1}}>
+                    <DescriptionInput isSignUp={true} />
+                  </KeyboardAvoidingView>
                 </>
-              )
+              );
               break
             case 'Neighborhood Input':
               return (
@@ -499,19 +509,21 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                    <View style={styles.emailContainer}>
-                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
-                  <PasswordInput
-                    authMessage={authMessage}
-                    noUserFoundMessage={noUserFoundMessage}
-                    isLastSlide={lastSlide}
-                    _confirmSignInGC={_checkSignIn}
-                    isSignIn={false}
-                  />
-        </KeyboardAvoidingView>
-                    </View>
+                  <View style={styles.emailContainer}>
+                    <KeyboardAvoidingView
+                      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                      style={{flex: 1}}>
+                      <PasswordInput
+                        authMessage={authMessage}
+                        noUserFoundMessage={noUserFoundMessage}
+                        isLastSlide={lastSlide}
+                        _confirmSignInGC={_checkSignIn}
+                        isSignIn={false}
+                      />
+                    </KeyboardAvoidingView>
+                  </View>
                 </>
-              )
+              );
               break
           }
   };
