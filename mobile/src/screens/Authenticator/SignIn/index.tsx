@@ -11,7 +11,7 @@ import {ProfileFields} from '@localModels';
 import {AppContainer, ConfirmationCode, PasswordInput, Cancel, PhoneInput, NextButton, PrevButton, ResetPassword, ForgotPassword} from '@components'
 import {useNavigation} from '@react-navigation/native'
 import { CHECK_PHONE_INPUT } from '@graphQL2'
-import {View, Keyboard, Alert} from 'react-native'
+import {View, Keyboard, Alert, KeyboardAvoidingView, Platform} from 'react-native'
 import {styles }from '@styles'
 import  { signInSchema } from '@validation'
 import { UserContext} from '@UserContext'
@@ -246,6 +246,7 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                   <View style={styles.phoneContainer}>
                     <View style={styles.forgotPasswordContainer1}>
                       <PhoneInput faceID={true} />
@@ -260,6 +261,7 @@ const [authMessage, setAuthMessage] = useState(null)
                       />
                     </View>
                   </View>
+        </KeyboardAvoidingView>
                 </>
               );
               break
@@ -269,9 +271,11 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                     <ForgotPassword
                       _onPresSetNewPassword={_onPresSetNewPassword}
                     />
+        </KeyboardAvoidingView>
                 </>
               );
               break
@@ -281,7 +285,9 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
                   <ResetPassword _resetPassword={_resetPassword}/>
+        </KeyboardAvoidingView>
                 </>
               );
               break;

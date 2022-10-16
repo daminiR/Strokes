@@ -2,7 +2,7 @@ import React, {useRef, useEffect, useState } from 'react'
 import {Input, Button, Text} from 'react-native-elements'
 import {initialPasswordReset} from '@constants'
 import  { passwordResetSchema } from '@validation'
-import { View} from 'react-native'
+import { View, KeyboardAvoidingView, Platform} from 'react-native'
 import { useFormikContext, Formik} from 'formik';
 import {styles} from '@styles'
 import { ProfileFields} from '@localModels'
