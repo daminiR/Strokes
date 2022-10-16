@@ -1,12 +1,16 @@
 import {Chip } from 'react-native-elements'
+import _ from 'lodash'
 import {Image, TouchableOpacity } from 'react-native-elements'
 import { useFormikContext} from 'formik';
-import { sportIconMap} from '@constants';
+import { sportIconMap, customIcons, customIconMap} from '@constants';
 import React, {useEffect,useState} from 'react'
 import {styles} from '@styles'
 import LinearGradient from 'react-native-linear-gradient'
 import {GameLevelChoose} from '@components'
 import { EditFields, ProfileFields} from '@localModels'
+import { createIconSetFromIcoMoon } from 'react-native-vector-icons';
+const icoMoonConfig = require('./../../selection.json')
+const Icon = createIconSetFromIcoMoon(icoMoonConfig);
 
 const intermediate = {
                  colors: ['#ff7f02', 'white', 'white', 'white'],
@@ -75,6 +79,16 @@ const advanced = {
     );
   };
 
+   const renderIcon = () => {
+     const customIcon = customIconMap[sport]
+     console.log("sport log", customIcon)
+     return (
+       <>
+          <Icon name={customIcon} size={20}/>
+       </>
+     );
+   };
+
    const renderColored = () => {
      return (
        <>
@@ -119,7 +133,8 @@ const advanced = {
            title={sport}
            titleStyle={styles.chipText}
            type="solid"
-           icon={sportIcon}
+           //icon={sportIcon}
+           icon={_.has(customIconMap, sport) ? renderIcon : sportIcon}
            buttonStyle={dynamicStyle}
            containerStyle={styles.singleChip}
            onPress={() => {
@@ -149,7 +164,6 @@ const advanced = {
            isSignUp={isSignUp}
          />
        )}
-
        {gameLevelInput ? renderColored() : renderNormal()}
      </>
    );

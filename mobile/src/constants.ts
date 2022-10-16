@@ -103,12 +103,12 @@ export const sportIconMap = {
     size: 20,
     color: 'black',
   },
-  Volleyball: {
-    name: 'volleyball',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
+  //Volleyball: {
+    //name: 'volleyball',
+    //type: 'material-community',
+    //size: 20,
+    //color: 'black',
+  //},
   Basketball: {
     name: 'basketball',
     type: 'material-community',
@@ -121,7 +121,13 @@ export const sportIconMap = {
     size: 20,
     color: 'black',
   },
-  TableTennis: {
+  'Table Tennis': {
+    name: 'table-tennis',
+    type: 'material-community',
+    size: 20,
+    color: 'black',
+  },
+  'Skateboarding': {
     name: 'table-tennis',
     type: 'material-community',
     size: 20,
@@ -145,26 +151,8 @@ export const sportIconMap = {
     size: 20,
     color: 'black',
   },
-  Skating: {
-    name: 'skating',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
   Snowbording: {
     name: 'snowboarding',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  'Ice Skating': {
-    name: 'ice-skating',
-    type: 'material-community',
-    size: 20,
-    color: 'black',
-  },
-  'Ice Hockey': {
-    name: 'hockey',
     type: 'material-community',
     size: 20,
     color: 'black',
@@ -226,12 +214,6 @@ export const sportIconMap = {
     size: 20,
     color: 'black',
   },
-  'Figure Skating': {
-    name: 'skating',
-    type: 'font-awesome',
-    size: 20,
-    color: 'black',
-  },
   //not found
   Wrestling: {
     name: 'fencing',
@@ -255,6 +237,38 @@ export const sportIconMap = {
   },
 };
 
+// left
+// squash
+// bouldering
+// volleyball
+// // frisbee
+
+export const customIconMap = {
+  "Squash":"squash",
+  "Bouldering": "bouldering",
+  "Volleyball":"volleyball",
+  "Body Building":"lifting",
+  "Gymnastics": "gymnast",
+  "Ice Skating":"ice-skating",
+  "Power Lifting":"lifting",
+  "Pickleball":"pickleball",
+  "Cycling":"bicycle",
+  "Skating":"roller-skate",
+  "Softball": "baseball",
+  "Kickball": "kickball",
+  "Kick boxing":"kickboxing",
+  "Hockey": "puck",
+  "Ice Hockey": "puck",
+  "Skateboarding": "skateboard",
+  "Snowbording": "snowboard",
+  "Surfing": "surfing",
+  "Cheerleading": "cheerleading",
+  "Ultimate Frisbee": "frisbee",
+  "Dance": "cheerleading",
+  "Dodgeball": "dodgeball",
+  "Wrestling": "wrestling",
+  "Paddleboarding": "paddle",
+}
 
 export const sportsList = [
   "Softball",
@@ -273,6 +287,7 @@ export const sportsList = [
   "Basketball",
   "Cricket",
   "Table Tennis",
+  "Skateboarding",
   "Baseball",
   "Golf",
   "American Football",
@@ -290,7 +305,6 @@ export const sportsList = [
   "Dance",
   "Dodgeball",
   "Fencing",
-  "Figure Skating",
   "Wrestling",
   "Gymnastics",
   "Paddleboarding"
