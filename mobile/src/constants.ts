@@ -255,8 +255,7 @@ export const ChatUserSettingsList = [
    sports:[],
    image_set:[],
    confirmationCode: '',
-
-   description: 'Hi I like to play soccer',
+   description: 'Hi, I am interested to find more people to play sports with!',
    location: {}
  }
 export const signInSlides = [

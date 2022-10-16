@@ -382,7 +382,7 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                   <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <PhoneInput />
+                    <PhoneInput />
                 </>
               )
               break
@@ -474,6 +474,7 @@ const _awsConfirmOTP =  () => {
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
+                    <View style={styles.emailContainer}>
                   <PasswordInput
                     authMessage={authMessage}
                     noUserFoundMessage={noUserFoundMessage}
@@ -481,26 +482,10 @@ const _awsConfirmOTP =  () => {
                     _confirmSignInGC={_checkSignIn}
                     isSignIn={false}
                   />
+                    </View>
                 </>
               )
               break
-            //case 'Confirmation Code':
-              //return (
-                //<>
-                  //<View style={styles.cancel}>
-                    //<Cancel _onPressCancel={_onPressCancel} />
-                  //</View>
-                  //<ConfirmationCode
-                    //authMessage={authMessage}
-                    //noUserFoundMessage={noUserFoundMessage}
-                    //isLastSlide={lastSlide}
-                    //_confirmSignInGC={_awsConfirmOTP}
-                    //resendConfirmation={resendCode}
-                    //isSignUp={true}
-                  ///>
-                //</>
-              //)
-              //break
           }
   };
 const [visible, setVisible] = useState(false);

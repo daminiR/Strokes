@@ -246,7 +246,7 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <View style={styles.emailContainer}>
+                  <View style={styles.phoneContainer}>
                     <View style={styles.forgotPasswordContainer1}>
                       <PhoneInput faceID={true} />
                     </View>
