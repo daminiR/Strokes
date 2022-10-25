@@ -2,19 +2,86 @@ import { Types, model, Schema} from 'mongoose';
 import { DeleteT, SquashDocument, LikedByUserT, PotentialMatchT, LocationT} from '../types/Squash.d'
 const uri = process.env.ATLAS_URI as any
 const GENDERS = ["Male", "Female"]
+const LOCATIONS = [
+  {
+    city: "New York City",
+    state: "NY",
+    country: "US",
+  },
+  {
+    city: "Cambridge",
+    state: "MA",
+    country: "US",
+  },
+  {
+    city: "Boston",
+    state: "MA",
+    country: "US",
+  },
+  {
+    city: "Sommerville",
+    state: "MA",
+    country: "US",
+  },
+  {
+    city: "Chicago",
+    state: "IL",
+    country: "US",
+  },
+  {
+    city: "Charleston",
+    state: "SC",
+    country: "US",
+  },
+  {
+    city: "Las Vegas",
+    state: "NV",
+    country: "US",
+  },
+  {
+    city: "Seattle",
+    state: "WA",
+    country: "US",
+  },
+  {
+    city: "San Francisco",
+    state: "CA",
+    country: "US",
+  },
+  {
+    city: "Washington",
+    state: "DC",
+    country: "US",
+  },
+  {
+    city: "Las Vegas",
+    state: "NV",
+    country: "US",
+  },
+  {
+    city: "Los Angeles",
+    state: "NV",
+    country: "US",
+  },
+  {
+    city: "Austin",
+    state: "Texas",
+    country: "US",
+  },
+];
 const CITIES = [
-  "New York City",
-  "Cambridge",
-  "Boston",
-  "Sommerville",
-  "Chicago",
-  "Charleston",
-  "Las Vegas",
-  "Seattle",
-  "San Francisco",
-  "Washington",
-  "Los Angeles",
-  "Austin",
+  'New York City',
+  'Cambridge',
+  'Boston',
+  'Sommerville',
+  'Chicago',
+  'Charleston',
+  'Las Vegas',
+  'Seattle',
+  'San Francisco',
+  'Washington',
+  'Los Angeles',
+  'Austin',
 ];
 const STATES = [
   "NY",
@@ -68,6 +135,12 @@ const SPORTS = [
   "Paddleboarding",
   "Boxing"
 ]
+const LocationSchema = new Schema({
+  city: { type: String, enum: CITIES, required: true},
+  state: { type: String, enum: STATES },
+  country: { type: String, enum: COUNTRY },
+});
+
 
 const LEVELS = ['0', '1', '2']
 const MAX_SPORTS_LIMIT = 5
@@ -179,12 +252,9 @@ var squashSchema = new Schema({
     ],
   },
   location: {
-    type:{
-        city: {type: String, enum: CITIES},
-        state: {type: String, enum: STATES},
-        country: {type: String, enum: COUNTRY},
-    },
+    type: <LocationT>,
     required: true,
+    enum: Object.values(LOCATIONS)
   },
   description: {
     type: String,
