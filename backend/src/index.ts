@@ -18,6 +18,7 @@ import { createServer } from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 const startServer = async () => {
   const uri = process.env.ATLAS_URI as any
+  const collectionName = process.env.COLLECTION_NAME as any
   const app = express()
   app.use(graphqlUploadExpress())
   const httpServer = createServer(app)
@@ -47,8 +48,11 @@ const startServer = async () => {
     useUnifiedTopology: true,
   } as ConnectOptions)
   .catch((error) => {console.log(error)})
-  httpServer.listen({ port: 4000 }, () =>
-    console.log(`🚀  Is this still running Server ready at http://localhost:4000${server.graphqlPath}`)
-  );
+  httpServer.listen({ port: 4000 }, () => {
+    console.log(`Collection Name:${collectionName}`)
+    console.log(
+      `🚀  Is this still running Server ready at http://localhost:4000${server.graphqlPath}`
+    )
+  });
 };
 startServer();

@@ -1,8 +1,32 @@
 import { Types, model, Schema} from 'mongoose';
 import { DeleteT, SquashDocument, LikedByUserT, PotentialMatchT, LocationT} from '../types/Squash.d'
-//const mongoose = require('mongoose');
-//const Schema = mongoose.Schema;
+const uri = process.env.ATLAS_URI as any
 const GENDERS = ["Male", "Female"]
+const CITIES = [
+  "New York City",
+  "Cambridge",
+  "Boston",
+  "Sommerville",
+  "Chicago",
+  "Charleston",
+  "Las Vegas",
+  "Seattle",
+  "San Francisco",
+  "Washington",
+  "Los Angeles",
+  "Austin",
+];
+const STATES = [
+  "NY",
+  "MA",
+  "IL",
+  "SC",
+  "NV",
+  "WA",
+  "CA",
+  "DC",
+  "TX",
+];
 const COUNTRY = ["US"];
 const SPORTS = [
   "Softball",
@@ -43,7 +67,8 @@ const SPORTS = [
   "Gymnastics",
   "Paddleboarding",
   "Boxing"
-];
+]
+
 const LEVELS = ['0', '1', '2']
 const MAX_SPORTS_LIMIT = 5
 
@@ -154,7 +179,11 @@ var squashSchema = new Schema({
     ],
   },
   location: {
-    type:<LocationT>{},
+    type:{
+        city: {type: String, enum: CITIES},
+        state: {type: String, enum: STATES},
+        country: {type: String, enum: COUNTRY},
+    },
     required: true,
   },
   description: {

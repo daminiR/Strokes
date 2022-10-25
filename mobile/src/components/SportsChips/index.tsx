@@ -30,7 +30,6 @@ const advanced = {
 }
 
  const SportChips = ({sport, removeSport=null, gameLevel = null, isSelected = false, isDisplay, getData=null, isSignUp}) => {
-   console.log(sport)
    const [dynamicStyle, setDynamicStyle] = useState(styles.ChipButton);
    const [loadingGameStyle, setLoadingGameStyle] = useState(true);
    const [gameLevelStyle, setGameLevelStyle] = useState(null);
@@ -70,7 +69,6 @@ const advanced = {
 
    const renderIcon = () => {
      const customIcon = customIconMap[sport]
-     console.log("sport log", customIcon)
      return (
        <>
           <Icon name={customIcon} size={25}/>

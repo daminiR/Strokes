@@ -106,16 +106,6 @@ const ImageInput = ({isSignUp}) => {
    const [loadingTempValues, setLoadingTempValues] = useState(true);
     var setTempInputValues = null;
     var tempInputValues = null;
-   //if (!isSignUp){
-    //var {setTempInputValues, tempInputValues} = useContext(DoneCancelContext);
-   //}
-    //useEffect(() => {
-        //setLoadingTempValues(true)
-      //if (!isSignUp ){
-        //setTempInputValues((prevState) => {return {...prevState, 'first_name' : values.first_name, 'last_name' : values.last_name}})
-      //}
-        //setLoadingTempValues(false)
-    //}, [])
     var val1 = null
     var val2 = null
     var val3 = null
@@ -151,18 +141,10 @@ const ImageInput = ({isSignUp}) => {
                 leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
                 onBlur={handleBlur('first_name')}
                 onChangeText={
-                  //isSignUp
-                  //?
                   handleChange('first_name')
-                  //: (text) => {
-                  //console.log("first name",text)
-                  //setTempInputValues((prevState) => {return {...prevState, 'first_name' : text}})
-                  //}
                 }
                 value={
-                  //isSignUp ?
                   values.first_name
-                  //: tempInputValues.first_name
                 }
               />
               <Input
@@ -171,21 +153,10 @@ const ImageInput = ({isSignUp}) => {
                 leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
                 onBlur={handleBlur('last_name')}
                 onChangeText={
-                  //isSignUp
-                  //?
                   handleChange('last_name')
-                  //: (text) => {
-                  //console.log('lat name', tempInputValues.last_name);
-                  //setTempInputValues((prevState) => {
-                  //return {...prevState, last_name: text};
-                  //});
-                  //}
                 }
                 value={
-                //isSignUp
-                  //?
                 values.last_name
-                //: tempInputValues.last_name
                 }
               />
               {renderError()}

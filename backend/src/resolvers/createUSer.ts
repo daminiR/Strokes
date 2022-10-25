@@ -1,13 +1,6 @@
 import Squash from '../models/Squash';
-import { GraphQLUpload } from 'graphql-upload'
-import { ObjectId} from 'mongodb'
-import { sanitizeFile } from '../utils/fileNaming'
-import * as path from 'path';
-import {validator} from '../validation'
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
-import {Data, DisplayData} from '../types/Squash'
-import { AuthenticationError }  from 'apollo-server-express';
 import {
   createAWSUpload,
 } from "../utils/awsUpload";

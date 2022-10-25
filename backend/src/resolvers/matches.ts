@@ -53,9 +53,6 @@ export const resolvers = {
       info
     ) => {
       const { _id, offset, limit, location, sport, game_levels, ageRange } = sanitize(unSanitizedData)
-      //const user = context.user;
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
-      //// it is imperitive all the filter items are indexed!
       console.log("why matches erro", _id)
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
@@ -70,14 +67,14 @@ export const resolvers = {
           {
             active: true,
           },
-          //{
-            //sports: {
-              //$elemMatch: { sport: sport, game_level: { $in: game_levels } },
-            //},
-          //},
-          //{
-            //age: { $gt: minAge, $lt: maxAge },
-          //},
+          {
+            sports: {
+              $elemMatch: { sport: sport, game_level: { $in: game_levels } },
+            },
+          },
+          {
+            age: { $gt: minAge, $lt: maxAge },
+          },
         ],
       };
       const fieldsNeeded = {

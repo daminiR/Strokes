@@ -246,22 +246,24 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
-                  <View style={styles.phoneContainer}>
-                    <View style={styles.forgotPasswordContainer1}>
-                      <PhoneInput faceID={true} />
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{flex: 1}}>
+                    <View style={styles.phoneContainer}>
+                      <View style={styles.forgotPasswordContainer1}>
+                        <PhoneInput faceID={true} />
+                      </View>
+                      <View style={styles.forgotPasswordContainer2}>
+                        <PasswordInput
+                          authMessage={authMessage}
+                          noUserFoundMessage={noUserFoundMessage}
+                          isLastSlide={lastSlide}
+                          _confirmSignInGC={_checkSignIn}
+                          _forgotPassword={_forgotPassword}
+                        />
+                      </View>
                     </View>
-                    <View style={styles.forgotPasswordContainer2}>
-                      <PasswordInput
-                        authMessage={authMessage}
-                        noUserFoundMessage={noUserFoundMessage}
-                        isLastSlide={lastSlide}
-                        _confirmSignInGC={_checkSignIn}
-                        _forgotPassword={_forgotPassword}
-                      />
-                    </View>
-                  </View>
-        </KeyboardAvoidingView>
+                  </KeyboardAvoidingView>
                 </>
               );
               break
@@ -271,11 +273,13 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{flex: 1}}>
                     <ForgotPassword
                       _onPresSetNewPassword={_onPresSetNewPassword}
                     />
-        </KeyboardAvoidingView>
+                  </KeyboardAvoidingView>
                 </>
               );
               break
@@ -285,9 +289,11 @@ const [authMessage, setAuthMessage] = useState(null)
                   <View style={styles.cancel}>
                     <Cancel _onPressCancel={_onPressCancel} />
                   </View>
-                  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex:1}}>
-                  <ResetPassword _resetPassword={_resetPassword}/>
-        </KeyboardAvoidingView>
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={{flex: 1}}>
+                    <ResetPassword _resetPassword={_resetPassword} />
+                  </KeyboardAvoidingView>
                 </>
               );
               break;
