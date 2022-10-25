@@ -660,13 +660,13 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
   },
-  nameStyle: {
-    paddingTop: 15,
-    paddingBottom: 7,
-    color: '#363636',
-    fontSize: 30,
-    textAlign: 'center',
-  },
+  //nameStyle: {
+    //paddingTop: 15,
+    //paddingBottom: 7,
+    //color: '#363636',
+    //fontSize: 30,
+    //textAlign: 'center',
+  //},
   // COMPONENT - MESSAGE
   containerMessage: {
     flex: 1,

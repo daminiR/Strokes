@@ -87,5 +87,4 @@ const NeighborhoodSearch = ({isSignUp}) => {
     </View>
   );
   }
-      //<GooglePlacesInput isSignUp={isSignUp}/>
 export {NeighborhoodSearch};

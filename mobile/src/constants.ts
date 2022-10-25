@@ -37,13 +37,6 @@ export const sportIconMap = {
     size: 25,
     color: 'black',
   },
-  //not found
-  'Kick boxing': {
-    name: 'fencing',
-    type: 'material-community',
-    size: 25,
-    color: 'black',
-  },
   Tennis: {
     name: 'tennisball',
     type: 'ionicon',

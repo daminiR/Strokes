@@ -18,6 +18,8 @@ import { AppContainer } from '@components'
 
 export const RootRefreshContext = createContext(null);
 const appId = process.env.React_App_SendBird
+const poolID = process.env.React_App_UserPoolId
+const aws_client_id = process.env.React_App_AWS_Client_Id
 const sendbird = new SendBird({ appId });
 sendbird.setErrorFirstCallback(true);
 const App = () =>
@@ -28,6 +30,8 @@ const App = () =>
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const [loadingApp, setLoadingApp ] = useState(false)
   const uri_upload = process.env.React_App_UriUploadRemote
+  console.log("the pool id", poolID)
+  console.log("aws app id", aws_client_id)
   useEffect(() => {
     setLoadingApp(true)
     LogBox.ignoreLogs(['Warning: ...']);
