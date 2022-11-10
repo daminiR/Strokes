@@ -252,9 +252,8 @@ var squashSchema = new Schema({
     ],
   },
   location: {
-    type: <LocationT>,
+    type: LocationSchema,
     required: true,
-    enum: Object.values(LOCATIONS)
   },
   description: {
     type: String,
