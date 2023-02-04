@@ -59,7 +59,8 @@ const clientId = process.env.React_App_AWS_Client_Id
 		console.log('CodeDeliveryData from forgotPassword: ' + data);
 	},
 	onFailure: function(err) {
-		alert(err.message || JSON.stringify(err));
+		//alert(err.message || JSON.stringify(err));
+        alert("oops we ran into some error!");
 	},
 });
     setPasswordReset(true)

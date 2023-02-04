@@ -47,7 +47,6 @@ var cognitoUser = new CognitoUser(userData);
 return await new Promise((resolve, reject) => {
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: function (result) {
-      console.log("i dont think we make it here")
       var accessToken = result.getAccessToken().getJwtToken();
       var idToken = result.getIdToken().getJwtToken();
           cognitoUser.getCachedDeviceKeyAndPassword();
@@ -58,7 +57,8 @@ return await new Promise((resolve, reject) => {
             },
             onFailure: function (err) {
             console.log("on failure")
-              alert(err.message || JSON.stringify(err));
+              //alert(err.message || JSON.stringify(err));
+              alert("oops we ran into some error!");
               reject(err);
               return;
             },
@@ -89,8 +89,8 @@ return await new Promise((resolve, reject) => {
       //});
     },
     onFailure: function (err) {
-      console.log("on failure 2:w ")
-      alert(err.message || JSON.stringify(err));
+      //alert(err.message || JSON.stringify(err));
+      alert("oops we ran into some error!");
       reject(err);
       return;
     },
@@ -122,7 +122,8 @@ const getAWSUser = async () => {
         //console.log('Succesful signout');
         cognitoUser.getSession(function (err, session) {
           if (err) {
-            alert(err.message || JSON.stringify(err));
+            //alert(err.message || JSON.stringify(err));
+            alert("oops we ran into some error!");
             reject(err);
             return;
           }
@@ -135,10 +136,10 @@ const getAWSUser = async () => {
               // Handle error
             } else {
               attributes = attributes;
-              console.log(
-                'whate are the attributes',
-                _.find(attributes, {Name: 'sub'}).Value,
-              );
+              //console.log(
+                //'whate are the attributes',
+                //_.find(attributes, {Name: 'sub'}).Value,
+              //);
               // Do something with attributes
               const awsUser =  _.chain(attributes).keyBy('Name').mapValues('Value').value()
               resolve({session: session, attributes: awsUser});

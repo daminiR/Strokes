@@ -98,8 +98,8 @@ const Slider =  () => {
               headers: {
                 //"authorization": newUserToken ? `Bearer ${newUserToken}` : 'nothin',
                 //"authorization": newUserToken ? `Bearer ${newUserToken}` : 'nothin',
-                //authorization: newUserToken ? `Bearer ${newUserToken}` : '',
-                authorization: 'sdfalfdajlfas',
+                authorization: newUserToken ? `Bearer ${newUserToken}` : '',
+                //authorization: 'sdfalfdajlfas',
               },
     },
     onCompleted: (data) => {
@@ -187,8 +187,8 @@ const _confirmSignInGC = () => {
     null,
     (err, result) => {
       if (err) {
-        console.log("in signup")
-        alert(err.message || JSON.stringify(err));
+        //alert(err.message || JSON.stringify(err));
+        alert("sign in error");
         setLoadingSubmit(true);
         return;
       }
@@ -288,7 +288,8 @@ const _awsConfirmOTP =  () => {
     true,
     function (err, result) {
       if (err) {
-        alert(err.message || JSON.stringify(err));
+        //alert(err.message || JSON.stringify(err));
+        alert("unable to confirm code");
         return;
       }
       console.log('call result: ' + result);
@@ -378,7 +379,8 @@ const _awsConfirmOTP =  () => {
     var cognitoUser = new CognitoUser(userData);
     cognitoUser.resendConfirmationCode(function (err, result) {
       if (err) {
-        alert(err.message || JSON.stringify(err));
+        //alert(err.message || JSON.stringify(err));
+        alert("unable to resend confimratioin code");
         return;
       }
       console.log('call result: ' + result);
