@@ -58,7 +58,7 @@ project.xcworkspace
 .gradle
 local.properties
 *.iml
-mobile/android/
+#mobile/android/
 
 # Node
 node_modules
@@ -136,13 +136,13 @@ gradle-app.setting
 /build/
 /mobile/packages/react-native-codegen/android/build/
 /mobile/packages/react-native-codegen/android/gradlePlugin-build/gradlePlugin/build
-/mobile/android/app/.cxx/
-/mobile//android/app/build/
-/mobile/android/app/gradle/
-/mobile/android/app/gradlew
-/mobile/android/app/gradlew.bat
-/mobile/android/build/
-/mobile/android/gradle/
-/mobile/gradle/gradlew
-/mobile/android/gradlew.bat
+#/mobile/android/app/.cxx/
+#/mobile//android/app/build/
+#/mobile/android/app/gradle/
+#/mobile/android/app/gradlew
+#/mobile/android/app/gradlew.bat
+#/mobile/android/build/
+#/mobile/android/gradle/
+#/mobile/gradle/gradlew
+#/mobile/android/gradlew.bat
 
