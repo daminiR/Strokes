@@ -28,6 +28,7 @@ const Matches = ({navigation}) => {
     onCompleted: () => {
     setLoading(true)
     // setting likes from query results of people who like current user
+    console.log("we will be polling")
     const user = currentUserData.squash
       // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
     const likesByUsers = user?.likedByUSers

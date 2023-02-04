@@ -15,6 +15,7 @@ import {RootRefreshContext} from '../../../index.js'
 export const UserContext = createContext(null);
 import {createInitialFilterFormik} from '@utils'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [currentUser, setCurrentUser ] = useState(newUserSub)
@@ -34,6 +35,11 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [initialValuesFormik, setInitialValuesFormik] = useState({});
   const {loadingSignUpInRefresh, setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const didMountRef = useRef(false)
+  //details = {
+    //"alertBody":"hello",
+    //"repeatInterval":"minute"
+  //}
+  //PushNotificationIOS.scheduleLocalNotification(details);
   const [queryProssibleMatches, { loading: loadingMatches2, data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
@@ -83,7 +89,6 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
               : 0;
             console.log(likes);
             const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
-            console.log('whats the limit', limit);
             console.log(initialValues);
             const sport = _.find(initialValues.sportFilters, (sportObj) => {
               return sportObj.filterSelected == true;
@@ -136,7 +141,6 @@ const start = (user) => {
   }, [deleted])
   useEffect(() => {
     if(didMountRef.current){
-      console.log("figure logic for useRef")
     }
   }, [cityVar()])
   const login = user => {
@@ -205,7 +209,6 @@ const start = (user) => {
     }
   }
 
-  console.log("one of these are stil trueeeeee", loadingSigning, loadingUser, loadingMatches, userLoading)
   const renderRoot = () => {
     return (
       <AppContainer loading={loadingSigning || loadingUser || loadingMatches || userLoading}>

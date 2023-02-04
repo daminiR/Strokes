@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/daminiR/sport#readme",
   "dependencies": {
+    "@react-native-community/push-notification-ios": "^1.10.1",
     "concurrently": "^5.3.0",
     "react-devtools": "^4.22.1",
     "react-native-keychain": "^8.1.1",
+    "react-native-push-notification": "^8.1.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {

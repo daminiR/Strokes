@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as mime from 'react-native-mime-types'
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { ReactNativeFile, File } from 'apollo-upload-client'
 import {
   AuthenticationDetails,
@@ -48,6 +49,7 @@ export  const _check_single = async (Image, uploadFile): Promise<void> => {
     //todo find all storages that indvidually need to be cleared
     //AsyncStorage.clear();
     sendbird.disconnect();
+    PushNotificationIOS.removeAllPendingNotificationRequests();
     setDisplayInput(false);
     client.resetStore();
     setClient(null)

@@ -13,8 +13,18 @@ import { setContext } from '@apollo/client/link/context'
 import { LogBox } from 'react-native'
 import SendBird from 'sendbird'
 import { AppContainer } from '@components'
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 //TODO: async funtion persist check later
+const getCorrectDate = () => {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  //date.setDays(10);
+  date.setHours(16);
+  date.setMinutes(54);
+  date.setSeconds(3);
+  return date;
+};
 
 export const RootRefreshContext = createContext(null);
 const appId = process.env.React_App_SendBird
@@ -30,13 +40,23 @@ const App = () =>
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const [loadingApp, setLoadingApp ] = useState(false)
   const uri_upload = process.env.React_App_UriUploadRemote
-  console.log("the pool id", poolID)
-  console.log("aws app id", aws_client_id)
+  PushNotificationIOS.addNotificationRequest({
+  body:"Release your work stress by finding someone to play sports with!",
+  fireDate: getCorrectDate(),
+  id:"1",
+  repeats: true,
+  repeatsComponent: {
+    day: true,
+    hour: true,
+    minute: true,
+    second: true,
+  },
+});
+
   useEffect(() => {
     setLoadingApp(true)
     LogBox.ignoreLogs(['Warning: ...']);
     LogBox.ignoreAllLogs();
-    console.log(uri_upload)
     async function init() {
       let newPersistor = new CachePersistor({
         cache,

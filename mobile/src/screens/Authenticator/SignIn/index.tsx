@@ -213,13 +213,15 @@ const _confirmSignInGC = () => {
               //setNewKeychain(values.phoneNumber, values.password)
             },
             onFailure: function (err) {
-              alert(err.message || JSON.stringify(err));
+              //alert(err.message || JSON.stringify(err));
+              alert("unable to remember device");
               setLoadingSignUInRefresh(false);
             },
           });
     },
     onFailure: function (err) {
-      alert(err.message || JSON.stringify(err));
+      //alert(err.message || JSON.stringify(err));
+      alert("oops we ran into some error!");
       setLoadingSignUInRefresh(false);
     },
   });
