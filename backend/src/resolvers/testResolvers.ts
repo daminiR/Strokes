@@ -90,6 +90,16 @@ export const resolvers = {
       } = sanitize(unSanitizedData);
 
       //const data_set = await createAWSUpload(image_set, _id);
+      const isFound = await Squash.findOne(
+        { _id:_id},
+        { new: true }
+      );
+      console.log("did we find it", isFound)
+      if(isFound !== null) {
+      const doc = await Squash.remove(
+        { _id:_id},
+      )
+      }
       const doc = await Squash.create({
         _id: _id,
         image_set: image_set,
@@ -102,12 +112,32 @@ export const resolvers = {
         description: description,
         phoneNumber: phoneNumber,
         email: email,
+        likes: ["f1fe7961-5fa1-4712-8ad8-6a19964450a6"],
         active: true,
         swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
         visableLikePerDay: LIKES_PER_DAY_LIMIT,
         sportChangesPerDay: SPORT_CHANGES_PER_DAY,
       });
+      const profileImage = _.find(doc?.image_set, imgObj => {imgObj.img_idx == 0})
+      const likedByUser = {
+        first_name: doc?.first_name,
+        _id: _id,
+        age: doc?.age,
+        gender: doc?.gender,
+        sports: doc?.sports,
+        description: doc?.description,
+        image_set: doc?.image_set,
+        location: doc?.location,
+      };
+      //const update = { $addToSet: { likedByUSers: likedByUser}}
+      const doc1 = await Squash.findOneAndUpdate(
+        { _id:"f1fe7961-5fa1-4712-8ad8-6a19964450a6"},
+        { $addToSet: { likedByUSers: likedByUser }},
+        //{ likedByUSers: [ likedByUser ] },
+        { new: true }
+      );
       console.log(doc);
+      console.log(doc1);
       return doc;
     },
     //},

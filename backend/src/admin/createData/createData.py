@@ -7,7 +7,7 @@ import json
   # sports: [{game_level: number, sport: string}]
   # image_set: [{img_idx: number, imageURL: string, filePath: string}]
 letters = string.ascii_lowercase
-numUsers = 3
+numUsers = 200
 gender = ["Male", "Female"]
 
 sportsList2 = [
@@ -142,6 +142,3 @@ with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData
      print("location", location)
      dataWriter.writerow([_id, first_name, last_name, genderUser, age, sportsObjJSON, imagesJSON, description, email, locationJSON])
   csv_file.close()
-
-
-
