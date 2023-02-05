@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
-import {Text} from 'react-native';
-import {getAWSUser} from '@utils';
+import {Text, Platform} from 'react-native';
+import {getAWSUser, getCorrectDate} from '@utils';
 import { cache } from './cache'
 import {AuthNavigator} from '@screens'
 import {ApolloClient, ApolloProvider} from '@apollo/client'
@@ -8,23 +8,12 @@ import { FormProvider } from './Contexts/FormContext'
 import {CachePersistor, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import  { createUploadLink } from 'apollo-upload-client';
-import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
+//import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { setContext } from '@apollo/client/link/context'
 import { LogBox } from 'react-native'
 import SendBird from 'sendbird'
 import { AppContainer } from '@components'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-
-//TODO: async funtion persist check later
-const getCorrectDate = () => {
-  const date = new Date();
-  date.setDate(date.getDate() + 1);
-  //date.setDays(10);
-  date.setHours(16);
-  date.setMinutes(54);
-  date.setSeconds(3);
-  return date;
-};
 
 export const RootRefreshContext = createContext(null);
 const appId = process.env.React_App_SendBird
@@ -40,6 +29,8 @@ const App = () =>
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const [loadingApp, setLoadingApp ] = useState(false)
   const uri_upload = process.env.React_App_UriUploadRemote
+  console.log(uri_upload)
+  if (Platform.OS === 'ios'){
   PushNotificationIOS.addNotificationRequest({
   body:"Release your work stress by finding someone to play sports with!",
   fireDate: getCorrectDate(),
@@ -49,10 +40,12 @@ const App = () =>
     day: true,
     hour: true,
     minute: true,
-    second: true,
-  },
+   second: true,
+  }
 });
 
+
+  }
   useEffect(() => {
     setLoadingApp(true)
     LogBox.ignoreLogs(['Warning: ...']);
@@ -147,6 +140,6 @@ const App = () =>
   //client.resetStore()
   //client.resetStore()
   //just to reset cache for debugging
-  enableFlipperApolloDevtools(client)
+  //enableFlipperApolloDevtools(client)
 }
 export default App

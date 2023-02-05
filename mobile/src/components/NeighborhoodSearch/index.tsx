@@ -4,7 +4,7 @@ import {Text} from 'react-native-elements'
 import { View} from 'react-native'
 import { EditFields, ProfileFields} from '@localModels'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import {API_KEY} from './API_KEY'
+//import {API_KEY} from './API_KEY'
 import {CityInput} from '@components'
 import {DoneCancelContext} from '@Contexts'
 
@@ -66,7 +66,7 @@ const GooglePlacesInput = ({isSignUp = false}) => {
         //onTimeout={_onTimeOut()}
         onPress={(data, details=null) => _onPressLocation(data, details)}
         query={{
-          key: API_KEY,
+          //key: API_KEY,
           language: 'en',
           components: 'country:us',
           types: '(cities)',

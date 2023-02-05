@@ -8,6 +8,7 @@ import {resolvers as deleteUser} from './resolvers/deleteUser'
 import {resolvers as createUser} from './resolvers/createUSer'
 import {resolvers as likesDislikes} from './resolvers/likesDislikes'
 import {resolvers as matches} from './resolvers/matches'
+import {resolvers as testResolvers} from './resolvers/testResolvers'
 import {resolvers as random} from './resolvers/random'
 import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
@@ -27,6 +28,7 @@ const startServer = async () => {
       createUser,
       deleteUser,
       likesDislikes,
+      testResolvers,
       matches,
       updateUser,
       uploads,

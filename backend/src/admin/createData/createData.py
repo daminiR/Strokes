@@ -10,19 +10,59 @@ letters = string.ascii_lowercase
 numUsers = 3
 gender = ["Male", "Female"]
 
-sportsList2 = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
-sportsList = [{"Squash", 0},
-              {"Tennis", 0},
-              {"Soccer", 0},
-              {"Badminton", 1},
-              {"Hockey",0},
-              {"Volleyball",0 },
-              {"Basketball",0 },
-              {"Cricket",0 },
-              {"Table Tennis",0 },
-              {"Baseball",0 },
-              {"Golf",0 },
-              {"American Football", 0}]
+sportsList2 = [
+  "Softball",
+  "Kickball",
+  "Pickleball",
+  "Hiking",
+  "Swimming",
+  "Kick boxing",
+  "Bouldering",
+  "Squash",
+  "Tennis",
+  "Soccer",
+  "Badminton",
+  "Hockey",
+  "Volleyball",
+  "Basketball",
+  "Cricket",
+  "Table Tennis",
+  "Skateboarding",
+  "Baseball",
+  "Golf",
+  "American Football",
+  "Skating",
+  "Snowbording",
+  "Ice Skating",
+  "Ice Hockey",
+  "Power Lifting",
+  "Body Building",
+  "Surfing",
+  "Cheerleading",
+  "Ultimate Frisbee",
+  "Cricket",
+  "Cycling",
+  "Dance",
+  "Dodgeball",
+  "Fencing",
+  "Wrestling",
+  "Gymnastics",
+  "Paddleboarding",
+  "Boxing"
+];
+# sportsList2 = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
+# sportsList = [{"Squash", 0},
+              # {"Tennis", 0},
+              # {"Soccer", 0},
+              # {"Badminton", 1},
+              # {"Hockey",0},
+              # {"Volleyball",0 },
+              # {"Basketball",0 },
+              # {"Cricket",0 },
+              # {"Table Tennis",0 },
+              # {"Baseball",0 },
+              # {"Golf",0 },
+              # {"American Football", 0}]
 
 image_set = [
    "https://images.unsplash.com/photo-1641175702113-796692d71e9b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNzR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=900&q=60",
@@ -66,7 +106,7 @@ image_set = [
   "https://cdn.pixabay.com/photo/2021/10/17/08/11/animal-6717147__480.jpg"
 ]
 
-with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData3.csv", mode='w') as csv_file:
+with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData.csv", mode='w') as csv_file:
   dataWriter = csv.writer(csv_file, delimiter=';',quotechar = "'")
   dataWriter.writerow(['_id', 'first_name', 'last_name', 'genderUser', 'age', 'sports', 'image_set', 'desciption', 'location'])
   for user in range(numUsers):
@@ -74,10 +114,11 @@ with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData
      first_name = ''.join(random.choice(letters) for i in range(8))
      last_name = ''.join(random.choice(letters) for i in range(8))
      description = ''.join(random.choice(letters) for i in range(50))
+     email = ''.join(random.choice(letters) for i in range(4)) + "@gmail.com"
      genderUser = random.choice(gender)
-     age  = random.randint(18, 118)
+     age  = random.randint(22, 90)
      # sports = list(random.sample(sportsList, random.randint(2, 6)))
-     sports = random.sample(sportsList2, random.randint(2, 6))
+     sports = random.sample(sportsList2, random.randint(2, 4))
      sportsObj = [{'sport': sport, "game_level": random.choice(["0","1","2"])} for sport in sports]
      sportsObjJSON = json.dumps(sportsObj)
      random_imgs = random.sample(image_set, random.randint(2, 5))
@@ -99,7 +140,7 @@ with open("/home/damini/activityBook/backend/src/admin/createData/sampleUserData
      print("sportsType", sportsObjJSON)
      print("image_set", images)
      print("location", location)
-     dataWriter.writerow([_id, first_name, last_name, genderUser, age, sportsObjJSON, imagesJSON, description, locationJSON])
+     dataWriter.writerow([_id, first_name, last_name, genderUser, age, sportsObjJSON, imagesJSON, description, email, locationJSON])
   csv_file.close()
 
 

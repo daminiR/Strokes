@@ -3,12 +3,10 @@ import {useLazyQuery, useMutation} from '@apollo/client'
 import { useFormikContext, Formik} from 'formik';
 import {useNavigation} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
-import {ApolloClient, ApolloProvider} from '@apollo/client'
 import {signUpSlides, intitialFormikSignUp, TOTAL_SIGNUP_SLIDES} from '@constants'
 import {  RootStackSignOutParamList } from 'src/navigation'
 import AppIntroSlider from 'react-native-app-intro-slider'
 import {ADD_PROFILE2 } from '@graphQL2'
-import  { createUploadLink } from 'apollo-upload-client';
 import {ProfileFields} from '@localModels';
 import { loginReducer } from '../../../reducers/Login';
 import * as Keychain from 'react-native-keychain';

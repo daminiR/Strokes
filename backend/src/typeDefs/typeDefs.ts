@@ -152,6 +152,26 @@ export const typeDefs = gql`
       newUserToken: String
     ): Squash!
 
+    createSquashTestSamples(
+      _id: String!
+      first_name: String!
+      email: String!
+      last_name: String!
+      age: Int!
+      gender: String!
+      sports: [SquashNodeInput!]!
+      location: LocationInput!
+      description: String!
+      image_set: [DataInput!]!
+      matches : [PotentialMatchInput!]
+      blocked_me : [PotentialMatchInput!]
+      i_blocked : [PotentialMatchInput!]
+      likes : [String!]
+      dislikes : [String!]
+      likedByUSers: [String!]
+      phoneNumber: String
+    ): Squash!
+
     softDeleteUser(_id: String): String!
   }
 `;

@@ -1,13 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as mime from 'react-native-mime-types'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import { ReactNativeFile, File } from 'apollo-upload-client'
-import {
-  AuthenticationDetails,
-  CognitoUserPool,
-  CognitoUserAttribute,
-  CognitoUser,
-} from 'amazon-cognito-identity-js';
+import {ReactNativeFile, File} from 'apollo-upload-client'
+import {CognitoUserPool } from 'amazon-cognito-identity-js';
 
 
 export  const generateRNFile =  (uri, name) => {

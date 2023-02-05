@@ -48,7 +48,7 @@ const CityInput = ({isSignUp}) => {
      cityFunc(true);
     const tempLocation = {
       city: city,
-      country: 'USA',
+      country: 'US',
       state: 'MA',
     };
     console.log("location error", tempLocation)
