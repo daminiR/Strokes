@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="MongoDB Test Plan" enabled="true">
       <stringProp name="TestPlan.comments">Shows how to setup a MongoDB Test</stringProp>
@@ -46,7 +46,10 @@
               <elementProp name="variables" elementType="HTTPArgument" enabled="true">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">variables</stringProp>
-                <stringProp name="Argument.value">{&quot;id&quot;:&quot;agQNkas1O3NxIcqEVgBTWCcXEvh2&quot;}</stringProp>
+                <stringProp name="Argument.value">{
+	&quot;id&quot;: &quot;agQNkas1O3NxIcqEVgBTWCcXEvh2&quot;
+
+}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -131,7 +134,10 @@
                 <elementProp name="variables" elementType="HTTPArgument" enabled="true">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.name">variables</stringProp>
-                  <stringProp name="Argument.value">{&quot;_id&quot;:&quot;${var2}&quot;}</stringProp>
+                  <stringProp name="Argument.value">{
+	&quot;_id&quot;: &quot;${var2}&quot;
+
+}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -217,6 +223,17 @@
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">query</stringProp>
                 <stringProp name="Argument.value">mutation UpdateUserProfileTestSamples ($_id1: String!, $_id2: String!){ updateUserProfileTestSamples (_id1: $_id1, _id2: $_id2 ) }</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+              </elementProp>
+              <elementProp name="variables" elementType="HTTPArgument" enabled="true">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.name">variables</stringProp>
+                <stringProp name="Argument.value">{
+	&quot;_id1&quot;: &quot;WRK9SDd3QcYp3Md9IHrljIgwxd13&quot;
+	&quot;_id2&quot;: &quot;agQNkas1O3NxIcqEVgBTWCcXEvh2&quot;
+
+}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -557,7 +574,16 @@ vars.putObject(&quot;newSport&quot;, array)
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument" enabled="true">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;operationName&quot;:&quot;CreateSquashTestSamples&quot;,&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){\n\t_id\n}\t\n}&quot;}</stringProp>
+                  <stringProp name="Argument.value">{&quot;operationName&quot;:&quot;CreateSquashTestSamples&quot;,&quot;variables&quot;:{
+  &quot;_id&quot;:&quot;${_id}&quot;,
+  &quot;first_name&quot;:&quot;${first_name}&quot;,
+  &quot;last_name&quot;: &quot;${last_name}&quot;,
+  &quot;gender&quot;: &quot;${genderUser}&quot;,
+  &quot;age&quot;: ${age2},
+  &quot;sports&quot;:&quot;${sports}&quot;,
+  &quot;image_set&quot;:&quot;${image_set}&quot;,
+  &quot;description&quot;:&quot;${description}&quot;
+},&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){\n\t_id\n}\t\n}&quot;}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -601,7 +627,9 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument" enabled="true">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;operationName&quot;:&quot;TestMut&quot;,&quot;variables&quot;:{&quot;name&quot;:&quot;${first_name}&quot;},&quot;query&quot;:&quot;mutation TestMut($name: String!){\n\ttestMut(name: $name)\n\t}&quot;}</stringProp>
+                  <stringProp name="Argument.value">{&quot;operationName&quot;:&quot;TestMut&quot;,&quot;variables&quot;:{
+	&quot;name&quot;: &quot;${first_name}&quot;
+},&quot;query&quot;:&quot;mutation TestMut($name: String!){\n\ttestMut(name: $name)\n\t}&quot;}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -675,7 +703,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Create Data" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Create Data" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -691,7 +719,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
       <hashTree>
         <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
-          <stringProp name="LoopController.loops">1000</stringProp>
+          <stringProp name="LoopController.loops">2</stringProp>
         </LoopController>
         <hashTree>
           <RegExUserParameters guiclass="RegExUserParametersGui" testclass="RegExUserParameters" testname="RegEx User Parameters" enabled="true">
@@ -709,7 +737,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
             <boolProp name="recycle">true</boolProp>
             <stringProp name="shareMode">shareMode.all</stringProp>
             <boolProp name="stopThread">false</boolProp>
-            <stringProp name="variableNames"> _id,first_name,last_name,genderUser,age,sports,image_set,description,location</stringProp>
+            <stringProp name="variableNames"> _id,first_name,last_name,genderUser,age,sports,image_set,description,email,location</stringProp>
           </CSVDataSet>
           <hashTree/>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
@@ -781,7 +809,16 @@ vars.putObject(&quot;newSport&quot;, array)
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument" enabled="true">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;operationName&quot;:&quot;CreateSquashTestSamples&quot;,&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){\n\t_id\n}\t\n}&quot;}</stringProp>
+                  <stringProp name="Argument.value">{&quot;operationName&quot;:&quot;CreateSquashTestSamples&quot;,&quot;variables&quot;:{
+  &quot;_id&quot;:&quot;${_id}&quot;,
+  &quot;first_name&quot;:&quot;${first_name}&quot;,
+  &quot;last_name&quot;: &quot;${last_name}&quot;,
+  &quot;gender&quot;: &quot;${genderUser}&quot;,
+  &quot;age&quot;: ${age2},
+  &quot;sports&quot;:&quot;${sports}&quot;,
+  &quot;image_set&quot;:&quot;${image_set}&quot;,
+  &quot;description&quot;:&quot;${description}&quot;
+},&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){\n\t_id\n}\t\n}&quot;}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -825,7 +862,9 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument" enabled="true">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;operationName&quot;:&quot;TestMut&quot;,&quot;variables&quot;:{&quot;name&quot;:&quot;${first_name}&quot;},&quot;query&quot;:&quot;mutation TestMut($name: String!){\n\ttestMut(name: $name)\n\t}&quot;}</stringProp>
+                  <stringProp name="Argument.value">{&quot;operationName&quot;:&quot;TestMut&quot;,&quot;variables&quot;:{
+	&quot;name&quot;: &quot;${first_name}&quot;
+},&quot;query&quot;:&quot;mutation TestMut($name: String!){\n\ttestMut(name: $name)\n\t}&quot;}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -903,7 +942,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $description: String!, $image_set:[DataInput!]!, $location:LocationInput!){createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, location: $location, description: $description, image_set: $image_set){_id}}&quot;,&#xd;
+                  <stringProp name="Argument.value">{&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $description: String!, $image_set:[DataInput!]!, $email: String!, $location:LocationInput!){createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, email: $email, location: $location, description: $description, image_set: $image_set){_id}}&quot;,&#xd;
 &quot;variables&quot;:&#xd;
 {&#xd;
   &quot;_id&quot;:&quot;${_id}&quot;,&#xd;
@@ -914,6 +953,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
   &quot;sports&quot;: ${sports},&#xd;
   &quot;image_set&quot;:${image_set},&#xd;
   &quot;location&quot;:${location},&#xd;
+  &quot;email&quot;:&quot;${email}&quot;,&#xd;
   &quot;description&quot;:&quot;${description}&quot;&#xd;
 }&#xd;
 }&#xd;
@@ -936,7 +976,45 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
             <stringProp name="HTTPSampler.connect_timeout"></stringProp>
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
           </HTTPSamplerProxy>
-          <hashTree/>
+          <hashTree>
+            <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+              <boolProp name="ResultCollector.error_logging">false</boolProp>
+              <objProp>
+                <name>saveConfig</name>
+                <value class="SampleSaveConfiguration">
+                  <time>true</time>
+                  <latency>true</latency>
+                  <timestamp>true</timestamp>
+                  <success>true</success>
+                  <label>true</label>
+                  <code>true</code>
+                  <message>true</message>
+                  <threadName>true</threadName>
+                  <dataType>true</dataType>
+                  <encoding>false</encoding>
+                  <assertions>true</assertions>
+                  <subresults>true</subresults>
+                  <responseData>false</responseData>
+                  <samplerData>false</samplerData>
+                  <xml>false</xml>
+                  <fieldNames>true</fieldNames>
+                  <responseHeaders>false</responseHeaders>
+                  <requestHeaders>false</requestHeaders>
+                  <responseDataOnError>false</responseDataOnError>
+                  <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                  <assertionsResultsToSave>0</assertionsResultsToSave>
+                  <bytes>true</bytes>
+                  <sentBytes>true</sentBytes>
+                  <url>true</url>
+                  <threadCounts>true</threadCounts>
+                  <idleTime>true</idleTime>
+                  <connectTime>true</connectTime>
+                </value>
+              </objProp>
+              <stringProp name="filename"></stringProp>
+            </ResultCollector>
+            <hashTree/>
+          </hashTree>
         </hashTree>
         <RegExUserParameters guiclass="RegExUserParametersGui" testclass="RegExUserParameters" testname="RegEx User Parameters" enabled="true">
           <stringProp name="RegExUserParameters.regex_ref_name"></stringProp>
@@ -945,7 +1023,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
         </RegExUserParameters>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Analyze Query All Possible Matches" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Analyze Query All Possible Matches" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>

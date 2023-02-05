@@ -22,7 +22,6 @@ export const connect = (uid, nickname, dispatch, sendbird, start, setSendbird) =
               console.log("Connet Error: did we hit here")
               start(user);
             } else {
-              //showError(err.message);
             }
           });
         } else {
@@ -33,7 +32,6 @@ export const connect = (uid, nickname, dispatch, sendbird, start, setSendbird) =
       } else {
         dispatch({type: 'end-connection'});
         console.log('Connect Error error ....', err);
-        //showError(err.message);
       }
     });
     setSendbird(sendbird)

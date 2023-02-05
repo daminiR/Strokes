@@ -123,6 +123,11 @@ Please take a look at the [contributing guidelines](./CONTRIBUTING.md) for a det
 **A:** Ans: check if multipart/form-data is set in binary media types -> needs to be set
 ##
 
+##
+**Q:** Error with fliper network!!! Very comman problem
+**A:** Ans:if you face flipper can;t connect to network the solution si sfound here on this github change android sdk locatioin!
+https://github.com/facebook/flipper/issues/3027#issuecomment-1265146675
+##
 
 <table>
   <tr>
