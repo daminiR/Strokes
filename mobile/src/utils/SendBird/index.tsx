@@ -44,36 +44,43 @@ export const createSendbirdChannel = (matches, sendbird, currentUser) => {
 
 
 
-export const connect = (uid, nickname, dispatch, sendbird, start, setSendbird) => {
-    console.log('Connect Error nickname ....', uid);
-    dispatch({type: 'start-connection'});
-    sendbird.connect(uid, (err, user) => {
-      if (!err) {
-        console.log('Connect Error everyload', user.nickname);
-        console.log('Connect Error nickname ....', nickname);
-        if (user.nickname !== nickname) {
-            console.log('signup', user.nickname);
-            sendbird.updateCurrentUserInfo(nickname, '', (err, user) => {
-            dispatch({type: 'end-connection'});
-            if (!err) {
-              console.log("Connet Error: did we hit here")
-              start(user);
-            } else {
-            }
+export const connect = (
+  uid,
+  nickname,
+  dispatch,
+  sendbird,
+  start,
+  setSendbird
+) => {
+  dispatch({ type: "start-connection" });
+  sendbird
+    .connect(uid)
+    .then((user) => {
+      if (user.nickname !== nickname) {
+        sendbird
+          .updateCurrentUserInfo(nickname, "")
+          .then((new_user) => {
+            setSendbird(sendbird);
+            dispatch({ type: "end-connection" });
+            start(user);
+          })
+          .catch((err) => {
+            dispatch({ type: "end-connection" });
+            console.log("Connect Error error ....", err);
           });
-        } else {
-            console.log('signin', user.nickname);
-          dispatch({type: 'end-connection'});
-          start(user);
-        }
-      } else {
-        dispatch({type: 'end-connection'});
-        console.log('Connect Error error ....', err);
       }
+      else {
+        setSendbird(sendbird);
+        dispatch({ type: "end-connection" });
+        start(user);
+      }
+    })
+    .catch((err) => {
+      dispatch({ type: "end-connection" });
+      console.log("Connect Error error ....", err);
     });
-    setSendbird(sendbird)
-    //}
-  };
+  //}
+};
 
 export const ellipsis = (s, len) => {
   return s.length > len ? s.substring(0, len) + '..' : s;

@@ -35,11 +35,6 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [initialValuesFormik, setInitialValuesFormik] = useState({});
   const {loadingSignUpInRefresh, setLoadingSignUInRefresh} = useContext(RootRefreshContext)
   const didMountRef = useRef(false)
-  //details = {
-    //"alertBody":"hello",
-    //"repeatInterval":"minute"
-  //}
-  //PushNotificationIOS.scheduleLocalNotification(details);
   const [queryProssibleMatches, { loading: loadingMatches2, data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {

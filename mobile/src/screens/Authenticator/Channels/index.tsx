@@ -33,61 +33,60 @@ const Channels = props => {
     error: null,
   });
   // on state change
+  console.log("did we make it", sendbird)
   useEffect(() => {
     sendbird.addConnectionHandler('channels', connectionHandler);
     sendbird.addChannelHandler('channels', channelHandler);
     //const unsubscribe = AppState.addEventListener('change', handleStateChange);
     if (!sendbird.currentUser) {
-      sendbird.connect(currentUser.userId, (err, _) => {
-        if (!err) {
+      sendbird.connect(currentUser.userId)
+      .then(()=>{
           refresh();
-        } else {
+        } )
+        .cath((err) => {
           dispatch({
             type: 'end-loading',
             payload: {
               error: 'Connection failed. Please check the network status.',
             },
           });
-        }
-      });
+        })
     } else {
       refresh();
     }
     return () => {
-      console.log("sbError channel error")
       dispatch({ type: 'end-loading' });
       sendbird.removeConnectionHandler('channels');
       sendbird.removeChannelHandler('channels');
       //unsubscribe.remove();
     };
-  }, []);
+  }, [])
 
-  useEffect(() => {
-    console.log("channesError route params change")
-    if (route.params && route.params.action) {
-      const { action, data } = route.params;
-      switch (action) {
-        case 'leave':
-          data.channel.leave(err => {
-            if (err) {
-              dispatch({
-                type: 'error',
-                payload: {
-                  error: 'Failed to leave the channel.',
-                },
-              });
-            }
-          });
-          break;
-      }
-    }
-  }, [route.params]);
+  //useEffect(() => {
+    //if (route.params && route.params.action) {
+      //const { action, data } = route.params;
+      //switch (action) {
+        //case 'leave':
+          //data.channel.leave(err => {
+            //if (err) {
+              //dispatch({
+                //type: 'error',
+                //payload: {
+                  //error: 'Failed to leave the channel.',
+                //},
+              //});
+            //}
+          //});
+          //break;
+      //}
+    //}
+  //}, [route.params]);
 
-  useEffect(() => {
-    if (query) {
-      next();
-    }
-  }, [query]);
+  //useEffect(() => {
+    //if (query) {
+      //next();
+    //}
+  //}, [query])
   /// on connection event
   const connectionHandler = new sendbird.ConnectionHandler();
   connectionHandler.onReconnectStarted = () => {
@@ -157,8 +156,8 @@ const Channels = props => {
     }
   };
   const refresh = () => {
-    const matches = currentUserData.squash.matches
-    createSendbirdChannel(matches, sendbird, currentUser)
+    //const matches = currentUserData.squash.matches
+    //createSendbirdChannel(matches, sendbird, currentUser)
     //const params = {
       //includeEmpty: true,
       ////hiddenChannelFilter: "unhidden_only",
