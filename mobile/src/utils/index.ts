@@ -1,4 +1,5 @@
 export * from './formik'
+export * from './SendBird'
 export * from './Notifications'
 export * from './FaceID'
 export * from './awsCognito'

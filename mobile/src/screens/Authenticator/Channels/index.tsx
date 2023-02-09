@@ -1,4 +1,5 @@
 import React, {useEffect, useContext, useReducer, useState} from 'react';
+//import { HiddenChannelFilter } from '@sendbird/chat/groupChannel';
 import _ from 'lodash'
 import {
   StyleSheet,
@@ -15,6 +16,7 @@ import {UserContext} from '@UserContext'
 import { channelsReducer } from '../../../reducers/Channels';
 import Channel from '../../../components/Channels';
 import { handleNotificationAction } from '../../../utils/SendBird';
+import {createSendbirdChannel} from '@utils'
 
 const Channels = props => {
   const { route, navigation} = props;
@@ -30,20 +32,16 @@ const Channels = props => {
     empty: '',
     error: null,
   });
-  console.log("states", state.channels)
   // on state change
   useEffect(() => {
     sendbird.addConnectionHandler('channels', connectionHandler);
     sendbird.addChannelHandler('channels', channelHandler);
-    console.log("sbError chennel errors", sendbird.channelHandlers)
     //const unsubscribe = AppState.addEventListener('change', handleStateChange);
     if (!sendbird.currentUser) {
-      console.log("channesError: not corret uSer")
       sendbird.connect(currentUser.userId, (err, _) => {
         if (!err) {
           refresh();
         } else {
-          console.log("do we hit here refresh error")
           dispatch({
             type: 'end-loading',
             payload: {
@@ -54,7 +52,6 @@ const Channels = props => {
       });
     } else {
       refresh();
-      console.log("channesError: corret uSer")
     }
     return () => {
       console.log("sbError channel error")
@@ -116,8 +113,6 @@ const Channels = props => {
   };
 
   // now that we have connection add all matches channels
-
-
   /// on channel event
   const channelHandler = new sendbird.ChannelHandler();
   channelHandler.onUserJoined = (channel, user) => {
@@ -162,42 +157,50 @@ const Channels = props => {
     }
   };
   const refresh = () => {
-    console.log("channesError: list of groupChannel", sendbird.GroupChannel)
+    const matches = currentUserData.squash.matches
+    createSendbirdChannel(matches, sendbird, currentUser)
+    //const params = {
+      //includeEmpty: true,
+      ////hiddenChannelFilter: "unhidden_only",
+    //};
     var q = sendbird.GroupChannel.createMyGroupChannelListQuery()
-    q.show_empty = true
-    q.includeEmpty = true
-    console.log("channesError: list of groupChannel", q)
-    //setQuery(sendbird.GroupChannel.createMyGroupChannelListQuery());
+      q.limit = 10;
+      q.show_empty = true
+      q.includeEmpty = true
+      q.hiddenChannelFilter ="unhidden_only"
     setQuery(q);
     dispatch({ type: 'refresh' });
   };
   const next = () => {
     if (query.hasNext) {
-      console.log("channesError: list of quer", query)
       dispatch({ type: 'start-loading' });
       query.limit = 10;
       query.show_empty = true
       query.includeEmpty = true
-      // addd channels for ones that dont have any
+      query.hiddenChannelFilter ="unhidden_only"
 
-      _.map(currentUserData.squash.matches, (match) => {
-        var userIds = [currentUser.sub, match._id]
-        sendbird.GroupChannel.createChannelWithUserIds(
-          userIds,
-          true,
-          function (groupChannel, error) {
-            if (error) {
-              // Handle error.
-              console.log('SB_ERROR', error);
-            }
-            console.log('SB OPEN2', groupChannel);
-          },
-        );
-      })
+      //const matches = currentUserData.squash.matches
+      //## this is a soft way to doubel check that each users id in matches has  an open channel
+      // only do this if user not in chat
+      // TODO: this code isnt required to run , you should createChannels whever there is a match directly
+      //_.map(matches, (match) => {
+        //var userIds = [currentUser.sub, match._id]
+        //// check if matchId channel already exists
+        //sendbird.GroupChannel.createChannelWithUserIds(
+          //userIds,
+          //true,
+          //function (groupChannel, error) {
+            //if (error) {
+              //// Handle error.
+              //console.log('SB_ERROR', error);
+            //}
+            //console.log('SB OPEN2', groupChannel);
+          //},
+        //);
+      //})
       //query.include_empty = true
+      //query.hiddenChannelFilter ="unhidden_only"
       query.next((err, fetchedChannels) => {
-        console.log("channesError: list of fetched", fetchedChannels)
-        console.log("channesError: list of err", err)
         dispatch({ type: 'end-loading' });
         if (!err) {
           dispatch({
@@ -215,7 +218,6 @@ const Channels = props => {
       });
     }
   };
-  console.log("list of channels", state)
   return (
     <>
       <StatusBar backgroundColor="#742ddd" barStyle="light-content" />

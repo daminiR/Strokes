@@ -13,10 +13,6 @@ import {UserContext} from '@UserContext'
 import {renderMatchCard, calculateOfflineMatches} from '@utils'
 import {LikesOverLay} from '@components';
 
-
-// number of likes allowed to be seen per day -> rest is blurred
-const LIKES_ACTIVE = 3
-
 const Matches = ({navigation}) => {
   const [like, setLike] = useState(false)
   const [indexVal, setIndex] = useState(0)
@@ -28,7 +24,6 @@ const Matches = ({navigation}) => {
     onCompleted: () => {
     setLoading(true)
     // setting likes from query results of people who like current user
-    console.log("we will be polling")
     const user = currentUserData.squash
       // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
     const likesByUsers = user?.likedByUSers
@@ -36,7 +31,6 @@ const Matches = ({navigation}) => {
     const totalMatches = calculateOfflineMatches(user)
     const final = _.filter(likesByUsers, likeObj => !_.includes(dislikeIDs, likeObj._id ))
     const totalLikes = _.differenceBy(final, totalMatches, '_id')
-    console.log("total likes", totalLikes)
     setTotalLikesFromUsers(totalLikes)
     setLoading(false)
     }
@@ -56,7 +50,6 @@ const Matches = ({navigation}) => {
       }
       appState.current = nextAppState;
       getSquashProfile({variables: {id: currentUser.sub}});
-      console.log('AppState', appState.current);
     });
     return () => {
     }
