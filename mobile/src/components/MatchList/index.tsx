@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useContext, useState } from 'react'
 import {FilterFields} from '@localModels'
 import {Text, View } from 'react-native';
-import {createInitialFilterFormik, byGameLevel} from '@utils'
+import {createInitialFilterFormik, byGameLevel, createSendbirdChannel} from '@utils'
 import _ from 'lodash'
 import {UserContext} from '@UserContext'
 import { useFormikContext} from 'formik'
@@ -34,7 +34,7 @@ const MatchList = ({matches}) => {
   const {currentUser, queryProssibleMatches , data, userData, setData, userLoading, sendbird} = useContext(UserContext)
   const [loadingFilters, setLoadingFilters] = useState(true)
   const [disableLikes, setDisableLikes] = useState(false)
-  const [disableDisLikes, setDisableDislikes] = useState(false)
+  const [disableDisLikes, setDisablelikes] = useState(false)
   const [disableMatches, setDisableMatches] = useState(false)
   const [matched, setMatched] = useState(false)
   const [lastMatch, setLastMatch] = useState(matches.length == 0)
@@ -43,6 +43,8 @@ const MatchList = ({matches}) => {
     awaitRefetchQueries: true,
     onCompleted: (data) => {
       getSquashProfile({variables: {id: currentUser.sub}});
+      // also start  sendbird here
+      //createSendbirdChannel(match, sendbird, currentUser)
       setDisableMatches(false)
     },
   })

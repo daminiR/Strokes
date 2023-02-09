@@ -6,7 +6,7 @@ import { useLazyQuery, useMutation} from '@apollo/client'
 import {UserContext} from '@UserContext'
 import {  Done, Cancel, CardItem} from '@components'
 import _ from 'lodash'
-import {createProfileImage, swipeRightLiked, swipeLeftDisliked} from '@utils'
+import {createProfileImage, swipeRightLiked, swipeLeftDisliked, createSendbirdChannel} from '@utils'
 import {likeIconStyle, dislikeIconStyle } from '@constants'
 import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '@localStore'
 import { READ_SQUASH, UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '@graphQL2'
@@ -47,20 +47,10 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
     onCompleted: (data) => {
       getSquashProfile({variables: {id: currentUser.sub}});
       /// open channel with the two users
-      //if (data.updateMatches) {
-        //var userIds = [currentUser.uid, data.updateMatches._id];
-        //sendbird.GroupChannel.createChannelWithUserIds(
-          //userIds,
-          //true,
-          //function (groupChannel, error) {
-            //if (error) {
-              //// Handle error.
-              //console.log('SB_ERROR', error);
-            //}
-            //console.log('SB OPEN', groupChannel);
-          //},
-        //);
-      //}
+      if (data.updateMatches) {
+        const match = data.updateMatches
+        //createSendbirdChannel(match, sendbird, currentUser)
+      }
     },
   })
   useEffect(() => {

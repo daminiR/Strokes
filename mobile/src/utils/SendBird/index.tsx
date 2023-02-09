@@ -1,11 +1,48 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
-
+import _ from 'lodash'
 import notifee from '@notifee/react-native';
 
 const channelNameMaxMembers = 3;
 const channelNameEllipsisLength = 32;
 const maxUnreadMessageCount = 99;
+
+export const createSendbirdChannel = (matches, sendbird, currentUser) => {
+      _.map(matches, (match) => {
+        var userIds = [currentUser.sub, match._id]
+        // check if matchId channel already exists
+        sendbird.GroupChannel.createChannelWithUserIds(
+          userIds,
+          true,
+          function (groupChannel, error) {
+            if (error) {
+              // Handle error.
+              console.log('SB_ERROR', error);
+            }
+            console.log('SB OPEN2', groupChannel);
+          },
+        );
+      })
+}
+//export const hideOldChannels = (sendbird) => {
+      //_.map(matches, (match) => {
+        //var userIds = [currentUser.sub, match._id]
+        //// check if matchId channel already exists
+        //sendbird.GroupChannel.createChannelWithUserIds(
+          //userIds,
+          //true,
+          //function (groupChannel, error) {
+            //if (error) {
+              //// Handle error.
+              //console.log('SB_ERROR', error);
+            //}
+            //console.log('SB OPEN2', groupChannel);
+          //},
+        //);
+      //})
+//}
+
+
 
 export const connect = (uid, nickname, dispatch, sendbird, start, setSendbird) => {
     console.log('Connect Error nickname ....', uid);
@@ -108,7 +145,6 @@ export const handleNotificationAction = async (navigation, sendbird, currentUser
       const message = JSON.parse(remoteMessage.data.sendbird);
       if (message && message.channel) {
         const channel = await sendbird.GroupChannel.getChannel(message.channel.channel_url);
-        console.log("what channels", channel)
         navigation.dispatch(state => {
           const lobbyIndex = state.routes.findIndex(route => route.name === 'Lobby');
           const newRoute = { name: 'Chat', params: { channel, currentUser } };

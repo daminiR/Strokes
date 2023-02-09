@@ -19,7 +19,6 @@ const renderMatchCard = (card, setLike, setIndex, index, likesLeft) => {
       const profileImage = createProfileImage( card.image_set)
       const title = card.first_name +', ' + card.age
       const _onPress = () => {
-        console.log("i dont think we make it here")
         setLike(true)
         setIndex(index)
       }
@@ -90,8 +89,8 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
         }})
 
     // to slow ith liks condition
-    const likedByIDs = _.map(currentUser.likedByUSers, likedByObj => {return likedByObj._id})
-    if (_.includes(likedByIDs, card._id)){
+  const likedByIDs = _.map(currentUser.likedByUSers, likedByObj => {return likedByObj._id})
+  if (_.includes(likedByIDs, card._id)) {
     const matchedUser = sanitizeCard(card)
     setMatched(true)
     updateMatches({variables: {currentUserId: _id,
