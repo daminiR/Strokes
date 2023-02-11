@@ -49,7 +49,6 @@ export const resolvers = {
         visableLikePerDay: LIKES_PER_DAY_LIMIT,
         sportChangesPerDay: SPORT_CHANGES_PER_DAY,
       });
-      console.log(doc);
       return doc;
     },
   },

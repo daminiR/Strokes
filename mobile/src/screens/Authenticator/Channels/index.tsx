@@ -33,60 +33,61 @@ const Channels = props => {
     error: null,
   });
   // on state change
-  console.log("did we make it", sendbird)
   useEffect(() => {
     sendbird.addConnectionHandler('channels', connectionHandler);
     sendbird.addChannelHandler('channels', channelHandler);
     //const unsubscribe = AppState.addEventListener('change', handleStateChange);
     if (!sendbird.currentUser) {
-      sendbird.connect(currentUser.userId)
-      .then(()=>{
+      sendbird.connect(currentUser.userId, (err, _) => {
+        if (!err) {
           refresh();
-        } )
-        .cath((err) => {
+        } else {
           dispatch({
             type: 'end-loading',
             payload: {
               error: 'Connection failed. Please check the network status.',
             },
           });
-        })
+        }
+      });
     } else {
       refresh();
     }
     return () => {
+      console.log("sbError channel error")
       dispatch({ type: 'end-loading' });
       sendbird.removeConnectionHandler('channels');
       sendbird.removeChannelHandler('channels');
       //unsubscribe.remove();
     };
-  }, [])
+  }, []);
 
-  //useEffect(() => {
-    //if (route.params && route.params.action) {
-      //const { action, data } = route.params;
-      //switch (action) {
-        //case 'leave':
-          //data.channel.leave(err => {
-            //if (err) {
-              //dispatch({
-                //type: 'error',
-                //payload: {
-                  //error: 'Failed to leave the channel.',
-                //},
-              //});
-            //}
-          //});
-          //break;
-      //}
-    //}
-  //}, [route.params]);
+  useEffect(() => {
+    console.log("channesError route params change")
+    if (route.params && route.params.action) {
+      const { action, data } = route.params;
+      switch (action) {
+        case 'leave':
+          data.channel.leave(err => {
+            if (err) {
+              dispatch({
+                type: 'error',
+                payload: {
+                  error: 'Failed to leave the channel.',
+                },
+              });
+            }
+          });
+          break;
+      }
+    }
+  }, [route.params]);
 
-  //useEffect(() => {
-    //if (query) {
-      //next();
-    //}
-  //}, [query])
+  useEffect(() => {
+    if (query) {
+      next();
+    }
+  }, [query]);
   /// on connection event
   const connectionHandler = new sendbird.ConnectionHandler();
   connectionHandler.onReconnectStarted = () => {
@@ -156,16 +157,18 @@ const Channels = props => {
     }
   };
   const refresh = () => {
-    //const matches = currentUserData.squash.matches
-    //createSendbirdChannel(matches, sendbird, currentUser)
-    //const params = {
-      //includeEmpty: true,
-      ////hiddenChannelFilter: "unhidden_only",
-    //};
+    const matches = currentUserData.squash.matches
+    createSendbirdChannel(matches, sendbird, currentUser)
+    const params = {
+      includeEmpty: true,
+      //hiddenChannelFilter: "hidden_prevent_auto_unhide",
+      hiddenChannelFilter: "unhidden_only",
+    };
     var q = sendbird.GroupChannel.createMyGroupChannelListQuery()
       q.limit = 10;
       q.show_empty = true
       q.includeEmpty = true
+      //q.hiddenChannelFilter ="hidden_prevent_auto_unhide"
       q.hiddenChannelFilter ="unhidden_only"
     setQuery(q);
     dispatch({ type: 'refresh' });
@@ -176,6 +179,7 @@ const Channels = props => {
       query.limit = 10;
       query.show_empty = true
       query.includeEmpty = true
+      //query.hiddenChannelFilter ="hidden_prevent_auto_unhide"
       query.hiddenChannelFilter ="unhidden_only"
 
       //const matches = currentUserData.squash.matches
@@ -200,20 +204,53 @@ const Channels = props => {
       //query.include_empty = true
       //query.hiddenChannelFilter ="unhidden_only"
       query.next((err, fetchedChannels) => {
-        dispatch({ type: 'end-loading' });
+        //const channelsToHide = fetchedChannels.filter((channel) => {
+          //const unixTime = channel.createdAt;
+          //// tesing with 1 day
+          ////const ChatTimer = 8.64e+7
+          ////ideally 14 days
+          //const ChatTimer = 1.21e9;
+          ////test with 1 hour
+          ////const ChatTimer = 1.8e+6
+          //console.log("worked fetched here", channel.isHidden);
+          //if (Date.now() - unixTime > ChatTimer) {
+            ////const params = {
+            ////hidePreviousMessages: false,
+            ////allowAutoUnhide: true,
+            ////};
+            //channel
+              //.hide()
+              //.then(() => {
+                //console.log("worked");
+                //console.log(channel.isHidden);
+                //channel.refresh().then(() => {
+                  //console.log("worked after refresh", channel.isHidden);
+                  //return true;
+                //});
+              //})
+              //.catch((err) => console.log(err));
+          //}
+        //});
+        //console.log("worked channels", channelsToHide);
+        //const check = channelsToHide.map((channel) => {
+          //console.log("worked after", channel.isHidden);
+        //});
+
+        dispatch({ type: "end-loading" });
         if (!err) {
           dispatch({
-            type: 'fetch-channels',
+            type: "fetch-channels",
             payload: { channels: fetchedChannels },
           });
         } else {
           dispatch({
-            type: 'error',
+            type: "error",
             payload: {
-              error: 'Failed to get the channels.',
+              error: "Failed to get the channels.",
             },
           });
         }
+        //refresh()
       });
     }
   };

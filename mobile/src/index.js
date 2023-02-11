@@ -11,23 +11,16 @@ import  { createUploadLink } from 'apollo-upload-client';
 //import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { setContext } from '@apollo/client/link/context'
 import { LogBox } from 'react-native'
-import SendbirdChat from '@sendbird/chat'
-import { GroupChannelModule } from '@sendbird/chat/groupChannel';
+import SendBird from 'sendbird'
 import { AppContainer } from '@components'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 export const RootRefreshContext = createContext(null);
-const APP_ID = process.env.React_App_SendBird
+const appId = process.env.React_App_SendBird
 const poolID = process.env.React_App_UserPoolId
 const aws_client_id = process.env.React_App_AWS_Client_Id
-const params = {
-  appId: APP_ID,
-  modules: [
-    new GroupChannelModule(),
-  ],
-};
-const sendbird= SendbirdChat.init(params);
-
+const sendbird = new SendBird({ appId });
+sendbird.setErrorFirstCallback(true);
 const App = () =>
 {
   const [client, setClient] = useState();
@@ -36,6 +29,7 @@ const App = () =>
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const [loadingApp, setLoadingApp ] = useState(false)
   const uri_upload = process.env.React_App_UriUploadRemote
+  console.log(uri_upload)
   if (Platform.OS === 'ios'){
   PushNotificationIOS.addNotificationRequest({
   body:"Release your work stress by finding someone to play sports with!",
@@ -49,6 +43,7 @@ const App = () =>
    second: true,
   }
 });
+
 
   }
   useEffect(() => {
