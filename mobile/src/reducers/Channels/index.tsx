@@ -13,14 +13,29 @@ export const channelsReducer =  (state, action) => {
     }
     case 'fetch-channels': {
       const { channels } = action.payload || {};
-      //const new_channels = channels.map((channel)=> {
+      //const channelsToHide = channels.map((channel)=> {
         //const unixTime = channel.createdAt
         //// tesing with 1 day
-        //const ChatTimer = 8.64e+7
-        //// ideally 14 days
-        ////const ChatTimer = 1.21e+9
+        ////const ChatTimer = 8.64e+7
+         ////ideally 14 days
+        //const ChatTimer = 1.21e+9
          ////test with 1 hour
         ////const ChatTimer = 1.8e+6
+        //console.log("worked here", channel)
+        //channel.hide().then((channel) =>{
+          ////refresh channel
+        //console.log("worked new", channel)
+        ////channel.refresh().then(() =>{
+        ////console.log("worked after refresh", channel.isHidden)
+        ////return true
+          ////})
+        //})
+        //.catch((err) => {
+
+          //console.log("did we have error worked")
+          //console.log("worked", err)
+
+        //})
         //if (Date.now() - unixTime > ChatTimer) {
           ////const params = {
             ////hidePreviousMessages: false,
@@ -30,21 +45,20 @@ export const channelsReducer =  (state, action) => {
           //.then(() => {
           //console.log("worked")
           //console.log(channel.isHidden)
-          //return channel
           //})
           //.catch(err => console.log(err))
         //}
-          //return channel
       //})
-      console.log("channels to hide", channels.length)
-      ////const new_channels = _.map(channelsToHide, (channel) => {
-      ////})
-      //const distinctChannels = new_channels.filter(channel => !state.channelMap[channel.url]);
-      //const mergedChannels = [...state.channels, ...distinctChannels].sort((a, b) => {
-        //const at = a.lastMessage ? a.lastMessage.createdAt : a.createdAt;
-        //const bt = b.lastMessage ? b.lastMessage.createdAt : b.createdAt;
-        //return bt - at;
-      //});
+    //console.log("worked channels", channelsToHide)
+    //const check = channelsToHide.map((channel)=> {
+        //console.log("worked after", channel.isHidden)
+      //})
+      const distinctChannels = channels.filter(channel => !state.channelMap[channel.url]);
+      const mergedChannels = [...state.channels, ...distinctChannels].sort((a, b) => {
+        const at = a.lastMessage ? a.lastMessage.createdAt : a.createdAt;
+        const bt = b.lastMessage ? b.lastMessage.createdAt : b.createdAt;
+        return bt - at;
+      });
       const channelMap = {};
       for (let i in channels) {
         const channel = channels[i];

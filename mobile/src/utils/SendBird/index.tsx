@@ -25,24 +25,7 @@ export const createSendbirdChannel = (matches, sendbird, currentUser) => {
       })
 }
 //export const hideOldChannels = (sendbird) => {
-      //_.map(matches, (match) => {
-        //var userIds = [currentUser.sub, match._id]
-        //// check if matchId channel already exists
-        //sendbird.GroupChannel.createChannelWithUserIds(
-          //userIds,
-          //true,
-          //function (groupChannel, error) {
-            //if (error) {
-              //// Handle error.
-              //console.log('SB_ERROR', error);
-            //}
-            //console.log('SB OPEN2', groupChannel);
-          //},
-        //);
-      //})
 //}
-
-
 
 export const connect = (
   uid,

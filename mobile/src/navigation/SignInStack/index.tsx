@@ -55,6 +55,7 @@ export type RootStackSignInParamList = {
     connecting: false,
   });
   const {data, sendbird, setSendbird} = useContext(UserContext);
+  console.log("connect status in chatscreen", sendbird)
   const [initialized, setInitialized] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const start = (user) => {
@@ -64,15 +65,17 @@ export type RootStackSignInParamList = {
   };
   useFocusEffect(
     useCallback(() => {
+      console.log("connect status: on chat")
       connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start, setSendbird);
       return () => {
         sendbird.disconnect()
+        console.log("connect status: not on chat", sendbird)
       }
     }, [])
   );
   const login = async (user) => {
-    //try {
-      console.log("registry sendbird")
+    try {
+      setCurrentUser(user);
       const authorizationStatus = await messaging().requestPermission();
       if (
         authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
@@ -82,15 +85,13 @@ export type RootStackSignInParamList = {
           //const token = await messaging().getAPNSToken();
           //sendbird.registerAPNSPushTokenForCurrentUser(token);
         } else {
-          //const token = await messaging().getToken();
-          //sendbird.registerGCMPushTokenForCurrentUser(token);
-          //console.log("registry sendbird")
-          //setCurrentUser(user);
+          const token = await messaging().getToken();
+          sendbird.registerGCMPushTokenForCurrentUser(token);
         }
       }
-    //} catch (err) {
-      //console.error(err);
-    //}
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const logout = async () => {
@@ -105,7 +106,7 @@ export type RootStackSignInParamList = {
           options={{headerShown: true}}
           name="CHANNELS"
           component={Channels}
-          initialParams={currentUser}
+          initialParams={{currentUser}}
         />
         <ProfileStack.Screen
           options={{headerShown: false}}
