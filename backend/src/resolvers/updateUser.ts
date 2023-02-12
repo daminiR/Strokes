@@ -8,13 +8,16 @@ import {
   SPORT_CHANGES_PER_DAY,
 } from "../constants/";
 import sanitize from 'mongo-sanitize'
+import { filterMatches } from '../utils/matches';
 
 export const resolvers = {
   Query: {
     squash: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
+      // change matches to only get matches that are beyond certain dates
       const squash_val = await Squash.findById(id);
-      return squash_val;
+      const new_squash = filterMatches(squash_val)
+      return new_squash;
     },
     squashes: async (parents, unSanitizedId, context, info) => {
       //const user = context.user;

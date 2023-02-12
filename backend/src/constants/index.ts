@@ -4,6 +4,8 @@ export const SPORT_CHANGES_PER_DAY = 2
 export const dest_gcs_images = "all_images"
 export const POST_CHANNEL = 'MESSAGE_CHANNEL'
 export const GENDERS = ["Male", "Female"]
+export const LEVELS = ['0', '1', '2']
+export const MAX_SPORTS_LIMIT = 5
 export const LOCATIONS = [
   {
     city: "New York City",
