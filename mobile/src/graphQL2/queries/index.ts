@@ -58,11 +58,6 @@ const GET_POTENTIAL_MATCHES = gql`
         sport
         game_level
       }
-      location {
-        city
-        state
-        country
-      }
       description
       image_set {
         img_idx
