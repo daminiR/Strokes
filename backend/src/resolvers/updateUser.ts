@@ -13,7 +13,6 @@ export const resolvers = {
   Query: {
     squash: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
-      console.log("id in sqash", id)
       const squash_val = await Squash.findById(id);
       return squash_val;
     },

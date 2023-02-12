@@ -44,6 +44,7 @@ export interface PotentialMatchType {
     gender: string
     sports: Sport[],
     description: string
+    image_set: ImageSetT[]
 }
 export interface LikedByUserType {
     first_name: string

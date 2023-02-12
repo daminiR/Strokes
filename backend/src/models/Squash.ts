@@ -1,140 +1,14 @@
 import { Types, model, Schema} from 'mongoose';
 import { DeleteT, SquashDocument, LikedByUserT, PotentialMatchT, LocationT, PotentialMatchType, PotentialMatchSingleT} from '../types/Squash.d'
 const uri = process.env.ATLAS_URI as any
-const GENDERS = ["Male", "Female"]
-const LOCATIONS = [
-  {
-    city: "New York City",
-    state: "NY",
-    country: "US",
-  },
-  {
-    city: "Cambridge",
-    state: "MA",
-    country: "US",
-  },
-  {
-    city: "Boston",
-    state: "MA",
-    country: "US",
-  },
-  {
-    city: "Sommerville",
-    state: "MA",
-    country: "US",
-  },
-  {
-    city: "Chicago",
-    state: "IL",
-    country: "US",
-  },
-  {
-    city: "Charleston",
-    state: "SC",
-    country: "US",
-  },
-  {
-    city: "Las Vegas",
-    state: "NV",
-    country: "US",
-  },
-  {
-    city: "Seattle",
-    state: "WA",
-    country: "US",
-  },
-  {
-    city: "San Francisco",
-    state: "CA",
-    country: "US",
-  },
-  {
-    city: "Washington",
-    state: "DC",
-    country: "US",
-  },
-  {
-    city: "Las Vegas",
-    state: "NV",
-    country: "US",
-  },
-  {
-    city: "Los Angeles",
-    state: "NV",
-    country: "US",
-  },
-  {
-    city: "Austin",
-    state: "Texas",
-    country: "US",
-  },
-];
-const CITIES = [
-  'New York City',
-  'Cambridge',
-  'Boston',
-  'Sommerville',
-  'Chicago',
-  'Charleston',
-  'Las Vegas',
-  'Seattle',
-  'San Francisco',
-  'Washington',
-  'Los Angeles',
-  'Austin',
-];
-const STATES = [
-  "NY",
-  "MA",
-  "IL",
-  "SC",
-  "NV",
-  "WA",
-  "CA",
-  "DC",
-  "TX",
-];
-const COUNTRY = ["US"];
-const SPORTS = [
-  "Softball",
-  "Kickball",
-  "Pickleball",
-  "Hiking",
-  "Swimming",
-  "Kick boxing",
-  "Bouldering",
-  "Squash",
-  "Tennis",
-  "Soccer",
-  "Badminton",
-  "Hockey",
-  "Volleyball",
-  "Basketball",
-  "Cricket",
-  "Table Tennis",
-  "Skateboarding",
-  "Baseball",
-  "Golf",
-  "American Football",
-  "Skating",
-  "Snowbording",
-  "Ice Skating",
-  "Ice Hockey",
-  "Power Lifting",
-  "Body Building",
-  "Surfing",
-  "Cheerleading",
-  "Ultimate Frisbee",
-  "Cricket",
-  "Cycling",
-  "Dance",
-  "Dodgeball",
-  "Fencing",
-  "Wrestling",
-  "Gymnastics",
-  "Paddleboarding",
-  "Boxing"
-]
+import {
+  GENDERS,
+  LOCATIONS,
+  CITIES,
+  STATES,
+  COUNTRY,
+  SPORTS
+} from "../constants/";
 const LocationSchema = new Schema({
   city: { type: String, enum: CITIES, required: true},
   state: { type: String, enum: STATES },
@@ -166,8 +40,11 @@ const _idValidator = _id => {
 // TODO: need to decide on what age requirement you need for your app -> 18 for now, also max requirement?
 // TODO: need to figure away to allow enum values only once!
 // TODO: need to check if age above 40s is really the persons age
-const PotentialMatchSchema = new Schema(
+const LikedByUserType = new Schema(
   {
+    location: {
+      type: LocationSchema,
+    },
     first_name: {
       type: String!,
       required: true
@@ -181,11 +58,97 @@ const PotentialMatchSchema = new Schema(
       required: true,
       min: 18,
       max: 90,
-      //TODO: fix the age and bithday category asap
-      //validate: {
-      //validator: Number.isInteger,
-      //message: "{VALUE} is not an integer value",
-      //},
+    },
+    gender: {
+      type: String,
+      required: true,
+      enum: GENDERS,
+    },
+    sports: {
+      type: [
+        {
+          game_level: { type: String, enum: LEVELS },
+          sport: { type: String, enum: SPORTS },
+        },
+      ],
+      required: true,
+      validate: [
+        {
+          validator: imageArrayMinLimit,
+          message: "Cannot have no sport, choose atleast one",
+        },
+        {
+          validator: sportsArrayMaxLimit,
+          message: "Cannot have more than 5 chossen sports at a time",
+        },
+      ],
+    },
+    description: {
+      type: String,
+      maxlength: 300,
+    },
+    image_set: {
+      type: [
+        {
+          img_idx: { type: Number },
+          imageURL: { type: String },
+          filePath: { type: String },
+        },
+      ],
+      required: true,
+      validate: [
+        {
+          validator: imageArrayMinLimit,
+          message: "Cannot have no images",
+        },
+        {
+          validator: imageArrayMaxLimit,
+          message: "No more than 6 images",
+        },
+      ],
+    },
+  },
+  { timestamps: true }
+)
+const PotentialMatchSchema = new Schema(
+  {
+    _id: {
+      type: String!,
+      required: true
+    },
+    first_name: {
+      type: String!,
+      required: true
+    },
+    image_set: {
+      type: [
+        {
+          img_idx: { type: Number },
+          imageURL: { type: String },
+          filePath: { type: String },
+        },
+      ],
+      required: true,
+      validate: [
+        {
+          validator: imageArrayMinLimit,
+          message: "Cannot have no images",
+        },
+        {
+          validator: imageArrayMaxLimit,
+          message: "No more than 6 images",
+        },
+      ],
+    },
+    age: {
+      type: Number,
+      required: true,
+      min: 18,
+      max: 90,
+    },
+    location: {
+      type: LocationSchema,
+      required: true,
     },
     gender: {
       type: String,
@@ -223,12 +186,6 @@ var squashSchema = new Schema(
     _id: {
       type: String!,
       required: true,
-      //validate: [
-      //{
-      //validator: _idValidator,
-      //message: "_id provided is not an ObjectID",
-      //},
-      //],
     },
     first_name: {
       type: String!,
@@ -245,40 +202,20 @@ var squashSchema = new Schema(
     visableLikePerDay: {
       type: Number,
       required: true,
-      //TODO: fix the age and bithday category asap
-      //validate: {
-      //validator: Number.isInteger,
-      //message: "{VALUE} is not an integer value",
-      //},
     },
     sportChangesPerDay: {
       type: Number,
       required: true,
-      //TODO: fix the age and bithday category asap
-      //validate: {
-      //validator: Number.isInteger,
-      //message: "{VALUE} is not an integer value",
-      //},
     },
     swipesPerDay: {
       type: Number,
       required: true,
-      //TODO: fix the age and bithday category asap
-      //validate: {
-      //validator: Number.isInteger,
-      //message: "{VALUE} is not an integer value",
-      //},
     },
     age: {
       type: Number,
       required: true,
       min: 18,
       max: 90,
-      //TODO: fix the age and bithday category asap
-      //validate: {
-      //validator: Number.isInteger,
-      //message: "{VALUE} is not an integer value",
-      //},
     },
     gender: {
       type: String,
@@ -353,21 +290,15 @@ var squashSchema = new Schema(
       required: false,
     },
     likedByUSers: {
-      type: <LikedByUserT>{},
+      type: [LikedByUserType],
       required: false,
     },
     dislikes: {
       type: [String],
       required: false,
     },
-    i_blocked: {
-      type: <PotentialMatchT>{},
-      required: false,
-    },
-    blocked_me: {
-      type: <PotentialMatchT>{},
-      required: false,
-    },
+    i_blocked:[PotentialMatchSchema],
+    blocked_me:[PotentialMatchSchema],
     matches:[PotentialMatchSchema],
     // new additions
     deleted: {
