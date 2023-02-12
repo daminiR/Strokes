@@ -104,6 +104,7 @@ export const resolvers = {
       const { currentUserId, potentialMatchId, currentUser, potentialMatch } = sanitize(unSanitizedData)
       //const user = context.user;
       //if (user?.sub != currentUserId) throw new AuthenticationError("not logged in");
+      console.log("update matches", potentialMatch)
       const doc = await Squash.findOneAndUpdate(
         { _id: currentUserId },
         { $addToSet: { matches: potentialMatch } },
