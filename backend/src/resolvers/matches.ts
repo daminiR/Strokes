@@ -53,7 +53,6 @@ export const resolvers = {
       info
     ) => {
       const { _id, offset, limit, location, sport, game_levels, ageRange } = sanitize(unSanitizedData)
-      console.log("why matches erro", _id)
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
       const filter = {
@@ -102,11 +101,20 @@ export const resolvers = {
       info
     ) => {
       const { currentUserId, potentialMatchId, currentUser, potentialMatch } = sanitize(unSanitizedData)
-      //const user = context.user;
-      //if (user?.sub != currentUserId) throw new AuthenticationError("not logged in");
+      //const chat_timer = 1.21e+9
+      //two days
+      const chat_timer = 1.728e+8
+      const unix = Date.now() - chat_timer
+      // note: don't need to update matches archives for potential match because
+      //that needs to be on the potential matches server load on their id
       const doc = await Squash.findOneAndUpdate(
-        { _id: currentUserId },
-        { $addToSet: { matches: potentialMatch } },
+        { _id: currentUserId},
+        { $set: { "matches.$[elem].archived": true } },
+          { arrayFilters: [ { "elem.createdAt": { $lte: unix } } ] , new: true},
+      );
+      const doc = await Squash.findOneAndUpdate(
+        { _id: currentUserId},
+        {$addToSet: { matches: potentialMatch } },
         { new: true }
       );
       const potentialMatchDoc = await Squash.findOneAndUpdate(
