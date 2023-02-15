@@ -83,7 +83,7 @@ const PotentialMatchSchema = new Schema(
         },
       ],
     },
-    createdAt: Number,
+     createdAt: Number,
     updatedAt: Number,
     description: {
       type: String,
