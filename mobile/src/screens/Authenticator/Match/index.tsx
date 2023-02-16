@@ -48,4 +48,4 @@ const Match =()  => {
     </>
   );
 }
-export { Match}
+export { Match }

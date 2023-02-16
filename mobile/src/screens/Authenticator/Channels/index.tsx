@@ -26,6 +26,7 @@ const Channels = props => {
   const [state, dispatch] = useReducer(channelsReducer, {
     sendbird,
     currentUser,
+    matches: [],
     channels: [],
     channelMap: {},
     loading: false,
@@ -179,68 +180,31 @@ const Channels = props => {
       query.limit = 10;
       query.show_empty = true
       query.includeEmpty = true
-      //query.hiddenChannelFilter ="hidden_prevent_auto_unhide"
       query.hiddenChannelFilter ="unhidden_only"
-
-      //const matches = currentUserData.squash.matches
-      //## this is a soft way to doubel check that each users id in matches has  an open channel
-      // only do this if user not in chat
-      // TODO: this code isnt required to run , you should createChannels whever there is a match directly
-      //_.map(matches, (match) => {
-        //var userIds = [currentUser.sub, match._id]
-        //// check if matchId channel already exists
-        //sendbird.GroupChannel.createChannelWithUserIds(
-          //userIds,
-          //true,
-          //function (groupChannel, error) {
-            //if (error) {
-              //// Handle error.
-              //console.log('SB_ERROR', error);
-            //}
-            //console.log('SB OPEN2', groupChannel);
-          //},
-        //);
-      //})
-      //query.include_empty = true
-      //query.hiddenChannelFilter ="unhidden_only"
       query.next((err, fetchedChannels) => {
-        //const channelsToHide = fetchedChannels.filter((channel) => {
-          //const unixTime = channel.createdAt;
-          //// tesing with 1 day
-          ////const ChatTimer = 8.64e+7
-          ////ideally 14 days
-          //const ChatTimer = 1.21e9;
-          ////test with 1 hour
-          ////const ChatTimer = 1.8e+6
-          //console.log("worked fetched here", channel.isHidden);
-          //if (Date.now() - unixTime > ChatTimer) {
-            ////const params = {
-            ////hidePreviousMessages: false,
-            ////allowAutoUnhide: true,
-            ////};
-            //channel
-              //.hide()
-              //.then(() => {
-                //console.log("worked");
-                //console.log(channel.isHidden);
-                //channel.refresh().then(() => {
-                  //console.log("worked after refresh", channel.isHidden);
-                  //return true;
-                //});
-              //})
-              //.catch((err) => console.log(err));
-          //}
-        //});
-        //console.log("worked channels", channelsToHide);
-        //const check = channelsToHide.map((channel) => {
-          //console.log("worked after", channel.isHidden);
-        //});
-
+        const matches_id = _.map(currentUserData.squash.matches, match => {return match._id})
+        //console.log("matches id debud chennell fetched:", fetchedChannels);
+        //if (fetchedChannels) {
+           //const notArchivedChannels = fetchedChannels.filter((channel) => {
+            //console.log("matches id debud chennell:", channel);
+            //const member = _.filter(channel.members, (member) => {
+              //return member.userId !== currentUser.userId;
+            //});
+            //if (member?.userId) {
+              //console.log("matches id debud sb:", matches_id);
+              //console.log("matches id debud sb memebr id:", member);
+              //return _.includes(matches_id, member[0].userId);
+            //} else {
+              //false;
+            //}
+          //});
+        //console.log("matches id debud chennell fetched:", fetchedChannels);
+        //}
         dispatch({ type: "end-loading" });
         if (!err) {
           dispatch({
             type: "fetch-channels",
-            payload: { channels: fetchedChannels },
+            payload: { channels: fetchedChannels , matches: matches_id, currentUser: currentUser},
           });
         } else {
           dispatch({

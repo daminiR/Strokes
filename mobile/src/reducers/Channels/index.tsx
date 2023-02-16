@@ -2,7 +2,6 @@ import _ from 'lodash'
 export const channelsReducer =  (state, action) => {
   switch (action.type) {
     case 'refresh': {
-      console.log("dispatch", state.channels)
       return {
         ...state,
         channelMap: {},
@@ -12,48 +11,25 @@ export const channelsReducer =  (state, action) => {
       };
     }
     case 'fetch-channels': {
-      const { channels } = action.payload || {};
-      //const channelsToHide = channels.map((channel)=> {
-        //const unixTime = channel.createdAt
-        //// tesing with 1 day
-        ////const ChatTimer = 8.64e+7
-         ////ideally 14 days
-        //const ChatTimer = 1.21e+9
-         ////test with 1 hour
-        ////const ChatTimer = 1.8e+6
-        //console.log("worked here", channel)
-        //channel.hide().then((channel) =>{
-          ////refresh channel
-        //console.log("worked new", channel)
-        ////channel.refresh().then(() =>{
-        ////console.log("worked after refresh", channel.isHidden)
-        ////return true
-          ////})
-        //})
-        //.catch((err) => {
-
-          //console.log("did we have error worked")
-          //console.log("worked", err)
-
-        //})
-        //if (Date.now() - unixTime > ChatTimer) {
-          ////const params = {
-            ////hidePreviousMessages: false,
-            ////allowAutoUnhide: true,
-          ////};
-          //channel.hide()
-          //.then(() => {
-          //console.log("worked")
-          //console.log(channel.isHidden)
-          //})
-          //.catch(err => console.log(err))
-        //}
-      //})
-    //console.log("worked channels", channelsToHide)
-    //const check = channelsToHide.map((channel)=> {
-        //console.log("worked after", channel.isHidden)
-      //})
-      const distinctChannels = channels.filter(channel => !state.channelMap[channel.url]);
+      const { channels, matches, currentUser} = action.payload || {};
+      console.log("not archived", currentUser.userId)
+      const notArchivedChannels = channels.filter((channel) => {
+            const member = _.filter(channel.members, (member) => {
+            console.log("not archived 1", member.userId)
+            console.log("not archived 2", currentUser.userId)
+              return member.userId !== currentUser.userId;
+            })
+            if (member[0]?.userId) {
+              console.log("not archived ch1", matches);
+              console.log("not archived ch2", member[0].userId);
+              return _.includes(matches, member[0].userId);
+            }
+            else {
+              return false
+            }
+      })
+      console.log("not archived channels", notArchivedChannels.length)
+      const distinctChannels = notArchivedChannels.filter(channel => !state.channelMap[channel.url]);
       const mergedChannels = [...state.channels, ...distinctChannels].sort((a, b) => {
         const at = a.lastMessage ? a.lastMessage.createdAt : a.createdAt;
         const bt = b.lastMessage ? b.lastMessage.createdAt : b.createdAt;
@@ -67,8 +43,8 @@ export const channelsReducer =  (state, action) => {
       return {
         ...state,
         channelMap,
-        channels: channels,
-        empty: channels.length === 0 ? 'Start conversation.' : '',
+        channels: notArchivedChannels,
+        empty: notArchivedChannels.length === 0 ? 'Start conversation.' : '',
       };
     }
     case 'join-channel':
