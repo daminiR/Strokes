@@ -6,6 +6,8 @@ export const POST_CHANNEL = 'MESSAGE_CHANNEL'
 export const GENDERS = ["Male", "Female"]
 export const LEVELS = ['0', '1', '2']
 export const MAX_SPORTS_LIMIT = 5
+// chat time currently at 2 days
+export const CHAT_TIMER = 1.728e+8
 export const LOCATIONS = [
   {
     city: "New York City",
