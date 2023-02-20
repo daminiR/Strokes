@@ -167,6 +167,31 @@ const ImageInput = ({isSignUp}) => {
       </>
     );
   }
+  const DeleteAccountInput = ({softDelete}) => {
+    return (
+      <>
+        <View>
+          <Text style={styles.privacy}>
+            This will start the delete proces of your account. For morre
+            information of how th delete process works please check
+          </Text>
+          <Text
+            style={styles.link}
+            onPress={() =>
+              Linking.openURL("https://daminir.github.io/Playarmo/")
+            }
+          >
+            https://daminir.github.io/Playarmo/
+          </Text>
+          <Text style={styles.privacy}>for more details.</Text>
+          <Button
+            title="Delete Account"
+            buttonStyle={styles.buttonStyle}
+            onPress={() => softDelete()}
+          />
+        </View>
+      </>
+    );}
   const PrivacyInput = () => {
     return (
       <>
@@ -348,4 +373,4 @@ const DescriptionInput = ({isSignUp}) => {
     );
   };
 
-  export {PrivacyInput, DescriptionInput, EmailInput, ImageInput, SportsInput, GenderInput, PhoneInput, NameInput, BirthdayInput}
+  export {DeleteAccountInput, PrivacyInput, DescriptionInput, EmailInput, ImageInput, SportsInput, GenderInput, PhoneInput, NameInput, BirthdayInput}

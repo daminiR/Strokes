@@ -12,11 +12,6 @@ export const MAX_SPORTS_LIMIT = 5
 export const CHAT_TIMER = 1.21e+9
 export const LOCATIONS = [
   {
-    city: "New York City",
-    state: "NY",
-    country: "US",
-  },
-  {
     city: "Cambridge",
     state: "MA",
     country: "US",
@@ -31,115 +26,22 @@ export const LOCATIONS = [
     state: "MA",
     country: "US",
   },
-  {
-    city: "Chicago",
-    state: "IL",
-    country: "US",
-  },
-  {
-    city: "Charleston",
-    state: "SC",
-    country: "US",
-  },
-  {
-    city: "Las Vegas",
-    state: "NV",
-    country: "US",
-  },
-  {
-    city: "Seattle",
-    state: "WA",
-    country: "US",
-  },
-  {
-    city: "San Francisco",
-    state: "CA",
-    country: "US",
-  },
-  {
-    city: "Washington",
-    state: "DC",
-    country: "US",
-  },
-  {
-    city: "Las Vegas",
-    state: "NV",
-    country: "US",
-  },
-  {
-    city: "Los Angeles",
-    state: "NV",
-    country: "US",
-  },
-  {
-    city: "Austin",
-    state: "Texas",
-    country: "US",
-  },
 ];
 export const CITIES = [
-  'New York City',
   'Cambridge',
   'Boston',
   'Sommerville',
-  'Chicago',
-  'Charleston',
-  'Las Vegas',
-  'Seattle',
-  'San Francisco',
-  'Washington',
-  'Los Angeles',
-  'Austin',
 ];
 export const STATES = [
-  "NY",
-  "MA",
-  "IL",
-  "SC",
-  "NV",
-  "WA",
-  "CA",
-  "DC",
-  "TX",
+  "MA"
 ];
 export const COUNTRY = ["US"];
 export const SPORTS = [
   "Softball",
-  "Kickball",
   "Pickleball",
-  "Hiking",
-  "Swimming",
-  "Kick boxing",
-  "Bouldering",
+  "Basketball",
   "Squash",
   "Tennis",
   "Soccer",
-  "Badminton",
-  "Hockey",
-  "Volleyball",
-  "Basketball",
-  "Cricket",
-  "Table Tennis",
-  "Skateboarding",
-  "Baseball",
-  "Golf",
-  "American Football",
-  "Skating",
-  "Snowbording",
-  "Ice Skating",
-  "Ice Hockey",
-  "Power Lifting",
-  "Body Building",
-  "Surfing",
-  "Cheerleading",
-  "Ultimate Frisbee",
-  "Cricket",
-  "Cycling",
-  "Dance",
-  "Dodgeball",
-  "Fencing",
-  "Wrestling",
-  "Gymnastics",
-  "Paddleboarding",
-  "Boxing"
+  "Volleyball"
 ]

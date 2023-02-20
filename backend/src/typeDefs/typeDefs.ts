@@ -173,5 +173,6 @@ export const typeDefs = gql`
       phoneNumber: String
     ): Squash!
     softDeleteUser(_id: String): String!
+    softUnDeleteUser(_id: String): String!
   }
 `;

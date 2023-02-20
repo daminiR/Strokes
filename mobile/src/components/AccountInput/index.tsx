@@ -101,9 +101,6 @@ const softDelete = async() => {
 }
 
 const confirmDelete = async() => {
-  console.log("code", formikValues.confirmationCode)
-  console.log("phone", formikValues.phoneNumber)
-  console.log("ficn", confirmationFunc)
     confirmationFunc && confirmationFunc
       .confirm(formikValues.confirmationCode)
       .then((userCredential) => {
@@ -128,24 +125,41 @@ const confirmDelete = async() => {
   };
   return (
     // either put done/cancel here or in parent modal
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       {AccountList.map((item, i) => (
-        <ListItem disabled={item.buttonPress ? false : true }onPress={() => item.buttonPress && item.buttonPress()} key={i} bottomDivider>
+        <ListItem
+          disabled={item.buttonPress ? false : true}
+          onPress={() => {
+            if (item.title === "Delete Account") {
+              item.buttonPress && item.buttonPress();
+            } else {
+              item.buttonPress && item.buttonPress();
+            }
+          }}
+          key={i}
+          bottomDivider
+        >
           <ListItem.Content>
             <ListItem.Title>{item.title}</ListItem.Title>
             <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle>
           </ListItem.Content>
-          <ListItem.Chevron/>
+          <ListItem.Chevron />
         </ListItem>
       ))}
       <Button
         title="Sign Out"
         buttonStyle={styles.buttonStyle}
-        onPress={async ()  => {
-          setLoadingSignUInRefresh(true)
-          await signOut(setDisplayInput, client, sendbird, setLoadingSignUInRefresh, setCurrentUser, setClient);
-          console.log("did we make it to signitn outtttttttt")
-          setLoadingSignUInRefresh(false)
+        onPress={async () => {
+          setLoadingSignUInRefresh(true);
+          await signOut(
+            setDisplayInput,
+            client,
+            sendbird,
+            setLoadingSignUInRefresh,
+            setCurrentUser,
+            setClient
+          );
+          setLoadingSignUInRefresh(false);
         }}
       />
       <Button
@@ -153,19 +167,20 @@ const confirmDelete = async() => {
         buttonStyle={styles.buttonStyle}
         onPress={() => softDelete()}
       />
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={displayInput}
-        >
-          <View style={{flex: 1}}>
-            <View style={styles.top}>
-                <Cancel _onPressCancel={_onPressCancelInput} />
-                <Done _onPressDone={_onPressDoneInput} />
-            </View>
+      <Modal animationType="slide" transparent={false} visible={displayInput}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.top}>
+            <Cancel _onPressCancel={_onPressCancelInput} />
+            <Done _onPressDone={_onPressDoneInput} />
           </View>
-            <EditAccountDetailsInput inputType={inputType} getData={getData} confirmDelete={confirmDelete}/>
-        </Modal>
+        </View>
+        <EditAccountDetailsInput
+          inputType={inputType}
+          getData={getData}
+          confirmDelete={confirmDelete}
+          softDelete={softDelete}
+        />
+      </Modal>
     </View>
   );
 }

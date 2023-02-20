@@ -9,7 +9,6 @@ import {resolvers as createUser} from './resolvers/createUSer'
 import {resolvers as likesDislikes} from './resolvers/likesDislikes'
 import {resolvers as matches} from './resolvers/matches'
 import {resolvers as random} from './resolvers/random'
-import {resolvers as update} from './resolvers/admin_resolvers/update_schema'
 import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
 
@@ -30,8 +29,7 @@ const startServer = async () => {
       matches,
       random,
       updateUser,
-      uploads,
-      update
+      uploads
     ]
   );
   const schema = makeExecutableSchema({

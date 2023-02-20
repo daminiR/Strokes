@@ -261,6 +261,11 @@ const SOFT_DELETE_PROFILE = gql`
     softDeleteUser(_id: $_id)
   }
 `
+const SOFT_UN_DELETE_PROFILE = gql`
+  mutation softUnDeleteUser($_id: String!) {
+    softUnDeleteUser(_id: $_id)
+  }
+`
 const UPDATE_PROFILE_COMPLETE = gql`
   mutation UpdateProfileComplete($id: ID, $isProfileComplete: Boolean!){
       _id
@@ -289,4 +294,5 @@ export {
   POST_MESSAGE,
   DELETE_CHAT_USER,
   SOFT_DELETE_PROFILE,
+  SOFT_UN_DELETE_PROFILE,
 };

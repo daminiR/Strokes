@@ -12,6 +12,10 @@ const _email = () => {
       EditAccounDetailInputVar({inputType: 'Email Input', displayInput: true})
       console.log(EditInputVar())
 };
+const _deleteAccount = () => {
+      EditAccounDetailInputVar({inputType: 'Delete Account Input', displayInput: true})
+      console.log(EditInputVar())
+};
 const _privacyPolicy = () => {
       EditAccounDetailInputVar({inputType: 'Privacy Input', displayInput: true})
       console.log(EditInputVar())
@@ -48,4 +52,4 @@ const _editDescription = () => {
 const _editAccount = () => {
       EditAccountInputVar({inputType: 'Account Input', displayInput: true})
 }
-export {_confirmationCode, _email, _phone_number,_editDescription, _editSports, _editAccount, _neighborhood, _gender, _age, _first_name, _privacyPolicy}
+export {_deleteAccount, _confirmationCode, _email, _phone_number,_editDescription, _editSports, _editAccount, _neighborhood, _gender, _age, _first_name, _privacyPolicy}

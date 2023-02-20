@@ -1,6 +1,6 @@
 import { Dimensions, Platform } from 'react-native'
 import {DIMENSION_HEIGHT} from '@styles'
-import { _privacyPolicy, _email, _phone_number, _neighborhood, _gender, _age, _first_name} from './InputsVar'
+import { _privacyPolicy, _email, _phone_number, _neighborhood, _gender, _age, _first_name, _deleteAccount} from './InputsVar'
 
 export const primary = '#50E3C2'
 export const secondary = '#ff06f4'
@@ -135,43 +135,12 @@ export const customIconMap = {
 
 export const sportsList = [
   "Softball",
-  "Kickball",
   "Pickleball",
-  "Hiking",
-  "Swimming",
-  "Kick boxing",
-  "Bouldering",
   "Squash",
   "Tennis",
   "Soccer",
-  "Badminton",
-  "Hockey",
   "Volleyball",
-  "Basketball",
-  "Cricket",
-  "Table Tennis",
-  "Skateboarding",
-  "Baseball",
-  "Golf",
-  "American Football",
-  "Skating",
-  "Snowbording",
-  "Ice Skating",
-  "Ice Hockey",
-  "Power Lifting",
-  "Body Building",
-  "Surfing",
-  "Cheerleading",
-  "Ultimate Frisbee",
-  "Cricket",
-  "Cycling",
-  "Dance",
-  "Dodgeball",
-  "Fencing",
-  "Wrestling",
-  "Gymnastics",
-  "Paddleboarding",
-  "Boxing"
+  "Basketball"
 ];
 export const sportLevelList = ["beginners", "intermediate", "advanced"]
 export const profileSettingsLabels = ["first name", "last name", "age", "gender"]
@@ -212,6 +181,7 @@ export const AccountList = [
   {title: 'Phone Number', icon: 'av-timer', subtitle: '', buttonPress: null},
   {title: 'Email', icon: 'flight-takeoff', subtitle: '',buttonPress: _email},
   {title: 'Privacy Policy + Terms & Conditions', icon: 'flight-takeoff', subtitle: '',buttonPress: _privacyPolicy},
+  {title: 'Delete Account', icon: 'flight-takeoff', subtitle: '',buttonPress: _deleteAccount},
 ]
 
 export const settingsFlatList = [

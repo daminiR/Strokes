@@ -8,7 +8,6 @@ import { FormProvider } from './Contexts/FormContext'
 import {CachePersistor, AsyncStorageWrapper} from 'apollo3-cache-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import  { createUploadLink } from 'apollo-upload-client';
-//import { enableFlipperApolloDevtools } from 'react-native-flipper-apollo-devtools'
 import { setContext } from '@apollo/client/link/context'
 import { LogBox } from 'react-native'
 import SendBird from 'sendbird'
@@ -29,22 +28,19 @@ const App = () =>
   const [loadingSignUpInRefresh, setLoadingSignUInRefresh] = useState(false);
   const [loadingApp, setLoadingApp ] = useState(false)
   const uri_upload = process.env.React_App_UriUploadRemote
-  console.log(uri_upload)
-  if (Platform.OS === 'ios'){
-  PushNotificationIOS.addNotificationRequest({
-  body:"Release your work stress by finding someone to play sports with!",
-  fireDate: getCorrectDate(),
-  id:"1",
-  repeats: true,
-  repeatsComponent: {
-    day: true,
-    hour: true,
-    minute: true,
-   second: true,
-  }
-});
-
-
+  if (Platform.OS === "ios") {
+    PushNotificationIOS.addNotificationRequest({
+      body: "Release your work stress by finding someone to play sports with!",
+      fireDate: getCorrectDate(),
+      id: "1",
+      repeats: true,
+      repeatsComponent: {
+        day: true,
+        hour: true,
+        minute: true,
+        second: true,
+      },
+    });
   }
   useEffect(() => {
     setLoadingApp(true)
@@ -137,8 +133,8 @@ const App = () =>
           </ApolloProvider>
       );
     }
-  client.resetStore()
-  client.resetStore()
+  //client.resetStore()
+  //client.resetStore()
   //just to reset cache for debugging
   //enableFlipperApolloDevtools(client)
 }

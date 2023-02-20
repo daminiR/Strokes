@@ -13,5 +13,15 @@ export const resolvers = {
       console.log("user soft deleted", doc);
       return "Done";
     },
+    softUnDeleteUser: async (root, unSanitizedId, context) => {
+      const _id = sanitize(unSanitizedId);
+      const doc = await Squash.findOneAndUpdate(
+        { _id: _id },
+        { $set: { "deleted.isDeleted" : false } },
+        { new: true }
+      );
+      console.log("user soft \"un\" deleted", doc);
+      return "Done";
+    },
   },
 };

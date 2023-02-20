@@ -1,23 +1,31 @@
 import React  from 'react'
 import {View} from 'react-native';
 import {_onPressSignOut} from '@utils'
-import { EmailInput, PhoneInput, PrivacyInput, ConfirmationCode} from '@components'
+import { EmailInput, PhoneInput, PrivacyInput, ConfirmationCode, DeleteAccountInput} from '@components'
 
-const EditAccountDetailsInput = ({inputType= null, signOut = null, getData=null, confirmDelete=null}) => {
+const EditAccountDetailsInput = ({inputType= null, signOut = null, getData=null, confirmDelete=null, softDelete=null}) => {
   const renderInput = () => {
     switch (inputType) {
-      case 'Email Input':
-        return <EmailInput isSignUp={false} getData={getData}/>;
+      case "Email Input":
+        return <EmailInput isSignUp={false} getData={getData} />;
         break;
-      case 'Phone Input':
-        return <PhoneInput/>;
+      case "Phone Input":
+        return <PhoneInput />;
         break;
-      case 'Privacy Input':
-        return <PrivacyInput/>;
+      case "Privacy Input":
+        return <PrivacyInput />;
         break;
-      case 'Confirmation Code Input':
+      case "Delete Account Input":
+        return <DeleteAccountInput softDelete={softDelete}/>;
+        break;
+      case "Confirmation Code Input":
         //return <PhoneInput/>;
-        return <ConfirmationCode isLastSlide={true} _confirmSignInGC={confirmDelete}/>;
+        return (
+          <ConfirmationCode
+            isLastSlide={true}
+            _confirmSignInGC={confirmDelete}
+          />
+        );
         break;
     }
   }
