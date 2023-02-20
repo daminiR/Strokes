@@ -3,10 +3,10 @@ import messaging from '@react-native-firebase/messaging';
 import { Formik} from 'formik'
 import {byGameLevel} from '@utils'
 import _ from 'lodash'
-import { Platform } from 'react-native';
+import { Platform, Alert} from 'react-native';
 import { SignOutStack, MatchStackScreen} from '@NavStack'
-import { READ_SQUASH, GET_POTENTIAL_MATCHES} from '@graphQL2'
-import { useLazyQuery} from '@apollo/client'
+import { READ_SQUASH, GET_POTENTIAL_MATCHES, SOFT_UN_DELETE_PROFILE} from '@graphQL2'
+import { useLazyQuery, useMutation} from '@apollo/client'
 import {SWIPIES_PER_DAY_LIMIT} from '@constants'
 import  {cityVar} from '@cache'
 import  {AppContainer} from '@components'
@@ -34,7 +34,15 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [loadAllResults, setLoadAllResults] = useState(true)
   const [initialValuesFormik, setInitialValuesFormik] = useState({});
   const {loadingSignUpInRefresh, setLoadingSignUInRefresh} = useContext(RootRefreshContext)
-  const didMountRef = useRef(false)
+  const didMountRef = useRef(false);
+  const [softUnDeleteUser] = useMutation(SOFT_UN_DELETE_PROFILE, {
+    //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
+    onCompleted: async () => {
+      setLoadingSignUInRefresh(true);
+      console.log("Succesful signout, and soft delete");
+      setLoadingSignUInRefresh(false);
+    },
+  });
   const [queryProssibleMatches, { loading: loadingMatches2, data: testData, fetchMore}] = useLazyQuery(GET_POTENTIAL_MATCHES, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
@@ -47,7 +55,7 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
     },
     onError: (err) => {
       setLoadinMatches(false)
-      console.log('Match query Errpr', err);
+      console.log('Match query Error', err);
     },
   });
   const [getSquashProfile, {data: userData, loading: userLoading, error, refetch: refetchUserData}] = useLazyQuery(READ_SQUASH, {
@@ -56,7 +64,19 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
       //TODO: if data doesnt exists input is incorrect => add checks
       setLoadingUser(false);
       if (data?.squash) {
-        setDeleted(data.squash.deleted)
+        setDeleted(data.squash.deleted);
+        //if soft delete is true set to false
+        const delete_doc = data.squash.deleted;
+        const id = data.squash._id
+        if (id) {
+          delete_doc &&
+            delete_doc.isDeleted &&
+            softUnDeleteUser({
+              variables: {
+                _id: id,
+              },
+            });
+        }
         setProfileState(true);
         setData(data);
       }
@@ -129,8 +149,14 @@ const start = (user) => {
   }, [userData]);
 
   useEffect(() => {
-    deleted && deleted.isDeleted &&
-      console.log("user info must be erase from react native and soft deleted on database")
+    deleted &&
+      deleted.isDeleted &&
+      Alert.alert(
+        "Account Restored",
+        "Your account will no longer be deleted",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      );
+
   }, [deleted])
   useEffect(() => {
     if(didMountRef.current){
@@ -196,8 +222,13 @@ const start = (user) => {
       if (!deleted || !deleted?.isDeleted) {
         // user is not a soft deleted user
         return !loadingSigning && !loadingMatches && <MatchStackScreen />;
+      } else {
+        // user is a soft deleted user and put alert message
+        //restore account back
+        return !loadingSigning && !loadingMatches && <MatchStackScreen />;
       }
     } else {
+      //# have to sign you out
       return !loadingUser && <SignOutStack/>;
     }
   }

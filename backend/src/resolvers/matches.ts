@@ -62,7 +62,7 @@ export const resolvers = {
             _id: { $ne: _id },
           },
           {
-            "location.city": location.city,
+            "location.state": location.state,
           },
           {
             active: true,
