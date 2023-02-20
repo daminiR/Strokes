@@ -22,26 +22,29 @@ export type ActiveChatT = {
 const ActiveChat = ({ route, navigation}) => {
   const [displayInput, setDisplayInput] = useState(false);
   //const {currentUserID, matchID, matchedUserProfileImage, matchedUserName} = route.params
-  const {currentUserID} = route.params
+  const {currentUserID, channel} = route.params
   const [loadingDeleteChat, setLoadinDeleteChat] = useState(false);
   //const [deleteChatUser] = useMutation(DELETE_CHAT_USER, {
     //onCompleted: () => {
     //},
   //})
-  //useEffect(() => {
-    //navigation.setOptions({
-      ////title: matchedUserName,
-      //headerRight: (props) => (
-        //<View style={{flex: 1, justifyContent:'center', paddingHorizontal: 20}}>
-        //<Icon
-          //name="more-horiz"
-          //type="material"
-          //onPress={() => setDisplayInput(true)}
-        ///>
-        //</View>
-      //),
-    //});
-  //}, [])
+  useEffect(() => {
+    const member = _.filter(channel.members, (member) => {
+              return member.userId !== currentUserID;
+            })[0].nickname
+    navigation.setOptions({
+      title: member,
+      headerRight: (props) => (
+        <View style={{flex: 1, justifyContent:'center', paddingHorizontal: 20}}>
+        <Icon
+          name="more-horiz"
+          type="material"
+          onPress={() => setDisplayInput(true)}
+        />
+        </View>
+      ),
+    });
+  }, [])
   const _onPressDelete = ()=> {
     //setLoadinDeleteChat(true)
     //deleteChatUser({variables: {

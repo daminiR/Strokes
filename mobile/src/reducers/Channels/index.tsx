@@ -12,23 +12,17 @@ export const channelsReducer =  (state, action) => {
     }
     case 'fetch-channels': {
       const { channels, matches, currentUser} = action.payload || {};
-      console.log("not archived", currentUser.userId)
       const notArchivedChannels = channels.filter((channel) => {
             const member = _.filter(channel.members, (member) => {
-            console.log("not archived 1", member.userId)
-            console.log("not archived 2", currentUser.userId)
               return member.userId !== currentUser.userId;
             })
             if (member[0]?.userId) {
-              console.log("not archived ch1", matches);
-              console.log("not archived ch2", member[0].userId);
               return _.includes(matches, member[0].userId);
             }
             else {
               return false
             }
       })
-      console.log("not archived channels", notArchivedChannels.length)
       const distinctChannels = notArchivedChannels.filter(channel => !state.channelMap[channel.url]);
       const mergedChannels = [...state.channels, ...distinctChannels].sort((a, b) => {
         const at = a.lastMessage ? a.lastMessage.createdAt : a.createdAt;

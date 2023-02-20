@@ -68,9 +68,11 @@ export const connect = (
 export const ellipsis = (s, len) => {
   return s.length > len ? s.substring(0, len) + '..' : s;
 };
-export const createChannelName = channel => {
+export const createChannelName = (channel, currentUserID)=> {
   if (channel.name === 'Group Channel' || channel.name.length === 0) {
-    const nicknames = channel.members.map(m => m.nickname);
+    const nicknames = [_.filter(channel.members, (member) => {
+              return member.userId !== currentUserID;
+            })[0].nickname]
     if (nicknames.length > channelNameMaxMembers) {
       return ellipsis(
         `${nicknames.slice(0, channelNameMaxMembers + 1).join(', ')} and ${

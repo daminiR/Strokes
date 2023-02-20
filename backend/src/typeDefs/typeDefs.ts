@@ -109,6 +109,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
+    updateAllUserSchema(_id: String!): String
     deleteImage(_id: String, img_idx: Int): [Data!]!
 
     updateLikes(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): Squash
@@ -171,7 +172,6 @@ export const typeDefs = gql`
       likedByUSers: [String!]
       phoneNumber: String
     ): Squash!
-
     softDeleteUser(_id: String): String!
   }
 `;

@@ -55,7 +55,6 @@ export type RootStackSignInParamList = {
     connecting: false,
   });
   const {data, sendbird, setSendbird} = useContext(UserContext);
-  console.log("connect status in chatscreen", sendbird)
   const [initialized, setInitialized] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const start = (user) => {
@@ -65,11 +64,9 @@ export type RootStackSignInParamList = {
   };
   useFocusEffect(
     useCallback(() => {
-      console.log("connect status: on chat")
       connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start, setSendbird);
       return () => {
         sendbird.disconnect()
-        console.log("connect status: not on chat", sendbird)
       }
     }, [])
   );
@@ -103,7 +100,7 @@ export type RootStackSignInParamList = {
     currentUser && (
       <ChatStack.Navigator>
         <ProfileStack.Screen
-          options={{headerShown: true}}
+          options={{headerShown: false}}
           name="CHANNELS"
           component={Channels}
           initialParams={{currentUser}}

@@ -8,7 +8,7 @@ import { createChannelName, createUnreadMessageCount, ellipsis } from '../../uti
 const LAST_MESSAGE_ELLIPSIS = 45;
 
 const Channel = props => {
-  const { sendbird, channel, onPress } = props;
+  const { sendbird, channel, onPress , currentUserID} = props;
   const [name, setName] = useState('');
   const [lastMessage, setLastMessage] = useState('');
   const [unreadMessageCount, setUnreadMessageCount] = useState('');
@@ -39,7 +39,7 @@ const Channel = props => {
   };
 
   const updateChannelName = channel => {
-    setName(createChannelName(channel));
+    setName(createChannelName(channel, currentUserID));
   };
   const updateLastMessage = channel => {
     if (channel.lastMessage) {
