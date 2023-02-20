@@ -55,7 +55,6 @@ const Channels = props => {
       refresh();
     }
     return () => {
-      console.log("sbError channel error")
       dispatch({ type: 'end-loading' });
       sendbird.removeConnectionHandler('channels');
       sendbird.removeChannelHandler('channels');
@@ -64,7 +63,6 @@ const Channels = props => {
   }, []);
 
   useEffect(() => {
-    console.log("channesError route params change")
     if (route.params && route.params.action) {
       const { action, data } = route.params;
       switch (action) {
@@ -150,7 +148,7 @@ const Channels = props => {
     } else {
 
       navigation.navigate('ACTIVE_CHAT', {
-        currentUserID: currentUser.sub,
+        currentUserID: currentUser.userId,
         channel: channel,
         currentUser: currentUser,
         profileViewData: profileViewDataList[0],
@@ -159,7 +157,7 @@ const Channels = props => {
   };
   const refresh = () => {
     const matches = currentUserData.squash.matches
-    createSendbirdChannel(matches, sendbird, currentUser)
+    //createSendbirdChannel(matches, sendbird, currentUser)
     const params = {
       includeEmpty: true,
       //hiddenChannelFilter: "hidden_prevent_auto_unhide",
@@ -183,23 +181,6 @@ const Channels = props => {
       query.hiddenChannelFilter ="unhidden_only"
       query.next((err, fetchedChannels) => {
         const matches_id = _.map(currentUserData.squash.matches, match => {return match._id})
-        //console.log("matches id debud chennell fetched:", fetchedChannels);
-        //if (fetchedChannels) {
-           //const notArchivedChannels = fetchedChannels.filter((channel) => {
-            //console.log("matches id debud chennell:", channel);
-            //const member = _.filter(channel.members, (member) => {
-              //return member.userId !== currentUser.userId;
-            //});
-            //if (member?.userId) {
-              //console.log("matches id debud sb:", matches_id);
-              //console.log("matches id debud sb memebr id:", member);
-              //return _.includes(matches_id, member[0].userId);
-            //} else {
-              //false;
-            //}
-          //});
-        //console.log("matches id debud chennell fetched:", fetchedChannels);
-        //}
         dispatch({ type: "end-loading" });
         if (!err) {
           dispatch({
@@ -224,7 +205,7 @@ const Channels = props => {
       <SafeAreaView style={style.container}>
         <FlatList
           data={state.channels}
-          renderItem={({ item }) => <Channel key={item.url} sendbird={sendbird} channel={item} onPress={channel => chat(channel)} />}
+          renderItem={({ item }) => <Channel key={item.url} sendbird={sendbird} channel={item} onPress={channel => chat(channel)} currentUserID={currentUser.userId}/>}
           keyExtractor={item => item.url}
           refreshControl={
             <RefreshControl refreshing={state.loading} colors={['#742ddd']} tintColor={'#742ddd'} onRefresh={refresh} />

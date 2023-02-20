@@ -9,6 +9,7 @@ import {resolvers as createUser} from './resolvers/createUSer'
 import {resolvers as likesDislikes} from './resolvers/likesDislikes'
 import {resolvers as matches} from './resolvers/matches'
 import {resolvers as random} from './resolvers/random'
+import {resolvers as update} from './resolvers/admin_resolvers/update_schema'
 import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
 
@@ -30,6 +31,7 @@ const startServer = async () => {
       random,
       updateUser,
       uploads,
+      update
     ]
   );
   const schema = makeExecutableSchema({
@@ -39,31 +41,6 @@ const startServer = async () => {
   const server = new ApolloServer({
     schema: schema,
     context: async ({ event, context, express }) => {
-      //context.callbackWaitsForEmptyEventLoop = false;
-      //// Get the user token from the headers.
-      //const authReq = express.req.headers.authorization || "";
-      //const token = authReq.split("Bearer ")[1] || "";
-      //// Try to retrieve a user with the token and verify
-      //console.log("Token check", token)
-      //var user = null as any;
-      //if (token) {
-        //console.log("so we have token", token)
-        //verifier
-          //.verify(token)
-          //.then((payload) => {
-            //console.log("do we get aws verification or no", payload);
-            //user = payload;
-            //return { user };
-          //})
-          //.catch((err) => {
-            //console.log("we get no verification ", err);
-            //user = null;
-            //return { user };
-          //});
-      //} else {
-        //user = null;
-        //return { user };
-      //}
       return "Context when needed"
     },
   });

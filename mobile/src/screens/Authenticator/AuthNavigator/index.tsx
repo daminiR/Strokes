@@ -62,7 +62,6 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
       }
     },
     onError: (({graphQLErrors, networkError}) => {
-      console.log("errors here2")
       if (networkError){
         console.log(networkError)
       }
@@ -127,7 +126,6 @@ const start = (user) => {
     }
   }, [loadingSignUpInRefresh, currentUser]);
   useEffect(() => {
-        console.log("did a refetch occur", userData)
   }, [userData]);
 
   useEffect(() => {

@@ -29,24 +29,10 @@ const Lobby = props => {
       login(user);
     }
   };
-    //useCallback(() => {
-      //useFocusEffect(
-      //const val = navigation.state
-      //console.log("connect status: on chat", val)
-      ////connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start);
-      //return () => {
-        ////logout()
-      //console.log("connect status: not on chat")
-        ////unsubscribe()
-      //}
-    //}, [])
-  //);
 
   useEffect(() => {
-    console.log(" connect status: we did login")
     connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start);
     return () => {
-      //console.log("connect status: did we logout")
       //logout();
     };
 },

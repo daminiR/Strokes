@@ -137,8 +137,8 @@ const App = () =>
           </ApolloProvider>
       );
     }
-  //client.resetStore()
-  //client.resetStore()
+  client.resetStore()
+  client.resetStore()
   //just to reset cache for debugging
   //enableFlipperApolloDevtools(client)
 }
