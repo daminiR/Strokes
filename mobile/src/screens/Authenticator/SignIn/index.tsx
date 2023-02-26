@@ -308,7 +308,7 @@ const [authMessage, setAuthMessage] = useState(null)
         data={signInSlides}
         scrollEnabled={false}
         onSlideChange={(index, lastIndex) => _onSlideChange(index, lastIndex)}
-        dotClickEnabled={false}
+        dotClickEnabled={true}
         ref={(ref) => (this.slider = ref!)}
       />
     </AppContainer>

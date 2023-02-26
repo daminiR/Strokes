@@ -24,18 +24,18 @@ const Lobby = props => {
   const {data, sendbird} = useContext(UserContext);
   const [initialized, setInitialized] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const start = (user) => {
-    if (login) {
-      login(user);
-    }
-  };
+  //const start = (user) => {
+    //if (login) {
+      //login(user);
+    //}
+  //};
 
   useEffect(() => {
-    connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start);
+    connect(data.squash._id, data.squash.first_name, dispatch, sendbird);
     return () => {
       //logout();
     };
-},
+  },
 
 
   []);
@@ -63,26 +63,29 @@ const Lobby = props => {
     });
   }, [currentUser]);
 
-  const login = async (user) => {
-    try {
-      setCurrentUser(user);
-      const authorizationStatus = await messaging().requestPermission();
-      if (
-        authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-      ) {
-        if (Platform.OS === 'ios') {
-          //const token = await messaging().getAPNSToken();
-          //sendbird.registerAPNSPushTokenForCurrentUser(token);
-        } else {
-          const token = await messaging().getToken();
-          sendbird.registerGCMPushTokenForCurrentUser(token);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  //const login = async (user) => {
+    //console.log("do we have token? in lobb")
+    //console.log("do we have token? in lobb")
+    //try {
+      //setCurrentUser(user);
+      //const authorizationStatus = await messaging().requestPermission();
+      //if (
+        //authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        //authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
+      //) {
+        //if (Platform.OS === 'ios') {
+          ////const token = await messaging().getAPNSToken();
+          ////sendbird.registerAPNSPushTokenForCurrentUser(token);
+        //} else {
+          //console.log("do we have token? in lobb")
+          //const token = await messaging().getToken();
+          //sendbird.registerGCMPushTokenForCurrentUser(token);
+        //}
+      //}
+    //} catch (err) {
+      //console.error(err);
+    //}
+  //};
 
   const logout = async () => {
     sendbird.disconnect();

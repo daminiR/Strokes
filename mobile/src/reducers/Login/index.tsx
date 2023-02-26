@@ -1,5 +1,5 @@
 export const loginReducer = (state, action) => {
-  console.log("Connect Error action", action)
+  console.log("Connect  action", action)
   switch (action.type) {
     case 'edit-userId': {
       const { content } = action.payload || {};

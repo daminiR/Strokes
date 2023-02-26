@@ -16,7 +16,6 @@ import { loginReducer } from '../../../reducers/Login';
 
 const Login = props => {
   const { sendbird, onLogin } = props;
-  console.log("what is sb vale logi", sendbird)
   const [state, dispatch] = useReducer(loginReducer, {
     userId: '',
     nickname: '',

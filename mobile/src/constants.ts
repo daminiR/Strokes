@@ -316,6 +316,13 @@ export const signUpSlides = [
     inputLabel: 'confirmationCode',
     backgroundColor: '#59b2ab',
   },
+  {
+    key: '10',
+    type: 'Send Verification',
+    title: 'Send Verification',
+    inputLabel: 'sendVerification',
+    backgroundColor: '#59b2ab',
+  },
 ];
 export const likeIconStyle= {
     type: 'material-community',

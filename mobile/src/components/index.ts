@@ -1,4 +1,5 @@
 export * from './AppContainer'
+export * from './SendResetCode'
 export * from './PasswordResetOverlay'
 export * from './PasswordResetInput'
 export * from './ForgotPassword'

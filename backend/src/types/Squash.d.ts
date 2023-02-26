@@ -65,7 +65,7 @@ export interface SquashDocument extends Document {
   location: LocationT
   description: [string]
   image_set: ImageSetT[]
-  matched : PotentialMatchT
+  matches : PotentialMatchT
   blocked_me : PotentialMatchT
   i_blocked : PotentialMatchT
   likes : PotentialMatchT

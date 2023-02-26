@@ -10,15 +10,14 @@ import { ProfileFields, SignIn} from '@localModels'
 import { useFormikContext} from 'formik';
 import  {styles}  from '@styles'
 import { View} from 'react-native'
-const ResetPassword = ({_resetPassword=null})  => {
+const SendVerificationCode = ({_signUp=null})  => {
   const { values, handleBlur, handleChange, errors, touched} = useFormikContext<ProfileFields | SignIn | EditFields>();
   return (
     <>
       <AppContainer>
-        <Text style={styles.titleFontStyle}>Reset Password</Text>
+        <Text style={styles.titleFontStyle}>Verify Phone Number</Text>
         <Text style={styles.descriptionFontStyle}>
-          Please enter a new password to sign in and the verification code you
-          recieved
+          Please enter the code received on your phone to sign up
         </Text>
         <View style={styles.emailContainer}>
           <View style={styles.emailInput}>
@@ -28,38 +27,23 @@ const ResetPassword = ({_resetPassword=null})  => {
                 multiline={false}
                 label="Verification Code"
                 leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-                onChangeText={handleChange('verificationCode')}
-                value={values.verificationCode}
-                onBlur={handleBlur('verificationCode')}
+                onChangeText={handleChange('confirmationCode')}
+                value={values.confirmationCode}
+                onBlur={handleBlur('confirmationCode')}
               />
-              {errors.verificationCode && touched.verificationCode ? (
+              {errors.confirmationCode && touched.confirmationCode ? (
                 <Text style={{alignSelf: 'center'}}>
-                  {errors.verificationCode}
+                  {errors.confirmationCode}
                 </Text>
-              ) : null}
-            </View>
-            <View style={styles.forgotPasswordContainer1}>
-              <Input
-                placeholder="New Password"
-                multiline={false}
-                secureTextEntry={true}
-                label="New Password"
-                leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-                onChangeText={handleChange('newPassword')}
-                value={values.newPasswor}
-                onBlur={handleBlur('newPassword')}
-              />
-              {errors.newPassword && touched.newPassword ? (
-                <Text style={{alignSelf: 'center'}}>{errors.newPassword}</Text>
               ) : null}
             </View>
           </View>
           <View style={styles.forgotPasswordContainer1}>
             <View style={styles.helloButtons}>
               <Button
-                title="Reset Password"
+                title="Verify"
                 titleStyle={styles.buttonText}
-                onPress={() => _resetPassword()}
+                onPress={() => _signUp()}
                 style={styles.buttonIndStyle}
                 buttonStyle={styles.buttonStyle}
               />
@@ -70,4 +54,4 @@ const ResetPassword = ({_resetPassword=null})  => {
     </>
   );
 }
-export { ResetPassword }
+export { SendVerificationCode }

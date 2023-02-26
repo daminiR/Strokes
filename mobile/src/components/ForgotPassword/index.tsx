@@ -8,7 +8,7 @@ import { RootStackSignUpParamList } from '@NavStack'
 import { confirmPassword, forgotPassword, setNewKeychain} from '@utils'
 import  {styles}  from '@styles'
 import { View} from 'react-native'
-const ForgotPassword = ({_onPresSetNewPassword}): ReactElement => {
+const ForgotPassword = ({_onPresSetNewPassword = null}): ReactElement => {
   return (
     <>
       <Text style={styles.titleFontStyle}>Reset Password</Text>

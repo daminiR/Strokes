@@ -12,6 +12,7 @@ import {Icon} from 'react-native-elements'
 import { HeaderBackButton } from '@react-navigation/elements'
 import {UserContext} from '@UserContext'
 import {connect} from '../../utils/SendBird'
+import notifee, { AndroidImportance } from '@notifee/react-native';
 
 import { loginReducer } from '../../reducers/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -47,110 +48,168 @@ export type RootStackSignInParamList = {
     </ProfileStack.Navigator>
   );
 }
- const ChatStackScreen = () => {
-  const [state, dispatch] = useReducer(loginReducer, {
-    userId: '',
-    nickname: '',
-    error: '',
-    connecting: false,
-  });
-  const {data, sendbird, setSendbird} = useContext(UserContext);
-  const [initialized, setInitialized] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const start = (user) => {
-    if (login) {
-      login(user);
-    }
-  };
-  useFocusEffect(
-    useCallback(() => {
-      connect(data.squash._id, data.squash.first_name, dispatch, sendbird, start, setSendbird);
-      return () => {
-        sendbird.disconnect()
-      }
-    }, [])
-  );
-  const login = async (user) => {
-    try {
-      setCurrentUser(user);
-      const authorizationStatus = await messaging().requestPermission();
-      if (
-        authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-      ) {
-        if (Platform.OS === 'ios') {
-          //const token = await messaging().getAPNSToken();
-          //sendbird.registerAPNSPushTokenForCurrentUser(token);
-        } else {
-          const token = await messaging().getToken();
-          sendbird.registerGCMPushTokenForCurrentUser(token);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+ const ChatStackScreen = ({ route }) => {
+   const token = route.params;
+   console.log("token in chat", token);
+   const [state, dispatch] = useReducer(loginReducer, {
+     userId: "",
+     nickname: "",
+     error: "",
+     connecting: false,
+   });
+   const { data, sendbird, setSendbird } = useContext(UserContext);
+   const [initialized, setInitialized] = useState(false);
+   const [currentUser, setCurrentUser] = useState(null);
+   //useEffect(() => {
+   //messaging().setBackgroundMessageHandler(async (message) => {
+   //const isSendbirdNotification = Boolean(message.data.sendbird);
+   //if(!isSendbirdNotification) return;
 
-  const logout = async () => {
-    sendbird.disconnect();
-    setCurrentUser(null);
-  };
+   //const text = message.data.message;
+   //const payload = JSON.parse(message.data.sendbird);
 
-  return (
-    currentUser && (
-      <ChatStack.Navigator>
-        <ProfileStack.Screen
-          options={{headerShown: false}}
-          name="CHANNELS"
-          component={Channels}
-          initialParams={{currentUser}}
-        />
-        <ProfileStack.Screen
-          options={{headerShown: false}}
-          name="SBCHAT"
-          component={SendBirdChat}
-        />
-        <ProfileStack.Screen
-          options={{headerShown: true}}
-          name="ACTIVE_CHAT"
-          component={ActiveChat}
-        />
-      </ChatStack.Navigator>
-    )
-  );
-}
+   //// The following is required for compatibility with Android 8.0 (API level 26)
+   //// and higher. Refer to Notifee's reference page for more information.
+   //const channelId = await notifee.createChannel({
+   //id: '1234',
+   //name: 'trial_channel',
+   //importance: AndroidImportance.HIGH
+   //});
+
+   //await notifee.displayNotification({
+   //id: message.messageId,
+   //title: 'New message has arrived!',
+   //subtitle: `Number of unread messages: ${payload.unread_message_count}`,
+   //body: payload.message,
+   //data: payload,
+   //android: {
+   //channelId,
+   ////smallIcon: NOTIFICATION_ICON_RESOURCE_ID,
+   //importance: AndroidImportance.HIGH,
+   //},
+   //ios: {
+   //foregroundPresentationOptions: {
+   //alert: true,
+   //badge: true,
+   //sound: true,
+   //},
+   //},
+   //});
+   //})
+
+   //}, []);
+   useFocusEffect(
+     useCallback(() => {
+       connect(
+         data.squash._id,
+         data.squash.first_name,
+         dispatch,
+         sendbird,
+         setSendbird,
+         setCurrentUser,
+         token
+       );
+       return () => {
+         sendbird.disconnect();
+       };
+     }, [])
+   );
+   const logout = async () => {
+     sendbird.disconnect();
+     setCurrentUser(null);
+   };
+
+   return (
+     currentUser && (
+       <ChatStack.Navigator>
+         <ProfileStack.Screen
+           options={{ headerShown: false }}
+           name="CHANNELS"
+           component={Channels}
+           initialParams={{ currentUser }}
+         />
+         <ProfileStack.Screen
+           options={{ headerShown: false }}
+           name="SBCHAT"
+           component={SendBirdChat}
+         />
+         <ProfileStack.Screen
+           options={{ headerShown: true }}
+           name="ACTIVE_CHAT"
+           component={ActiveChat}
+         />
+       </ChatStack.Navigator>
+     )
+   );
+ };
 const customTabBarStyle = {
   showLabel: false,
-  inactiveTintColor: 'gray',
-  style: {backgroundColor: '#2b1d08', height: Platform.OS === 'ios'? 100: 60},
+  inactiveTintColor: "gray",
+  style: {
+    backgroundColor: "#2b1d08",
+    height: Platform.OS === "ios" ? 100 : 60,
+  },
   labelStyle: {
-    color: '#242424',
-    fontFamily: 'OpenSans-Regular',
+    color: "#242424",
+    fontFamily: "OpenSans-Regular",
     //fontSize: 10,
   },
 };
- const MatchStackScreen = () => {
+const MatchStackScreen = () => {
+  const [token, setToken] = useState(null);
+  const {data, sendbird, setSendbird} = useContext(UserContext);
+  const login = async () => {
+    //try {
+    //setCurrentUser(user);
+    const authorizationStatus = await messaging().requestPermission();
+    if (
+      authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
+    ) {
+      if (Platform.OS === "ios") {
+        const token = await messaging().getAPNSToken();
+        sendbird.registerAPNSPushTokenForCurrentUser(token);
+      } else {
+        const token = await messaging().getToken();
+        setToken(token)
+        sendbird.registerGCMPushTokenForCurrentUser(token)
+      }
+    }
+    //} catch (err) {
+    //console.log("did we get token or not")
+    //console.error(err);
+    //}
+  };
+  const start = () => {
+    if (login) {
+      login();
+    }
+  };
+  useEffect(() => {
+    start();
+    return () => {};
+  }, []);
+
   return (
     <NavigationContainer>
       <Tab.Navigator
-        screenOptions={
-          ({route}) => ({
-          tabBarIcon: ({focused, size}) => {
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, size }) => {
             let iconName;
             switch (route.name) {
-              case 'Match':
-                iconName = focused ? 'home' : 'home';
+              case "Match":
+                iconName = focused ? "home" : "home";
                 break;
-              case 'Profile':
-                iconName = focused ? 'person-outline' : 'person-outline';
+              case "Profile":
+                iconName = focused ? "person-outline" : "person-outline";
                 break;
-              case 'Chat':
+              case "Chat":
                 iconName = focused
-                  ? 'chat-bubble-outline'
-                  : 'chat-bubble-outline';
+                  ? "chat-bubble-outline"
+                  : "chat-bubble-outline";
                 break;
-              case 'Likes':
-                iconName = focused ? 'favorite-border' : 'favorite-border';
+              case "Likes":
+                iconName = focused ? "favorite-border" : "favorite-border";
                 break;
             }
             // You can return any component that you like here!
@@ -159,23 +218,43 @@ const customTabBarStyle = {
                 name={iconName}
                 type="material"
                 size={20}
-                color={'#ff7f02'}
+                color={"#ff7f02"}
               />
             );
           },
-          tabBarInactiveTintColor: 'gray',
+          tabBarInactiveTintColor: "gray",
           tabBarStyle: customTabBarStyle.style,
-          tabBarShowLabel: false
+          tabBarShowLabel: false,
         })}
-        initialRouteName="Match">
-        <Tab.Screen options= {{headerShown: false}} name="Profile" component={ProfileStackScreen} />
-        <Tab.Screen options= {{headerShown: false}} name="Match" component={Match} />
-        <Tab.Screen options= {{headerShown: false}} name="Chat" component={ChatStackScreen} />
-        <Tab.Screen options= {{headerShown: false}} name="Likes" component={Likes} />
+        initialRouteName="Match"
+      >
+        <Tab.Screen
+          options={{ headerShown: false }}
+          name="Profile"
+          component={ProfileStackScreen}
+        />
+        <Tab.Screen
+          options={{ headerShown: false }}
+          name="Match"
+          component={Match}
+        />
+        {token && (
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name="Chat"
+            component={ChatStackScreen}
+            initialParams={{ token: token }}
+          />
+        )}
+        <Tab.Screen
+          options={{ headerShown: false }}
+          name="Likes"
+          component={Likes}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
-}
+};
 
 
 export {MatchStackScreen, ChatStackScreen, ProfileStackScreen}

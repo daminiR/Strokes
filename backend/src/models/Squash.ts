@@ -135,9 +135,9 @@ var squashSchema = new Schema(
       type: [String],
       required: false,
     },
-    i_blocked:[PotentialMatchSchema],
-    blocked_me:[PotentialMatchSchema],
-    matches:[PotentialMatchSchema],
+    i_blocked: [PotentialMatchSchema],
+    blocked_me: [PotentialMatchSchema],
+    matches: { type: [PotentialMatchSchema], required: false },
     // new additions
     deleted: {
       type: <DeleteT>{},
