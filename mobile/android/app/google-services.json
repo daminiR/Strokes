@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "473917597934",
+    "project_id": "playarmo-c5578",
+    "storage_bucket": "playarmo-c5578.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473917597934:android:f7d8506fdbd32d1e806bff",
+        "android_client_info": {
+          "package_name": "com.sports_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "473917597934-2jiv46gmag2fp17mck3ioji3pffmcve3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoG5Xk_MiS0fghryul0AYoYf65ejr6nYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "473917597934-2jiv46gmag2fp17mck3ioji3pffmcve3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

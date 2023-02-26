@@ -52,7 +52,7 @@ const clientId = process.env.React_App_AWS_Client_Id
               value={values.newPassword}
             />
             <Input
-              placeholder="Reset COde"
+              placeholder="Reset Code"
               label="Password Reset Code"
               leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
               onChangeText={handleChange('passwordResetCode')}

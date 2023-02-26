@@ -13,6 +13,7 @@ import { LogBox } from 'react-native'
 import SendBird from 'sendbird'
 import { AppContainer } from '@components'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import messaging from '@react-native-firebase/messaging';
 
 export const RootRefreshContext = createContext(null);
 const appId = process.env.React_App_SendBird
@@ -42,6 +43,13 @@ const App = () =>
       },
     });
   }
+  //useEffect(() => {
+    //const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      //Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+    //});
+
+    //return unsubscribe;
+  //}, []);
   useEffect(() => {
     setLoadingApp(true)
     LogBox.ignoreLogs(['Warning: ...']);
@@ -133,8 +141,8 @@ const App = () =>
           </ApolloProvider>
       );
     }
-  //client.resetStore()
-  //client.resetStore()
+  client.resetStore()
+  client.resetStore()
   //just to reset cache for debugging
   //enableFlipperApolloDevtools(client)
 }

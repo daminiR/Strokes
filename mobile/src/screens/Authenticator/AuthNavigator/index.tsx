@@ -8,7 +8,9 @@ import { SignOutStack, MatchStackScreen} from '@NavStack'
 import { READ_SQUASH, GET_POTENTIAL_MATCHES, SOFT_UN_DELETE_PROFILE} from '@graphQL2'
 import { useLazyQuery, useMutation} from '@apollo/client'
 import {SWIPIES_PER_DAY_LIMIT} from '@constants'
-import  {cityVar} from '@cache'
+import { cityVar } from "@cache"
+import { SignUp } from "@screens"
+import {useNavigation} from '@react-navigation/native';
 import  {AppContainer} from '@components'
 import { useApolloClient} from '@apollo/client'
 import {RootRefreshContext} from '../../../index.js'
@@ -129,7 +131,7 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
       if (loadingSigning) setLoadingSiginig(false);
     }
   }, [userLoading]);
-  const client = useApolloClient();
+const client = useApolloClient();
 const start = (user) => {
   if (login) {
     login(user);
@@ -138,7 +140,6 @@ const start = (user) => {
   useEffect(() => {
     //setLoadingUser(true);
     //setLoadingUser(false);
-    console.log("what is current user", currentUser)
     if (currentUser) {
       setLoadingUser(true);
       getSquashProfile({variables: {id: currentUser.sub}});
@@ -162,6 +163,7 @@ const start = (user) => {
     if(didMountRef.current){
     }
   }, [cityVar()])
+
   const login = user => {
     const savedUserKey = 'savedUser';
     AsyncStorage.setItem(savedUserKey, JSON.stringify(user))
@@ -228,8 +230,7 @@ const start = (user) => {
         return !loadingSigning && !loadingMatches && <MatchStackScreen />;
       }
     } else {
-      //# have to sign you out
-      return !loadingUser && <SignOutStack/>;
+        return !loadingUser && <SignOutStack/>
     }
   }
 

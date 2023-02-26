@@ -20,7 +20,8 @@ const PasswordInput = ({
   _confirmSignInGC,
   noUserFoundMessage = null,
   isSignIn = true,
-  _forgotPassword=null
+  _forgotPassword=null,
+  _verifyPhone=null
 }) => {
   const {values, setFieldValue, errors, touched, handleBlur, handleChange} =
   useFormikContext<ProfileFields>();
@@ -110,6 +111,15 @@ const clientId = process.env.React_App_AWS_Client_Id
                 //titleStyle={styles.buttonText}
                 onPress={() => _forgotPassword()}
                 title="Forgot Password?"
+              />
+            )}
+            {!isSignIn && (
+              <Button
+                type='clear'
+                //buttonStyle={styles.buttonStyle}
+                //titleStyle={styles.buttonText}
+                onPress={() => _verifyPhone()}
+                title="Send phone verification code"
               />
             )}
           <View style={styles.helloButtons}>

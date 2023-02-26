@@ -162,11 +162,6 @@ const confirmDelete = async() => {
           setLoadingSignUInRefresh(false);
         }}
       />
-      <Button
-        title="Delete Account"
-        buttonStyle={styles.buttonStyle}
-        onPress={() => softDelete()}
-      />
       <Modal animationType="slide" transparent={false} visible={displayInput}>
         <View style={{ flex: 1 }}>
           <View style={styles.top}>

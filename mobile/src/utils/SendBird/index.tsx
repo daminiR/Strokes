@@ -32,12 +32,14 @@ export const connect = (
   nickname,
   dispatch,
   sendbird,
-  start,
-  setSendbird
+  setSendbird=null,
+  setCurrentUser=null,
+  token=null
 ) => {
   dispatch({ type: "start-connection" });
+  console.log("here?2", uid)
   sendbird
-    .connect(uid)
+    .connect(uid, token=token)
     .then((user) => {
       if (user.nickname !== nickname) {
         sendbird
@@ -45,7 +47,7 @@ export const connect = (
           .then((new_user) => {
             setSendbird(sendbird);
             dispatch({ type: "end-connection" });
-            start(user);
+            //start(user);
           })
           .catch((err) => {
             dispatch({ type: "end-connection" });
@@ -54,8 +56,9 @@ export const connect = (
       }
       else {
         setSendbird(sendbird);
+        console.log("whats the problem", sendbird)
         dispatch({ type: "end-connection" });
-        start(user);
+        //start(user);
       }
     })
     .catch((err) => {
