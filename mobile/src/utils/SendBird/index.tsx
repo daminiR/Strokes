@@ -7,32 +7,25 @@ const channelNameMaxMembers = 3;
 const channelNameEllipsisLength = 32;
 const maxUnreadMessageCount = 99;
 
-export const createSendbirdChannel = async (matches, sendbird) => {
-      _.map(matches, async (match) => {
+export const createSendbirdChannel = (matches, sendbird) => {
+      _.map(matches, (match) => {
         var userIds = [sendbird.currentUser.userId, match._id];
+        console.log("check ids to see if exists in group channel", userIds)
         // check if matchId channel already exists
-        sendbird.GroupChannel.createChannelWithUserIds(userIds, true)
-          .then(() => {
-            console.log("all good");
-          })
-          .catch((err) => {
-            console.log("errsb")
-            console.log(err);
-
-          });
-        //true,
-        //function (groupChannel, error) {
-        //if (error) {
-        //// Handle error.
-        //console.log('SB_ERROR', error);
-        //}
-        //console.log('SB OPEN2', groupChannel);
-        //},
-        //);
+        sendbird.GroupChannel.createChannelWithUserIds(
+          userIds,
+          true,
+          function (groupChannel, error) {
+            if (error) {
+              // Handle error.
+              console.log('SB_ERROR', error);
+            }
+            console.log('SB OPEN2', groupChannel);
+          },
+        );
       })
 }
-//export const hideOldChannels = (sendbird) => {
-//}
+
 
 export const connect = async (
   uid,
