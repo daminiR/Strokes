@@ -7,48 +7,17 @@ import json
   # sports: [{game_level: number, sport: string}]
   # image_set: [{img_idx: number, imageURL: string, filePath: string}]
 letters = string.ascii_lowercase
-numUsers = 200
+numUsers = 100
 gender = ["Male", "Female"]
 
 sportsList2 = [
   "Softball",
-  "Kickball",
   "Pickleball",
-  "Hiking",
-  "Swimming",
-  "Kick boxing",
-  "Bouldering",
+  "Basketball",
   "Squash",
   "Tennis",
   "Soccer",
-  "Badminton",
-  "Hockey",
-  "Volleyball",
-  "Basketball",
-  "Cricket",
-  "Table Tennis",
-  "Skateboarding",
-  "Baseball",
-  "Golf",
-  "American Football",
-  "Skating",
-  "Snowbording",
-  "Ice Skating",
-  "Ice Hockey",
-  "Power Lifting",
-  "Body Building",
-  "Surfing",
-  "Cheerleading",
-  "Ultimate Frisbee",
-  "Cricket",
-  "Cycling",
-  "Dance",
-  "Dodgeball",
-  "Fencing",
-  "Wrestling",
-  "Gymnastics",
-  "Paddleboarding",
-  "Boxing"
+  "Volleyball"
 ];
 # sportsList2 = ["Squash", "Tennis", "Soccer", "badminton", "Hockey", "Volleyball", "Basketball", "Cricket", "Table Tennis", "Baseball", "Golf", "American Football"]
 # sportsList = [{"Squash", 0},

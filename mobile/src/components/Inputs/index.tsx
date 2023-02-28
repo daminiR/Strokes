@@ -1,11 +1,12 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useCallback, useEffect, useContext, useState } from 'react'
+import {  useFocusEffect } from '@react-navigation/native'
 import { useFormikContext} from 'formik';
 import { genderRadioObject } from '../../constants'
 import { Card, Input, Button, Icon, CheckBox} from 'react-native-elements'
 import { Text, View, TouchableWithoutFeedback, Keyboard, Linking, KeyboardAvoidingView, Platform} from 'react-native'
 import {styles} from '@styles'
 import {ChooseSportsChips, Pictures, DismissKeyboard} from '@components'
-import { EditFields, ProfileFields, SignIn} from '@localModels'
+import { EditFields, ProfileFields, SignInFields} from '@localModels'
 import {DoneCancelContext} from '@Contexts'
 import {sanitizePhone, formatPhoneNumber} from '@validation'
 import _ from 'lodash'
@@ -250,8 +251,9 @@ const ImageInput = ({isSignUp}) => {
 
 
   const PhoneInput = ({faceID=false}) => {
-    const { values, handleBlur, setFieldValue, submitForm, handleChange, errors, touched} = useFormikContext<ProfileFields | SignIn | EditFields>();
-    const [inputValue, setDisplayInputValue] = useState("")
+    const { values, handleBlur, setFieldValue, submitForm, handleChange, errors, touched} = useFormikContext<ProfileFields | SignInFields | EditFields>();
+    const [inputValue, setDisplayInputValue] = useState(null)
+    const [displayed, setDisplayed] = useState(false)
     const handleInput = (text) => {
       const tempText = text
     // this is where we'll call our future formatPhoneNumber function that we haven't written yet.
@@ -264,27 +266,28 @@ const ImageInput = ({isSignUp}) => {
   }
     return (
       <>
-        <DismissKeyboard>
-          <View style={styles.emailContainer}>
-            <Input
-              placeholder="Phone Number"
-              label="Phone Number"
-              leftIcon={{type: 'font-awesome', name: 'chevron-left'}}
-              onEndEditing={() => _onDoneEditing()}
-              onChangeText={(text) => {
-                handleInput(text);
-              }}
-              keyboardType={'phone-pad'}
-              onBlur={handleBlur('phoneNumber')}
-              value={faceID ? values.phoneNumber : inputValue}
-            />
-            {errors.phoneNumber && touched.phoneNumber ? (
-              <Text>{errors.phoneNumber}</Text>
-            ) : null}
-          </View>
-        </DismissKeyboard>
+          <DismissKeyboard>
+            <View style={styles.emailContainer}>
+              <Input
+                placeholder="Phone Number"
+                label="Phone Number"
+                leftIcon={{ type: "font-awesome", name: "chevron-left" }}
+                onEndEditing={() => _onDoneEditing()}
+                defaultValue={values.phoneNumber}
+                onChangeText={(text) => {
+                  handleInput(text);
+                }}
+                value={inputValue}
+                keyboardType={"phone-pad"}
+                onBlur={handleBlur("phoneNumber")}
+              />
+              {errors.phoneNumber && touched.phoneNumber ? (
+                <Text>{errors.phoneNumber}</Text>
+              ) : null}
+            </View>
+          </DismissKeyboard>
       </>
-    )}
+    );}
   const BirthdayInput = ({isSignUp}) => {
     const { handleBlur, errors, touched, values, submitForm, handleChange, handleSubmit } = useFormikContext<ProfileFields | EditFields>();
    const [loadingTempValues, setLoadingTempValues] = useState(true);

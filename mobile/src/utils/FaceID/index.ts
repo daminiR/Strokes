@@ -18,7 +18,6 @@ const getPassword = async (setCredentials, setFieldValue, setIsFaceID) =>{
     try {
       const settings = {service: 'org.reactjs.native.example.sports-app-keychain-password'}
         Keychain.getGenericPassword(settings).then((credentials) => {
-        console.log(credentials)
            if (credentials) {
             setCredentials(credentials)
             setFieldValue( 'phoneNumber', credentials.username)

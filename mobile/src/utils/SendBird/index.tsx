@@ -7,39 +7,44 @@ const channelNameMaxMembers = 3;
 const channelNameEllipsisLength = 32;
 const maxUnreadMessageCount = 99;
 
-export const createSendbirdChannel = (matches, sendbird, currentUser) => {
-      _.map(matches, (match) => {
-        var userIds = [currentUser.sub, match._id]
+export const createSendbirdChannel = async (matches, sendbird) => {
+      _.map(matches, async (match) => {
+        var userIds = [sendbird.currentUser.userId, match._id];
         // check if matchId channel already exists
-        sendbird.GroupChannel.createChannelWithUserIds(
-          userIds,
-          true,
-          function (groupChannel, error) {
-            if (error) {
-              // Handle error.
-              console.log('SB_ERROR', error);
-            }
-            console.log('SB OPEN2', groupChannel);
-          },
-        );
+        sendbird.GroupChannel.createChannelWithUserIds(userIds, true)
+          .then(() => {
+            console.log("all good");
+          })
+          .catch((err) => {
+            console.log("errsb")
+            console.log(err);
+
+          });
+        //true,
+        //function (groupChannel, error) {
+        //if (error) {
+        //// Handle error.
+        //console.log('SB_ERROR', error);
+        //}
+        //console.log('SB OPEN2', groupChannel);
+        //},
+        //);
       })
 }
 //export const hideOldChannels = (sendbird) => {
 //}
 
-export const connect = (
+export const connect = async (
   uid,
   nickname,
   dispatch,
   sendbird,
   setSendbird=null,
-  setCurrentUser=null,
-  token=null
 ) => {
   dispatch({ type: "start-connection" });
-  console.log("here?2", uid)
-  sendbird
-    .connect(uid, token=token)
+  return await new Promise((resolve, reject) => {
+    sendbird
+    .connect(uid)
     .then((user) => {
       if (user.nickname !== nickname) {
         sendbird
@@ -47,24 +52,27 @@ export const connect = (
           .then((new_user) => {
             setSendbird(sendbird);
             dispatch({ type: "end-connection" });
+            resolve(new_user)
             //start(user);
           })
           .catch((err) => {
             dispatch({ type: "end-connection" });
             console.log("Connect Error error ....", err);
+            reject()
           });
       }
       else {
         setSendbird(sendbird);
-        console.log("whats the problem", sendbird)
         dispatch({ type: "end-connection" });
-        //start(user);
+        resolve(user)
       }
     })
     .catch((err) => {
       dispatch({ type: "end-connection" });
       console.log("Connect Error error ....", err);
+      reject()
     });
+  })
   //}
 };
 
@@ -73,9 +81,10 @@ export const ellipsis = (s, len) => {
 };
 export const createChannelName = (channel, currentUserID)=> {
   if (channel.name === 'Group Channel' || channel.name.length === 0) {
+    console.log("how many channels", channel)
     const nicknames = [_.filter(channel.members, (member) => {
               return member.userId !== currentUserID;
-            })[0].nickname]
+    })[0]?.nickname]
     if (nicknames.length > channelNameMaxMembers) {
       return ellipsis(
         `${nicknames.slice(0, channelNameMaxMembers + 1).join(', ')} and ${
@@ -165,4 +174,3 @@ export const handleNotificationAction = async (navigation, sendbird, currentUser
     }
   }
 };
-

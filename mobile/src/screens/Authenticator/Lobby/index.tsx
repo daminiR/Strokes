@@ -24,26 +24,10 @@ const Lobby = props => {
   const {data, sendbird} = useContext(UserContext);
   const [initialized, setInitialized] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  //const start = (user) => {
-    //if (login) {
-      //login(user);
-    //}
-  //};
-
-  useEffect(() => {
-    connect(data.squash._id, data.squash.first_name, dispatch, sendbird);
-    return () => {
-      //logout();
-    };
-  },
-
-
-  []);
   useLayoutEffect(() => {
     const title = currentUser ? (
       <View style={style.headerLeftContainer}></View>
     ) : null;
-    //<Text style={style.headerTitle}>Channels</Text>
 
     const right = currentUser ? (
       <View style={style.headerRightContainer}>
@@ -63,29 +47,6 @@ const Lobby = props => {
     });
   }, [currentUser]);
 
-  //const login = async (user) => {
-    //console.log("do we have token? in lobb")
-    //console.log("do we have token? in lobb")
-    //try {
-      //setCurrentUser(user);
-      //const authorizationStatus = await messaging().requestPermission();
-      //if (
-        //authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        //authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-      //) {
-        //if (Platform.OS === 'ios') {
-          ////const token = await messaging().getAPNSToken();
-          ////sendbird.registerAPNSPushTokenForCurrentUser(token);
-        //} else {
-          //console.log("do we have token? in lobb")
-          //const token = await messaging().getToken();
-          //sendbird.registerGCMPushTokenForCurrentUser(token);
-        //}
-      //}
-    //} catch (err) {
-      //console.error(err);
-    //}
-  //};
 
   const logout = async () => {
     sendbird.disconnect();
@@ -102,7 +63,6 @@ const Lobby = props => {
       navigation.navigate('Profile', {currentUser});
     }
   };
-
   return (
     <>
       {currentUser && (
@@ -111,7 +71,6 @@ const Lobby = props => {
     </>
   );
 };
-
 const style = StyleSheet.create({
   headerLeftContainer: {
     flexDirection: 'row',
@@ -135,5 +94,4 @@ const style = StyleSheet.create({
     marginLeft: 10,
   },
 })
-
 export default withAppContext(Lobby);

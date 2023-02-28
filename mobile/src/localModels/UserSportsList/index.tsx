@@ -95,7 +95,7 @@ export interface EditFields {
        //confirmationCode: string,
        description: string,
 }
-export interface SignIn {
+export interface SignInFields {
        phoneNumber: string;
        password: string
        newPassword: string
