@@ -18,13 +18,32 @@ import { loginReducer } from '../../reducers/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 
+import Notifee, { EventType } from '@notifee/react-native';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
+
 import { withAppContext } from '../../AppContext';
 import { handleNotificationAction } from '../../utils/SendBird';
 
 const ProfileStack = createStackNavigator()
 const ChatStack = createStackNavigator()
 const Tab  = createBottomTabNavigator()
+// Handle data from '@react-native-community/push-notification-ios'.
+const onNotificationIOS = (notification) => {
+    const data = notification?.getData();
+    if (data && data.userInteraction === 1 && Boolean(data.sendbird)) {
+        // Navigate to channel.
+        // const channelUrl = data.sendbird.channel.channel_url;
+    }
+}
 
+// Handle data from '@notifee/react-native'.
+const onNotificationAndroid = async (event) => {
+    if(event.type === EventType.PRESS && Boolean(event.detail.notification?.data?.sendbird)) {
+      console.log("did it log")
+        // Navigate to channel.
+        // const channelUrl = event.detail.notification.data.sendbird.channel.channel_url;
+    }
+}
 export type RootStackSignInParamList = {
   PROFILE: {data: number}
   EDIT_SPORTS: undefined
@@ -186,6 +205,24 @@ const MatchStackScreen = () => {
     start();
     return () => {};
   }, []);
+   useEffect(() => {
+     if (Platform.OS == "ios") {
+       PushNotificationIOS.getInitialNotification().then(onNotificationIOS);
+       PushNotificationIOS.addEventListener(
+         "localNotification",
+         onNotificationIOS
+       );
+       return () => {
+         PushNotificationIOS.removeEventListener("localNotification");
+       };
+     }
+    else {
+       const unsubscribe = Notifee.onForegroundEvent(onNotificationAndroid);
+       return () => {
+         unsubscribe();
+       };
+     }
+   }, []);
 
   return (
     <NavigationContainer>

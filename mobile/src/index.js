@@ -15,6 +15,7 @@ import { AppContainer } from '@components'
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import messaging from '@react-native-firebase/messaging';
 
+
 export const RootRefreshContext = createContext(null);
 const appId = process.env.React_App_SendBird
 const poolID = process.env.React_App_UserPoolId
