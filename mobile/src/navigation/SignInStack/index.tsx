@@ -60,44 +60,41 @@ export type RootStackSignInParamList = {
    const { data, sendbird, setSendbird } = useContext(UserContext);
    const [initialized, setInitialized] = useState(false);
    const [currentUser, setCurrentUser] = useState(null);
-   //useEffect(() => {
-   //messaging().setBackgroundMessageHandler(async (message) => {
-   //const isSendbirdNotification = Boolean(message.data.sendbird);
-   //if(!isSendbirdNotification) return;
+   useEffect(() => {
+     messaging().setBackgroundMessageHandler(async (message) => {
+       const isSendbirdNotification = Boolean(message.data.sendbird);
+       if (!isSendbirdNotification) return;
+       const text = message.data.message;
+       const payload = JSON.parse(message.data.sendbird);
+       // The following is required for compatibility with Android 8.0 (API level 26)
+       // and higher. Refer to Notifee's reference page for more information.
+       const channelId = await notifee.createChannel({
+         id: "1234",
+         name: "trial_channel",
+         importance: AndroidImportance.HIGH,
+       });
 
-   //const text = message.data.message;
-   //const payload = JSON.parse(message.data.sendbird);
-
-   //// The following is required for compatibility with Android 8.0 (API level 26)
-   //// and higher. Refer to Notifee's reference page for more information.
-   //const channelId = await notifee.createChannel({
-   //id: '1234',
-   //name: 'trial_channel',
-   //importance: AndroidImportance.HIGH
-   //});
-
-   //await notifee.displayNotification({
-   //id: message.messageId,
-   //title: 'New message has arrived!',
-   //subtitle: `Number of unread messages: ${payload.unread_message_count}`,
-   //body: payload.message,
-   //data: payload,
-   //android: {
-   //channelId,
-   ////smallIcon: NOTIFICATION_ICON_RESOURCE_ID,
-   //importance: AndroidImportance.HIGH,
-   //},
-   //ios: {
-   //foregroundPresentationOptions: {
-   //alert: true,
-   //badge: true,
-   //sound: true,
-   //},
-   //},
-   //});
-   //})
-
-   //}, []);
+       await notifee.displayNotification({
+         id: message.messageId,
+         title: "New message has arrived!",
+         subtitle: `Number of unread messages: ${payload.unread_message_count}`,
+         body: payload.message,
+         data: payload,
+         android: {
+           channelId,
+           //smallIcon: NOTIFICATION_ICON_RESOURCE_ID,
+           importance: AndroidImportance.HIGH,
+         },
+         ios: {
+           foregroundPresentationOptions: {
+             alert: true,
+             badge: true,
+             sound: true,
+           },
+         },
+       });
+     });
+   }, []);
    useFocusEffect(
      useCallback(() => {
         connect(
