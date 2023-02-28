@@ -7,7 +7,7 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import {signInSlides, iniitialSignInForm} from '@constants'
 import {  RootStackSignOutParamList } from '@navigationStack'
 import AppIntroSlider from 'react-native-app-intro-slider'
-import {ProfileFields} from '@localModels';
+import {ProfileFields, SignInFields} from '@localModels';
 import {AppContainer, ConfirmationCode, PasswordInput, Cancel, PhoneInput, NextButton, PrevButton, ResetPassword, ForgotPassword} from '@components'
 import {useNavigation} from '@react-navigation/native'
 import { CHECK_PHONE_INPUT } from '@graphQL2'
@@ -53,7 +53,7 @@ export const Slider =  ({changeEmail}) => {
     error: '',
     connecting: false,
   });
-  const {values, errors, touched, setFieldTouched, setFieldValue} = useFormikContext();
+  const {values, errors, touched, setFieldTouched, setFieldValue} = useFormikContext<ProfileFields | SignInFields>();
   const [lastSlide, setLastSlide] = useState(false)
   const navigation = useNavigation()
   const [index, setIndex] = useState(0)
@@ -253,7 +253,7 @@ const [authMessage, setAuthMessage] = useState(null)
                     style={{flex: 1}}>
                     <View style={styles.phoneContainer}>
                       <View style={styles.forgotPasswordContainer1}>
-                        <PhoneInput faceID={true} />
+                        <PhoneInput faceID={true}/>
                       </View>
                       <View style={styles.forgotPasswordContainer2}>
                         <PasswordInput

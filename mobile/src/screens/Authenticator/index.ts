@@ -14,6 +14,7 @@ export * from './ActiveChat'
 export * from './AuthNavigator'
 export * from './Channels'
 export * from './SendBirdChat'
+export * from './SendBirdV4'
 
 
 

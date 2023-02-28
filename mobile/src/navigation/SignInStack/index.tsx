@@ -100,15 +100,15 @@ export type RootStackSignInParamList = {
    //}, []);
    useFocusEffect(
      useCallback(() => {
-       connect(
-         data.squash._id,
-         data.squash.first_name,
-         dispatch,
-         sendbird,
-         setSendbird,
-         setCurrentUser,
-         token
-       );
+        connect(
+          data.squash._id,
+          data.squash.first_name,
+          dispatch,
+          sendbird,
+          setSendbird
+        ).then((user) => {
+          setCurrentUser(user);
+        });
        return () => {
          sendbird.disconnect();
        };
@@ -255,6 +255,5 @@ const MatchStackScreen = () => {
     </NavigationContainer>
   );
 };
-
 
 export {MatchStackScreen, ChatStackScreen, ProfileStackScreen}
