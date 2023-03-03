@@ -4,42 +4,82 @@ import {  useFocusEffect } from '@react-navigation/native'
 import { StyleSheet, Image, Text, TouchableOpacity, View, Platform } from 'react-native';
 import {ActiveChat, Profile, Chat, Match, Likes, Login, Channels} from '@screens'
 import {SendBirdChat} from '../../screens/Authenticator/SendBirdChat'
-import Lobby from '../../screens/Authenticator/Lobby'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {tabBarSize} from '@constants'
 import {Icon} from 'react-native-elements'
-import { HeaderBackButton } from '@react-navigation/elements'
 import {UserContext} from '@UserContext'
 import {connect} from '../../utils/SendBird'
 import notifee, { AndroidImportance } from '@notifee/react-native';
-
+import SendBird from 'sendbird';
 import { loginReducer } from '../../reducers/Login';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 
 import Notifee, { EventType } from '@notifee/react-native';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-
-import { withAppContext } from '../../AppContext';
-import { handleNotificationAction } from '../../utils/SendBird';
 
 const ProfileStack = createStackNavigator()
 const ChatStack = createStackNavigator()
 const Tab  = createBottomTabNavigator()
 // Handle data from '@react-native-community/push-notification-ios'.
 const onNotificationIOS = (notification) => {
+        console.log("did it log")
     const data = notification?.getData();
-    if (data && data.userInteraction === 1 && Boolean(data.sendbird)) {
+  if (data && data.userInteraction === 1 && Boolean(data.sendbird)) {
+        console.log("did it log")
         // Navigate to channel.
         // const channelUrl = data.sendbird.channel.channel_url;
     }
 }
+export const sbRegisterPushToken = () => {
+  return new Promise((resolve, reject) => {
+    const sb = SendBird.getInstance();
+    if (sb) {
+      if (Platform.OS === 'ios') {
+        // WARNING! FCM token doesn't work in request to APNs.
+        // Use APNs token here instead.
+          messaging().getAPNSToken()
+          .then(token => {
+            if (token) {
+              sb.registerAPNSPushTokenForCurrentUser(token, (result, error) => {
+                if (!error) {
+                  resolve();
+                } else reject(error);
+              });
+            } else {
+              resolve();
+            }
+          })
+          .catch(error => {
+            reject(error);
+          });
+      } else {
+          messaging()
+          .getToken()
+          .then(token => {
+            if (token) {
+              sb.registerGCMPushTokenForCurrentUser(token, (result, error) => {
+                if (!error) {
+                  resolve();
+                } else reject(error);
+              });
+            } else {
+              resolve();
+            }
+          })
+          .catch(error => {
+            reject(error);
+          });
+      }
+    } else {
+      reject('SendBird is not initialized');
+    }
+  });
+};
+
 
 // Handle data from '@notifee/react-native'.
 const onNotificationAndroid = async (event) => {
     if(event.type === EventType.PRESS && Boolean(event.detail.notification?.data?.sendbird)) {
-      console.log("did it log")
         // Navigate to channel.
         // const channelUrl = event.detail.notification.data.sendbird.channel.channel_url;
     }
@@ -79,6 +119,23 @@ export type RootStackSignInParamList = {
    const { data, sendbird, setSendbird } = useContext(UserContext);
    const [initialized, setInitialized] = useState(false);
    const [currentUser, setCurrentUser] = useState(null);
+  const login = async () => {
+    //try {
+    //setCurrentUser(user);
+    const authorizationStatus = await messaging().requestPermission();
+    if (
+      authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
+    ) {
+      sbRegisterPushToken().then(()=>console.log("succesful"))
+                                 .catch((err) => {console.log("so we have err", err)})
+  }
+   }
+  const start = () => {
+    if (login) {
+      login();
+    }
+  };
    useEffect(() => {
      messaging().setBackgroundMessageHandler(async (message) => {
        const isSendbirdNotification = Boolean(message.data.sendbird);
@@ -124,6 +181,7 @@ export type RootStackSignInParamList = {
           setSendbird
         ).then((user) => {
           setCurrentUser(user);
+          start()
         });
        return () => {
          sendbird.disconnect();
@@ -134,7 +192,6 @@ export type RootStackSignInParamList = {
      sendbird.disconnect();
      setCurrentUser(null);
    };
-
    return (
      currentUser && (
        <ChatStack.Navigator>
@@ -174,37 +231,6 @@ const customTabBarStyle = {
 const MatchStackScreen = () => {
   const [token, setToken] = useState(null);
   const {data, sendbird, setSendbird} = useContext(UserContext);
-  const login = async () => {
-    //try {
-    //setCurrentUser(user);
-    const authorizationStatus = await messaging().requestPermission();
-    if (
-      authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-    ) {
-      if (Platform.OS === "ios") {
-        const token = await messaging().getAPNSToken();
-        sendbird.registerAPNSPushTokenForCurrentUser(token);
-      } else {
-        const token = await messaging().getToken();
-        setToken(token)
-        sendbird.registerGCMPushTokenForCurrentUser(token)
-      }
-    }
-    //} catch (err) {
-    //console.log("did we get token or not")
-    //console.error(err);
-    //}
-  };
-  const start = () => {
-    if (login) {
-      login();
-    }
-  };
-  useEffect(() => {
-    start();
-    return () => {};
-  }, []);
    useEffect(() => {
      if (Platform.OS == "ios") {
        PushNotificationIOS.getInitialNotification().then(onNotificationIOS);
@@ -272,7 +298,7 @@ const MatchStackScreen = () => {
           name="Match"
           component={Match}
         />
-        {token && (
+        {(
           <Tab.Screen
             options={{ headerShown: false }}
             name="Chat"
