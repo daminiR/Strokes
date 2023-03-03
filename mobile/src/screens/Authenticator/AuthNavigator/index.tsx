@@ -160,34 +160,13 @@ const start = (user) => {
 
   }, [deleted])
   useEffect(() => {
-    if(didMountRef.current){
+    if (didMountRef.current) {
     }
-  }, [cityVar()])
+  }, [cityVar()]);
 
-  const login = user => {
-    const savedUserKey = 'savedUser';
-    AsyncStorage.setItem(savedUserKey, JSON.stringify(user))
-      .then(async () => {
-        try {
-          setCurrentUser(user);
-          const authorizationStatus = await messaging().requestPermission();
-          if (
-            authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-          ) {
-            if (Platform.OS === 'ios') {
-              //const token = await messaging().getAPNSToken();
-              //sendbird.registerAPNSPushTokenForCurrentUser(token);
-            } else {
-              const token = await messaging().getToken();
-              sendbird.registerGCMPushTokenForCurrentUser(token);
-            }
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      })
-      .catch(err => console.error(err));
+  const login = async (user) => {
+    const savedUserKey = "savedUser";
+    await AsyncStorage.setItem(savedUserKey, JSON.stringify(user));
   };
 
   if (loadingSigning) return null
