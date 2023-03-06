@@ -131,7 +131,7 @@ export const resolvers = {
           getMatchedUserToken(potentialMatchId)
             .then((matchUserToken) => {
               sendAdminMatchMessages(
-                channel_response["channel_url"],
+                channel_response,
                 trieal?.first_name,
                 matchUserToken
               );

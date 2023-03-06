@@ -240,7 +240,6 @@ const _confirmSignInGC2 = () => {
     }
   };
   const _verifyPhone = () => {
-    console.log(index);
     _confirmSignInGC2();
     //resendCode()
     this.slider.goToSlide(10, true);
@@ -392,7 +391,6 @@ const _confirmSignInGC2 = () => {
                         authMessage={authMessage}
                         noUserFoundMessage={noUserFoundMessage}
                         isLastSlide={lastSlide}
-                        _confirmSignInGC={_checkSignIn}
                         _verifyPhone={_verifyPhone}
                         isSignIn={false}
                       />
