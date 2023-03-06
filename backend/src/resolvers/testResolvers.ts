@@ -61,7 +61,7 @@ export const resolvers = {
         phoneNumber: phoneNumber,
         email: email,
         matches: [],
-        likes: ["3708d089-3938-4160-80b3-fb0963b58914"],
+        likes: ["ba98a8c9-5939-4418-807b-320fdc0e0fec"],
         active: true,
         swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
         visableLikePerDay: LIKES_PER_DAY_LIMIT,
@@ -80,7 +80,7 @@ export const resolvers = {
       };
       //const update = { $addToSet: { likedByUSers: likedByUser}}
       const doc1 = await Squash.findOneAndUpdate(
-        { _id:"3708d089-3938-4160-80b3-fb0963b58914"},
+        { _id:"ba98a8c9-5939-4418-807b-320fdc0e0fec"},
         { $addToSet: { likedByUSers: likedByUser }},
         //{ likedByUSers: [ likedByUser ] },
         { new: true }

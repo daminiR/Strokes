@@ -36,7 +36,7 @@ export const getMatchedUserToken = (matchedUserId) => {
         },
       })
       .then((response) => {
-        resolve(response["tokens"], response[""})
+        resolve(response["tokens"])
       })
       .catch((err) => {
         reject();
