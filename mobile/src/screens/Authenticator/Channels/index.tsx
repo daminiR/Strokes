@@ -157,7 +157,7 @@ const Channels = props => {
   };
   const refresh = () => {
     const matches = currentUserData.squash.matches
-    createSendbirdChannel(matches, sendbird)
+    //createSendbirdChannel(matches, sendbird)
     const params = {
       includeEmpty: true,
       //hiddenChannelFilter: "hidden_prevent_auto_unhide",

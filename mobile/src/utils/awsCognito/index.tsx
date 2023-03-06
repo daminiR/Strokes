@@ -274,7 +274,6 @@ return await new Promise((resolve, reject) => {
               resolve({session: accessToken, confirmedUser: cognitoUser});
             },
             onFailure: function (err) {
-            console.log("on failure")
               //alert(err.message || JSON.stringify(err));
               alert("oops we ran into some error!");
               reject(err);
