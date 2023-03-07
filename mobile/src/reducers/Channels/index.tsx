@@ -13,9 +13,12 @@ export const channelsReducer =  (state, action) => {
     case 'fetch-channels': {
       const { channels, matches, currentUser} = action.payload || {};
       const notArchivedChannels = channels.filter((channel) => {
+            //console.log("channels fetched", currentUser.userId)
             const member = _.filter(channel.members, (member) => {
               return member.userId !== currentUser.userId;
             })
+            console.log("channels fetched memebr",member[0].userId, matches)
+
             if (member[0]?.userId) {
               return _.includes(matches, member[0].userId);
             }

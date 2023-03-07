@@ -172,6 +172,9 @@ export const typeDefs = gql`
       likedByUSers: [String!]
       phoneNumber: String
     ): Squash!
+    removeMatchesDummy(
+      check: String!
+    ): String!
     softDeleteUser(_id: String): String!
     softUnDeleteUser(_id: String): String!
   }

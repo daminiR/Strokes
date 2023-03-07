@@ -18,6 +18,37 @@ import {
 //const pubsub = new PubSub()
 export const resolvers = {
   Mutation: {
+    removeMatchesDummy: async (
+      root,
+      unSanitizedData,
+      context,
+    ) => {
+      //const data_set = await createAWSUpload(image_set, _id);
+      const matched_id = "14683ec0-46bb-4b56-ade5-3424af8e9719"
+      const current_id = "ba98a8c9-5939-4418-807b-320fdc0e0fec"
+      const current = await Squash.findOneAndUpdate(
+        { _id: current_id},
+        { $pull:
+           {
+             "matches": {"_id": matched_id} ,
+             "likes": matched_id,
+          },
+        },
+        { new: true }
+      );
+      const matched = await Squash.findOneAndUpdate(
+        { _id: matched_id},
+        { $pull:
+           {
+             "matches": {"_id": current_id} ,
+             "likedByUSers": current_id,
+          },
+        },
+        { new: true }
+      );
+      console.log("Reseted matches")
+      return "done";
+    },
     createSquashTestSamples: async (
       root,
       unSanitizedData,
@@ -89,9 +120,5 @@ export const resolvers = {
       console.log(doc1);
       return doc;
     },
-    //},
-    //testMut(root, args){
-      //return args.name
-    //},
   }
 }

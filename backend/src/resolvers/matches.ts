@@ -62,8 +62,11 @@ export const resolvers = {
       const filter = {
         $and: [
           {
-            _id: { $ne: _id },
+            _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec",
           },
+          //{
+            //_id: { $ne: _id },
+          //},
           {
             "location.state": location.state,
           },
@@ -118,6 +121,7 @@ export const resolvers = {
       );
       createGroupChannel(currentUserId, potentialMatchId)
         .then(async (channel_response) => {
+          console.log("new group created?")
           await Squash.findOneAndUpdate(
             { _id: currentUserId },
             { $addToSet: { matches: potentialMatch } },
@@ -130,11 +134,22 @@ export const resolvers = {
           );
           getMatchedUserToken(potentialMatchId)
             .then((matchUserToken) => {
-              sendAdminMatchMessages(
-                channel_response,
-                trieal?.first_name,
-                matchUserToken
-              );
+              console.log("what value", matchUserToken);
+              if (matchUserToken !== undefined || matchUserToken !== null) {
+                sendAdminMatchMessages(
+                  channel_response,
+                  trieal?.first_name,
+                  matchUserToken[0],
+                  potentialMatchId
+                )
+                  .then(() => {
+                    console.log("succesfull push");
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    console.log("did not push notify");
+                  });
+              }
             })
             .catch((err) => {
               console.log(err);
