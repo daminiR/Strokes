@@ -92,7 +92,7 @@ export const resolvers = {
         phoneNumber: phoneNumber,
         email: email,
         matches: [],
-        likes: ["ba98a8c9-5939-4418-807b-320fdc0e0fec"],
+        likes: ["14683ec0-46bb-4b56-ade5-3424af8e9719"],
         active: true,
         swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
         visableLikePerDay: LIKES_PER_DAY_LIMIT,
@@ -111,7 +111,7 @@ export const resolvers = {
       };
       //const update = { $addToSet: { likedByUSers: likedByUser}}
       const doc1 = await Squash.findOneAndUpdate(
-        { _id:"ba98a8c9-5939-4418-807b-320fdc0e0fec"},
+        { _id:"14683ec0-46bb-4b56-ade5-3424af8e9719"},
         { $addToSet: { likedByUSers: likedByUser }},
         //{ likedByUSers: [ likedByUser ] },
         { new: true }
@@ -121,4 +121,4 @@ export const resolvers = {
       return doc;
     },
   }
-}
+  }

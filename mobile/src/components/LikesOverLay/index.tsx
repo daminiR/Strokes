@@ -23,6 +23,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
   const [updateLikes] = useMutation(UPDATE_LIKES, {
     onCompleted: () => {
       /// enable disabled like/ dislike after complete
+      //getSquashProfile({variables: {id: currentUser.sub}});
     },
   });
   const [updateDislikes] = useMutation(UPDATE_DISLIKES, {

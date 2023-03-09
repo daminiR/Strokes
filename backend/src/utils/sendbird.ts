@@ -59,7 +59,7 @@ export const sendAdminMatchMessages = (
   const url = `https://api-${SB_APP_ID}.sendbird.com/v3/group_channels/${channel_url}/messages`;
   const request = {
     user_id: matched_id,
-    message_type: "MESG",
+    message_type: "ADMM",
     message: "This chat will close in 14 days. Make sure you comply with terms of use while using the app.",
     send_push: true,
     push_message_template: {

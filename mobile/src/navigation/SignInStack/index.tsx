@@ -127,9 +127,12 @@ export type RootStackSignInParamList = {
       authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
     ) {
-      sbRegisterPushToken().then(()=>console.log("succesful"))
-                                 .catch((err) => {console.log("so we have err", err)})
-  }
+      sbRegisterPushToken()
+        .then(() => console.log("succesful"))
+        .catch((err) => {
+          console.log("so we have err", err);
+        });
+    }
    }
   const start = () => {
     if (login) {
