@@ -43,6 +43,7 @@ const MatchList = ({matches}) => {
     awaitRefetchQueries: true,
     onCompleted: (data) => {
       getSquashProfile({variables: {id: currentUser.sub}});
+      console.log("error")
       // also start  sendbird here
       //createSendbirdChannel(match, sendbird, currentUser)
       setDisableMatches(false)

@@ -99,6 +99,7 @@ const swipeRightLiked = async (currentUser,_id, card, updateLikes, updateMatches
                   potentialMatch: matchedUser}})
     }
 }
+
 const swipeLeftDisliked = async (_id, card, updateDislikes, isFromLikes) => {
     // push all ids when likes or dislikes and bulk send mutation
     var array = dislikesVar()
