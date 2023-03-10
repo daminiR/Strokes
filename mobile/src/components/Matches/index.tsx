@@ -21,11 +21,11 @@ const Matches = ({navigation}) => {
   const [loading, setLoading] = useState(true)
   const [getSquashProfile] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
-    onCompleted: () => {
+    onCompleted: (data) => {
     setLoading(true)
     // setting likes from query results of people who like current user
-    console.log("did we")
-    const user = currentUserData.squash
+    //const user = currentUserData.squash
+    const user = data.squash
       // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
     const likesByUsers = user?.likedByUSers
     const dislikeIDs = user?.dislikes
@@ -39,7 +39,7 @@ const Matches = ({navigation}) => {
   const appState = useRef(AppState.currentState)
   useEffect(() => {
       getSquashProfile({variables: {id: currentUser.sub}});
-  }, [currentUserData.squash.matches])
+  }, [])
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
@@ -62,6 +62,9 @@ const Matches = ({navigation}) => {
           like={like}
           setLike={setLike}
           likeProfile={totalLikesFromUsers && totalLikesFromUsers[indexVal]}
+            getSquashProfile={getSquashProfile}
+          setLoadingList={setLoading}
+          setTotalLikesFromUsers={setTotalLikesFromUsers}
         />
       )}
       <View style={styles.top}>

@@ -74,7 +74,6 @@ export const ellipsis = (s, len) => {
 };
 export const createChannelName = (channel, currentUserID)=> {
   if (channel.name === 'Group Channel' || channel.name.length === 0) {
-    console.log("how many channels", channel)
     const nicknames = [_.filter(channel.members, (member) => {
               return member.userId !== currentUserID;
     })[0]?.nickname]

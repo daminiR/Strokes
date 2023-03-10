@@ -233,3 +233,4 @@ export {
   GET_SELECTED_SQUASH_1,
   SWIPED_LEFT,
 };
+

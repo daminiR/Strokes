@@ -7,13 +7,17 @@ import axios from 'axios'
 
 export const resolvers = {
   Query: {
-    matchesNotOptim: async (
-      parents,
-      unSanitizedData,
-      context,
-      info
-    ) => {
-      const { _id, offset, limit, location, sport, game_levels, ageRange, dislikes } = sanitize(unSanitizedData)
+    matchesNotOptim: async (parents, unSanitizedData, context, info) => {
+      const {
+        _id,
+        offset,
+        limit,
+        location,
+        sport,
+        game_levels,
+        ageRange,
+        dislikes,
+      } = sanitize(unSanitizedData);
       //const user = context.user;
       //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       const minAge = ageRange.minAge;
@@ -50,13 +54,9 @@ export const resolvers = {
       );
       return users;
     },
-    queryProssibleMatches: async (
-      parents,
-      unSanitizedData,
-      context,
-      info
-    ) => {
-      const { _id, offset, limit, location, sport, game_levels, ageRange } = sanitize(unSanitizedData)
+    queryProssibleMatches: async (parents, unSanitizedData, context, info) => {
+      const { _id, offset, limit, location, sport, game_levels, ageRange } =
+        sanitize(unSanitizedData);
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
       const filter = {
@@ -65,7 +65,7 @@ export const resolvers = {
             _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec",
           },
           //{
-            //_id: { $ne: _id },
+          //_id: { $ne: _id },
           //},
           {
             "location.state": location.state,
@@ -96,17 +96,12 @@ export const resolvers = {
       const users = await Squash.find(filter, fieldsNeeded)
         .skip(offset)
         .limit(limit);
-      console.log(users)
+      console.log(users);
       return users;
     },
   },
   Mutation: {
-    updateMatches: async (
-      parents,
-      unSanitizedData,
-      context,
-      info
-    ) => {
+    updateMatches: async (parents, unSanitizedData, context, info) => {
       const { currentUserId, potentialMatchId, currentUser, potentialMatch } =
         sanitize(unSanitizedData);
       //const chat_timer = 1.21e+9
@@ -119,46 +114,31 @@ export const resolvers = {
         { $set: { "matches.$[elem].archived": true } },
         { arrayFilters: [{ "elem.createdAt": { $lte: unix } }], new: true }
       );
-      createGroupChannel(currentUserId, potentialMatchId)
-        .then(async (channel_response) => {
-          const currentDoc = await Squash.findOneAndUpdate(
-            { _id: currentUserId },
-            { $addToSet: { matches: potentialMatch } },
-            { new: true }
-          );
-          const potentialMatchDoc = await Squash.findOneAndUpdate(
-            { _id: potentialMatchId },
-            { $push: { matches: currentUser } },
-            { new: true }
-          );
-          getMatchedUserToken(potentialMatchId)
-            .then((matchUserToken) => {
-              if (matchUserToken !== undefined || matchUserToken !== null) {
-                sendAdminMatchMessages(
-                  channel_response,
-                  trieal?.first_name,
-                  matchUserToken[0],
-                  potentialMatchId
-                )
-                  .then(() => {
-                    console.log("succesfull push");
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                    console.log("did not push notify");
-                  });
-              }
-              return potentialMatchDoc;
-            })
-            .catch((err) => {
-              console.log(err);
-              return trieal;
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-          return trieal;
-        });
+      const channel_response = await createGroupChannel(
+        currentUserId,
+        potentialMatchId
+      );
+      const currentDoc = await Squash.findOneAndUpdate(
+        { _id: currentUserId },
+        { $addToSet: { matches: potentialMatch } },
+        { new: true }
+      );
+      const potentialMatchDoc = await Squash.findOneAndUpdate(
+        { _id: potentialMatchId },
+        { $push: { matches: currentUser } },
+        { new: true }
+      );
+      const matchUserToken = await getMatchedUserToken(potentialMatchId);
+      //.then((matchUserToken) => {
+      if (matchUserToken !== undefined || matchUserToken !== null) {
+        const res = await sendAdminMatchMessages(
+          channel_response,
+          trieal?.first_name,
+          matchUserToken[0],
+          potentialMatchId
+        );
+        return currentDoc;
+      }
     },
   },
 };

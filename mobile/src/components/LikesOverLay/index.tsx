@@ -1,4 +1,5 @@
 import {styles} from '@styles'
+import {renderMatchCard, calculateOfflineMatches} from '@utils'
 import React, { useRef, useEffect,useContext, useState } from 'react'
 import { View} from 'react-native';
 import {Overlay, Card, FAB} from 'react-native-elements'
@@ -12,7 +13,7 @@ import {_retriveGameLevel, _retriveAgeRangeFilter, _retriveSportFilter} from '@l
 import { READ_SQUASH, UPDATE_MATCHES, UPDATE_DISLIKES, UPDATE_LIKES} from '@graphQL2'
 
   //// TODO : this needs to update every time user changes list of activities
-const LikesOverLay = ({like, setLike, likeProfile = null}) => {
+const LikesOverLay = ({like, setLike, likeProfile = null, getSquashProfile=null, setLoadingList, setTotalLikesFromUsers}) => {
   const [loading, setLoading] = React.useState(true)
   const [newImageSet, setNewImageSet] = React.useState([])
   const [profileTitle, setProfileTitle] = React.useState('')
@@ -31,26 +32,41 @@ const LikesOverLay = ({like, setLike, likeProfile = null}) => {
       getSquashProfile({variables: {id: currentUser.sub}});
     },
   });
-  const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
-    variables: {id: currentUser.sub},
-    //fetchPolicy:"cache-and-network",
-    fetchPolicy: "network-only",
-    onCompleted: (data) => {
-      //TODO: if data doesnt exists input is incorrect => add checks
-      if (data) {
-        setData(data)
-      }
-    }
-  })
+  //const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
+    //variables: {id: currentUser.sub},
+    ////fetchPolicy:"cache-and-network",
+    //fetchPolicy: "network-only",
+    //onCompleted: (data) => {
+      //console.log("whats happending", data.squash.matches.length)
+      ////TODO: if data doesnt exists input is incorrect => add checks
+      //if (data) {
+        //setData(data)
+      //}
+    //}
+  //})
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
-    //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
+    //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
     //awaitRefetchQueries: true,
     onCompleted: (data) => {
-      getSquashProfile({variables: {id: currentUser.sub}});
+      //getSquashProfile({variables: {id: currentUser.sub}});
       /// open channel with the two users
-      if (data.updateMatches) {
-        const match = data.updateMatches
-        //createSendbirdChannel(match, sendbird, currentUser)
+      //setLoadingList(true);
+      // setting likes from query results of people who like current user
+      if (data) {
+        //const user = currentUserData.squash
+        const user = data.updateMatches;
+        // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
+        const likesByUsers = user?.likedByUSers;
+        const dislikeIDs = user?.dislikes;
+        const totalMatches = calculateOfflineMatches(user);
+        const final = _.filter(
+          likesByUsers,
+          (likeObj) => !_.includes(dislikeIDs, likeObj._id)
+        );
+        const totalLikes = _.differenceBy(final, totalMatches, "_id");
+        setTotalLikesFromUsers(totalLikes);
+        //setData(data.updateMatches)
+        //setLoadingList(false);
       }
     },
   })

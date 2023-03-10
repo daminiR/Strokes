@@ -1,14 +1,14 @@
 import axios from 'axios'
 import { SB_APP_ID, TOKEN } from '../constants';
 
-export const createGroupChannel = (userId1, userId2) => {
+export const createGroupChannel = async (userId1, userId2) => {
   const url = `https://api-${SB_APP_ID}.sendbird.com/v3/group_channels`;
   const form = {
     user_ids: [userId1, userId2],
     is_distinct: true,
     //strict: true,
   };
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     axios
       .post(url, form, {
         headers: {
@@ -16,7 +16,7 @@ export const createGroupChannel = (userId1, userId2) => {
           "Api-Token": TOKEN,
         },
       })
-      .then((response) => {
+      .then( (response) => {
         resolve(response)
         console.log("good to go");
       })
@@ -54,6 +54,7 @@ export const sendAdminMatchMessages = (
   matched_id
 ) => {
   // only matches user gets notification, not the user matching. Only on message needed
+  console.log("respionse", channel_response)
   console.log(channel_response["data"]["channel_url"])
   const channel_url = channel_response["data"]["channel_url"]
   const url = `https://api-${SB_APP_ID}.sendbird.com/v3/group_channels/${channel_url}/messages`;

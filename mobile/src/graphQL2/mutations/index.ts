@@ -174,6 +174,27 @@ const UPDATE_MATCHES = gql`
       last_name
       age
       gender
+      likedByUSers {
+        _id
+        first_name
+        age
+        location {
+          city
+          state
+          country
+        }
+        gender
+        sports {
+          sport
+          game_level
+        }
+        description
+        image_set {
+          img_idx
+          imageURL
+          filePath
+        }
+      }
       sports {
         sport
         game_level
