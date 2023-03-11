@@ -21,7 +21,7 @@ import _  from 'lodash'
 const AccountDetails = ({signOut}) => {
   const client = useApolloClient();
   const [inputType, setInputType] = useState();
-  const {currentUser, currentUserData, sendbird, userData, userLoading, refetchUserData, setCurrentUser} = useContext(UserContext)
+  const { sendbird, dataGlobal, setCurrentUser } = useContext(UserContext);
   const [phoneNumber, setPhoneNumber] = useState(null)
   const [loading, setLoading] = useState(true)
   const [confirmationFunc, setConfirmationFunc] = useState(null)
@@ -97,7 +97,7 @@ const AccountDetails = ({signOut}) => {
     });
   };
 const softDelete = async() => {
-  softDeleteUser({variables: {_id: userData.squash._id}})
+  softDeleteUser({variables: {_id: dataGlobal._id}})
 }
 
 const confirmDelete = async() => {
@@ -109,7 +109,7 @@ const confirmDelete = async() => {
            .then(() => {
              // delete from mongodb
              // soft delete for now
-            softDeleteUser({variables: {_id: userData.squash._id}})
+            softDeleteUser({variables: {_id: dataGlobal._id}})
              AsyncStorage.clear();
              console.log('user has been deleted');
              EditAccountInputVar({inputType: '', displayInput: false});

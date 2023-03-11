@@ -4,37 +4,37 @@ import {defaultAgeRange, defaultGameLevel} from '@constants'
 import {SportFilters} from '@localModels'
 import {filterSportChangedVar} from '@cache'
 
-const createInitialValuesFormik = (userData, phoneNumber) => {
-    if (userData){
-      const formik_images = userData.squash.image_set.map((imageObj) => ({
+const createInitialValuesFormik = (dataGlobal) => {
+    if (dataGlobal){
+      const formik_images = dataGlobal.image_set.map((imageObj) => ({
       img_idx: imageObj.img_idx,
       imageURL: imageObj.imageURL,
       filePath: imageObj.filePath,
     }));
-      const formik_sports = userData.squash.sports.map((sportObj) => ({
+      const formik_sports = dataGlobal.sports.map((sportObj) => ({
         sport: sportObj.sport,
         game_level: sportObj.game_level,
       }));
       const formik_location =  {
-        city: userData.squash.location.city,
-        state: userData.squash.location.state,
-        country: userData.squash.location.country,
+        city: dataGlobal.location.city,
+        state: dataGlobal.location.state,
+        country: dataGlobal.location.country,
       }
-      const new_formik =  {
-        email: userData.squash.email,
-        phoneNumber: phoneNumber,
-        first_name: userData.squash.first_name,
-        last_name: userData.squash.last_name,
-        age: userData.squash.age,
-        gender: userData.squash.gender,
+      const new_formik = {
+        email: dataGlobal.email,
+        phoneNumber: dataGlobal.phoneNumber,
+        first_name: dataGlobal.first_name,
+        last_name: dataGlobal.last_name,
+        age: dataGlobal.age,
+        gender: dataGlobal.gender,
         image_set: formik_images,
         sports: formik_sports,
         location: formik_location,
-        description: userData.squash.description,
+        description: dataGlobal.description,
         remove_uploaded_images: [],
         add_local_images: [],
-        original_uploaded_image_set: formik_images
-      }
+        original_uploaded_image_set: formik_images,
+      };
       return new_formik
     }
 }

@@ -8,7 +8,6 @@ import {FilterFields} from '@localModels'
 import {cityVar}from '@cache'
 import {RootRefreshContext} from '../../index'
 
-//export const FilterContext = createContext(null)
 const addmoreData= {
     type: 'material-community',
     name: 'alarm-plus',
@@ -27,27 +26,18 @@ const Patron = ()  => {
   const [loadingMatches, setLoadingMatches] = useState(true)
   const [allUsers, setAllUsers] = useState(null)
   const [loadUsers, setLoadUsers] = useState(null)
-  const {values: filterValues} = useFormikContext<FilterFields>();
-  const {
-    setLoadAllResults,
-    userData,
-    queryProssibleMatches,
-    potentialMatches,
-    currentUser,
-    data: currentUserData,
-    userLoading,
-    setPotentialMatches,
-    swipesLeft,
-  } = useContext(UserContext);
+  const { values: filterValues } = useFormikContext<FilterFields>();
+  const { potentialMatches, dataGlobal: currentUserData } =
+    useContext(UserContext);
   const [matches, setMatches] = useState(null)
   useEffect(() => {
-        cityVar(currentUserData?.squash.location.city)
+        cityVar(currentUserData?.location.city)
   }, []);
   useEffect(() => {
     setLoadingMatches(true);
     if (potentialMatches) {
       const patron_list = createPatronList(
-        userData?.squash,
+        currentUserData,
         potentialMatches,
         filterValues,
       );

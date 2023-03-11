@@ -33,14 +33,14 @@ const renderMessage = (item, navigation, currentUserID, setLoading) => {
 }
 
 const MessagesList = () => {
-  const { setOfflineMatches, currentUser, data: currentUserData} = useContext(UserContext)
+  const { setOfflineMatches, currentUser, dataGlobal: currentUserData} = useContext(UserContext)
   const [loading, setLoading] = useState(true)
   const [matches, setMatches] = useState(null)
   const [title, setTitle] = useState(null)
   const navigation = useNavigation()
   useEffect(() => {
-    if(currentUserData.squash.matches){
-    const user = currentUserData.squash
+    if(currentUserData.matches){
+    const user = currentUserData
     setLoading(true)
     const totalMatches = calculateOfflineMatches(user)
     // if in likedBy USe and in likes but not in matches then add to matches else load matches
@@ -50,7 +50,7 @@ const MessagesList = () => {
     setOfflineMatches(totalMatches)
     setLoading(false)
     }
-  }, [currentUserData.squash.matches])
+  }, [currentUserData.matches])
 
   return (
     <>

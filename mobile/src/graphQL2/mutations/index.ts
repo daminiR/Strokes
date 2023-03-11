@@ -174,6 +174,32 @@ const UPDATE_MATCHES = gql`
       last_name
       age
       gender
+      deleted {
+        isDeleted
+        deletedAt
+      }
+      sports {
+        sport
+        game_level
+      }
+      location {
+        city
+        state
+        country
+      }
+      swipesPerDay
+      visableLikePerDay
+      sportChangesPerDay
+      description
+      phoneNumber
+      email
+      image_set {
+        img_idx
+        imageURL
+        filePath
+      }
+      likes
+      dislikes
       likedByUSers {
         _id
         first_name
@@ -195,32 +221,15 @@ const UPDATE_MATCHES = gql`
           filePath
         }
       }
-      sports {
-        sport
-        game_level
-      }
-      location {
-        city
-        state
-        country
-      }
-      description
-      image_set {
-        img_idx
-        imageURL
-        filePath
-      }
-      likes
-      dislikes
       matches {
-      location {
-        city
-        state
-        country
-      }
         _id
         first_name
         age
+        location {
+          city
+          state
+          country
+        }
         gender
         sports {
           sport

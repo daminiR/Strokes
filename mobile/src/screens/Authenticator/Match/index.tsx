@@ -19,21 +19,13 @@ type MatchScreenNavigationProp = StackNavigationProp<RootStackSignInParamList, '
 export const FilterSportContext = createContext(null);
 export const MatchesProfileContext = createContext(null)
 const Match =()  => {
-  const [allUsers, setAllUsers] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
-  const {
-    data,
-    potentialMatches,
-    initialValuesFormik: filterValues,
-    userLoading,
-    cachedUser,
-    currentUser,
-    userData,
-  } = useContext(UserContext);
+  const { initialValuesFormik: filterValues, dataGlobal } =
+    useContext(UserContext);
   useEffect(() => {
     setLoadingData(true);
-    if (userData) setLoadingData(false);
-  }, [userData.squash])
+    if (dataGlobal) setLoadingData(false);
+  }, [dataGlobal])
   const renderPatron = () => {
     return <Patron />;
   };

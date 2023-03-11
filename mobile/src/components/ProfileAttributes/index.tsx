@@ -8,13 +8,13 @@ import { EditFields} from '@localModels'
 import {settingsFlatList} from '@constants'
 
 const ProfileAttirbutes = () => {
-  const {userData, userLoading} = useContext(UserContext)
+  const {dataGlobal, userLoading} = useContext(UserContext)
   const {values: formikValues } = useFormikContext<EditFields>();
   const navigation = useNavigation()
   // update first name on profile screen
   useEffect(() => {
-    if (userData?.squash) {
-      const user = userData.squash;
+    if (dataGlobal) {
+      const user = dataGlobal;
       // first name
       const first_name_ind_to_update = settingsFlatList.findIndex(
         (listAttribute) => listAttribute.title == 'Name',

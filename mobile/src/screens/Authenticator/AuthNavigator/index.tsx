@@ -28,7 +28,7 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
   const [changeSport, setChangeSport] = useState(true)
   const [loadingUser, setLoadingUser] = useState(false);
   const [loadingMatches, setLoadinMatches] = useState(false);
-  const [data, setData] = useState(null);
+  const [dataGlobal, setDataGlobal] = useState(null);
   const [allUsers, setAllUsers] = useState(null)
   const [offlineMatches, setOfflineMatches] = useState(null)
   const [CacheVal, setCacheVal] = useState(null)
@@ -41,7 +41,6 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.uid}}],
     onCompleted: async () => {
       setLoadingSignUInRefresh(true);
-      console.log("Succesful signout, and soft delete");
       setLoadingSignUInRefresh(false);
     },
   });
@@ -64,7 +63,6 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
     fetchPolicy: "network-only",
     onCompleted: async (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
-      setLoadingUser(false);
       if (data?.squash) {
         setDeleted(data.squash.deleted);
         //if soft delete is true set to false
@@ -79,8 +77,9 @@ const AuthNavigator = ({sendbird, currentUser: newUserSub}) => {
               },
             });
         }
+        setDataGlobal(data.squash);
+        setLoadingUser(false);
         setProfileState(true);
-        setData(data);
       }
     },
     onError: (({graphQLErrors, networkError}) => {
@@ -174,8 +173,8 @@ const start = (user) => {
     getSquashProfile: getSquashProfile,
     refetchUserData: refetchUserData,
     userData: userData,
-    setData: setData,
-    data: data,
+    setDataGlobal: setDataGlobal,
+    dataGlobal: dataGlobal,
     userLoading: userLoading,
     currentUser: currentUser,
     setCurrentUser: setCurrentUser,

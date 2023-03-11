@@ -116,7 +116,7 @@ export type RootStackSignInParamList = {
      error: "",
      connecting: false,
    });
-   const { data, sendbird, setSendbird } = useContext(UserContext);
+   const { dataGlobal, sendbird, setSendbird } = useContext(UserContext);
    const [initialized, setInitialized] = useState(false);
    const [currentUser, setCurrentUser] = useState(null);
   const login = async () => {
@@ -177,8 +177,8 @@ export type RootStackSignInParamList = {
    useFocusEffect(
      useCallback(() => {
         connect(
-          data.squash._id,
-          data.squash.first_name,
+          dataGlobal._id,
+          dataGlobal.first_name,
           dispatch,
           sendbird,
           setSendbird
@@ -233,7 +233,7 @@ const customTabBarStyle = {
 };
 const MatchStackScreen = () => {
   const [token, setToken] = useState(null);
-  const {data, sendbird, setSendbird} = useContext(UserContext);
+  const {dataContext, sendbird, setSendbird} = useContext(UserContext);
    useEffect(() => {
      if (Platform.OS == "ios") {
        PushNotificationIOS.getInitialNotification().then(onNotificationIOS);

@@ -21,7 +21,7 @@ import {createSendbirdChannel} from '@utils'
 const Channels = props => {
   const { route, navigation} = props;
   const {currentUser} = route.params
-  const {data: currentUserData, sendbird, setSendbird} = useContext(UserContext)
+  const {dataGlobal: currentUserData, sendbird, setSendbird} = useContext(UserContext)
   const [query, setQuery] = useState(null);
   const [state, dispatch] = useReducer(channelsReducer, {
     sendbird,
@@ -141,7 +141,7 @@ const Channels = props => {
   const chat = (channel) => {
     const other_user = _.filter(channel.members, (member)=> {return member.userId !== currentUser.userId})
     const other_id = other_user[0].userId
-    const profileViewDataList = _.filter(currentUserData.squash.matches, (match)  => {return match._id === other_id})
+    const profileViewDataList = _.filter(currentUserData.matches, (match)  => {return match._id === other_id})
 
     if (profileViewDataList.length === 0) {
       console.log("user doesnt exist anymore")
@@ -156,7 +156,7 @@ const Channels = props => {
     }
   };
   const refresh = () => {
-    const matches = currentUserData.squash.matches
+    const matches = currentUserData.matches
     //createSendbirdChannel(matches, sendbird)
     const params = {
       includeEmpty: true,
@@ -180,7 +180,7 @@ const Channels = props => {
       query.includeEmpty = true
       query.hiddenChannelFilter ="unhidden_only"
       query.next((err, fetchedChannels) => {
-        const matches_id = _.map(currentUserData.squash.matches, match => {return match._id})
+        const matches_id = _.map(currentUserData.matches, match => {return match._id})
         dispatch({ type: "end-loading" });
         if (!err) {
           dispatch({

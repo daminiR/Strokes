@@ -9,7 +9,6 @@ import {UserContext} from '@UserContext'
 
 const Filters = () => {
   const [filter, setFilter] = useState(false);
-  const {data: currentUserData, potentialMatches, initialValuesFormik: filterValues, userLoading, cachedUser, currentUser, userData} = useContext(UserContext)
   const _onFilter = () => {
     setFilter(true);
   };

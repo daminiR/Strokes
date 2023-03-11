@@ -23,7 +23,8 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
   const [gameLevel1, setGameLevel1] = useState(false);
   const [gameLevel2, setGameLevel2] = useState(false);
   const [gameLevel0, setGameLevel0] = useState(false);
-  const {userData, queryProssibleMatches, potentialMatches, currentUser, data: currentUserData, userLoading, setPotentialMatches} = useContext(UserContext)
+  const { dataGlobal, queryProssibleMatches, currentUser } =
+    useContext(UserContext);
 
   const value = {
     allUserSportsFilter: allUserSportsFilter,
@@ -54,15 +55,15 @@ const FilterOverlaySingle = ({filter, setFilter}) => {
     const sportFilter = _.find(allUserSportsFilter, ['filterSelected', true])
     _storeSportFilter(sportFilter)
     _storeGameLevelFilter(gameLevelObj);
-        const dislikes = userData.squash.dislikes ? userData.squash.dislikes.length : 0;
-        const likes = userData.squash.likes ? userData.squash.likes.length : 0;
+        const dislikes = dataGlobal.dislikes ? dataGlobal.dislikes.length : 0;
+        const likes = dataGlobal.likes ? dataGlobal.likes.length : 0;
         const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
         queryProssibleMatches({
           variables: {
             _id: currentUser.sub,
             offset: 0,
             limit: limit,
-            location: _.omit(userData.squash.location, ['__typename']),
+            location: _.omit(dataGlobal.location, ['__typename']),
             sport: sportFilter.sport,
             game_levels: byGameLevel(gameLevelObj),
             ageRange: multiSliderValue

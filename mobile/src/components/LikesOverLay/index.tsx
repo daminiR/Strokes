@@ -19,7 +19,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null, getSquashProfile=null,
   const [profileTitle, setProfileTitle] = React.useState('')
   const [userProfile, setUserProfile] = React.useState(null)
   const [profileImageValue, setProfileImageValue] = React.useState(null)
-  const {currentUser, data, userData, setData, userLoading, sendbird} = useContext(UserContext)
+  const {currentUser, dataGlobal, setDataGlobal, userLoading, sendbird} = useContext(UserContext)
   const [matched, setMatched] = useState(false)
   const [updateLikes] = useMutation(UPDATE_LIKES, {
     onCompleted: () => {
@@ -32,28 +32,11 @@ const LikesOverLay = ({like, setLike, likeProfile = null, getSquashProfile=null,
       getSquashProfile({variables: {id: currentUser.sub}});
     },
   });
-  //const [ getSquashProfile] = useLazyQuery(READ_SQUASH, {
-    //variables: {id: currentUser.sub},
-    ////fetchPolicy:"cache-and-network",
-    //fetchPolicy: "network-only",
-    //onCompleted: (data) => {
-      //console.log("whats happending", data.squash.matches.length)
-      ////TODO: if data doesnt exists input is incorrect => add checks
-      //if (data) {
-        //setData(data)
-      //}
-    //}
-  //})
   const [updateMatches] = useMutation(UPDATE_MATCHES, {
     //refetchQueries: [{query: READ_SQUASH, variables: {id: currentUser.sub}}],
     //awaitRefetchQueries: true,
     onCompleted: (data) => {
-      //getSquashProfile({variables: {id: currentUser.sub}});
-      /// open channel with the two users
-      //setLoadingList(true);
-      // setting likes from query results of people who like current user
       if (data) {
-        //const user = currentUserData.squash
         const user = data.updateMatches;
         // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
         const likesByUsers = user?.likedByUSers;
@@ -65,7 +48,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null, getSquashProfile=null,
         );
         const totalLikes = _.differenceBy(final, totalMatches, "_id");
         setTotalLikesFromUsers(totalLikes);
-        //setData(data.updateMatches)
+        setDataGlobal(data.updateMatches)
         //setLoadingList(false);
       }
     },
@@ -127,7 +110,7 @@ const LikesOverLay = ({like, setLike, likeProfile = null, getSquashProfile=null,
               onPress={() => {
                 setLike(false);
                 swipeRightLiked(
-                  userData.squash,
+                  dataGlobal,
                   currentUser.sub,
                   likeProfile,
                   updateLikes,

@@ -30,8 +30,15 @@ const MatchList = ({matches}) => {
     },
   });
   const {setValues, setFieldValue, values: filterValues } = useFormikContext<FilterFields>();
-  const [endingText, setEndingText] = useState(null)
-  const {currentUser, queryProssibleMatches , data, userData, setData, userLoading, sendbird} = useContext(UserContext)
+  const [endingText, setEndingText] = useState(null);
+  const {
+    currentUser,
+    queryProssibleMatches,
+    dataGlobal,
+    setDataGlobal,
+    userLoading,
+    sendbird,
+  } = useContext(UserContext);
   const [loadingFilters, setLoadingFilters] = useState(true)
   const [disableLikes, setDisableLikes] = useState(false)
   const [disableDisLikes, setDisablelikes] = useState(false)
@@ -55,17 +62,17 @@ const MatchList = ({matches}) => {
 
   useEffect(() => {
     setLoadingFilters(true);
-    userData?.squash &&
-      createInitialFilterFormik(userData.squash.sports).then(
+    dataGlobal &&
+      createInitialFilterFormik(dataGlobal.sports).then(
         (initialValues) => {
           if (filterSportChangedVar() || isCityChangedVar()) {
             const vals = initialValues ? initialValues: filterValues
             initialValues && setValues(initialValues);
-            const dislikes = userData.squash.dislikes
-              ? userData.squash.dislikes.length
+            const dislikes = dataGlobal.dislikes
+              ? dataGlobal.dislikes.length
               : 0;
-            const likes = userData.squash.likes
-              ? userData.squash.likes.length
+            const likes = dataGlobal.likes
+              ? dataGlobal.likes.length
               : 0;
             const limit = dislikes + likes + SWIPIES_PER_DAY_LIMIT;
             // run matches query
@@ -77,7 +84,7 @@ const MatchList = ({matches}) => {
                 _id: currentUser.sub,
                 offset: 0,
                 limit: limit,
-                location: _.omit(userData.squash.location, ['__typename']),
+                location: _.omit(dataGlobal.location, ['__typename']),
                 sport: sport,
                 game_levels: byGameLevel(vals.gameLevels),
                 ageRange: vals.ageRange,
@@ -89,13 +96,13 @@ const MatchList = ({matches}) => {
         },
       );
     setLoadingFilters(false);
-  }, [userData?.squash.sports, isCityChangedVar()]);
+  }, [dataGlobal.sports, isCityChangedVar()]);
 
   useEffect(() => {
-      if (matches?.length == 0 && userData.squash.swipesPerDay != 0) {
+      if (matches?.length == 0 && dataGlobal.swipesPerDay != 0) {
         setEndingText('no more matches left!');
       }
-      else if (matches?.length == 0 && userData.squash.swipesPerDay == 0) {
+      else if (matches?.length == 0 && dataGlobal.swipesPerDay == 0) {
         setEndingText('you have reach swipe limit for the day!');
       }
 
@@ -110,7 +117,7 @@ const MatchList = ({matches}) => {
     onCompleted: (data) => {
       //TODO: if data doesnt exists input is incorrect => add checks
       if (data) {
-        setData(data)
+        setDataGlobal(data.squash)
       }
     }
   })
@@ -144,7 +151,7 @@ const MatchList = ({matches}) => {
             }}
             onSwipedRight={(index) => {
               swipeRightLiked(
-                userData.squash,
+                dataGlobal,
                 currentUser.sub,
                 matches[index],
                 updateLikes,

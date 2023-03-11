@@ -12,27 +12,21 @@ const FilterOverlay = ({filter, setFilter}) => {
   //const {setValues, values: filterValues } = useFormikContext<FilterFields>();
   const gameLevelRef = useRef()
   const ageSliderRef = useRef()
-  const sportFilterRef = useRef()
-  const {aloading, currentUser, data: currentUserData, userLoading} = useContext(UserContext)
+  const sportFilterRef = useRef();
+  const {
+    aloading,
+    currentUser,
+    dataGlobal: currentUserData,
+    userLoading,
+  } = useContext(UserContext);
   const [loadingSports, setLoadingSports] = useState(true)
   const [sportsList, setSportsList] = useState(null)
   const [selectedSport, setSelectedSport] = useState(null)
 
-  //useEffect(() => {
-    //createInitialFilterFormik(
-      //currentUserData.squash.sports,
-    //).then((initialValues) => {
-      //setInitialValuesFormik(initialValues);
-    //})
-    //.catch (error => {
-      //console.log(error);
-    //})
-  //}, [filter])
-
   useEffect(() => {
     if(currentUserData){
         setLoadingSports(true);
-        const sports = _.map(currentUserData.squash.sports, (sportObj) => {return sportObj.sport});
+        const sports = _.map(currentUserData.sports, (sportObj) => {return sportObj.sport});
         setSportsList(sports);
         setLoadingSports(false);
     }

@@ -21,7 +21,7 @@ const Lobby = props => {
     connecting: false,
   });
   const {navigation} = props;
-  const {data, sendbird} = useContext(UserContext);
+  const {dataGlobal, sendbird} = useContext(UserContext);
   const [initialized, setInitialized] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   useLayoutEffect(() => {

@@ -19,8 +19,8 @@ const ProfileSettingsInput = () => {
   const [description, setDescription] = React.useState('Description')
   const [loadingSports, setLoadingSports] = React.useState(true)
   const [loadingDescription, setLoadingDescription] = React.useState(false)
-  const {data, setChangeSport, userData, userLoading} = useContext(UserContext)
-  const [numChangesLeft, setNumChangesLeft] = React.useState(userData.squash.sportChangesPerDay)
+  const {dataGlobal, setChangeSport, userLoading} = useContext(UserContext)
+  const [numChangesLeft, setNumChangesLeft] = React.useState(dataGlobal.sportChangesPerDay)
   useEffect(() => {
         const user = formikValues
         setLoadingSports(true);

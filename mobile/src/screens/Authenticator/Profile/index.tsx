@@ -29,9 +29,26 @@ const EditProfile = () => {
   const [loadingUserUpload, setLoadingUserUpload] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [inputType, setInputType] = useState();
-  const {setFieldValue, touched, initialValues: formikInitialValues, setValues, values: formikValues,resetForm, handleReset, errors: validationErrors, handleSubmit} = useFormikContext<EditFields>();
+  const {
+    setFieldValue,
+    touched,
+    initialValues: formikInitialValues,
+    setValues,
+    values: formikValues,
+    resetForm,
+    handleReset,
+    errors: validationErrors,
+    handleSubmit,
+  } = useFormikContext<EditFields>();
   const [tempInputValues, setTempInputValues] = useState(null);
-  const {currentUser,userData, imageErrorVisible, setImageErrorVisible, changeSport, setChangeSport} = useContext(UserContext)
+  const {
+    currentUser,
+    imageErrorVisible,
+    setImageErrorVisible,
+    changeSport,
+    setChangeSport,
+    dataGlobal
+  } = useContext(UserContext);
   const {data:InputTypeData } = useQuery(GET_INPUT_TYPE);
   const [updateUserProfile] = useMutation(UPDATE_USER_PROFILE, {
     //////// refetching is necessary because without this the update happens on cancel/done"
@@ -70,7 +87,7 @@ const EditProfile = () => {
 
 const _onPressDoneProfile = () => {
   // add anything that needs to be modified -> TODO: remove all database updates and add them here! => this is super important for optimizing and scaling! you have to many updates to mutations data!
-    const val = compareQueryFormik(userData.squash, formikValues)
+    const val = compareQueryFormik(dataGlobal, formikValues)
     if (!val) {
       const RNLocalFiles = convertImagesToFormat(formikValues.add_local_images, currentUser.sub)
       ///// debug images
@@ -98,11 +115,8 @@ const _onPressDoneProfile = () => {
     }
 }
 const _onPressCancelProfile = () => {
-    handleReset()
-    const initialValues2 = createInitialValuesFormik(
-      userData,
-      userData.squash.phoneNumber,
-    );
+    handleReset();
+    const initialValues2 = createInitialValuesFormik(dataGlobal);
     handleReset()
     resetForm({values: {...initialValues2}})
     setIsVisible(false);
@@ -183,23 +197,17 @@ const doneCancelValues = {
     );
 }
 const Profile = () => {
-  const {data, userData, userLoading, currentUser} = useContext(UserContext)
+  const {dataGlobal, userLoading, currentUser} = useContext(UserContext)
   const [initialValuesFormik, setInitialValuesFormik] = useState(null);
   const [loadingFormikValues, setLoadingFormikValues] = useState(true)
   useEffect(() => {
     if (!userLoading){
     setLoadingFormikValues(true);
-    const userDetails = userData.squash.phoneNumber
-    if (userDetails) {
-      const initialValues = createInitialValuesFormik(
-        data,
-        userDetails,
-      );
+      const initialValues = createInitialValuesFormik(dataGlobal);
       setInitialValuesFormik(initialValues);
       setLoadingFormikValues(false);
     }
-    }
-  }, [userData]);
+  }, [dataGlobal]);
   const renderFormikProfile = () => {
     return (
       <>
@@ -211,11 +219,8 @@ const Profile = () => {
               initialValues={loadingFormikValues ? initialValuesFormik : initialValuesFormik}
               onSubmit={(values, {resetForm}) => {
                 // do not remove this code this helps update when press done
-                const userDetails = userData.squash.phoneNumber;
-                const initialValues2 = createInitialValuesFormik(
-                  userData,
-                  userDetails,
-                );
+                const userDetails = dataGlobal.phoneNumber;
+                const initialValues2 = createInitialValuesFormik(userData);
                 setInitialValuesFormik(initialValues2);
                 resetForm({values: {...initialValues2}});
               }}>

@@ -17,14 +17,12 @@ const Matches = ({navigation}) => {
   const [like, setLike] = useState(false)
   const [indexVal, setIndex] = useState(0)
   const [totalLikesFromUsers, setTotalLikesFromUsers] = useState(null)
-  const {currentUser, data: currentUserData} = useContext(UserContext)
+  const {currentUser, dataGlobal: currentUserData} = useContext(UserContext)
   const [loading, setLoading] = useState(true)
   const [getSquashProfile] = useLazyQuery(READ_SQUASH, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
     setLoading(true)
-    // setting likes from query results of people who like current user
-    //const user = currentUserData.squash
     const user = data.squash
       // TODO: more calucaltiion here -> when liked and not matched should show -> and rerender with very match
     const likesByUsers = user?.likedByUSers
@@ -78,7 +76,7 @@ const Matches = ({navigation}) => {
             data={totalLikesFromUsers}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) =>
-              renderMatchCard(item, setLike, setIndex, index, currentUserData.squash.visableLikePerDay)
+              renderMatchCard(item, setLike, setIndex, index, currentUserData.visableLikePerDay)
             }
           />
         )}
