@@ -62,22 +62,22 @@ export const resolvers = {
       const filter = {
         $and: [
           {
-            _id: { $ne: _id },
+            _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec",
           },
-          {
-            "location.state": location.state,
-          },
-          {
-            active: true,
-          },
-          {
-            sports: {
-              $elemMatch: { sport: sport, game_level: { $in: game_levels } },
-            },
-          },
-          {
-            age: { $gt: minAge, $lt: maxAge },
-          },
+          //{
+            //"location.state": location.state,
+          //},
+          //{
+            //active: true,
+          //},
+          //{
+            //sports: {
+              //$elemMatch: { sport: sport, game_level: { $in: game_levels } },
+            //},
+          //},
+          //{
+            //age: { $gt: minAge, $lt: maxAge },
+          //},
         ],
       };
       const fieldsNeeded = {
