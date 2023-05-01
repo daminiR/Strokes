@@ -19,7 +19,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		824DBB7F28FBA54500E3C6D4 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 824DBB7E28FBA54500E3C6D4 /* icomoon.ttf */; };
 		82553ACD278CBC9D007E974D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		829E117F29AEAB6A00475331 /* GoogleService-Info-2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 829E117E29AEAB6A00475331 /* GoogleService-Info-2.plist */; };
+		82A81A102A00432200B75D23 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 82A81A0F2A00432200B75D23 /* GoogleService-Info.plist */; };
 		82E1C551271CB84E002C00B1 /* tinderclone.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82E1C550271CB84E002C00B1 /* tinderclone.ttf */; };
 		82F8039726BB448C000C8F5A /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82F8039626BB448C000C8F5A /* File.swift */; };
 		83E6B70E3EA0411FA04CFB1E /* KLMN-Flash-Pix.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8D2BE619E3E54D998051EA17 /* KLMN-Flash-Pix.ttf */; };
@@ -71,7 +71,8 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = sports_app/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		824DBB7E28FBA54500E3C6D4 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = ../src/assets/fonts/icomoon.ttf; sourceTree = "<group>"; };
 		828F4F55287E32260051D7FB /* sports_app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = sports_app.entitlements; path = sports_app/sports_app.entitlements; sourceTree = "<group>"; };
-		829E117E29AEAB6A00475331 /* GoogleService-Info-2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info-2.plist"; path = "../../../Downloads/GoogleService-Info-2.plist"; sourceTree = "<group>"; };
+		8296448D29B64A5E00B8571F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Desktop/GoogleINfoLIstReal/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		82A81A0F2A00432200B75D23 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Desktop/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		82E1C550271CB84E002C00B1 /* tinderclone.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = tinderclone.ttf; path = ../src/assets/fonts/tinderclone.ttf; sourceTree = "<group>"; };
 		82F8039526BB448C000C8F5A /* sports_app-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sports_app-Bridging-Header.h"; sourceTree = "<group>"; };
 		82F8039626BB448C000C8F5A /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
@@ -144,7 +145,7 @@
 		13B07FAE1A68108700A75B9A /* sports_app */ = {
 			isa = PBXGroup;
 			children = (
-				829E117E29AEAB6A00475331 /* GoogleService-Info-2.plist */,
+				8296448D29B64A5E00B8571F /* GoogleService-Info.plist */,
 				828F4F55287E32260051D7FB /* sports_app.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -204,6 +205,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				82A81A0F2A00432200B75D23 /* GoogleService-Info.plist */,
 				82F8039626BB448C000C8F5A /* File.swift */,
 				13B07FAE1A68108700A75B9A /* sports_app */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -392,9 +394,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				82A81A102A00432200B75D23 /* GoogleService-Info.plist in Resources */,
 				824DBB7F28FBA54500E3C6D4 /* icomoon.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				829E117F29AEAB6A00475331 /* GoogleService-Info-2.plist in Resources */,
 				82E1C551271CB84E002C00B1 /* tinderclone.ttf in Resources */,
 				83E6B70E3EA0411FA04CFB1E /* KLMN-Flash-Pix.ttf in Resources */,
 				ED0A75A620A048BD9570BF57 /* OpenSans-Regular.ttf in Resources */,

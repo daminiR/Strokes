@@ -13,7 +13,6 @@ import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
 import {resolvers as update} from './resolvers/admin_resolvers/update_schema'
 
-import * as sendbird from "sendbird-platform-sdk-typescript";
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
 import { createServer } from 'http';
@@ -25,8 +24,6 @@ const startServer = async () => {
   const app = express()
   app.use(graphqlUploadExpress());
   const httpServer = createServer(app);
-  const serverConfig = new sendbird.ServerConfiguration("https://api-{app_id}.sendbird.com", { "app_id": appId })
-  const configuration = sendbird.createConfiguration({ baseServer : serverConfig });
   const resolvers2 = mergeResolvers(
     [
       createUser,

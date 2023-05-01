@@ -17,6 +17,7 @@ import {
 const PasswordInput = ({
   authMessage = null,
   isLastSlide,
+  _confirmSignInGC=null,
   noUserFoundMessage = null,
   isSignIn = true,
   _forgotPassword=null,
@@ -120,6 +121,16 @@ const clientId = process.env.React_App_AWS_Client_Id
                 onPress={() => _verifyPhone()}
                 title="Send phone verification code"
               />
+            )}
+            {isSignIn && (
+              <View style={styles.helloButtons}>
+              <Button
+                buttonStyle={styles.buttonStyle}
+                titleStyle={styles.buttonText}
+                onPress={() => _confirmSignInGC(values.password)}
+                title="Confirm"
+              />
+              </View>
             )}
         </View>
       </DismissKeyboard>

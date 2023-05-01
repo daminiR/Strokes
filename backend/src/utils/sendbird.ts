@@ -6,7 +6,7 @@ export const createGroupChannel = (userId1, userId2) => {
   const form = {
     user_ids: [userId1, userId2],
     is_distinct: true,
-    strict: true,
+    //strict: true,
   };
   return new Promise((resolve, reject) => {
     axios
