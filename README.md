@@ -6,6 +6,7 @@
 </p>
 
 <p align="center">
+New Changes underway
   Built with React Native.
 </p>
 
