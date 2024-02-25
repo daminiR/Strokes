@@ -145,6 +145,7 @@ const App = () =>
   client.resetStore()
   client.resetStore()
   //just to reset cache for debugging
-  //enableFlipperApolloDevtools(client)
+  //enableFlipperAolloDevtools(client)
+  //apolloDevToolsInit(client);
 }
 export default App

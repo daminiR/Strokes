@@ -1,8 +1,10 @@
 import axios from 'axios'
-import { SB_APP_ID, TOKEN } from '../constants';
+import 'dotenv/config'
 
 export const createGroupChannel = (userId1, userId2) => {
-  const url = `https://api-${SB_APP_ID}.sendbird.com/v3/group_channels`;
+  const sb_token = process.env.SB_TOKEN as any
+  const sb_app_id = process.env.SB_APP_ID as any
+  const url = `https://api-${sb_app_id}.sendbird.com/v3/group_channels`;
   const form = {
     user_ids: [userId1, userId2],
     is_distinct: true,
@@ -13,7 +15,7 @@ export const createGroupChannel = (userId1, userId2) => {
       .post(url, form, {
         headers: {
           "Content-Type": "application/json, charset=utf8",
-          "Api-Token": TOKEN,
+          "Api-Token": sb_token,
         },
       })
       .then((response) => {
@@ -25,14 +27,16 @@ export const createGroupChannel = (userId1, userId2) => {
   });
 };
 export const getMatchedUserToken = (matchedUserId) => {
-  const url = `https://api-${SB_APP_ID}.sendbird.com/v3/users/${matchedUserId}/push/${'apns'}`
+  const sb_token = process.env.SB_TOKEN as any
+  const sb_app_id = process.env.SB_APP_ID as any
+  const url = `https://api-${sb_app_id}.sendbird.com/v3/group_channels`;
   const request = {};
   return new Promise((resolve, reject) => {
     axios
       .post(url, request, {
         headers: {
           "Content-Type": "application/json, charset=utf8",
-          "Api-Token": TOKEN,
+          "Api-Token": sb_token,
         },
       })
       .then((response) => {
@@ -49,7 +53,9 @@ export const sendAdminMatchMessages = (
   apns_matched_user_token
 ) => {
   // only matches user gets notification, not the user matching. Only on message needed
-  const url = `https://api-${SB_APP_ID}.sendbird.com/v3/group_channels/${channel_url}/messages`;
+  const sb_token = process.env.SB_TOKEN as any
+  const sb_app_id = process.env.SB_APP_ID as any
+  const url = `https://api-${sb_app_id}.sendbird.com/v3/group_channels`;
   const request = {
     message_type: "MESG",
     message: "This chat will close in 14 days. Make sure you comply with terms of use while using the app.",
@@ -65,7 +71,7 @@ export const sendAdminMatchMessages = (
       .post(url, request, {
         headers: {
           "Content-Type": "application/json, charset=utf8",
-          "Api-Token": TOKEN,
+          "Api-Token": sb_token,
         },
       })
       .then((response) => {
@@ -77,7 +83,9 @@ export const sendAdminMatchMessages = (
   });
 };
 export const createUserSendbird = (userId1, first_name, issue_access_token) => {
-  const url = `https://api-${SB_APP_ID}.sendbird.com/v3/users`
+  const sb_token = process.env.SB_TOKEN as any
+  const sb_app_id = process.env.SB_APP_ID as any
+  const url = `https://api-${sb_app_id}.sendbird.com/v3/group_channels`;
   const form = {
     user_id: userId1,
     nickname: first_name,
@@ -88,7 +96,7 @@ export const createUserSendbird = (userId1, first_name, issue_access_token) => {
       .post(url, form, {
         headers: {
           "Content-Type": "application/json, charset=utf8",
-          "Api-Token": TOKEN,
+          "Api-Token": sb_token,
         },
       })
       .then((response) => {

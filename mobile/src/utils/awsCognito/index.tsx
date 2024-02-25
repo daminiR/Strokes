@@ -194,14 +194,14 @@ const authAndMongo = (
             newClient
           )
             .then(async () => {
-              connect(
-                _id,
-                values.first_name,
-                dispatch,
-                sendbird,
-                start,
-                setSendbird
-              );
+              //connect(
+                //_id,
+                //values.first_name,
+                //dispatch,
+                //sendbird,
+                //start,
+                //setSendbird
+              //);
               Keychain.setGenericPassword(values.phoneNumber, values.password, {
                 service:
                   "org.reactjs.native.example.sports-app-keychain-password",

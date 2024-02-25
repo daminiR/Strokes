@@ -156,13 +156,27 @@ const Slider =  () => {
   };
 
 const verifyCode = () => {
-  var cognitoUser = getCognitoUser(values)
-  cognitoUser.confirmRegistration(values.confirmationCode, true, function (err, result) {
-    if (err) {
-      //alert(err.message || JSON.stringify(err));
-      alert("unable to resend confirmation code");
-      return;
-    }
+  //var cognitoUser = getCognitoUser(values)
+  //cognitoUser.confirmRegistration(values.confirmationCode, true, function (err, result) {
+    //if (err) {
+      ////alert(err.message || JSON.stringify(err));
+      //alert("unable to resend confirmation code");
+      //return;
+    //}
+    //authAndMongo(
+      //values,
+      //setNewUserToken,
+      //setLoadingSignUInRefresh,
+      //setLoadingSubmit,
+      //registerOnMongoDb,
+      //createSquash2,
+      //dispatch,
+      //sendbird,
+      //start,
+      //setSendbird,
+      //setAuthMessage
+    //);
+  //});
     authAndMongo(
       values,
       setNewUserToken,
@@ -176,7 +190,6 @@ const verifyCode = () => {
       setSendbird,
       setAuthMessage
     );
-  });
 };
 
 const _confirmSignInGC2 = () => {
