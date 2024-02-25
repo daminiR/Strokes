@@ -1,7 +1,7 @@
 <h1 align="center"> Sports App </h1> <br>
 <p align="center">
   <a href="https://gitpoint.co/">
-    <img alt="Playarmo" title="Playarmo" src="./1024.png" width="450">
+    <img alt="Strokes" title="Strokes" src="./1024.png" width="450">
   </a>
 </p>
 
