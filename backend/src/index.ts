@@ -17,7 +17,6 @@ import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
 import { createServer } from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-const appId = "FFBBD532-7319-41BD-A32A-26F6D6BCA74C"
 const startServer = async () => {
   const uri = process.env.ATLAS_URI as any
   const collectionName = process.env.COLLECTION_NAME as any

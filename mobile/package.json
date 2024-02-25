@@ -68,7 +68,7 @@
     "react-native-elements": "^3.4.2",
     "react-native-emoji": "^1.8.0",
     "react-native-flash-message": "^0.2.0",
-    "react-native-flipper": "^0.182.0",
+    "react-native-flipper": "^0.212.0",
     "react-native-fs": "^2.18.0",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-gifted-chat": "^0.16.3",
@@ -111,6 +111,7 @@
     "jest": "^27.4.7",
     "jest-circus": "^27.4.6",
     "metro-react-native-babel-preset": "0.59.0",
+    "react-native-apollo-devtools-client": "^1.0.4",
     "react-test-renderer": "16.13.1"
   },
   "resolutions": {

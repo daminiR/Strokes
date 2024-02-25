@@ -9,8 +9,6 @@ export const MAX_SPORTS_LIMIT = 5
 // chat time currently at 2 days
 //export const CHAT_TIMER = 1.728e+8
 // chat time currently at 14 days
-export const SB_APP_ID = "FFBBD532-7319-41BD-A32A-26F6D6BCA74C";
-export const TOKEN = "2abd56b4db65e8b6b1ef447bb79e10fb894922fd"
 export const CHAT_TIMER = 1.21e+9
 export const LOCATIONS = [
   {

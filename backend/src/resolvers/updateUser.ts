@@ -15,6 +15,8 @@ export const resolvers = {
     squash: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
       // change matches to only get matches that are beyond certain dates
+      console.log("id")
+      console.log(unSanitizedId)
       var squash_val = await Squash.findById(id);
       if (squash_val) {
         if (squash_val.matches) {
