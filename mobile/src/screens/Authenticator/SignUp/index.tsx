@@ -156,7 +156,7 @@ const Slider =  () => {
   };
 
 const verifyCode = () => {
-  //var cognitoUser = getCognitoUser(values)
+  var cognitoUser = getCognitoUser(values)
   //cognitoUser.confirmRegistration(values.confirmationCode, true, function (err, result) {
     //if (err) {
       ////alert(err.message || JSON.stringify(err));
