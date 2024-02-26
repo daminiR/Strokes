@@ -108,12 +108,12 @@ const en = {
   signUpScreen: {
     signIn: "Sign Up",
     enterDetails:
-      "Swipe, match, and rally! Dive into the squash scene with our app for finding friends to the hit the court with. From rookies to pros, its all about making connections and having a blast on the squash court!",
+      "Swipe, match, and rally! Dive into the squash scene with our app for finding friends to the hit the court with.",
     //gender input
     genderFieldLabel: "Gender",
     //squash level
     neighborhoodFieldLabel: "Neighborhood",
-    descriptionFieldLabel: "Description",
+    descriptionFieldLabel: "Share your squash story!",
     firstNameFieldLabel: "First Name",
     lastNameFieldLabel: "Last Name",
     phoneFieldLabel: "Phone",
