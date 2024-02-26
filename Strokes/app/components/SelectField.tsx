@@ -99,7 +99,7 @@ export const SelectField = forwardRef(function SelectField(
   return (
     <>
       <TouchableOpacity activeOpacity={1} onPress={presentOptions}>
-        <View pointerEvents="none">
+        <View style={{marginBottom: spacing.lg}} pointerEvents="none">
           <TextField
             {...TextFieldProps}
             value={valueString}

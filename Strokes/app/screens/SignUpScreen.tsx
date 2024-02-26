@@ -1,7 +1,8 @@
 import { observer } from "mobx-react-lite"
-import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
-import { TextInput, TextStyle, ViewStyle, View} from "react-native"
-import { Button, Icon, Screen, Text, TextField, SelectField, Toggle, TextFieldAccessoryProps } from "../components"
+import React, {useEffect, useRef, useState, useMemo} from "react"
+import { isRTL, translate, TxKeyPath } from "../i18n"
+import { TextInput, TextStyle, ViewStyle, View } from "react-native"
+import { Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
@@ -10,49 +11,46 @@ interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
 
 export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScreen(_props) {
   const authPasswordInput = useRef<TextInput>(null)
-
-
-  const [authPassword, setAuthPassword] = useState("")
+  const { userStore, authenticationStore } = useStores()
+  useEffect(() => {
+    // Pre-fill logic if necessary
+    return () => userStore.reset()
+  }, [userStore])
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
-  const [value, setValue] = useState(false)
-   const [selectedTeam, setSelectedTeam] = useState<string[]>([]);
-  const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
-  const {
-    authenticationStore: { authEmail, setAuthEmail, setAuthToken, validationError },
-  } = useStores()
-
+  const [selectedTeam, setSelectedTeam] = useState<string[]>([])
+  const tx = "Genders.gender"
+  const i18nText = tx && translate(tx)
+  console.log(i18nText)
+  const error =  ""
   useEffect(() => {
     // Here is where you could fetch credentials from keychain or storage
     // and pre-fill the form fields.
-    setAuthEmail("ignite@infinite.red")
-    setAuthPassword("ign1teIsAwes0m3")
+    //setAuthEmail("ignite@infinite.red")
+    //setAuthPassword("ign1teIsAwes0m3")
 
     // Return a "cleanup" function that React will run when the component unmounts
     return () => {
-      setAuthPassword("")
-      setAuthEmail("")
+      //setAuthPassword("")
+      //setAuthEmail("")
     }
   }, [])
-
-  const error = isSubmitted ? validationError : ""
 
   function login() {
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
 
-    if (validationError) return
+    //if (validationError) return
 
-    // Make a request to your server to get an authentication token.
-    // If successful, reset the fields and set the token.
-    setIsSubmitted(false)
-    setAuthPassword("")
-    setAuthEmail("")
-
-    // We'll mock this with a fake token.
-    setAuthToken(String(Date.now()))
+    // Reset fields and set the token on successful login
+    //setAuthToken(String(Date.now()))
+    //resetFields()
+    //
   }
+  const setGender = (gender) => {
+    userStore.setGender(gender);
+  };
 
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
     () =>
@@ -81,13 +79,13 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       {attemptsCount > 2 && <Text tx="signUpScreen.hint" size="sm" weight="light" style={$hint} />}
 
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={userStore.phoneNumber ?? undefined}
+        onChangeText={userStore.setPhoneNumber}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="tel-device"
         autoCorrect={false}
-        keyboardType="email-address"
+        keyboardType="number-pad"
         labelTx="signUpScreen.phoneFieldLabel"
         placeholderTx="signUpScreen.phoneFieldLabel"
         helper={error}
@@ -96,8 +94,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       />
 
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={userStore.email ?? undefined}
+        onChangeText={userStore.setEmail}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="email"
@@ -110,8 +108,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={userStore.firstName ?? undefined}
+        onChangeText={userStore.setFirstName}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="name"
@@ -125,8 +123,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       />
 
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={userStore.lastName ?? undefined}
+        onChangeText={userStore.setLastName}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="name"
@@ -139,24 +137,9 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="name"
-        autoCorrect={false}
-        keyboardType="default"
-        labelTx="signUpScreen.genderFieldLabel"
-        placeholderTx="signUpScreen.genderFieldLabel"
-        helper={error}
-        status={error ? "error" : undefined}
-        onSubmitEditing={() => authPasswordInput.current?.focus()}
-      />
-
-      <TextField
         ref={authPasswordInput}
-        value={authPassword}
-        onChangeText={setAuthPassword}
+        value={userStore.authPassword ?? undefined}
+        onChangeText={userStore.setAuthPassword}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="password"
@@ -167,65 +150,31 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         onSubmitEditing={login}
         RightAccessory={PasswordRightAccessory}
       />
-      <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="name"
-        autoCorrect={false}
-        keyboardType="default"
-        labelTx="signUpScreen.lastNameFieldLabel"
-        placeholderTx="signUpScreen.lastNameFieldLabel"
-        helper={error}
-      />
-      <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="name"
-        autoCorrect={false}
-        keyboardType="default"
-        labelTx="signUpScreen.neighborhoodFieldLabel"
-        placeholderTx="signUpScreen.neighborhoodFieldLabel"
-        helper={error}
-      />
       <SelectField
         label="Where do you squash?"
-        helper="Select your squash city"
         placeholder="e.g. Boston"
         value={selectedTeam}
         onSelect={setSelectedTeam}
         tx={"neighborhoods.cities"}
         multiple={false}
-        containerStyle={{ marginBottom: spacing.large }}
+        containerStyle={{ marginBottom: spacing.lg }}
       />
-
-      <View style={{ flexDirection: "row", width: "100%" }}>
-        <View style={{ flex: 1 }}>
+      <View style={$inputWrapperStyle}>
+        {i18nText.map(({key, text})=> (
           <Toggle
             {..._props}
-            helperTx="genderField.genderMaleFieldLabel"
+            key={key}
+            helperTx={`genderField.gender${text}FieldLabel`}
             variant="radio"
-            value={value}
-            onPress={() => setValue(!value)}
+            value={userStore.gender === key}
+            onPress={() => setGender(key)}
           />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Toggle
-            {..._props}
-            helperTx="genderField.genderFemaleFieldLabel"
-            variant="radio"
-            value={value}
-            onPress={() => setValue(!value)}
-          />
-        </View>
+        ))}
       </View>
 
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={userStore.description ?? undefined}
+        onChangeText={userStore.setDescription}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="name"
@@ -236,7 +185,6 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         placeholderTx="signUpScreen.descriptionFieldLabel"
         helper={error}
       />
-
       <Button
         testID="login-button"
         tx="signUpScreen.tapToSignIn"
@@ -272,4 +220,13 @@ const $textField: ViewStyle = {
 
 const $tapButton: ViewStyle = {
   marginTop: spacing.xs,
+}
+const $inputWrapperStyle: ViewStyle = {
+  marginBottom: spacing.lg,
+  flexDirection: "row", // Aligns children side by side
+  justifyContent: "space-around", // Distributes children evenly with space around them
+  alignItems: "center", // Centers children vertically in the container
+  flexWrap: "wrap", // Allows items to wrap to the next line if the container is too narrow
+  backgroundColor: colors.palette.neutral200,
+  overflow: "hidden",
 }
