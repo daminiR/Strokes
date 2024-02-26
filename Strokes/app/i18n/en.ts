@@ -1,9 +1,10 @@
-export const teams = [
-  { label: "Celtics", value: "BOS" },
-  { label: "Jazz", value: "UTA" },
-  { label: "Wizards", value: "WAS" },
-]
 const en = {
+  Genders: {
+    gender: [
+      { key: "male", text: "Male" },
+      { key: "female", text: "Female" },
+    ],
+  },
   neighborhoods: {
     cities: [
       { label: "Amherst", value: "amherst" },
