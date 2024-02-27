@@ -1,4 +1,5 @@
 export * from "./AutoImage"
+export * from "./ImagePickerWall"
 export * from "./Button"
 export * from "./Card"
 export * from "./Header"

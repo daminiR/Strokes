@@ -18,7 +18,6 @@ export interface TextFieldAccessoryProps {
   multiline: boolean
   editable: boolean
 }
-
 export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
   /**
    * A style modifier for different input states.
