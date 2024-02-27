@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "app/*": ["./app/*"],
-      "assets/*": ["./assets/*"]
+      "assets/*": ["./assets/*"],
+      "@graphQL": ["./app/graphQL/index.ts"],
     }
   },
   "extends": "expo/tsconfig.base",

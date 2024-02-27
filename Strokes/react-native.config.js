@@ -11,6 +11,11 @@ module.exports = {
   // Remove when FlashList fully supports the new architecture.
   // https://github.com/Shopify/flash-list/pull/550
   //
+  env: {
+    development: '.env.development',
+    staging: '.env.staging',
+    production: '.env.production',
+  },
   project: {
     android: {
       unstable_reactLegacyComponentNames: ["CellContainer", "AutoLayoutView"],

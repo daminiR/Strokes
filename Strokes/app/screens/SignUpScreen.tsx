@@ -1,8 +1,10 @@
 import { observer } from "mobx-react-lite"
+import Config from 'react-native-config';
+import { navigate, goBack} from "../navigators"
 import React, {useEffect, useRef, useState, useMemo} from "react"
 import { isRTL, translate, TxKeyPath } from "../i18n"
 import { TextInput, TextStyle, ViewStyle, View } from "react-native"
-import { Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
+import { Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
@@ -22,14 +24,12 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   const [selectedTeam, setSelectedTeam] = useState<string[]>([])
   const tx = "Genders.gender"
   const i18nText = tx && translate(tx)
-  console.log(i18nText)
   const error =  ""
   useEffect(() => {
     // Here is where you could fetch credentials from keychain or storage
     // and pre-fill the form fields.
     //setAuthEmail("ignite@infinite.red")
     //setAuthPassword("ign1teIsAwes0m3")
-
     // Return a "cleanup" function that React will run when the component unmounts
     return () => {
       //setAuthPassword("")
@@ -40,11 +40,12 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   function login() {
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
+    authenticationStore.signUp()
+    navigate('VerificationSignUp', {})
 
     //if (validationError) return
 
     // Reset fields and set the token on successful login
-    //setAuthToken(String(Date.now()))
     //resetFields()
     //
   }
@@ -74,6 +75,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
+      <Header leftIcon= {"back"} onLeftPress={() => goBack()}/>
       <Text testID="login-heading" tx="signUpScreen.signIn" preset="heading" style={$signIn} />
       <Text tx="signUpScreen.enterDetails" preset="subheading" style={$enterDetails} />
       {attemptsCount > 2 && <Text tx="signUpScreen.hint" size="sm" weight="light" style={$hint} />}
@@ -119,7 +121,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         placeholderTx="signUpScreen.firstNameFieldLabel"
         helper={error}
         status={error ? "error" : undefined}
-        onSubmitEditing={() => authPasswordInput.current?.focus()}
+        //onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
 
       <TextField
@@ -134,7 +136,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         placeholderTx="signUpScreen.lastNameFieldLabel"
         helper={error}
         status={error ? "error" : undefined}
-        onSubmitEditing={() => authPasswordInput.current?.focus()}
+        //onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
       <TextField
         ref={authPasswordInput}
