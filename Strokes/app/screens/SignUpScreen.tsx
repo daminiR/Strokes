@@ -4,7 +4,7 @@ import { navigate, goBack} from "../navigators"
 import React, {useEffect, useRef, useState, useMemo} from "react"
 import { isRTL, translate, TxKeyPath } from "../i18n"
 import { TextInput, TextStyle, ViewStyle, View } from "react-native"
-import { Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
+import { ImagePickerWall, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
@@ -75,6 +75,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
+      <ImagePickerWall/>
       <Header leftIcon= {"back"} onLeftPress={() => goBack()}/>
       <Text testID="login-heading" tx="signUpScreen.signIn" preset="heading" style={$signIn} />
       <Text tx="signUpScreen.enterDetails" preset="subheading" style={$enterDetails} />
