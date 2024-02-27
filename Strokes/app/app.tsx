@@ -22,6 +22,7 @@ import { useFonts } from "expo-font"
 import React from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import * as Linking from "expo-linking"
+import { ApolloProvider } from '@apollo/client';
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary"
@@ -31,6 +32,7 @@ import Config from "./config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import { ViewStyle } from "react-native"
+import client from './services/api/apollo-client';
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
@@ -101,17 +103,19 @@ function App(props: AppProps) {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <ErrorBoundary catchErrors={Config.catchErrors}>
-            <GestureHandlerRootView style={$container}>
-              <AppNavigator
-                linking={linking}
-                initialState={initialNavigationState}
-                onStateChange={onNavigationStateChange}
-              />
-            </GestureHandlerRootView>
-          </ErrorBoundary>
-        </BottomSheetModalProvider>
+        <ApolloProvider client={client}>
+          <BottomSheetModalProvider>
+            <ErrorBoundary catchErrors={Config.catchErrors}>
+              <GestureHandlerRootView style={$container}>
+                <AppNavigator
+                  linking={linking}
+                  initialState={initialNavigationState}
+                  onStateChange={onNavigationStateChange}
+                />
+              </GestureHandlerRootView>
+            </ErrorBoundary>
+          </BottomSheetModalProvider>
+        </ApolloProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   )

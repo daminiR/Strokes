@@ -105,6 +105,18 @@ const en = {
     tapToSignIn: "Tap to sign in!",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
+  Hello: {
+    title:"Hello",
+    enterDetails: "Welcome to Strokes. Do you want to sign in or sign up?",
+    signIn: "Sign In",
+    signUp: "Sign Up",
+  },
+  VerificationSignUpScreen: {
+    enterDetails: "We sent you a secret code on your phone, it will help us know you're real!",
+    verificationCode: "Secret Code",
+    tapToVerify: "Verify",
+    title:"Verify Code"
+  },
   signUpScreen: {
     signIn: "Sign Up",
     enterDetails:
