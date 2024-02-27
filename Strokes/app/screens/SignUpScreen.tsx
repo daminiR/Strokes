@@ -37,6 +37,10 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     }
   }, [])
 
+   const handleImagesUpdate = (images: ImageData[]) => {
+    userStore.setImageFiles(images); // Assuming your store has a method to update image files
+  };
+
   function login() {
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
@@ -75,7 +79,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <ImagePickerWall/>
+        <ImagePickerWall onImagesUpdate={handleImagesUpdate} />
       <Header leftIcon= {"back"} onLeftPress={() => goBack()}/>
       <Text testID="login-heading" tx="signUpScreen.signIn" preset="heading" style={$signIn} />
       <Text tx="signUpScreen.enterDetails" preset="subheading" style={$enterDetails} />
