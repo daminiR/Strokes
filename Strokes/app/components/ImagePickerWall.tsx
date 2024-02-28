@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { colors, spacing } from "../theme"
 import { View, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -77,22 +78,23 @@ export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   scrollView: {
     marginTop: 10,
   },
   imageRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   imageContainer: {
     width: 100,
     height: 100,
     marginRight: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#e1e4e8',
+    marginBottom: spacing.lg,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#e1e4e8",
     borderRadius: 10,
   },
   image: {
@@ -104,16 +106,16 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   deleteButton: {
-    position: 'absolute',
+    position: "absolute",
     right: 5,
     top: 5,
-    backgroundColor: 'red',
+    backgroundColor: "red",
     borderRadius: 15,
     width: 25,
     height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-});
+})
 
 

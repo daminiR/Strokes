@@ -38,6 +38,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   }, [])
 
    const handleImagesUpdate = (images: ImageData[]) => {
+     console.log(images)
     userStore.setImageFiles(images); // Assuming your store has a method to update image files
   };
 
@@ -79,11 +80,13 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-        <ImagePickerWall onImagesUpdate={handleImagesUpdate} />
-      <Header leftIcon= {"back"} onLeftPress={() => goBack()}/>
+      <Header leftIcon={"back"} onLeftPress={() => goBack()} />
       <Text testID="login-heading" tx="signUpScreen.signIn" preset="heading" style={$signIn} />
       <Text tx="signUpScreen.enterDetails" preset="subheading" style={$enterDetails} />
       {attemptsCount > 2 && <Text tx="signUpScreen.hint" size="sm" weight="light" style={$hint} />}
+
+      <Text tx="signUpScreen.ImagePickerLabel" preset="formLabel" style={$enterDetails} />
+      <ImagePickerWall onImagesUpdate={handleImagesUpdate} />
 
       <TextField
         value={userStore.phoneNumber ?? undefined}
@@ -167,7 +170,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         containerStyle={{ marginBottom: spacing.lg }}
       />
       <View style={$inputWrapperStyle}>
-        {i18nText.map(({key, text})=> (
+        {i18nText.map(({ key, text }) => (
           <Toggle
             {..._props}
             key={key}

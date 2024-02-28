@@ -48,6 +48,7 @@
     "amazon-cognito-identity-js": "^6.3.7",
     "apisauce": "3.0.1",
     "apollo-link-context": "^1.0.20",
+    "apollo-upload-client": "^18.0.1",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",

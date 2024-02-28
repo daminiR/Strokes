@@ -1,8 +1,21 @@
 import { types, flow } from 'mobx-state-tree';
 import { gql } from '@apollo/client';
 import client from '../services/api/apollo-client';
+import {ReactNativeFile, File} from 'apollo-upload-client'
 import { getRootStore } from './helpers/getRootStore';
 import * as graphQL from '@graphQL'
+import mime from 'mime-types';
+
+const convertImagesToRNFiles = (images, namePrefix) => images.map((imageObj, index) => {
+  const uri = imageObj.imageURL;
+  const file = uri ? new ReactNativeFile({
+    uri,
+    type: mime.lookup(uri) || 'image', // Default to 'image' if MIME type can't be determined
+    name: `${namePrefix}-${index}`, // Construct name using namePrefix and index for uniqueness
+  }) : null;
+
+  return { file, img_idx: imageObj.img_idx };
+});
 
 interface UserData {
   phoneNumber: string;
@@ -26,13 +39,14 @@ const MongoDBStore = types
     createUserInMongoDB: flow(function* createUser() {
       try {
         const userStore = getRootStore(self).userStore
+        console.log(userStore.imageFiles)
         const response = yield client.mutate({
           mutation: graphQL.ADD_PROFILE2,
           variables: {
             phoneNumber: userStore.phoneNumber,
             email: userStore.email,
             _id: userStore._id,
-            //image_set: rnfiles,
+            image_set: userStore.imageFiles,
             first_name: userStore.firstName,
             last_name: userStore.lastName,
             age: 33,
