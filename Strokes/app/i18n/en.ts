@@ -122,6 +122,7 @@ const en = {
     enterDetails:
       "Swipe, match, and rally! Dive into the squash scene with our app for finding friends to the hit the court with.",
     //gender input
+    ImagePickerLabel: "Personalize your profile with photos!",
     genderFieldLabel: "Gender",
     //squash level
     neighborhoodFieldLabel: "Neighborhood",

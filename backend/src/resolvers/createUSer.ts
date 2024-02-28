@@ -31,6 +31,7 @@ export const resolvers = {
         newUserToken,
       } = sanitize(unSanitizedData);
 
+      // TODO: to come back to altering this upload to s3 function
       const data_set = await createAWSUpload(image_set, _id);
       const doc = await Squash.create({
         _id: _id,
