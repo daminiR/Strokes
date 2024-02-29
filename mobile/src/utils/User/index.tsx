@@ -8,9 +8,7 @@ import _ from 'lodash'
     )
     return RNFiles
   }
- const registerOnMongoDb = async (values, _id, createSquash2, token, client) => {
-  console.log("do we make it here")
-  console.log("what values")
+const registerOnMongoDb = async (values, _id, createSquash2, token, client) => {
   const rnfiles = convertImagesToFormat(values.image_set, _id)
     await createSquash2({
       variables: {

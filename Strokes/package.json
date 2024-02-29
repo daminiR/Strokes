@@ -45,6 +45,7 @@
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.0.2",
     "@shopify/flash-list": "^1.6.3",
+    "@types/apollo-upload-client": "^18.0.0",
     "amazon-cognito-identity-js": "^6.3.7",
     "apisauce": "3.0.1",
     "apollo-link-context": "^1.0.20",

@@ -1,7 +1,7 @@
 import { types, flow } from 'mobx-state-tree';
 import { gql } from '@apollo/client';
 import client from '../services/api/apollo-client';
-import {ReactNativeFile, File} from 'apollo-upload-client'
+import {ReactNativeFile, File} from '@types/apollo-upload-client'
 import { getRootStore } from './helpers/getRootStore';
 import * as graphQL from '@graphQL'
 import mime from 'mime-types';
