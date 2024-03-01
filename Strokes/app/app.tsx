@@ -33,6 +33,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import { ViewStyle } from "react-native"
 import client from './services/api/apollo-client';
+import urql from './services/api/urql';
+import { Provider } from 'urql';
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
@@ -103,7 +105,7 @@ function App(props: AppProps) {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <ApolloProvider client={client}>
+        <Provider value={client}>
           <BottomSheetModalProvider>
             <ErrorBoundary catchErrors={Config.catchErrors}>
               <GestureHandlerRootView style={$container}>
@@ -115,7 +117,7 @@ function App(props: AppProps) {
               </GestureHandlerRootView>
             </ErrorBoundary>
           </BottomSheetModalProvider>
-        </ApolloProvider>
+        </Provider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   )
