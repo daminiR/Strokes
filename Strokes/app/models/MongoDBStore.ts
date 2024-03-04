@@ -70,7 +70,7 @@ const MongoDBStore = types
           variables: {
             phoneNumber: userStore.phoneNumber,
             email: userStore.email,
-            _id: userStore._id,
+            _id: "userStore._id",
             image_set: rnfiles,
             first_name: userStore.firstName,
             last_name: userStore.lastName,
