@@ -14,12 +14,37 @@ interface VerificationSignUpScreenProps extends AppStackScreenProps<"Verificatio
 export const VerificationSignUpScreen: FC<VerificationSignUpScreenProps> = observer(function VerificationSignUpScreen(_props) {
 
   const { mongoDBStore, userStore, authenticationStore } = useStores()
+  const [error, setError] = useState<string | null>(null)
   useEffect(() => {
     // Pre-fill logic if necessary
     return () => userStore.reset()
   }, [userStore])
   function verify() {
-    mongoDBStore.createUserInMongoDB()
+  authenticationStore
+    .confirmRegistration()
+    .then(() => {
+      // Handle successful verification, e.g., navigate to the next screen
+    })
+    .catch((error) => {
+      // Now, error contains the message thrown from confirmRegistration
+      console.error("Verification failed:", error.message || error)
+      // Set the error state here to display the error message in your component
+      setError(error.message || "An unknown error occurred")
+    })
+}
+  function sendCode() {
+    authenticationStore
+      .sendConfirmationCode()
+      .then(() => {
+        // Handle successful verification, e.g., navigate to the next screen
+        console.log("succesful")
+      })
+      .catch((error) => {
+        // Now, error contains the message thrown from confirmRegistration
+        console.error("Verification failed:", error.message || error)
+        // Set the error state here to display the error message in your component
+        setError(error.message || "An unknown error occurred")
+      })
   }
 
   return (
@@ -42,9 +67,16 @@ export const VerificationSignUpScreen: FC<VerificationSignUpScreenProps> = obser
         keyboardType="number-pad"
         labelTx="VerificationSignUpScreen.verificationCode"
         placeholderTx="VerificationSignUpScreen.verificationCode"
-        //helper={error}
-        //status={error ? "error" : undefined}
+        helper={error}
+        status={error ? "error" : undefined}
         //onSubmitEditing={() => authPasswordInput.current?.focus()}
+      />
+      <Button
+        testID="login-button"
+        tx="VerificationSignUpScreen.tapToResendCode"
+        style={$tapButton}
+        preset="reversed"
+        onPress={sendCode}
       />
       <Button
         testID="login-button"

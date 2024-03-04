@@ -52,25 +52,12 @@ const MongoDBStore = types
         const userStore = getRootStore(self).userStore
         const file = userStore.imageFiles
         rnfiles = createReactNativeFile(file)
-        //rnfile = new ReactNativeFile({
-          //uri: file[0].uri,
-          //type: "image/jpg", // Adjust type based on actual file type or metadata if available
-          //name: `pic-.jpg`, // Example naming convention
-        //})
-
-        //console.log(rnfiles)
-        //const response = yield client.mutate({
-          //mutation: graphQL.UPLOADIMAGE,
-         //variables: {
-            //image: rnfile,
-          //},
-        //})
         const response = yield client.mutate({
           mutation: graphQL.ADD_PROFILE2,
           variables: {
             phoneNumber: userStore.phoneNumber,
             email: userStore.email,
-            _id: "userStore._id",
+            _id: userStore._id,
             image_set: rnfiles,
             first_name: userStore.firstName,
             last_name: userStore.lastName,

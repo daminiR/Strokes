@@ -60,7 +60,7 @@ export const UserStoreModel = types
       self._id = _id
     },
     reset() {
-      self._id = ""
+      //self._id = ""
       //self.authPassword = ""
       //self.firstName = ""
       //self.lastName = ""
@@ -82,58 +82,77 @@ export const AuthenticationStoreModel = types
   .model("AuthenticationStoreModel", {
     user: types.maybeNull(UserStoreModel),
     isLoading: types.maybeNull(types.boolean),
+    isAuthenticated: types.maybeNull(types.boolean),
     verificationPhoneCode: types.maybeNull(types.string),
     error: types.maybeNull(types.string),
   })
   .actions((self) => ({
-    signUp: flow(function* signUp() {
-      const userStore = getRootStore(self).userStore
-      console.log(process.env.REACT_APP_USER_POOL_ID3)
+    setIsAuthenticated(isAuthenticated: Boolean) {
+      self.isAuthenticated = isAuthenticated
+    },
+    signUp: flow(function* () {
+      const userStore = getRoot(self).userStore
+
       try {
         const attributeList = [
           new CognitoUserAttribute({ Name: "email", Value: userStore.email }),
           new CognitoUserAttribute({ Name: "phone_number", Value: userStore.phoneNumber }),
           new CognitoUserAttribute({ Name: "gender", Value: userStore.gender }),
         ]
-        // Convert userPool.signUp to a Promise that can be used with yield
+
         const signUpResult = yield new Promise((resolve, reject) => {
           userPool.signUp(
             userStore.phoneNumber,
             userStore.authPassword,
             attributeList,
-            [],
-            (err: unknown, result: unknown) => {
+            null,
+            async (err, result) => {
               if (err) {
-                console.error("Error signing up:", err)
-                reject(err)
+                if (err.code === "UsernameExistsException") {
+                  // Instantiate CognitoUser and AuthenticationDetails
+                  const cognitoUser = new CognitoUser({
+                    Username: userStore.phoneNumber,
+                    Pool: userPool,
+                  })
+                  const authenticationDetails = new AuthenticationDetails({
+                    Username: userStore.phoneNumber,
+                    Password: userStore.authPassword,
+                  })
+
+                  // Attempt to authenticate the user
+                  cognitoUser.authenticateUser(authenticationDetails, {
+                    onSuccess: (authResult) => {
+                      // User is authenticated, check if they are confirmed
+                      cognitoUser.getUserData((userDataErr, userData) => {
+                        if (userDataErr) {
+                          reject(userDataErr)
+                        } else {
+                          const isConfirmed = userData.UserStatus === "CONFIRMED"
+                          reject(err)
+                          //resolve({ userConfirmed: isConfirmed, userData })
+                        }
+                      })
+                    },
+                    onFailure: (authErr) => {
+                      // Authentication failed, handle accordingly
+                      reject(authErr)
+                    },
+                  })
+                } else {
+                  reject(err)
+                }
               } else {
-                //set id
-                console.log("User authorized")
-                resolve(result)
+                userStore.setID(result?.userSub)
+                resolve({ userConfirmed: true, result })
               }
             },
           )
         })
-        userStore.setID(signUpResult.userSub)
-        yield self.sendConfirmationCode()
-        try {
-          //const mongoDBStore = getRootStore(self).mongoDBStore
-          //const mongoDBResponse = yield mongoDBStore.createUserInMongoDB()
-          //console.log("User created in MongoDB:", mongoDBResponse)
-          //self.setUser(signUpResult.user)
-          //self.setError(null)
-        } catch (mongoErr) {
-          console.error("Error creating user in MongoDB:", mongoErr)
-          // Handle MongoDB creation error
-          //self.setError(mongoErr.message || 'Error creating user in MongoDB');
-          // Clean-up logic if needed...
-          //yield self.deleteCognitoUser(signUpData.phoneNumber);
-          throw mongoErr
-        }
       } catch (error) {
-        //console.error('Error during the sign-up process:', error);
-        //self.setError(error.message || 'Error during the sign-up process');
-        // Handle error, potentially cleanup
+        // Handle error
+        console.error("Error during the signUp process:", error)
+        throw error
+        // Optionally set error state or navigate based on error type
       }
     }),
     authenticateUser: flow(function* (username, password) {
@@ -154,10 +173,10 @@ export const AuthenticationStoreModel = types
         const result = yield new Promise((resolve, reject) => {
           cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: (result) => {
-              AWS.config.region = "<region>" // Specify the AWS region
+              //AWS.config.region = "" // Specify the AWS region
 
               AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-                IdentityPoolId: "YOUR_IDENTITY_POOL_ID", // Your identity pool id here
+                IdentityPoolId: process.env.REACT_APP_USER_POOL_ID3,
                 Logins: {
                   [`cognito-idp.<region>.amazonaws.com/${poolData.UserPoolId}`]: result
                     .getIdToken()
@@ -189,40 +208,30 @@ export const AuthenticationStoreModel = types
         throw error // Or handle it as needed within your app
       }
     }),
-    sendConfirmationCode: flow(function* sendConfirmationCode() {
-      const userStore = getRootStore(self).userStore
-      yield self.authenticateUser()
+    sendConfirmationCode: flow(function* sendConfirmationCode(phoneNumber, password) {
+      // Assuming userPool is already defined and accessible
+      const userStore = getRoot(self).userStore
       const cognitoUser = new CognitoUser({
         Username: userStore.phoneNumber,
         Pool: userPool,
       })
+      cognitoUser.resendConfirmationCode(function(err, result) {
+	if (err) {
+    alert(err.message || JSON.stringify(err))
+    return
+  }
+	console.log('call result: ' + result);
+});
 
-      try {
-        yield new Promise((resolve, reject) => {
-          cognitoUser.getAttributeVerificationCode("email", {
-            onSuccess() {
-              console.log("Verification code sent successfully.")
-              resolve({})
-            },
-            onFailure(err) {
-              console.error("Failed to send verification code:", err)
-              reject(err)
-            },
-          })
-        })
-      } catch (error) {
-        console.error("Error sending confirmation code:", error)
-        throw error // Or handle it as needed
-      }
     }),
+
     confirmRegistration: flow(function* () {
       const userStore = getRoot(self).userStore
       const mongoDBStore = getRoot(self).mongoDBStore
-      // userStore should have the necessary user details
 
       var userData = {
         Username: userStore.phoneNumber,
-        Pool: userPool,
+        Pool: userPool, // Ensure userPool is defined and accessible
       }
       var cognitoUser = new CognitoUser(userData)
 
@@ -230,29 +239,27 @@ export const AuthenticationStoreModel = types
         const confirmationResult = yield new Promise((resolve, reject) => {
           cognitoUser.confirmRegistration(self.verificationPhoneCode, true, (err, result) => {
             if (err) {
-              reject(err)
+              reject(new Error(err.message || "Confirmation failed"))
             } else {
               resolve(result)
             }
           })
         })
+        console.log("usersub", cognitoUser)
+
         console.log("Confirmation successful:", confirmationResult)
 
-        // Assuming successful confirmation, now create user in MongoDB
-        const userDataToSave = {
-          username: userStore.username,
-          email: userStore.email,
-          phoneNumber: userStore.phoneNumber,
-          // Add other details as necessary
-        }
-
-        const mongoResult = yield mongoDBStore.createUserInMongoDB()
-        console.log("User created in MongoDB successfully:", mongoResult)
+        // If confirmation is successful, proceed with MongoDB user creation
+        const mongoResult = yield mongoDBStore.createUserInMongoDB(userStore.userData) // Ensure you're passing the correct data
+        // set authentication to true
+        self.setIsAuthenticated(true)
+        return mongoResult // Return MongoDB result or confirmation result as needed
       } catch (error) {
         console.error(
           "An error occurred during the confirmation or MongoDB user creation process:",
-          error,
+          error.message || error,
         )
+        throw error // Rethrow the error to be caught by the verify function
       }
     }),
     setVerificationPhoneCode(code: number) {

@@ -20,13 +20,6 @@ export const HelloScreen: FC<HelloScreenProps> = observer(function HelloScreen(_
   }, [userStore])
   function login() {
     console.log("logged")
-    //authenticationStore.signUp()
-
-    //if (validationError) return
-
-    // Reset fields and set the token on successful login
-    //resetFields()
-    //
   }
 
   return (

@@ -115,6 +115,7 @@ const en = {
     enterDetails: "We sent you a secret code on your phone, it will help us know you're real!",
     verificationCode: "Secret Code",
     tapToVerify: "Verify",
+    tapToResendCode: "Resend Code",
     title:"Verify Code"
   },
   signUpScreen: {
