@@ -4,7 +4,7 @@ import { navigate, goBack} from "../navigators"
 import React, {useEffect, useRef, useState, useMemo} from "react"
 import { isRTL, translate, TxKeyPath } from "../i18n"
 import { TextInput, TextStyle, ViewStyle, View } from "react-native"
-import { ImagePickerWall, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
+import { ImagePickerWall, ImageUploadComponent, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
@@ -37,23 +37,22 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     }
   }, [])
 
-   const handleImagesUpdate = (images: ImageData[]) => {
+const handleImagesUpdate = (images: ImageData[]) => {
      console.log(images)
     userStore.setImageFiles(images); // Assuming your store has a method to update image files
-  };
+  }
 
   function login() {
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
     authenticationStore.signUp()
     navigate('VerificationSignUp', {})
-
     //if (validationError) return
-
     // Reset fields and set the token on successful login
     //resetFields()
     //
   }
+
   const setGender = (gender) => {
     userStore.setGender(gender);
   };
@@ -164,7 +163,10 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         label="Where do you squash?"
         placeholder="e.g. Boston"
         value={selectedTeam}
-        onSelect={setSelectedTeam}
+        onSelect={(result) => {
+          setSelectedTeam(result)
+          userStore.setNeighborhood(result[0])
+        }}
         tx={"neighborhoods.cities"}
         multiple={false}
         containerStyle={{ marginBottom: spacing.lg }}

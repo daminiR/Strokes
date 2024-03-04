@@ -1,4 +1,5 @@
-import { gql, useMutation } from '@apollo/client'
+//import { gql, useMutation } from '@apollo/client'
+import { gql, useMutation } from 'urql';
 
 //mutation UploadFile($files: [Upload!]!, $_id: String!){
 const POST_MESSAGE = gql`
@@ -6,6 +7,7 @@ const POST_MESSAGE = gql`
         postMessage2(sender: $sender, text: $text, receiver: $receiver)
     }
 `
+
 const DELETE_IMAGE = gql`
   mutation DeleteImage($_id: String, $img_idx: Int){
         deleteImage(_id: $_id, img_idx: $img_idx){
@@ -25,13 +27,18 @@ const DELETE_CHAT_USER = gql`
     deleteChatUser(_idUser: $_idUser, _idChatUser: $_idChatUser)
   }
 `;
+const UPLOADIMAGE = gql`
+  mutation UploadImage($image: Upload!) {
+    uploadImage(image: $image)
+  }
+`
 const ADD_PROFILE2 = gql`
   mutation CreateSquash2(
     $_id: String!
     $first_name: String!
     $last_name: String!
     $gender: String!
-    $image_set: [ImageData!]!
+    $image_set: [Upload!]!
     $sports: [SquashNodeInput!]!
     $age: Int!
     $description: String!
@@ -71,11 +78,6 @@ const ADD_PROFILE2 = gql`
       description
       phoneNumber
       email
-      image_set {
-        img_idx
-        imageURL
-        filePath
-      }
     }
   }
 `;
@@ -129,11 +131,13 @@ const UPDATE_USER_PROFILE = gql`
     }
   }
 `;
+
 const UPDATE_USER_SPORTS = gql`
   mutation UpdateUserSports($_id: String!, $sportsList: [SquashNodeInput!]!) {
     updateUserSports(_id: $_id, sportsList: $sportsList)
   }
 `;
+
 const UPDATE_DISLIKES = gql`
   mutation UpdateDislikes($_id: String!, $dislikes: [String!]!, $isFromLikes: Boolean!) {
     updateDislikes(_id: $_id, dislikes: $dislikes, isFromLikes: $isFromLikes)
@@ -295,4 +299,5 @@ export {
   DELETE_CHAT_USER,
   SOFT_DELETE_PROFILE,
   SOFT_UN_DELETE_PROFILE,
+  UPLOADIMAGE,
 };

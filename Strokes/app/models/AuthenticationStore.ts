@@ -3,11 +3,15 @@ import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPo
 //import MongoDBStore from './MongoDBStore';
 import { getRootStore } from './helpers/getRootStore';
 
+const FileType = types.model("FileType", {
+  uri: types.string,
+  type: types.optional(types.string, "image/jpeg"), // Default to 'image/jpeg'
+  name: types.string,
+})
 const ImageDataModel = types.model({
-  imageURL: types.maybeNull(types.string),
+  file: types.maybeNull(types.string),
   img_idx: types.integer,
-  filePath: types.maybeNull(types.string),
-});
+})
 
 // Define a model for User
 export const UserStoreModel = types
@@ -16,7 +20,8 @@ export const UserStoreModel = types
     authPassword: types.maybeNull(types.string),
     phoneNumber: types.maybeNull(types.string),
     email: types.maybeNull(types.string),
-    imageFiles: types.optional(types.array(ImageDataModel), []),
+    //imageFiles: types.optional(types.array(ImageDataModel), []),
+     imageFiles: types.optional(types.array(types.frozen()), []),
     gender: types.optional(types.enumeration("Gender", ["male", "female", "other"]), "other"),
     description: types.maybeNull(types.string),
     firstName: types.maybeNull(types.string),

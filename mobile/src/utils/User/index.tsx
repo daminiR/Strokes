@@ -3,7 +3,7 @@ import _ from 'lodash'
  const convertImagesToFormat = (images, _id) => {
     const RNFiles = images.map(imageObj =>{
        const RNFile = generateRNFile(imageObj.imageURL, _id)
-       return {file: RNFile, img_idx: imageObj.img_idx}
+      return {file: RNFile, img_idx: imageObj.img_idx}
     }
     )
     return RNFiles
