@@ -3,78 +3,78 @@ import { colors, spacing } from "../theme"
 import { View, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { getRootStore } from '../models/helpers/getRootStore';
+
 
 interface ImageData {
-  imageURL: string | null;
+  uri: string | null;
   img_idx: number;
-  filePath: string | null;
+}
+
+interface ImagePickerWallProps {
+  onImagesUpdate: (images: ImageData[]) => void;
 }
 
 export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate }) => {
-    const [images, setImages] = useState<ImageData[]>([
-      { imageURL: null, img_idx: 0, filePath: null },
-      { imageURL: null, img_idx: 1, filePath: null },
-      { imageURL: null, img_idx: 2, filePath: null },
-    ])
+  const [images, setImages] = useState<ImageData[]>([
+    { uri: null, img_idx: 0 },
+    { uri: null, img_idx: 1 },
+    { uri: null, img_idx: 2 },
+  ]);
 
-    const handleChoosePhoto = async (index: number) => {
-      const options = { noData: true }
-      try {
-        const response = await launchImageLibrary(options)
-        if (response.assets && response.assets[0].uri) {
-          const newImage: ImageData = {
-            imageURL: response.assets[0].uri,
-            img_idx: index,
-            filePath: response.assets[0].uri, // Assuming uri is the filePath for demonstration
-          }
-          const updatedImages = images.map((img, imgIndex) => (imgIndex === index ? newImage : img))
-          setImages(updatedImages)
-          onImagesUpdate(updatedImages)
-        }
-      } catch (error) {
-        console.log("Error picking image: ", error)
+  const handleChoosePhoto = async (index: number) => {
+    const options = { noData: true, includeBase64: true}
+    try {
+      const response = await launchImageLibrary()
+      if (response.assets && response.assets[0].uri) {
+        const updatedImages = images.map((img, imgIndex) =>
+          imgIndex === index ? { ...img, uri: response.assets[0].uri} : img,
+        )
+        setImages(updatedImages)
+        onImagesUpdate(updatedImages)
       }
+    } catch (error) {
+      console.log("Error picking image: ", error)
     }
+  };
 
-    const handleDeletePhoto = (indexToDelete: number) => {
-      const updatedImages = images.map((img, imgIndex) =>
-        imgIndex === indexToDelete ? { ...img, imageURL: null, filePath: null } : img,
-      )
-      setImages(updatedImages)
-      onImagesUpdate(updatedImages)
-    }
+  const handleDeletePhoto = (indexToDelete: number) => {
+    const updatedImages = images.map((img, imgIndex) => imgIndex === indexToDelete ? { ...img, uri: null } : img);
+    setImages(updatedImages);
+    onImagesUpdate(updatedImages);
+  };
 
-    return (
-      <View style={styles.container}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollView}>
-          <View style={styles.imageRow}>
-            {images.map((img, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.imageContainer}
-                onPress={() => (img.imageURL ? handleDeletePhoto(index) : handleChoosePhoto(index))}
-              >
-                {img.imageURL ? (
-                  <Image source={{ uri: img.imageURL }} style={styles.image} />
-                ) : (
-                  <Icon name="camera-alt" size={30} color="#000" style={styles.cameraIcon} />
-                )}
-                {img.imageURL && (
-                  <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={() => handleDeletePhoto(index)}
-                  >
-                    <Icon name="close" size={20} color="white" />
-                  </TouchableOpacity>
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
-      </View>
-    )
-  }
+  return (
+    <View style={styles.container}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollView}>
+        <View style={styles.imageRow}>
+          {images.map((img, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.imageContainer}
+              onPress={() => (img.uri ? handleDeletePhoto(index) : handleChoosePhoto(index))}
+            >
+              {img.uri ? (
+                <Image source={{ uri: img.uri }} style={styles.image} />
+              ) : (
+                <Icon name="camera-alt" size={30} color="#000" style={styles.cameraIcon} />
+              )}
+              {img.uri && (
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleDeletePhoto(index)}
+                >
+                  <Icon name="close" size={20} color="white" />
+                </TouchableOpacity>
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
+
+// styles remain unchanged
 
 const styles = StyleSheet.create({
   container: {

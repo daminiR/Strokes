@@ -1,4 +1,5 @@
-import { gql} from '@apollo/client'
+//import { gql} from '@apollo/client'
+import { gql, useMutation } from 'urql';
 
 // something wrong with the way this is written
 const READ_SQUASHES = gql`

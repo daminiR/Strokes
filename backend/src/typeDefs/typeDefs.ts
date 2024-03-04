@@ -118,10 +118,15 @@ export const typeDefs = gql`
 
     postMessage2(sender: String, receiver: String, text: String): ID!
 
+    uploadImage(
+    image: FileUpload!
+    ):Boolean
+
     updateUserProfile(
       _id: String!
       first_name: String!
       last_name: String!
+      image_set: [FileUpload!]!
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
@@ -141,7 +146,7 @@ export const typeDefs = gql`
       sports: [SquashNodeInput!]!
       location: LocationInput!
       description: String!
-      image_set: [ImageData!]!
+      image_set: [FileUpload!]
       matches : [PotentialMatchInput!]
       blocked_me : [PotentialMatchInput!]
       i_blocked : [PotentialMatchInput!]

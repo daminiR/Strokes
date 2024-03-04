@@ -1,6 +1,9 @@
 // src/urqlClient.tsx
-import { createClient, dedupExchange, fetchExchange, Provider } from 'urql';
-import { cacheExchange } from '@urql/exchange-graphcache';
+import { Provider, dedupExchange } from 'urql';
+import { multipartFetchExchange } from '@urql/exchange-multipart-fetch';
+//import { multipartFetchExchange } from '@urql/exchange-multipart-fetch';
+//import { cacheExchange } from '@urql/exchange-graphcache';
+import { createClient, cacheExchange, fetchExchange } from '@urql/core'
 import { authExchange } from '@urql/exchange-auth';
 
 // Simulate retrieving the idToken from storage or state management
@@ -54,14 +57,18 @@ const authConfig = {
   },
 };
 
+
 export const urqlclient = createClient({
   url: process.env.React_App_UriUploadRemote, // Replace with your GraphQL endpoint
   exchanges: [
     dedupExchange,
     cacheExchange,
-    authExchange(authConfig), // Configure the auth exchange using the provided config
+    //authExchange(authConfig), // Configure the auth exchange using the provided config
     fetchExchange,
+    //multipartFetchExchange,
+    //customFetchExchange
   ],
+  //fetch: customFetch,
 });
 
 export const UrqlProvider = ({ children }) => (

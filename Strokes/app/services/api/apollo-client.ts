@@ -1,8 +1,10 @@
-import { ApolloClient, HttpLink, InMemoryCache, ApolloLink } from '@apollo/client';
-import { setContext } from 'apollo-link-context';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { createUploadLink } from 'apollo-upload-client'; // Import createUploadLink
 
-const httpLink = new HttpLink({
-  uri: process.env.React_App_UriUploadRemote, // Replace with your GraphQL endpoint
+// Replace HttpLink with createUploadLink for file upload support
+const uploadLink = createUploadLink({
+  uri: process.env.React_App_UriUploadRemote, // Your GraphQL endpoint
 });
 
 // Simulate retrieving the idToken from storage or state management
@@ -12,7 +14,7 @@ const getIdToken = async () => {
   return 'your_id_token_here'; // Replace with actual token retrieval logic
 };
 
-const authLink: ApolloLink = setContext(async (_, { headers }) => {
+const authLink = setContext(async (_, { headers }) => {
   const token = await getIdToken();
   return {
     headers: {
@@ -23,7 +25,7 @@ const authLink: ApolloLink = setContext(async (_, { headers }) => {
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink), // Chain the auth link with the http link
+  link: authLink.concat(uploadLink), // Use authLink with uploadLink
   cache: new InMemoryCache(),
 });
 

@@ -5,6 +5,7 @@ const generateRandomString = (size) : string => {
     const random_string = '-'.concat(crypto.randomBytes(size).toString('hex'))
     return random_string
 }
+
 export const sanitizeFile = (filename: string,  _uid: string) : string => {
     const curTime = moment().format("YYYYMMDDhhmmss")
     const random_string = generateRandomString(10)
