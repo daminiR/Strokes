@@ -13,6 +13,7 @@ interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
 
 export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScreen(_props) {
   const authPasswordInput = useRef<TextInput>(null)
+  const [signUpError, setSignUpError] = useState<string | null>(null)
   const { userStore, authenticationStore } = useStores()
   useEffect(() => {
     // Pre-fill logic if necessary
@@ -42,16 +43,21 @@ const handleImagesUpdate = (images: ImageData[]) => {
     userStore.setImageFiles(images); // Assuming your store has a method to update image files
   }
 
-  function login() {
-    setIsSubmitted(true)
-    setAttemptsCount(attemptsCount + 1)
-    authenticationStore.signUp()
-    navigate('VerificationSignUp', {})
-    //if (validationError) return
-    // Reset fields and set the token on successful login
-    //resetFields()
-    //
-  }
+  const login = () => {
+  authenticationStore.signUp().then((result) => {
+    // If signUp is successful, navigate to the WelcomeScreen
+      navigate("VerificationSignUp")
+  }).catch((error: any) => {
+    // Check for UsernameExistsException or UserNotConfirmedException
+    if (error && error.code === "UserNotConfirmedException") {
+      navigate("VerificationSignUp")
+    }
+    if (error && error.code === "UsernameExistsException") {
+      setSignUpError(error.message || "An unknown error occurred during the sign-up process.")
+    }
+  });
+};
+
 
   const setGender = (gender) => {
     userStore.setGender(gender);
@@ -195,7 +201,7 @@ const handleImagesUpdate = (images: ImageData[]) => {
         multiline={true}
         labelTx="signUpScreen.descriptionFieldLabel"
         placeholderTx="signUpScreen.descriptionFieldLabel"
-        helper={error}
+        helper={signUpError}
       />
       <Button
         testID="login-button"
@@ -203,6 +209,7 @@ const handleImagesUpdate = (images: ImageData[]) => {
         style={$tapButton}
         preset="reversed"
         onPress={login}
+
       />
     </Screen>
   )
