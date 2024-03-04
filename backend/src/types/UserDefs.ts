@@ -24,6 +24,7 @@ export const DataType = `
     filePath: String!
 `
 export const ImageData = `
+    img_idx: Int!,
     file: FileUpload!
 `
 export const ageRange = `
