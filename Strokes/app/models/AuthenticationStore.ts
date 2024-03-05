@@ -87,6 +87,31 @@ export const AuthenticationStoreModel = types
     error: types.maybeNull(types.string),
   })
   .actions((self) => ({
+    checkCognitoUserSession() {
+      const cognitoUser = userPool.getCurrentUser()
+
+      if (cognitoUser != null) {
+        cognitoUser.getSession(function (err, session) {
+          if (err) {
+            console.error(err)
+            return
+          }
+          if (session.isValid()) {
+            console.log("User is signed in")
+            // Optionally, refresh or retrieve new tokens
+            self.setIsAuthenticated(true)
+          } else {
+            console.log("Session is invalid")
+            self.setIsAuthenticated(false)
+          }
+        })
+      } else {
+        console.log("No current Cognito user")
+        self.setIsAuthenticated(false)
+        // Handle the case where there is no user
+      }
+    },
+
     setIsAuthenticated(isAuthenticated: Boolean) {
       self.isAuthenticated = isAuthenticated
     },
@@ -215,14 +240,13 @@ export const AuthenticationStoreModel = types
         Username: userStore.phoneNumber,
         Pool: userPool,
       })
-      cognitoUser.resendConfirmationCode(function(err, result) {
-	if (err) {
-    alert(err.message || JSON.stringify(err))
-    return
-  }
-	console.log('call result: ' + result);
-});
-
+      cognitoUser.resendConfirmationCode(function (err, result) {
+        if (err) {
+          alert(err.message || JSON.stringify(err))
+          return
+        }
+        console.log("call result: " + result)
+      })
     }),
 
     confirmRegistration: flow(function* () {
@@ -329,15 +353,22 @@ export const AuthenticationStoreModel = types
     }),
 
     signOut: flow(function* signOut() {
-      try {
-        const cognitoUser = userPool.getCurrentUser()
-        if (cognitoUser) {
+      const cognitoUser = userPool.getCurrentUser()
+
+      if (cognitoUser != null) {
+        try {
           cognitoUser.signOut()
+          console.log("User has been signed out.")
+
+          // Optional: Clear any user data from your application state
+          // Perform any additional cleanup or redirection as needed
+        } catch (error) {
+          console.error("An error occurred during sign out:", error)
+          // Handle the sign-out error (e.g., display a notification to the user)
         }
-        self.setUser(null)
-        self.setError(null)
-      } catch (error) {
-        console.error("Error signing out:", error)
+      } else {
+        console.log("No user is currently signed in.")
+        // Optionally, handle the case when no user is signed in (e.g., redirect to sign-in page)
       }
     }),
 

@@ -2,6 +2,7 @@ export * from "./WelcomeScreen"
 
 export * from "./LoginScreen"
 export * from "./SignUpScreen"
+export * from "./SportSwipeScreen"
 export * from "./HelloScreen"
 export * from "./DemoCommunityScreen"
 export * from "./VerificationSignUpScreen"
