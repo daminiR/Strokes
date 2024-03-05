@@ -18,7 +18,7 @@ export const HelloScreen: FC<HelloScreenProps> = observer(function HelloScreen(_
     // Pre-fill logic if necessary
     return () => userStore.reset()
   }, [userStore])
-  function login() {
+    function login() {
     console.log("logged")
   }
 
@@ -44,7 +44,8 @@ export const HelloScreen: FC<HelloScreenProps> = observer(function HelloScreen(_
         tx="Hello.signUp"
         style={$tapButton}
         preset="reversed"
-        onPress={()=>navigate("SignUp")}
+        onPress={()=>
+        navigate("SignUp")}
       />
     </Screen>
   )
