@@ -43,6 +43,10 @@ const handleImagesUpdate = (images: ImageData[]) => {
     userStore.setImageFiles(images); // Assuming your store has a method to update image files
   }
 
+  const test = () => {
+  authenticationStore.setIsAuthenticated(true)
+
+};
   const login = () => {
   authenticationStore.signUp().then((result) => {
     // If signUp is successful, navigate to the WelcomeScreen
@@ -208,7 +212,7 @@ const handleImagesUpdate = (images: ImageData[]) => {
         tx="signUpScreen.tapToSignIn"
         style={$tapButton}
         preset="reversed"
-        onPress={login}
+        onPress={test}
 
       />
     </Screen>
