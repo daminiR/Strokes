@@ -23,7 +23,7 @@ export const SportSwipeScreen: FC<DemoTabScreenProps<"SportSwipe">> = function S
   return (
     <View style={$containerWithFAB}>
       <Screen preset="auto" contentContainerStyle={$container} safeAreaEdges={["top", "bottom"]}>
-        <Header title="Zach" leftIcon="menu" rightIcon="settings" safeAreaEdges={[]} />
+        <Header title="Damini" leftIcon="menu" rightIcon="settings" safeAreaEdges={[]} />
         <View style={$profileImageContainer}>
           <AutoImage
             style={$autoImage}
