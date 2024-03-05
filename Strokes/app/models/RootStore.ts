@@ -1,5 +1,6 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { UserStoreModel, AuthenticationStoreModel } from "./AuthenticationStore"
+import { AuthenticationStoreModel } from "./AuthenticationStore"
+import { UserStoreModel } from "./UserStore"
 import { EpisodeStoreModel } from "./EpisodeStore"
 import MongoDBStore from "./MongoDBStore"
 
