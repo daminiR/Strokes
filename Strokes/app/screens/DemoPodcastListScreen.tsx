@@ -11,6 +11,7 @@ import {
   TextStyle,
   View,
   ViewStyle,
+  Dimensions,
 } from "react-native"
 import { type ContentStyle } from "@shopify/flash-list"
 import Animated, {
@@ -23,6 +24,7 @@ import Animated, {
 import {
   Button,
   ButtonAccessoryProps,
+  PlayerDetails,
   Card,
   EmptyState,
   Icon,
@@ -30,6 +32,7 @@ import {
   Screen,
   Text,
   Toggle,
+  CircularPlayerRatingBar
 } from "../components"
 import { isRTL, translate } from "../i18n"
 import { useStores } from "../models"
@@ -41,9 +44,9 @@ import { openLinkInBrowser } from "../utils/openLinkInBrowser"
 
 const ICON_SIZE = 14
 
-const rnrImage1 = require("../../assets/images/demo/rnr-image-1.png")
-const rnrImage2 = require("../../assets/images/demo/rnr-image-2.png")
-const rnrImage3 = require("../../assets/images/demo/rnr-image-3.png")
+const rnrImage1 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
+const rnrImage2 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
+const rnrImage3 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
 const rnrImages = [rnrImage1, rnrImage2, rnrImage3]
 
 export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = observer(
@@ -82,6 +85,7 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
           refreshing={refreshing}
           estimatedItemSize={177}
           onRefresh={manualRefresh}
+          numColumns={2}
           ListEmptyComponent={
             isLoading ? (
               <ActivityIndicator />
@@ -109,21 +113,6 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
           ListHeaderComponent={
             <View style={$heading}>
               <Text preset="heading" tx="demoPodcastListScreen.title" />
-              {(episodeStore.favoritesOnly || episodeStore.episodesForList.length > 0) && (
-                <View style={$toggle}>
-                  <Toggle
-                    value={episodeStore.favoritesOnly}
-                    onValueChange={() =>
-                      episodeStore.setProp("favoritesOnly", !episodeStore.favoritesOnly)
-                    }
-                    variant="switch"
-                    labelTx="demoPodcastListScreen.onlyFavorites"
-                    labelPosition="left"
-                    labelStyle={$labelStyle}
-                    accessibilityLabel={translate("demoPodcastListScreen.accessibility.switch")}
-                  />
-                </View>
-              )}
             </View>
           }
           renderItem={({ item }) => (
@@ -154,29 +143,6 @@ const EpisodeCard = observer(function EpisodeCard({
     return rnrImages[Math.floor(Math.random() * rnrImages.length)]
   }, [])
 
-  // Grey heart
-  const animatedLikeButtonStyles = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: interpolate(liked.value, [0, 1], [1, 0], Extrapolate.EXTEND),
-        },
-      ],
-      opacity: interpolate(liked.value, [0, 1], [1, 0], Extrapolate.CLAMP),
-    }
-  })
-
-  // Pink heart
-  const animatedUnlikeButtonStyles = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: liked.value,
-        },
-      ],
-      opacity: liked.value,
-    }
-  })
 
   /**
    * Android has a "longpress" accessibility action. iOS does not, so we just have to use a hint.
@@ -218,83 +184,31 @@ const EpisodeCard = observer(function EpisodeCard({
     openLinkInBrowser(episode.enclosure.link)
   }
 
-  const ButtonLeftAccessory: ComponentType<ButtonAccessoryProps> = useMemo(
-    () =>
-      function ButtonLeftAccessory() {
-        return (
-          <View>
-            <Animated.View
-              style={[$iconContainer, StyleSheet.absoluteFill, animatedLikeButtonStyles]}
-            >
-              <Icon
-                icon="heart"
-                size={ICON_SIZE}
-                color={colors.palette.neutral800} // dark grey
-              />
-            </Animated.View>
-            <Animated.View style={[$iconContainer, animatedUnlikeButtonStyles]}>
-              <Icon
-                icon="heart"
-                size={ICON_SIZE}
-                color={colors.palette.primary400} // pink
-              />
-            </Animated.View>
-          </View>
-        )
-      },
-    [],
-  )
-
   return (
     <Card
       style={$item}
       verticalAlignment="force-footer-bottom"
       onPress={handlePressCard}
       onLongPress={handlePressFavorite}
-      HeadingComponent={
-        <View style={$metadata}>
-          <Text
-            style={$metadataText}
-            size="xxs"
-            accessibilityLabel={episode.datePublished.accessibilityLabel}
-          >
-            {episode.datePublished.textLabel}
-          </Text>
-          <Text
-            style={$metadataText}
-            size="xxs"
-            accessibilityLabel={episode.duration.accessibilityLabel}
-          >
-            {episode.duration.textLabel}
-          </Text>
-        </View>
-      }
-      content={`${episode.parsedTitleAndSubtitle.title} - ${episode.parsedTitleAndSubtitle.subtitle}`}
       {...accessibilityHintProps}
-      RightComponent={<Image source={imageUri} style={$itemThumbnail} />}
-      FooterComponent={
-        <Button
-          onPress={handlePressFavorite}
-          onLongPress={handlePressFavorite}
-          style={[$favoriteButton, isFavorite && $unFavoriteButton]}
-          accessibilityLabel={
-            isFavorite
-              ? translate("demoPodcastListScreen.accessibility.unfavoriteIcon")
-              : translate("demoPodcastListScreen.accessibility.favoriteIcon")
-          }
-          LeftAccessory={ButtonLeftAccessory}
-        >
-          <Text
-            size="xxs"
-            accessibilityLabel={episode.duration.accessibilityLabel}
-            weight="medium"
-            text={
-              isFavorite
-                ? translate("demoPodcastListScreen.unfavoriteButton")
-                : translate("demoPodcastListScreen.favoriteButton")
-            }
+      ContentComponent={
+        <View>
+          <Image
+            source={{
+              uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+            }}
+            style={$itemThumbnail}
           />
-        </Button>
+          <View style={$metadata}>
+            <Text
+              style={$metadataText}
+              size="sm"
+              accessibilityLabel={episode.datePublished.accessibilityLabel}
+            >
+              {"Damini, 3.8 "}
+            </Text>
+          </View>
+        </View>
       }
     />
   )
@@ -306,26 +220,36 @@ const $screenContentContainer: ViewStyle = {
 }
 
 const $listContentContainer: ContentStyle = {
-  paddingHorizontal: spacing.lg,
+  paddingHorizontal: spacing.md, // Adjust if necessary to align with the card's horizontal margin
   paddingTop: spacing.lg + spacing.xl,
   paddingBottom: spacing.lg,
-}
+};
 
 const $heading: ViewStyle = {
   marginBottom: spacing.md,
 }
 
+const screenWidth = Dimensions.get('window').width; // Import Dimensions from 'react-native'
+const cardMargin = spacing.md;
+const cardWidth = (screenWidth - (3 * cardMargin)) / 2; // For two columns, considering margin as spacing
 const $item: ViewStyle = {
-  padding: spacing.md,
-  marginTop: spacing.md,
-  minHeight: 120,
-}
-
+  // Remove padding as the content now directly touches the card's edges
+  padding: 0,
+  // Apply a bottom margin to each card for vertical spacing
+  marginBottom: spacing.md,
+  // Apply horizontal margins to create space between cards in a grid or list layout
+  marginHorizontal: spacing.md / 2,
+  // Set a specific height for the card, adjust based on your content needs
+  height: 200, // Example height, adjust this value as necessary
+  // Consider the width if you're using a grid layout (for 2 columns, as an example, you might want to adjust this)
+  width: cardWidth,
+  borderRadius: 10, // Maintain the card's border radius for visual consistency
+};
 const $itemThumbnail: ImageStyle = {
-  marginTop: spacing.sm,
-  borderRadius: 50,
-  alignSelf: "flex-start",
-}
+  width: '100%', // Make the image full width of the card
+  height: '100%', // Adjust the height as needed or keep dynamic
+  borderRadius: 10, // Optional: Adjust or remove if you want sharp corners
+};
 
 const $toggle: ViewStyle = {
   marginTop: spacing.md,
@@ -343,35 +267,22 @@ const $iconContainer: ViewStyle = {
 }
 
 const $metadata: TextStyle = {
-  color: colors.textDim,
-  marginTop: spacing.xs,
-  flexDirection: "row",
-}
+  // Assuming this style is for the container of the metadata
+  position: 'absolute', // Position absolutely within the card, if overlaying text on image
+  bottom: 0, // Align to the bottom of the card
+  left: 0,
+  width: '100%', // Full width
+  backgroundColor: 'rgba(0, 0, 0, 0.8)', // Optional: Add a semi-transparent overlay for better readability
+  paddingHorizontal: spacing.sm, // Inner spacing
+  paddingVertical: spacing.xs,
+  borderBottomLeftRadius: 10, // Match the card's border radius
+  borderBottomRightRadius: 10,
+};
 
 const $metadataText: TextStyle = {
-  color: colors.textDim,
-  marginEnd: spacing.md,
-  marginBottom: spacing.xs,
-}
-
-const $favoriteButton: ViewStyle = {
-  borderRadius: 17,
-  marginTop: spacing.md,
-  justifyContent: "flex-start",
-  backgroundColor: colors.palette.neutral300,
-  borderColor: colors.palette.neutral300,
-  paddingHorizontal: spacing.md,
-  paddingTop: spacing.xxxs,
-  paddingBottom: 0,
-  minHeight: 32,
-  alignSelf: "flex-start",
-}
-
-const $unFavoriteButton: ViewStyle = {
-  borderColor: colors.palette.primary100,
-  backgroundColor: colors.palette.primary100,
-}
-
+  color: '#FFFFFF', // Ensure text color contrasts with the overlay/background
+  // No need for marginBottom if this is the only text
+};
 const $emptyState: ViewStyle = {
   marginTop: spacing.xxl,
 }
