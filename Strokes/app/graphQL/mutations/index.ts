@@ -61,22 +61,6 @@ const ADD_PROFILE2 = gql`
       email: $email
       newUserToken: $newUserToken
     ) {
-      _id
-      first_name
-      last_name
-      age
-      gender
-      sports {
-        sport
-        game_level
-      }
-      location {
-        city
-        state
-        country
-      }
-      description
-      phoneNumber
       email
     }
   }

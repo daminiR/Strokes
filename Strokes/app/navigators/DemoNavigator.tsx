@@ -9,12 +9,14 @@ import { SportSwipeScreen, DemoCommunityScreen, DemoShowroomScreen, DemoDebugScr
 import { DemoPodcastListScreen } from "../screens/DemoPodcastListScreen"
 import { colors, spacing, typography } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
+import {ProfileStack} from "./ProfileNavigator"
 
 export type DemoTabParamList = {
   SportSwipe: undefined
   DemoShowroom: { queryIndex?: string; itemIndex?: string }
   DemoDebug: undefined
   DemoPodcastList: undefined
+  Profile: undefined
 }
 
 /**
@@ -51,6 +53,16 @@ export function DemoNavigator() {
         tabBarItemStyle: $tabBarItem,
       }}
     >
+      <Tab.Screen
+        name="Profile"
+        component={ProfileStack}
+        options={{
+          tabBarLabel: translate("demoNavigator.componentsTab"),
+          tabBarIcon: ({ focused }) => (
+            <Icon icon="components" color={focused ? colors.tint : undefined} size={30} />
+          ),
+        }}
+      />
       <Tab.Screen
         name="DemoShowroom"
         component={DemoShowroomScreen}
