@@ -15,7 +15,7 @@ interface ProfileUpdateProps extends ProfileStackScreenProps<"ProfileUpdate"> {}
 export const ProfileUpdateScreen: FC<ProfileUpdateProps> = function ProfileUpdateScreen(_props) {
   const authPasswordInput = useRef<TextInput>(null)
   const [signUpError, setSignUpError] = useState<string | null>(null)
-  const { userStore, authenticationStore } = useStores()
+  const { userStore, tempUserStore, authenticationStore } = useStores()
   useEffect(() => {
     // Pre-fill logic if necessary
     return () => userStore.reset()
@@ -23,21 +23,19 @@ export const ProfileUpdateScreen: FC<ProfileUpdateProps> = function ProfileUpdat
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
+  const [isHydrated, setIsHydrated] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<string[]>([])
   const tx = "Genders.gender"
   const i18nText = tx && translate(tx)
-  const error =  ""
+  const error = ""
+
   useEffect(() => {
-    // Here is where you could fetch credentials from keychain or storage
-    // and pre-fill the form fields.
-    //setAuthEmail("ignite@infinite.red")
-    //setAuthPassword("ign1teIsAwes0m3")
-    // Return a "cleanup" function that React will run when the component unmounts
-    return () => {
-      //setAuthPassword("")
-      //setAuthEmail("")
-    }
-  }, [])
+    // Set tempStore from user store everytime
+    tempUserStore.hydrateFromUserStore()
+    setIsHydrated(true) // Set isHydrated to true once hydration is complete
+
+    return () => {}
+  }, []) // Ensure this effect runs only once
 
 const handleImagesUpdate = (images: ImageData[]) => {
      console.log(images)
@@ -68,72 +66,56 @@ const handleImagesUpdate = (images: ImageData[]) => {
     userStore.setGender(gender);
   };
 
-  const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
-    () =>
-      function PasswordRightAccessory(props: TextFieldAccessoryProps) {
-        return (
-          <Icon
-            icon={isAuthPasswordHidden ? "view" : "hidden"}
-            color={colors.palette.neutral800}
-            containerStyle={props.style}
-            size={20}
-            onPress={() => setIsAuthPasswordHidden(!isAuthPasswordHidden)}
-          />
-        )
-      },
-    [isAuthPasswordHidden],
-
-  )
-  const profileDetails = [
+     const profileDetails = useMemo(() => isHydrated ? [
   {
     label: "Phone Number",
-    value: userStore.phoneNumber,
+    value: tempUserStore.phoneNumber,
     iconName: "phone",
     case: "phoneNumber",
   },
   {
     label: "Email",
-    value: userStore.email,
+    value: tempUserStore.email,
     iconName: "email",
     case: "email",
   },
   {
     label: "First Name",
-    value: userStore.firstName,
+    value: tempUserStore.firstName,
     iconName: "account-circle",
     case: "firstName",
   },
   {
     label: "Last Name",
-    value: userStore.lastName,
+    value: tempUserStore.lastName,
     iconName: "account-circle",
     case: "lastName",
   },
   {
     label: "Description",
-    value: userStore.description,
+    value: tempUserStore.description,
     iconName: "description",
     case: "description",
   },
   {
     label: "Neighborhood",
-    value: userStore.neighborhood.city,
+    value: tempUserStore.neighborhood.city,
     iconName: "place",
     case: "neighborhoods",
   },
   {
     label: "Gender",
-    value: userStore.gender,
+    value: tempUserStore.gender,
     iconName: "person",
     case: "gender",
   },
   {
     label: "Age",
-    value: userStore.age,
+    value: tempUserStore.age,
     iconName: "person",
     case: "age",
   },
-];
+]: [], [isHydrated, tempUserStore]); // Depend on isHydrated and tempUserStore
 
   return (
     <Screen
@@ -161,7 +143,7 @@ const handleImagesUpdate = (images: ImageData[]) => {
               rightIcon={"caretRight"}
               //rightIconColor={colors.palette.angry500}
               //onPress={() => navigate("SingleUpdate", { field: `${item.case}` })}
-              onPress={() => navigate("SingleUpdate", { field: `${item.case}` })}
+              onPress={() => navigate("SingleUpdate", { field: `${item.case}` , isHydrated})}
 
             />
         )}
