@@ -22,7 +22,7 @@ const fieldConfigs = {
     method: "setPhoneNumber",
     keyboardType: "number-pad",
     labelTx: "UpdateProfile.phoneFieldLabel",
-    placeholderTx: "UpdateProfile.phoneFieldLabel",
+    placeholderTx: "phoneNumber",
   },
   email: {
     method: "setEmail",
@@ -73,16 +73,21 @@ type SingleUpdateScreenRouteProp = RouteProp<RootStackParamList, 'SingleUpdateSc
 export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function ProfileUpdateScreen(_props) {
   const { navigation } = _props;
   const route = useRoute<SingleUpdateScreenRouteProp>();
-  const fieldToUpdate = route.params?.field ?? 'No field specified';
-  console.log(fieldToUpdate)
+   const { fieldToUpdate, isHydrated } = route.params;
+   console.log(fieldToUpdate)
   const [selectedTeam, setSelectedTeam] = useState<string[]>([])
-  const { userStore } = useStores();
+  const { tempUserStore, userStore} = useStores();
   const tx = "Genders.gender"
   const i18nText = tx && translate(tx)
 
   const setGender = (gender) => {
-    userStore.setGender(gender)
+    tempUserStore.setGender(gender)
   }
+   if (!isHydrated) {
+    // Optionally, render a loading indicator or return null
+    return <Text>Loading...</Text>;
+  }
+
   // Helper function to capitalize the first letter of a string
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -114,8 +119,8 @@ function capitalizeFirstLetter(string) {
               key={key}
               helperTx={`genderField.gender${text}FieldLabel`}
               variant="radio"
-              value={userStore.gender === key}
-              onPress={() => userStore[`set${capitalizeFirstLetter(fieldToUpdate)}`](key)}
+              value={tempUserStore.gender === key}
+              onPress={() => tempUserStore[`set${capitalizeFirstLetter(fieldToUpdate)}`](key)}
             />
           ))}
         </View>
@@ -129,7 +134,7 @@ function capitalizeFirstLetter(string) {
           value={selectedTeam}
           onSelect={(result) => {
             setSelectedTeam(result)
-            userStore.setNeighborhood(result[0])
+            tempUserStore.setNeighborhood(result[0])
           }}
           tx={"neighborhoods.cities"}
           multiple={false}
@@ -140,14 +145,15 @@ function capitalizeFirstLetter(string) {
       // General case for fields that use TextField component
       return (
         <TextField
-          value={userStore[config.method] ?? undefined}
-          onChangeText={userStore[config.method]}
+          value={tempUserStore[config.method] ?? undefined}
+          onChangeText={tempUserStore[config.method]}
           containerStyle={$textField}
           autoCapitalize="none"
           autoComplete={fieldToUpdate}
           autoCorrect={false}
           keyboardType={config.keyboardType}
-          placeholderTx={config.placeholderTx}
+          //placeholderTx={config.placeholderTx}
+          placeholder={tempUserStore.email}
         />
       )
     }
