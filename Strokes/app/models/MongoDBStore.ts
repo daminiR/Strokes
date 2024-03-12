@@ -59,13 +59,13 @@ const MongoDBStore = types
             email: userStore.email,
             _id: userStore._id,
             image_set: rnfiles,
-            first_name: userStore.firstName,
-            last_name: userStore.lastName,
+            firstName: userStore.firstName,
+            lastName: userStore.lastName,
             age: 33,
             gender: userStore.gender,
             sports: { sport: "Squash", game_level: "1" },
             description: userStore.description,
-            location: { city: userStore.neighborhood, state: "MA", country: "US" },
+            neighborhood: { city: userStore.neighborhood, state: "MA", country: "US" },
             //newUserToken: token,
           },
         })
@@ -75,6 +75,28 @@ const MongoDBStore = types
         // Handle error or set error state
       }
     }),
+      queryUserFromMongoDB: flow(function* queryUser(id) {
+    try {
+      const response = yield client.query({
+        query: graphQL.READ_SQUASH,
+        variables: {
+          id: id,
+        },
+        fetchPolicy: "network-only", // Use this line to ensure the data is fetched from the network every time and not from cache
+      });
+      // Assuming response.data.user contains the user data
+      const userStore = getRootStore(self).userStore
+      const userData = response.data.squash;
+      // Do something with the user data, e.g., update the store or return the data
+      userStore.setFromMongoDb(userData)
+      return userData;
+    } catch (error) {
+      console.error("Error querying user:", error);
+      // Handle error or set error state
+      throw error; // Rethrowing the error for handling by the caller
+    }
+  }),
+
 
     // Add more actions for interacting with MongoDB via GraphQL as needed
   }));

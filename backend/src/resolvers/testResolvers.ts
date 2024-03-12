@@ -26,12 +26,12 @@ export const resolvers = {
       const {
         _id,
         image_set,
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         gender,
         age,
         sports,
-        location,
+        neighborhood,
         description,
         phoneNumber,
         email
@@ -42,7 +42,6 @@ export const resolvers = {
         { _id:_id},
         { new: true }
       );
-      console.log("did we find it", isFound, _id)
       if(isFound !== null) {
       const doc = await Squash.remove(
         { _id:_id},
@@ -51,11 +50,11 @@ export const resolvers = {
       const doc = await Squash.create({
         _id: _id,
         image_set: image_set,
-        first_name: first_name,
-        last_name: last_name,
+        firstName: firstName,
+        last_name: lastName,
         gender: gender,
         age: age,
-        location: location,
+        neighborhood: neighborhood,
         sports: sports,
         description: description,
         phoneNumber: phoneNumber,
@@ -69,14 +68,14 @@ export const resolvers = {
       });
       const profileImage = _.find(doc?.image_set, imgObj => {imgObj.img_idx == 0})
       const likedByUser = {
-        first_name: doc?.first_name,
+        firstName: doc?.firstName,
         _id: _id,
         age: doc?.age,
         gender: doc?.gender,
         sports: doc?.sports,
         description: doc?.description,
         image_set: doc?.image_set,
-        location: doc?.location,
+        neighborhood: doc?.neighborhood,
       };
       //const update = { $addToSet: { likedByUSers: likedByUser}}
       const doc1 = await Squash.findOneAndUpdate(

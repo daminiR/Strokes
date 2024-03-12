@@ -11,45 +11,29 @@ interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
   const authPasswordInput = useRef<TextInput>(null)
-
   const [authPassword, setAuthPassword] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
-  const {
-    authenticationStore: { authEmail, setAuthEmail, setAuthToken, validationError },
-  } = useStores()
-
+  const { userStore, authenticationStore } = useStores()
   useEffect(() => {
     // Here is where you could fetch credentials from keychain or storage
     // and pre-fill the form fields.
-    setAuthEmail("ignite@infinite.red")
-    setAuthPassword("ign1teIsAwes0m3")
+    //setAuthEmail("ignite@infinite.red")
+    //setAuthPassword("ign1teIsAwes0m3")
 
     // Return a "cleanup" function that React will run when the component unmounts
     return () => {
-      setAuthPassword("")
-      setAuthEmail("")
+      //setAuthPassword("")
+      //setAuthEmail("")
     }
   }, [])
 
-  const error = isSubmitted ? validationError : ""
-
+  //const error = isSubmitted ? validationError : ""
   function login() {
-    setIsSubmitted(true)
-    setAttemptsCount(attemptsCount + 1)
-
-    if (validationError) return
-
-    // Make a request to your server to get an authentication token.
-    // If successful, reset the fields and set the token.
-    setIsSubmitted(false)
-    setAuthPassword("")
-    setAuthEmail("")
-
-    // We'll mock this with a fake token.
-    setAuthToken(String(Date.now()))
+    authenticationStore.signIn()
   }
+
 
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
     () =>
@@ -79,35 +63,34 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
       <TextField
-        value={authEmail}
-        onChangeText={setAuthEmail}
+        value={userStore.phoneNumber ?? undefined}
+        onChangeText={userStore.setPhoneNumber}
         containerStyle={$textField}
         autoCapitalize="none"
-        autoComplete="email"
+        autoComplete="tel-device"
         autoCorrect={false}
-        keyboardType="email-address"
-        labelTx="loginScreen.emailFieldLabel"
-        placeholderTx="loginScreen.emailFieldPlaceholder"
-        helper={error}
-        status={error ? "error" : undefined}
-        onSubmitEditing={() => authPasswordInput.current?.focus()}
+        keyboardType="number-pad"
+        labelTx="signUpScreen.phoneFieldLabel"
+        placeholderTx="signUpScreen.phoneFieldLabel"
+        //helper={error}
+        //status={error ? "error" : undefined}
+        //onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
 
       <TextField
         ref={authPasswordInput}
-        value={authPassword}
-        onChangeText={setAuthPassword}
+        value={userStore.authPassword ?? undefined}
+        onChangeText={userStore.setAuthPassword}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="password"
         autoCorrect={false}
         secureTextEntry={isAuthPasswordHidden}
-        labelTx="loginScreen.passwordFieldLabel"
-        placeholderTx="loginScreen.passwordFieldPlaceholder"
-        onSubmitEditing={login}
+        labelTx="signUpScreen.passwordFieldLabel"
+        placeholderTx="signUpScreen.passwordFieldPlaceholder"
+        //onSubmitEditing={authenticationStore.signIn()}
         RightAccessory={PasswordRightAccessory}
       />
-
       <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"

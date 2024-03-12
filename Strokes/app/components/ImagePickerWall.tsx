@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { colors, spacing } from "../theme"
 import { View, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useStores } from "../models"
 
 
 interface ImageData {
@@ -15,19 +16,34 @@ interface ImagePickerWallProps {
 }
 
 export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate }) => {
-  const [images, setImages] = useState<ImageData[]>([
-    { uri: null, img_idx: 0 },
-    { uri: null, img_idx: 1 },
-    { uri: null, img_idx: 2 },
-  ]);
-
+  const { userStore } = useStores()
+  console.log(userStore.imageFiles)
+  const initializeImagesFromStore = () => {
+    if (userStore.imageFiles.length > 0) {
+      return userStore.imageFiles.map((image) => ({
+        uri: image.imageURL, // Use imageURL for the uri
+        img_idx: image.img_idx,
+      }))
+    }
+    // Return default placeholders if no images are in the store
+    return [
+      { uri: null, img_idx: 0 },
+      { uri: null, img_idx: 1 },
+      { uri: null, img_idx: 2 },
+    ]
+  }
+  const [images, setImages] = useState<ImageData[]>(initializeImagesFromStore)
+  // Update component's images state when userStore.imageData changes
+  useEffect(() => {
+    setImages(initializeImagesFromStore())
+  }, [userStore.imageData])
   const handleChoosePhoto = async (index: number) => {
-    const options = { noData: true, includeBase64: true}
+    const options = { noData: true, includeBase64: true }
     try {
       const response = await launchImageLibrary()
       if (response.assets && response.assets[0].uri) {
         const updatedImages = images.map((img, imgIndex) =>
-          imgIndex === index ? { ...img, uri: response.assets[0].uri} : img,
+          imgIndex === index ? { ...img, uri: response.assets[0].uri } : img,
         )
         setImages(updatedImages)
         onImagesUpdate(updatedImages)
@@ -35,13 +51,15 @@ export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate
     } catch (error) {
       console.log("Error picking image: ", error)
     }
-  };
+  }
 
   const handleDeletePhoto = (indexToDelete: number) => {
-    const updatedImages = images.map((img, imgIndex) => imgIndex === indexToDelete ? { ...img, uri: null } : img);
-    setImages(updatedImages);
-    onImagesUpdate(updatedImages);
-  };
+    const updatedImages = images.map((img, imgIndex) =>
+      imgIndex === indexToDelete ? { ...img, uri: null } : img,
+    )
+    setImages(updatedImages)
+    onImagesUpdate(updatedImages)
+  }
 
   return (
     <View style={styles.container}>
@@ -71,8 +89,8 @@ export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate
         </View>
       </ScrollView>
     </View>
-  );
-};
+  )
+}
 
 // styles remain unchanged
 

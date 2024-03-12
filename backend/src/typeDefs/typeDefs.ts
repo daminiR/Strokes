@@ -139,12 +139,12 @@ export const typeDefs = gql`
 
     createSquash2(
       _id: String!
-      first_name: String!
-      last_name: String!
+      firstName: String!
+      lastName: String!
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
-      location: LocationInput!
+      neighborhood: LocationInput!
       description: String!
       image_set: [FileUpload!]
       matches : [PotentialMatchInput!]
@@ -160,13 +160,13 @@ export const typeDefs = gql`
 
     createSquashTestSamples(
       _id: String!
-      first_name: String!
+      firstName: String!
       email: String!
-      last_name: String!
+      lastName: String!
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
-      location: LocationInput!
+      neighborhood: LocationInput!
       description: String!
       image_set: [DataInput!]!
       matches : [PotentialMatchInput!]

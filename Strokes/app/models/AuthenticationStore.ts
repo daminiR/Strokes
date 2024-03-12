@@ -236,23 +236,34 @@ export const AuthenticationStoreModel = types
       //self.user?.email = value.replace(/ /g, "")
     },
 
-    signIn: flow(function* signIn(signInData) {
+    signIn: flow(function* signIn() {
+      const userStore = getRoot(self).userStore
+      const mongoDBStore = getRoot(self).mongoDBStore
       try {
         const authData = {
-          Username: signInData.phoneNumber,
-          Password: signInData.password,
+          Username: userStore.phoneNumber,
+          Password: userStore.authPassword,
         }
         const authDetails = new AuthenticationDetails(authData)
         const userData = {
-          Username: signInData.phoneNumber,
+          Username: userStore.phoneNumber,
           Pool: userPool,
         }
         const cognitoUser = new CognitoUser(userData)
         yield new Promise((resolve, reject) => {
           cognitoUser.authenticateUser(authDetails, {
             onSuccess: (result) => {
-              self.setUser(cognitoUser)
-              self.setError(null)
+              console.log(result)
+              const userSub = result.idToken.payload.sub;
+              userStore.setID(userSub)
+              mongoDBStore.queryUserFromMongoDB(userSub)
+              self.setIsAuthenticated(true)
+
+
+
+              // mongodb hydrate userstore hydrate
+              //self.setUser(cognitoUser)
+              //self.setError(null)
               resolve(result)
             },
             onFailure: (err) => {
@@ -300,8 +311,7 @@ export const AuthenticationStoreModel = types
       if (cognitoUser != null) {
         try {
           cognitoUser.signOut()
-          console.log("User has been signed out.")
-
+          self.setIsAuthenticated(false)
           // Optional: Clear any user data from your application state
           // Perform any additional cleanup or redirection as needed
         } catch (error) {
@@ -310,6 +320,7 @@ export const AuthenticationStoreModel = types
         }
       } else {
         console.log("No user is currently signed in.")
+              self.setIsAuthenticated(false)
         // Optionally, handle the case when no user is signed in (e.g., redirect to sign-in page)
       }
     }),

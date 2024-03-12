@@ -1,10 +1,11 @@
 import { observer } from "mobx-react-lite"
+import { type ContentStyle } from "@shopify/flash-list"
 import Config from 'react-native-config';
 import { navigate, goBack} from "../navigators"
 import React, {FC, useEffect, useRef, useState, useMemo} from "react"
 import { isRTL, translate, TxKeyPath } from "../i18n"
-import { TextInput, TextStyle, ViewStyle, View } from "react-native"
-import { ImagePickerWall, ImageUploadComponent, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
+import { TextInput, TextStyle, ViewStyle, ScrollView, View } from "react-native"
+import { UpdateProfileCard, ListView, ImagePickerWall, ListItem, ImageUploadComponent, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps, ProfileStackScreenProps} from "../navigators"
 import { colors, spacing } from "../theme"
@@ -81,7 +82,58 @@ const handleImagesUpdate = (images: ImageData[]) => {
         )
       },
     [isAuthPasswordHidden],
+
   )
+  const profileDetails = [
+  {
+    label: "Phone Number",
+    value: userStore.phoneNumber,
+    iconName: "phone",
+    case: "phoneNumber",
+  },
+  {
+    label: "Email",
+    value: userStore.email,
+    iconName: "email",
+    case: "email",
+  },
+  {
+    label: "First Name",
+    value: userStore.firstName,
+    iconName: "account-circle",
+    case: "firstName",
+  },
+  {
+    label: "Last Name",
+    value: userStore.lastName,
+    iconName: "account-circle",
+    case: "lastName",
+  },
+  {
+    label: "Description",
+    value: userStore.description,
+    iconName: "description",
+    case: "description",
+  },
+  {
+    label: "Neighborhood",
+    value: userStore.neighborhood.city,
+    iconName: "place",
+    case: "neighborhoods",
+  },
+  {
+    label: "Gender",
+    value: userStore.gender,
+    iconName: "person",
+    case: "gender",
+  },
+  {
+    label: "Age",
+    value: userStore.age,
+    iconName: "person",
+    case: "age",
+  },
+];
 
   return (
     <Screen
@@ -90,133 +142,38 @@ const handleImagesUpdate = (images: ImageData[]) => {
       safeAreaEdges={["top", "bottom"]}
     >
       <Header leftIcon={"back"} onLeftPress={() => goBack()} />
-      <Text testID="login-heading" tx="signUpScreen.signIn" preset="heading" style={$signIn} />
-      <Text tx="signUpScreen.enterDetails" preset="subheading" style={$enterDetails} />
-      {attemptsCount > 2 && <Text tx="signUpScreen.hint" size="sm" weight="light" style={$hint} />}
+      <Text testID="login-heading" tx="UpdateProfile.title" preset="heading" style={$signIn} />
+      {attemptsCount > 2 && <Text tx="UpdateProfile.hint" size="sm" weight="light" style={$hint} />}
 
-      <Text tx="signUpScreen.ImagePickerLabel" preset="formLabel" style={$enterDetails} />
+      <Text tx="UpdateProfile.details" preset="formLabel" style={$enterDetails} />
       <ImagePickerWall onImagesUpdate={handleImagesUpdate} />
+      <ListView
+        contentContainerStyle={$listContentContainer}
+        data={profileDetails}
+        estimatedItemSize={55}
+        renderItem={({ item }) => (
+            <ListItem
+              title={item.label}
+              detailText={item.value}
+              //topSeparator={index !== 0}
+              style={$listItem}
+              topSeparator={true}
+              rightIcon={"caretRight"}
+              //rightIconColor={colors.palette.angry500}
+              //onPress={() => navigate("SingleUpdate", { field: `${item.case}` })}
+              onPress={() => navigate("SingleUpdate", { field: `${item.case}` })}
 
-      <TextField
-        value={userStore.phoneNumber ?? undefined}
-        onChangeText={userStore.setPhoneNumber}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="tel-device"
-        autoCorrect={false}
-        keyboardType="number-pad"
-        labelTx="signUpScreen.phoneFieldLabel"
-        placeholderTx="signUpScreen.phoneFieldLabel"
-        helper={error}
-        status={error ? "error" : undefined}
-        onSubmitEditing={() => authPasswordInput.current?.focus()}
-      />
-
-      <TextField
-        value={userStore.email ?? undefined}
-        onChangeText={userStore.setEmail}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="email"
-        autoCorrect={false}
-        keyboardType="email-address"
-        labelTx="signUpScreen.emailFieldLabel"
-        placeholderTx="signUpScreen.emailFieldPlaceholder"
-        helper={error}
-        status={error ? "error" : undefined}
-        onSubmitEditing={() => authPasswordInput.current?.focus()}
-      />
-      <TextField
-        value={userStore.firstName ?? undefined}
-        onChangeText={userStore.setFirstName}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="name"
-        autoCorrect={false}
-        keyboardType="default"
-        labelTx="signUpScreen.firstNameFieldLabel"
-        placeholderTx="signUpScreen.firstNameFieldLabel"
-        helper={error}
-        status={error ? "error" : undefined}
-        //onSubmitEditing={() => authPasswordInput.current?.focus()}
-      />
-
-      <TextField
-        value={userStore.lastName ?? undefined}
-        onChangeText={userStore.setLastName}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="name"
-        autoCorrect={false}
-        keyboardType="default"
-        labelTx="signUpScreen.lastNameFieldLabel"
-        placeholderTx="signUpScreen.lastNameFieldLabel"
-        helper={error}
-        status={error ? "error" : undefined}
-        //onSubmitEditing={() => authPasswordInput.current?.focus()}
-      />
-      <TextField
-        ref={authPasswordInput}
-        value={userStore.authPassword ?? undefined}
-        onChangeText={userStore.setAuthPassword}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="password"
-        autoCorrect={false}
-        secureTextEntry={isAuthPasswordHidden}
-        labelTx="signUpScreen.passwordFieldLabel"
-        placeholderTx="signUpScreen.passwordFieldPlaceholder"
-        onSubmitEditing={login}
-        RightAccessory={PasswordRightAccessory}
-      />
-      <SelectField
-        label="Where do you squash?"
-        placeholder="e.g. Boston"
-        value={selectedTeam}
-        onSelect={(result) => {
-          setSelectedTeam(result)
-          userStore.setNeighborhood(result[0])
-        }}
-        tx={"neighborhoods.cities"}
-        multiple={false}
-        containerStyle={{ marginBottom: spacing.lg }}
-      />
-      <View style={$inputWrapperStyle}>
-        {i18nText.map(({ key, text }) => (
-          <Toggle
-            {..._props}
-            key={key}
-            helperTx={`genderField.gender${text}FieldLabel`}
-            variant="radio"
-            value={userStore.gender === key}
-            onPress={() => setGender(key)}
-          />
-        ))}
-      </View>
-
-      <TextField
-        value={userStore.description ?? undefined}
-        onChangeText={userStore.setDescription}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoComplete="name"
-        autoCorrect={false}
-        keyboardType="default"
-        multiline={true}
-        labelTx="signUpScreen.descriptionFieldLabel"
-        placeholderTx="signUpScreen.descriptionFieldLabel"
-        helper={signUpError}
-      />
-      <Button
-        testID="login-button"
-        tx="signUpScreen.tapToSignIn"
-        style={$tapButton}
-        preset="reversed"
-        onPress={test}
-
+            />
+        )}
       />
     </Screen>
   )
+}
+
+const $listContentContainer: ContentStyle = {
+  paddingHorizontal: spacing.md, // Adjust if necessary to align with the card's horizontal margin
+  paddingTop: spacing.lg + spacing.xl,
+  paddingBottom: spacing.lg,
 }
 
 const $screenContentContainer: ViewStyle = {
@@ -228,6 +185,9 @@ const $signIn: TextStyle = {
   marginBottom: spacing.sm,
 }
 
+const $listItem: ViewStyle = {
+  paddingHorizontal: spacing.lg,
+};
 const $enterDetails: TextStyle = {
   marginBottom: spacing.lg,
 }

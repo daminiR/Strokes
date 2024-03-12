@@ -16,10 +16,10 @@ import {
 
 const LikedByUserSchema = new Schema(
   {
-    location: {
+    neighborhood: {
       type: LocationSchema,
     },
-    first_name: {
+    firstName: {
       type: String!,
       required: true,
     },

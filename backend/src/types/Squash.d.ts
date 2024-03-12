@@ -38,7 +38,7 @@ export interface FilterT {
 }
 
 export interface PotentialMatchType {
-    first_name: string
+    firstName: string
     _id: string
     age: number
     gender: string
@@ -47,7 +47,7 @@ export interface PotentialMatchType {
     image_set: ImageSetT[]
 }
 export interface LikedByUserType {
-    first_name: string
+    firstName: string
     _id: string
     age: number
     profileImage: ImageSetT
@@ -57,12 +57,12 @@ export type PotentialMatchSingleT= PotentialMatchType
 export type LikedByUserT = LikedByUserType[]
 export type SportsList = Sport[]
 export interface SquashDocument extends Document {
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   age : number
   gender: string
   sports: SportsList
-  location: LocationT
+  neighborhood: LocationT
   description: [string]
   image_set: ImageSetT[]
   matches : PotentialMatchT

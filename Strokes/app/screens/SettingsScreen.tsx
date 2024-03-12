@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite"
+import { type ContentStyle } from "@shopify/flash-list"
 import { navigate, goBack} from "../navigators"
 import React, { FC } from "react"
 import { Image, TouchableOpacity, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
@@ -12,6 +13,8 @@ import { useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 import {
   ImagePickerWall,
   ImageUploadComponent,
+  ListItem,
+  ListView,
   Header,
   Button,
   Screen,
@@ -21,30 +24,39 @@ import {
   Toggle,
 } from "../components"
 
-const welcomeLogo = require("../../assets/images/logo.png")
-const welcomeFace = require("../../assets/images/welcome-face.png")
 
-interface ProfileWelcomeScreen extends ProfileStackScreenProps<"ProfileWelcome"> {}
+interface SettingsScreen extends ProfileStackScreenProps<"Settings"> {}
 
-export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function ProfileWelcomeScreen(_props) {
+export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScreen(_props) {
+  const { userStore, authenticationStore } = useStores()
   const { navigation } = _props
   const {
     authenticationStore: { logout },
   } = useStores()
 
-  //function goNext() {
-    //navigation.navigate("Demo", { screen: "DemoShowroom", params: {} })
-  //}
-
   useHeader(
     {
-      rightIcon: "settings",
-      onRightPress: () => navigate("Settings"),
+      leftIcon: "back",
+      onLeftPress: goBack,
     },
-    [logout],
+    [goBack],
   )
 
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
+  const settingsMethods = [
+    {
+      label: "Terms And Conditions",
+      iconName: "phone",
+      onPress: () => console.log("Terms and Conditions"), // Placeholder function, adjust as needed
+    },
+    {
+      label: "Privacy Policy",
+      iconName: "privacy",
+      onPress: () => console.log("Privacy Policy"), // Placeholder function, adjust as needed
+    },
+    // Add more settings items as needed
+  ];
+
 
   return (
     <Screen
@@ -52,20 +64,72 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <View style={$container}>
-        {/* Profile Image Container */}
-        <View style={$profileImageContainer}>
-          <Image source={{ uri: 'https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg' }} style={$profileImage} />
-          <TouchableOpacity style={$editIconContainer}>
-            <Icon name="edit" size={24} color={colors.text} onPress={()=>navigate("ProfileTopTabNavigator")}/>
-          </TouchableOpacity>
-        </View>
-        {/* Other components */}
-      </View>
+      <ListView
+        contentContainerStyle={$listContentContainer}
+        data={settingsMethods}
+        estimatedItemSize={55}
+        renderItem={({ item }) => (
+            <ListItem
+              text={item.label}
+              style={$listItem}
+              topSeparator={true}
+              bottomSeparator={true}
+              rightIcon={"caretRight"}
+              //onPress={() => navigate("SingleUpdate", { field: `${item.case}` })}
+              //onPress={() => navigate("SingleUpdate", { field: `${item.case}` })}
 
+            />
+        )}
+      />
+      <Button
+        testID="login-button"
+        tx="UpdateProfile.logout"
+        style={$tapButton}
+        preset="reversed"
+        onPress={authenticationStore.signOut}
+      />
     </Screen>
   )
 })
+const $listContentContainer: ContentStyle = {
+  paddingHorizontal: spacing.md, // Adjust if necessary to align with the card's horizontal margin
+  paddingTop: spacing.lg + spacing.xl,
+  paddingBottom: spacing.lg,
+}
+
+
+const $signIn: TextStyle = {
+  marginBottom: spacing.sm,
+}
+
+const $listItem: ViewStyle = {
+  paddingHorizontal: spacing.lg,
+};
+const $enterDetails: TextStyle = {
+  marginBottom: spacing.lg,
+}
+
+const $hint: TextStyle = {
+  color: colors.tint,
+  marginBottom: spacing.md,
+}
+
+const $textField: ViewStyle = {
+  marginBottom: spacing.lg,
+}
+
+const $tapButton: ViewStyle = {
+  marginTop: spacing.xs,
+}
+const $inputWrapperStyle: ViewStyle = {
+  marginBottom: spacing.lg,
+  flexDirection: "row", // Aligns children side by side
+  justifyContent: "space-around", // Distributes children evenly with space around them
+  alignItems: "center", // Centers children vertically in the container
+  flexWrap: "wrap", // Allows items to wrap to the next line if the container is too narrow
+  backgroundColor: colors.palette.neutral200,
+  overflow: "hidden",
+}
 
 const $profileImageContainer: ViewStyle = {
   position: 'relative',

@@ -3,31 +3,33 @@ import { View, StyleSheet } from 'react-native';
 import { Header, Card, Button, ListItem, AutoImage, Screen, Text } from "../components"
 import { colors, spacing } from "../theme"
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { useStores } from "../models"
 
 interface PlayerDetailsProps {
   heading: string;
 }
 
 export const PlayerDetails: FC<PlayerDetailsProps> = ({ heading }) => {
+  const { userStore, authenticationStore } = useStores()
   return (
     <View style={styles.card}>
       <View style={styles.iconRow}>
         {/* Like Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"birthday-cake"} />
-          <Text style={$iconTileLabel}>Age</Text>
+          <Text style={$iconTileLabel}>{userStore.age}</Text>
         </View>
         <View style={styles.divider} />
         {/* Comment Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name="venus-mars" />
-          <Text style={$iconTileLabel}>Gender</Text>
+          <Text style={$iconTileLabel}>{userStore.gender}</Text>
         </View>
         <View style={styles.divider} />
         {/* Share Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"map-marker-alt"} />
-          <Text style={$iconTileLabel}>Club Location</Text>
+          <Text style={$iconTileLabel}>{userStore.neighborhood.city}</Text>
         </View>
       </View>
     </View>

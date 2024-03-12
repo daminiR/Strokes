@@ -15,12 +15,12 @@ export const resolvers = {
     squash: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
       // change matches to only get matches that are beyond certain dates
-      console.log("id")
       console.log(unSanitizedId)
       var squash_val = await Squash.findById(id);
       if (squash_val) {
         if (squash_val.matches) {
           const new_squash = filterMatches(squash_val);
+          console.log(new_squash)
           return new_squash;
         }
       }
@@ -39,8 +39,8 @@ export const resolvers = {
       const {
         _id,
         image_set,
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         gender,
         age,
         sports,
@@ -80,8 +80,8 @@ export const resolvers = {
           $set: {
             _id: _id,
             image_set: final_image_set,
-            first_name: first_name,
-            last_name: last_name,
+            firstName: firstName,
+            lastName: lastName,
             gender: gender,
             location: location,
             age: age,
