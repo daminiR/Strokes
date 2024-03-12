@@ -3,18 +3,18 @@ export const LocationType = `
     state: String!,
     country: String!
 `;
- export const MessageType = `
+export const MessageType = `
  _id: ID!,
  sender: String!,
  receiver: String!,
  text: String!
  createdAt: String
 `;
- export const DeletedType = `
+export const DeletedType = `
  isDeleted: Boolean,
  deletedAt: String,
 `;
-export  const SquashNodeType = `
+export const SquashNodeType = `
     sport: String!,
     game_level: String!,
 `
@@ -33,33 +33,33 @@ export const ageRange = `
 `
 export const PotentialMatchUserType = `
     _id: ID!
-    first_name: String!
+    firstName: String!
     age: Int!
     gender: String!
     sports: [SquashNode!]!
     description: String
-    location: LocationType!
+    neighborhood: LocationType!
     image_set: [Data!]!
 `
 export const LikedByUserType = `
     _id: ID!
-    first_name: String!
+    firstName: String!
     age: Int!
     gender: String!
     sports: [SquashNode!]!
     description: String
-    location: LocationType!
+    neighborhood: LocationType!
     image_set: [Data!]!
 `
 export const LikedByUserInputType = `
     _id: ID!
-    first_name: String!
+    firstName: String!
     age: Int!
     gender: String!
     sports: [SquashNodeInput!]!
     description: String
     image_set: [DataInput!]!
-    location: LocationInput!
+    neighborhood: LocationInput!
 `
 export const userExistT = `
     isPhoneExist: Boolean!
@@ -67,22 +67,22 @@ export const userExistT = `
 `
 export const PotentialMatchUserInputType = `
     _id: ID!
-    first_name: String!
+    firstName: String!
     age: Int!
     gender: String!
     sports: [SquashNodeInput!]!
     description: String
     image_set: [DataInput!]!
-    location: LocationInput!
+    neighborhood: LocationInput!
 `
 export const SquashType = `
-    first_name: String!
-    last_name: String!
+    firstName: String!
+    lastName: String!
     _id: ID!
     age: Int!
     gender: String!
     sports: [SquashNode!]!
-    location: Location!
+    neighborhood: Location!
     description: String
     image_set: [Data!]!
     matches : [PotentialMatch!]
@@ -100,13 +100,13 @@ export const SquashType = `
   `
 
 export const SquashInputType = `
-    first_name: String!
-    last_name: String!
+    firstName: String!
+    lastName: String!
     _id: ID!
     age: Int!
     gender: String!
     sports: [SquashNodeInput!]!
-    location: LocationInput!
+    neighborhood: LocationInput!
     description: String
     image_set: [DataInput!]!
     deleted: DeletedInput
@@ -122,3 +122,4 @@ export const SquashInputType = `
     phoneNumber: String
     email: String
   `
+

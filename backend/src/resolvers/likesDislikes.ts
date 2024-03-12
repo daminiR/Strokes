@@ -35,14 +35,14 @@ export const resolvers = {
         //imgObj.img_idx == 0;
         //});
         const likedByUser = {
-          first_name: doc?.first_name,
+          firstName: doc?.firstName,
           _id: _id,
           age: doc?.age,
           gender: doc?.gender,
           sports: doc?.sports,
           description: doc?.description,
           image_set: doc?.image_set,
-          location: doc?.location,
+          neighborhood: doc?.neighborhood,
         };
         const update = { $addToSet: { likedByUSers: likedByUser } };
         await Squash.updateMany(filter, update);
@@ -66,14 +66,14 @@ export const resolvers = {
         //imgObj.img_idx == 0;
         //});
         const likedByUser = {
-          first_name: doc?.first_name,
+          firstName: doc?.firstName,
           _id: _id,
           age: doc?.age,
           gender: doc?.gender,
           sports: doc?.sports,
           description: doc?.description,
           image_set: doc?.image_set,
-          location: doc?.location,
+          neighborhood: doc?.neighborhood,
         };
         const update = { $addToSet: { likedByUSers: likedByUser } };
         await Squash.updateMany(filter, update);

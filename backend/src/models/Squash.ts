@@ -25,13 +25,13 @@ var squashSchema = new Schema(
       type: String!,
       required: true,
     },
-    first_name: {
+    firstName: {
       type: String!,
       required: true,
       minlength: 3,
       maxlength: 30,
     },
-    last_name: {
+    lastName: {
       type: String!,
       required: true,
       minlength: 3,
@@ -79,7 +79,7 @@ var squashSchema = new Schema(
         },
       ],
     },
-    location: {
+    neighborhood: {
       type: LocationSchema,
       required: true,
     },

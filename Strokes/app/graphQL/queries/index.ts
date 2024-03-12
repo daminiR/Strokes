@@ -44,15 +44,15 @@ const MESSAGE_POSTED = gql`
 }`
 
 const GET_POTENTIAL_MATCHES = gql`
-  query QueryProssibleMatches ($_id: String!, $offset: Int, $limit: Int, $location: LocationInput!, $sport: String!, $game_levels: [String!]!, $ageRange: AgeRangeInput){
-    queryProssibleMatches (_id: $_id offset: $offset, limit:$limit, location: $location, game_levels:$game_levels, sport: $sport, ageRange: $ageRange){
-      location {
+  query QueryProssibleMatches ($_id: String!, $offset: Int, $limit: Int, $neighborhood: LocationInput!, $sport: String!, $game_levels: [String!]!, $ageRange: AgeRangeInput){
+    queryProssibleMatches (_id: $_id offset: $offset, limit:$limit, neighborhood: $neighborhood, game_levels:$game_levels, sport: $sport, ageRange: $ageRange){
+      neighborhood {
         city
         state
         country
       }
       _id
-      first_name
+      firstName
       age
       gender
       sports {
@@ -78,8 +78,8 @@ const READ_SQUASH = gql`
   query Squash($id: String!) {
     squash(id: $id) {
       _id
-      first_name
-      last_name
+      firstName
+      lastName
       age
       gender
       deleted {
@@ -90,7 +90,7 @@ const READ_SQUASH = gql`
         sport
         game_level
       }
-      location {
+      neighborhood {
         city
         state
         country
@@ -110,9 +110,9 @@ const READ_SQUASH = gql`
       dislikes
       likedByUSers {
         _id
-        first_name
+        firstName
         age
-        location {
+        neighborhood {
           city
           state
           country
@@ -131,9 +131,9 @@ const READ_SQUASH = gql`
       }
       matches {
         _id
-        first_name
+        firstName
         age
-        location {
+        neighborhood {
           city
           state
           country

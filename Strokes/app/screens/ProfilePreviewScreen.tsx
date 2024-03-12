@@ -1,4 +1,5 @@
 import React, { FC } from "react"
+import { observer } from 'mobx-react-lite';
 import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import {
   CircularPlayerRatingBar,
@@ -15,11 +16,13 @@ import {
 import { AppStackScreenProps, ProfileStackScreenProps} from "../navigators"
 import { DemoTabScreenProps } from "../navigators/DemoNavigator"
 import { spacing } from "../theme"
+import { useStores } from "../models"
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 interface ProfilePreviewScreen extends ProfileStackScreenProps<"ProfilePreview"> {}
 
-export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = function ProfilePreviewScreen(_props) {
+export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(function ProfilePreviewScreen(_props) {
+  const { userStore, authenticationStore } = useStores()
   return (
     <View style={$containerWithFAB}>
       <Screen preset="auto" contentContainerStyle={$container} safeAreaEdges={["top", "bottom"]}>
@@ -28,29 +31,28 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = function ProfilePr
           <AutoImage
             style={$autoImage}
             source={{
-              uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+              uri: userStore.imageFiles[0].imageURL,
             }}
           />
           <View style={$ratingBar}>
-            <CircularPlayerRatingBar rating={2} maxRating={7} size={100} strokeWidth={10} />
+            <CircularPlayerRatingBar rating={Number(userStore.sport[0].game_level)} maxRating={7} size={100} strokeWidth={10} />
           </View>
         </View>
         <PlayerDetails heading={"anything"} />
         <AutoImage
           style={$autoImage}
           source={{
-            uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+              uri: userStore.imageFiles[1].imageURL,
           }}
         />
         <Card
-          heading="Default Preset (default)"
-          content="Incididunt magna ut aliquip consectetur mollit dolor."
-          footer="Consectetur nulla non aliquip velit."
+          heading="Description"
+          content={userStore.description}
         />
         <AutoImage
           style={$autoImage}
           source={{
-            uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+              uri: userStore.imageFiles[2].imageURL,
           }}
         />
       </Screen>
@@ -68,7 +70,7 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = function ProfilePr
       </Button>
     </View>
   )
-}
+})
 const $profileImageContainer: ViewStyle = {
   position: "relative",
 }

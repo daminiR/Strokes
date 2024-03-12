@@ -12,6 +12,8 @@ import { Icon, IconTypes } from "./Icon"
 import { Text, TextProps } from "./Text"
 
 export interface ListItemProps extends TouchableOpacityProps {
+  title?: string
+  detailText?: string
   /**
    * How tall the list item should be.
    * Default: 56
@@ -104,6 +106,8 @@ interface ListItemActionProps {
  */
 export function ListItem(props: ListItemProps) {
   const {
+    title,
+    detailText,
     bottomSeparator,
     children,
     height = 56,
@@ -145,9 +149,18 @@ export function ListItem(props: ListItemProps) {
           Component={LeftComponent}
         />
 
-        <Text {...TextProps} tx={tx} text={text} txOptions={txOptions} style={$textStyles}>
-          {children}
-        </Text>
+        {/* Conditionally render title and detailText */}
+        <View style={{ flex: 1 }}>
+          {title && <Text preset={"formLabel"} style={[$titleStyle, TextProps?.style]}>{title}</Text>}
+          {detailText && (
+            <Text style={[$detailTextStyle, TextProps?.style]}>{detailText}</Text>
+          )}
+          {!title && !detailText && (
+            <Text {...TextProps} tx={tx} text={text} txOptions={txOptions} style={$textStyles}>
+              {children}
+            </Text>
+          )}
+        </View>
 
         <ListItemAction
           side="right"
@@ -191,6 +204,15 @@ function ListItemAction(props: ListItemActionProps) {
   return null
 }
 
+const $titleStyle: TextStyle = {
+  fontSize: 14,
+  //fontWeight: "bold",
+  //marginBottom: spacing.md, // Adjust spacing as needed
+}
+const $detailTextStyle: TextStyle = {
+  fontSize: 13,
+  color: colors.textDim, // Use a dimmer color for details
+}
 const $separatorTop: ViewStyle = {
   borderTopWidth: 1,
   borderTopColor: colors.separator,

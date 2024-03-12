@@ -82,13 +82,13 @@ export const resolvers = {
       };
       const fieldsNeeded = {
         _id: 1,
-        first_name: 1,
+        firstName: 1,
         age: 1,
         gender: 1,
         sports: 1,
         description: 1,
         image_set: 1,
-        location: 1,
+        neighborhood: 1,
       };
       const users = await Squash.find(filter, fieldsNeeded)
         .skip(offset)
@@ -132,7 +132,7 @@ export const resolvers = {
             .then((matchUserToken) => {
               sendAdminMatchMessages(
                 channel_response,
-                trieal?.first_name,
+                trieal?.firstName,
                 matchUserToken
               );
             })

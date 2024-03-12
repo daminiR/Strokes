@@ -8,6 +8,7 @@ import {
   NavigatorScreenParams,
 } from "@react-navigation/native"
 import Config from "../config"
+import {ProfileTopTabNavigator} from './ProfileTopTabNavigator'
 import * as Screens from "app/screens"
 // Import other screens as needed
 
@@ -15,6 +16,9 @@ export type ProfileStackParamList = {
   ProfileWelcome: undefined
   ProfilePreview: undefined
   ProfileUpdate: undefined
+  ProfileTopTabNavigator: undefined
+  SingleUpdate: undefined
+  Settings: undefined
 }
 
 /**
@@ -35,9 +39,10 @@ export function ProfileStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}
       initialRouteName={"ProfileWelcome"}
     >
-      <Stack.Screen name="ProfileUpdate" component={Screens.ProfileUpdateScreen} />
-      <Stack.Screen name="ProfilePreview" component={Screens.ProfilePreviewScreen} />
       <Stack.Screen name="ProfileWelcome" component={Screens.ProfileWelcomeScreen} />
+      <Stack.Screen name="SingleUpdate" component={Screens.SingleUpdateScreen} />
+      <Stack.Screen name="Settings" component={Screens.SettingsScreen} />
+      <Stack.Screen name="ProfileTopTabNavigator" component={ProfileTopTabNavigator} />
       {/* Add more screens as needed */}
     </Stack.Navigator>
   );
