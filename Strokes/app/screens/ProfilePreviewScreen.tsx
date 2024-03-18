@@ -22,37 +22,39 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 interface ProfilePreviewScreen extends ProfileStackScreenProps<"ProfilePreview"> {}
 
 export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(function ProfilePreviewScreen(_props) {
-  const { userStore, authenticationStore } = useStores()
+  const { tempUserStore, authenticationStore } = useStores()
   return (
     <View style={$containerWithFAB}>
       <Screen preset="auto" contentContainerStyle={$container} safeAreaEdges={["top", "bottom"]}>
-        <Header title="Damini" leftIcon="menu" rightIcon="settings" safeAreaEdges={[]} />
+        <Header title={tempUserStore.firstName} leftIcon="menu" rightIcon="settings" safeAreaEdges={[]} />
         <View style={$profileImageContainer}>
           <AutoImage
             style={$autoImage}
             source={{
-              uri: userStore.imageFiles[0].imageURL,
+              uri: tempUserStore.imageFiles[0].imageURL,
             }}
           />
           <View style={$ratingBar}>
-            <CircularPlayerRatingBar rating={Number(userStore.sport[0].game_level)} maxRating={7} size={100} strokeWidth={10} />
+            <CircularPlayerRatingBar
+              rating={Number(tempUserStore.sport[0].game_level)}
+              maxRating={7}
+              size={100}
+              strokeWidth={10}
+            />
           </View>
         </View>
-        <PlayerDetails heading={"anything"} />
+        <PlayerDetails heading={"Player Details"} isEditing={true} />
         <AutoImage
           style={$autoImage}
           source={{
-              uri: userStore.imageFiles[1].imageURL,
+            uri: tempUserStore.imageFiles[1].imageURL,
           }}
         />
-        <Card
-          heading="Description"
-          content={userStore.description}
-        />
+        <Card heading="Description" content={tempUserStore.description} />
         <AutoImage
           style={$autoImage}
           source={{
-              uri: userStore.imageFiles[2].imageURL,
+            uri: tempUserStore.imageFiles[2].imageURL,
           }}
         />
       </Screen>

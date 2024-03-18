@@ -55,14 +55,26 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
       <View style={$container}>
         {/* Profile Image Container */}
         <View style={$profileImageContainer}>
-          <Image source={{ uri: 'https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg' }} style={$profileImage} />
+          <Image
+            source={{ uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg" }}
+            style={$profileImage}
+          />
           <TouchableOpacity style={$editIconContainer}>
-            <Icon name="edit" size={24} color={colors.text} onPress={()=>navigate("ProfileTopTabNavigator")}/>
+            <Icon
+              name="edit"
+              size={24}
+              color={colors.text}
+              onPress={() =>
+                navigate("ProfileTopTabNavigator", {
+                  screen: "ProfileUpdate",
+                  params: { shouldHydrate: true },
+                })
+              }
+            />
           </TouchableOpacity>
         </View>
         {/* Other components */}
       </View>
-
     </Screen>
   )
 })

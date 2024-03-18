@@ -4,37 +4,39 @@ import { Header, Card, Button, ListItem, AutoImage, Screen, Text } from "../comp
 import { colors, spacing } from "../theme"
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useStores } from "../models"
+import { observer } from 'mobx-react-lite';
 
 interface PlayerDetailsProps {
   heading: string;
 }
 
-export const PlayerDetails: FC<PlayerDetailsProps> = ({ heading }) => {
-  const { userStore, authenticationStore } = useStores()
+export const PlayerDetails: FC<PlayerDetailsProps & { isEditing: boolean }> = observer(({ heading, isEditing }) => {
+  const { userStore, tempUserStore } = useStores();
+  const store = isEditing ? tempUserStore : userStore;
   return (
     <View style={styles.card}>
       <View style={styles.iconRow}>
         {/* Like Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"birthday-cake"} />
-          <Text style={$iconTileLabel}>{userStore.age}</Text>
+          <Text style={$iconTileLabel}>{store.age}</Text>
         </View>
         <View style={styles.divider} />
         {/* Comment Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name="venus-mars" />
-          <Text style={$iconTileLabel}>{userStore.gender}</Text>
+          <Text style={$iconTileLabel}>{store.gender}</Text>
         </View>
         <View style={styles.divider} />
         {/* Share Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"map-marker-alt"} />
-          <Text style={$iconTileLabel}>{userStore.neighborhood.city}</Text>
+          <Text style={$iconTileLabel}>{store.neighborhood.city}</Text>
         </View>
       </View>
     </View>
   )
-};
+})
 
 const $iconTileLabel: TextStyle = {
   marginTop: spacing.xxs,

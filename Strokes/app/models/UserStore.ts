@@ -51,8 +51,8 @@ export const UserStoreModel = types
     setGender(gender: string) {
       self.gender = gender
     },
-    setAge(age) {
-      self.age = age
+    setAge(age: string) {
+      self.age = parseInt(age, 10);
     },
     setImageFiles(imageFiles: SnapshotOrInstance<typeof ImageDataModel>[]) {
       self.imageFiles = cast(imageFiles)

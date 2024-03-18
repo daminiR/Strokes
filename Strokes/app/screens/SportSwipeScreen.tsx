@@ -42,7 +42,7 @@ export const SportSwipeScreen: FC<DemoTabScreenProps<"SportSwipe">> = function S
             />
           </View>
         </View>
-        <PlayerDetails heading={"anything"} />
+        <PlayerDetails heading={"Player Details"} isEditing={false} />
         <AutoImage
           style={$autoImage}
           source={{

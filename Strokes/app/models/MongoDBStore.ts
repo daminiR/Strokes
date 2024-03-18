@@ -65,7 +65,7 @@ const MongoDBStore = types
             gender: userStore.gender,
             sports: { sport: "Squash", game_level: "1" },
             description: userStore.description,
-            neighborhood: { city: userStore.neighborhood, state: "MA", country: "US" },
+            location: userStore.neighborhood,
             //newUserToken: token,
           },
         })
