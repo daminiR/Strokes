@@ -175,7 +175,7 @@ const handleImagesUpdate = (images: ImageData[]) => {
         value={selectedTeam}
         onSelect={(result) => {
           setSelectedTeam(result)
-          userStore.setNeighborhood(result[0])
+          userStore.setNeighborhood({ city: result[0], state: "MA", country: "US" })
         }}
         tx={"neighborhoods.cities"}
         multiple={false}

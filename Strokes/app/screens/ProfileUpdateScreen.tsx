@@ -4,22 +4,22 @@ import Config from 'react-native-config';
 import { navigate, goBack} from "../navigators"
 import React, {FC, useEffect, useRef, useState, useMemo} from "react"
 import { isRTL, translate, TxKeyPath } from "../i18n"
-import { TextInput, TextStyle, ViewStyle, ScrollView, View } from "react-native"
+import { useRoute, useNavigation} from '@react-navigation/native';
+import { TextInput, TextStyle, ViewStyle, ScrollView, View} from "react-native"
 import { UpdateProfileCard, ListView, ImagePickerWall, ListItem, ImageUploadComponent, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
 import { useStores } from "../models"
+
 import { AppStackScreenProps, ProfileStackScreenProps} from "../navigators"
 import { colors, spacing } from "../theme"
 
 interface ProfileUpdateProps extends ProfileStackScreenProps<"ProfileUpdate"> {}
 
-export const ProfileUpdateScreen: FC<ProfileUpdateProps> = function ProfileUpdateScreen(_props) {
+  export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function ProfileUpdateScreen(_props) {
   const authPasswordInput = useRef<TextInput>(null)
   const [signUpError, setSignUpError] = useState<string | null>(null)
+  const route = useRoute()
+  const shouldHydrate = route.params?.shouldHydrate;
   const { userStore, tempUserStore, authenticationStore } = useStores()
-  useEffect(() => {
-    // Pre-fill logic if necessary
-    return () => userStore.reset()
-  }, [userStore])
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
@@ -28,14 +28,17 @@ export const ProfileUpdateScreen: FC<ProfileUpdateProps> = function ProfileUpdat
   const tx = "Genders.gender"
   const i18nText = tx && translate(tx)
   const error = ""
+  console.log("userStore", userStore)
 
   useEffect(() => {
-    // Set tempStore from user store everytime
-    tempUserStore.hydrateFromUserStore()
-    setIsHydrated(true) // Set isHydrated to true once hydration is complete
-
-    return () => {}
-  }, []) // Ensure this effect runs only once
+    if (shouldHydrate) {
+      // Only hydrate from userStore if coming from Profile Welcome screen
+      tempUserStore.hydrateFromUserStore();
+      setIsHydrated(true); // Set isHydrated to true once hydration is complete
+    }
+    // Cleanup or other logic remains unchangedJ
+    return () => {};
+  }, [shouldHydrate]);
 
 const handleImagesUpdate = (images: ImageData[]) => {
      console.log(images)
@@ -43,9 +46,9 @@ const handleImagesUpdate = (images: ImageData[]) => {
   }
 
   const test = () => {
-  authenticationStore.setIsAuthenticated(true)
-
-};
+    authenticationStore.setIsAuthenticated(true)
+  }
+  console.log("Profile Update Temp", tempUserStore)
   const login = () => {
   authenticationStore.signUp().then((result) => {
     // If signUp is successful, navigate to the WelcomeScreen
@@ -65,13 +68,18 @@ const handleImagesUpdate = (images: ImageData[]) => {
   const setGender = (gender) => {
     userStore.setGender(gender);
   };
-
-     const profileDetails = useMemo(() => isHydrated ? [
+  const profileDetails =[
   {
     label: "Phone Number",
     value: tempUserStore.phoneNumber,
     iconName: "phone",
     case: "phoneNumber",
+  },
+  {
+    label: "Squash Level",
+    value: tempUserStore.sport[0].game_level,
+    iconName: "squash_level",
+    case: "squash_level",
   },
   {
     label: "Email",
@@ -114,8 +122,8 @@ const handleImagesUpdate = (images: ImageData[]) => {
     value: tempUserStore.age,
     iconName: "person",
     case: "age",
-  },
-]: [], [isHydrated, tempUserStore]); // Depend on isHydrated and tempUserStore
+  }]
+
 
   return (
     <Screen
@@ -134,23 +142,20 @@ const handleImagesUpdate = (images: ImageData[]) => {
         data={profileDetails}
         estimatedItemSize={55}
         renderItem={({ item }) => (
-            <ListItem
-              title={item.label}
-              detailText={item.value}
-              //topSeparator={index !== 0}
-              style={$listItem}
-              topSeparator={true}
-              rightIcon={"caretRight"}
-              //rightIconColor={colors.palette.angry500}
-              //onPress={() => navigate("SingleUpdate", { field: `${item.case}` })}
-              onPress={() => navigate("SingleUpdate", { field: `${item.case}` , isHydrated})}
-
-            />
+          <ListItem
+            title={item.label}
+            detailText={item.value}
+            //topSeparator={index !== 0}
+            style={$listItem}
+            topSeparator={true}
+            rightIcon={"caretRight"}
+            onPress={() => navigate("SingleUpdate", { field: `${item.case}`, isHydrated })}
+          />
         )}
       />
     </Screen>
   )
-}
+})
 
 const $listContentContainer: ContentStyle = {
   paddingHorizontal: spacing.md, // Adjust if necessary to align with the card's horizontal margin
