@@ -18,21 +18,28 @@ interface ImagePickerWallProps {
 export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate, isEditing }) => {
   const { userStore, tempUserStore } = useStores()
   const initializeImagesFromStore = useCallback(() => {
-  const store = isEditing ? tempUserStore : userStore // Choose the store based on isEditing
+  const store = isEditing ? tempUserStore : userStore; // Choose the store based on isEditing
+  console.log("userStore", userStore)
 
-    if (store.imageFiles.length > 0) {
-      return store.imageFiles.map((image) => ({
-        uri: image.imageURL, // Use imageURL for the uri
+  if (store.imageFiles.length > 0) {
+    return store.imageFiles.map((image) => {
+      // Determine the correct URI to use based on the object's structure
+      const uri = image.imageURL || image.uri;
+
+      return {
+        uri: uri, // Use the determined URI
         img_idx: image.img_idx,
-      }))
-    }
-    // Return default placeholders if no images are in the chosen store
-    return [
-      { uri: null, img_idx: 0 },
-      { uri: null, img_idx: 1 },
-      { uri: null, img_idx: 2 },
-    ]
-  }, [isEditing, userStore.imageFiles, tempUserStore.imageFiles])
+      };
+    });
+  }
+
+  // Return default placeholders if no images are in the chosen store
+  return [
+    { uri: null, img_idx: 0 },
+    { uri: null, img_idx: 1 },
+    { uri: null, img_idx: 2 },
+  ];
+}, [isEditing, userStore.imageFiles, tempUserStore.imageFiles]);
   const [images, setImages] = useState<ImageData[]>(initializeImagesFromStore)
   useEffect(() => {
     setImages(initializeImagesFromStore())
