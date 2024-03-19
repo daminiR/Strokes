@@ -38,7 +38,6 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
   //}
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log("Screen is focused - welcome temp", tempUserStore);
       // Your hydration logic here
       //userStore.setImageFiles([
         //{

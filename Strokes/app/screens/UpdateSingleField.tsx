@@ -14,6 +14,7 @@ interface SingleUpdateProps extends ProfileStackScreenProps<"SingleUpdate"> {}
 type RootStackParamList = {
   SingleUpdateScreen: {
     field?: string; // Marking 'field' as optional
+    shouldHydrate: boolean
   };
 };
 
@@ -90,7 +91,7 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
 ) {
   const { navigation } = _props
   const route = useRoute<SingleUpdateScreenRouteProp>()
-  const { field: fieldToUpdate, isHydrated } = route.params
+  const { field: fieldToUpdate, shouldHydrate: shouldHydrate} = route.params
   const { tempUserStore, userStore } = useStores()
   const [selectedTeam, setSelectedTeam] = useState<string[]>([])
   const [tempGender, setTempGender] = useState(tempUserStore.gender);
@@ -112,7 +113,7 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
   const setGender = (gender) => {
     tempUserStore.setGender(gender)
   }
-  if (!isHydrated) {
+  if (!shouldHydrate) {
     // Optionally, render a loading indicator or return null
     return <Text>Loading...</Text>
   }
@@ -160,7 +161,7 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
       return null
     }
 
-    if (!isHydrated) {
+    if (!shouldHydrate) {
       // Display a text message instead of an activity indicator
       return (
         <View>

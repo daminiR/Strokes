@@ -19,7 +19,7 @@ interface ProfileUpdateProps extends ProfileStackScreenProps<"ProfileUpdate"> {}
   const [signUpError, setSignUpError] = useState<string | null>(null)
   const route = useRoute()
   const shouldHydrate = route.params?.shouldHydrate;
-  const { userStore, tempUserStore, authenticationStore } = useStores()
+  const { mongoDBStore, userStore, tempUserStore, authenticationStore } = useStores()
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
@@ -56,13 +56,15 @@ interface ProfileUpdateProps extends ProfileStackScreenProps<"ProfileUpdate"> {}
   //}, [shouldHydrate]);
 
 const handleImagesUpdate = (images: ImageData[]) => {
-    tempUserStore.setImageFiles(images); // Assuming your store has a method to update image files
-  }
+  tempUserStore.setImageFiles(images) // Assuming your store has a method to update image files
+}
+const updateUserChanges = () => {
+  mongoDBStore.updateUserInMongoDB()
+}
 
   const test = () => {
     authenticationStore.setIsAuthenticated(true)
   }
-  console.log("Profile Update Temp", tempUserStore)
   const login = () => {
   authenticationStore.signUp().then((result) => {
     // If signUp is successful, navigate to the WelcomeScreen
@@ -143,11 +145,14 @@ const handleImagesUpdate = (images: ImageData[]) => {
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Header leftIcon={"back"} onLeftPress={() => goBack()} />
+      <Header leftIcon={"back"}
+      onLeftPress={() => goBack()}
+      rightText="Save" leftText="Cancel"
+      onRightPress={() => updateUserChanges()}/>
       <Text testID="login-heading" tx="UpdateProfile.title" preset="heading" style={$signIn} />
       {attemptsCount > 2 && <Text tx="UpdateProfile.hint" size="sm" weight="light" style={$hint} />}
       <Text tx="UpdateProfile.details" preset="formLabel" style={$enterDetails} />
-      <ImagePickerWall onImagesUpdate={handleImagesUpdate} isEditing={true}/>
+      <ImagePickerWall onImagesUpdate={handleImagesUpdate} isEditing={true} />
       <ListView
         contentContainerStyle={$listContentContainer}
         data={profileDetails}
@@ -160,7 +165,12 @@ const handleImagesUpdate = (images: ImageData[]) => {
             style={$listItem}
             topSeparator={true}
             rightIcon={"caretRight"}
-            onPress={() => navigate("SingleUpdate", { field: `${item.case}`, isHydrated })}
+
+            onPress={() =>
+              navigate("SingleUpdate", {
+            field: `${item.case}`,
+            shouldHydrate: shouldHydrate })
+            }
           />
         )}
       />

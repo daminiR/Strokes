@@ -1,9 +1,6 @@
 import Squash from '../models/Squash';
 import _ from 'lodash'
-import {
-  deleteFilesFromAWS,
-  createAWSUpload,
-} from "../utils/awsUpload";
+import { manageImages } from "../utils/awsUpload";
 import {
   SPORT_CHANGES_PER_DAY,
 } from "../constants/";
@@ -15,12 +12,12 @@ export const resolvers = {
     squash: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
       // change matches to only get matches that are beyond certain dates
-      console.log(unSanitizedId)
+      console.log(unSanitizedId);
       var squash_val = await Squash.findById(id);
       if (squash_val) {
         if (squash_val.matches) {
           const new_squash = filterMatches(squash_val);
-          console.log(new_squash)
+          console.log(new_squash);
           return new_squash;
         }
       }
@@ -36,9 +33,15 @@ export const resolvers = {
   },
   Mutation: {
     updateUserProfile: async (root, unSanitizedData, context) => {
+      // Assuming context provides user authentication details
+      const userId = context.isAuthenticated(); // Adjust according to your authentication logic
+
+      if (!userId) {
+        throw new Error("Unauthorized");
+      }
+
       const {
         _id,
-        image_set,
         firstName,
         lastName,
         gender,
@@ -46,53 +49,53 @@ export const resolvers = {
         sports,
         location,
         description,
-        remove_uploaded_images,
-        add_local_images,
-        original_uploaded_image_set,
-      } = sanitize(unSanitizedData);
+        addLocalImages,
+        removeUploadedImages,
+      } = args;
 
-      //const user = context.user;
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
-
-      const removed_image_set = await deleteFilesFromAWS(
-        remove_uploaded_images,
-        original_uploaded_image_set,
-        add_local_images.length
-      );
-      const data_set = await createAWSUpload(add_local_images, _id);
-      const final_image_set = removed_image_set.concat(data_set);
-      const check_doc_sports = await Squash.findById(_id);
-      var sportChangesPerDay = check_doc_sports?.sportChangesPerDay;
-      const sportsOld = _.map(check_doc_sports?.sports, (sportObj) => {
-        return sportObj.sport;
-      });
-      const sportsNew = _.map(sports, (sportObj) => {
-        return sportObj.sport;
-      });
-      if (!_.isEqual(check_doc_sports?.sports, sports)) {
-        sportChangesPerDay = sportChangesPerDay
-          ? sportChangesPerDay - 1
-          : SPORT_CHANGES_PER_DAY;
+      if (userId !== _id) {
+        throw new Error("Unauthorized: You can only update your own profile.");
       }
-      const doc = await Squash.findOneAndUpdate(
-        { _id: _id },
-        {
-          $set: {
-            _id: _id,
-            image_set: final_image_set,
-            firstName: firstName,
-            lastName: lastName,
-            gender: gender,
-            location: location,
-            age: age,
-            sports: sports,
-            description: description,
-            sportChangesPerDay: sportChangesPerDay,
+
+      const session = await mongoose.startSession();
+      session.startTransaction();
+
+      try {
+        // Handling image removal from AWS and constructing the new image set
+        const currentSquashProfile = await Squash.findById(_id).session(
+          session
+        );
+        if (!currentSquashProfile) {
+          throw new Error("User profile not found.");
+        }
+
+         const { uploadedImages, deletedImageKeys } = await manageImages(addLocalImages, removeUploadedImages, _id);
+
+
+        // Updating the Squash model
+        const updatedProfile = await Squash.findOneAndUpdate(
+          { _id: _id },
+          {
+            firstName,
+            lastName,
+            gender,
+            age,
+            sports,
+            location,
+            description,
+            image_set: updatedImageSet,
+            // Include other fields as necessary
           },
-        },
-        { new: true }
-      );
-      return doc;
+          { new: true, session }
+        );
+        await session.commitTransaction();
+        return updatedProfile;
+      } catch (error) {
+        await session.abortTransaction();
+        throw error; // Re-throw the error for external handling
+      } finally {
+        session.endSession();
+      }
     },
   },
 };
