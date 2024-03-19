@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import { navigate, goBack} from "../navigators"
-import React, { FC } from "react"
+import React, { FC, useEffect} from "react"
 import { Image, TouchableOpacity, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { isRTL } from "../i18n"
@@ -29,12 +29,36 @@ interface ProfileWelcomeScreen extends ProfileStackScreenProps<"ProfileWelcome">
 export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function ProfileWelcomeScreen(_props) {
   const { navigation } = _props
   const {
+    tempUserStore,
     authenticationStore: { logout },
   } = useStores()
 
   //function goNext() {
     //navigation.navigate("Demo", { screen: "DemoShowroom", params: {} })
   //}
+  useEffect(() => {
+      // Only hydrate from userStore if coming from Profile Welcome screen
+      //userStore.setImageFiles([
+        //{
+          //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-30203d2574996d496b73-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-0.jpg.jpeg",
+          //filePath: "all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-30203d2574996d496b73-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-0.jpg.jpeg",
+          //img_idx: 0,
+        //},
+        //{
+          //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-e17ffbbd29ce6c01cb28-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-1.jpg.jpeg",
+          //filePath: "ll_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-e17ffbbd29ce6c01cb28-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-1.jpg.jpeg",
+          //img_idx: 1,
+        //},
+        //{
+          //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-72f2288ae034de867efe-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-2.jpg.jpeg",
+          //filePath: "all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-72f2288ae034de867efe-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-2.jpg.jpeg",
+          //img_idx: 2,
+        //},
+      //])
+      tempUserStore.hydrateFromUserStore();
+    // Cleanup or other logic remains unchangedJ
+    return () => {};
+  }, []);
 
   useHeader(
     {
