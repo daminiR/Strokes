@@ -1,5 +1,6 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {ProfileUpdateScreen, ProfilePreviewScreen} from "app/screens"
+import { navigate, goBack} from "../navigators"
 
 const ProfileTopTab = createMaterialTopTabNavigator();
 import { useHeader } from "../utils/useHeader"
@@ -8,6 +9,7 @@ export function ProfileTopTabNavigator() {
   useHeader(
     {
       leftIcon: "back",
+      onLeftPress: () => goBack(),
     },
     [],
   )
