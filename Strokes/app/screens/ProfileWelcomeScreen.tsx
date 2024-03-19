@@ -37,7 +37,9 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
     //navigation.navigate("Demo", { screen: "DemoShowroom", params: {} })
   //}
   useEffect(() => {
-      // Only hydrate from userStore if coming from Profile Welcome screen
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log("Screen is focused - welcome temp", tempUserStore);
+      // Your hydration logic here
       //userStore.setImageFiles([
         //{
           //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-30203d2574996d496b73-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-0.jpg.jpeg",
@@ -56,9 +58,11 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
         //},
       //])
       tempUserStore.hydrateFromUserStore();
-    // Cleanup or other logic remains unchangedJ
-    return () => {};
-  }, []);
+    });
+
+    // Return the cleanup function
+    return unsubscribe;
+  }, [navigation, tempUserStore]);
 
   useHeader(
     {
