@@ -23,6 +23,12 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [selectedTeam, setSelectedTeam] = useState<string[]>([])
+  useEffect(() => {
+    // Assuming neighborhoods is an array of strings
+    if (userStore.neighborhood) {
+      setSelectedTeam([userStore.neighborhood["city"]])
+    }
+  }, [userStore.neighborhood["city"]]) // Dependency array ensures this runs when tempUserStore.neighborhoods changes
   const tx = "Genders.gender"
   const i18nText = tx && translate(tx)
   const error =  ""
@@ -39,7 +45,6 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   }, [])
 
 const handleImagesUpdate = (images: ImageData[]) => {
-     console.log(images)
     userStore.setImageFiles(images); // Assuming your store has a method to update image files
   }
 
@@ -118,8 +123,8 @@ const handleImagesUpdate = (images: ImageData[]) => {
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="email"
+        keyboardType="default"
         autoCorrect={false}
-        keyboardType="email-address"
         labelTx="signUpScreen.emailFieldLabel"
         placeholderTx="signUpScreen.emailFieldPlaceholder"
         helper={error}
@@ -151,6 +156,20 @@ const handleImagesUpdate = (images: ImageData[]) => {
         keyboardType="default"
         labelTx="signUpScreen.lastNameFieldLabel"
         placeholderTx="signUpScreen.lastNameFieldLabel"
+        helper={error}
+        status={error ? "error" : undefined}
+        //onSubmitEditing={() => authPasswordInput.current?.focus()}
+      />
+      <TextField
+        value={userStore.sport[0].game_level ?? undefined}
+        onChangeText={userStore.setSport}
+        containerStyle={$textField}
+        autoCapitalize="none"
+        autoComplete="name"
+        autoCorrect={false}
+        keyboardType="decimal-pad"
+        labelTx="signUpScreen.sportFieldLabel"
+        placeholderTx="signUpScreen.sportFieldLabel"
         helper={error}
         status={error ? "error" : undefined}
         //onSubmitEditing={() => authPasswordInput.current?.focus()}
@@ -193,7 +212,6 @@ const handleImagesUpdate = (images: ImageData[]) => {
           />
         ))}
       </View>
-
       <TextField
         value={userStore.description ?? undefined}
         onChangeText={userStore.setDescription}
