@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import { colors, spacing } from "../theme"
 import { View, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -15,28 +15,29 @@ interface ImagePickerWallProps {
   onImagesUpdate: (images: ImageData[]) => void;
 }
 
-export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate }) => {
-  const { userStore } = useStores()
-  console.log(userStore.imageFiles)
-  const initializeImagesFromStore = () => {
-    if (userStore.imageFiles.length > 0) {
-      return userStore.imageFiles.map((image) => ({
+export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate, isEditing }) => {
+  const { userStore, tempUserStore } = useStores()
+  const initializeImagesFromStore = useCallback(() => {
+  const store = isEditing ? tempUserStore : userStore // Choose the store based on isEditing
+
+    if (store.imageFiles.length > 0) {
+      return store.imageFiles.map((image) => ({
         uri: image.imageURL, // Use imageURL for the uri
         img_idx: image.img_idx,
       }))
     }
-    // Return default placeholders if no images are in the store
+    // Return default placeholders if no images are in the chosen store
     return [
       { uri: null, img_idx: 0 },
       { uri: null, img_idx: 1 },
       { uri: null, img_idx: 2 },
     ]
-  }
+  }, [isEditing, userStore.imageFiles, tempUserStore.imageFiles])
   const [images, setImages] = useState<ImageData[]>(initializeImagesFromStore)
-  // Update component's images state when userStore.imageData changes
   useEffect(() => {
     setImages(initializeImagesFromStore())
-  }, [userStore.imageData])
+  }, [initializeImagesFromStore]) // Dependency is the memoized function itself
+
   const handleChoosePhoto = async (index: number) => {
     const options = { noData: true, includeBase64: true }
     try {
@@ -52,7 +53,6 @@ export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate
       console.log("Error picking image: ", error)
     }
   }
-
   const handleDeletePhoto = (indexToDelete: number) => {
     const updatedImages = images.map((img, imgIndex) =>
       imgIndex === indexToDelete ? { ...img, uri: null } : img,

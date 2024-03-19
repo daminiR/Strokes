@@ -28,11 +28,26 @@ interface ProfileUpdateProps extends ProfileStackScreenProps<"ProfileUpdate"> {}
   const tx = "Genders.gender"
   const i18nText = tx && translate(tx)
   const error = ""
-  console.log("userStore", userStore)
-
   useEffect(() => {
     if (shouldHydrate) {
       // Only hydrate from userStore if coming from Profile Welcome screen
+      //userStore.setImageFiles([
+        //{
+          //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-30203d2574996d496b73-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-0.jpg.jpeg",
+          //filePath: "all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-30203d2574996d496b73-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-0.jpg.jpeg",
+          //img_idx: 0,
+        //},
+        //{
+          //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-e17ffbbd29ce6c01cb28-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-1.jpg.jpeg",
+          //filePath: "ll_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-e17ffbbd29ce6c01cb28-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-1.jpg.jpeg",
+          //img_idx: 1,
+        //},
+        //{
+          //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-72f2288ae034de867efe-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-2.jpg.jpeg",
+          //filePath: "all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-72f2288ae034de867efe-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-2.jpg.jpeg",
+          //img_idx: 2,
+        //},
+      //])
       tempUserStore.hydrateFromUserStore();
       setIsHydrated(true); // Set isHydrated to true once hydration is complete
     }
@@ -41,8 +56,7 @@ interface ProfileUpdateProps extends ProfileStackScreenProps<"ProfileUpdate"> {}
   }, [shouldHydrate]);
 
 const handleImagesUpdate = (images: ImageData[]) => {
-     console.log(images)
-    userStore.setImageFiles(images); // Assuming your store has a method to update image files
+    tempUserStore.setImageFiles(images); // Assuming your store has a method to update image files
   }
 
   const test = () => {
@@ -134,9 +148,8 @@ const handleImagesUpdate = (images: ImageData[]) => {
       <Header leftIcon={"back"} onLeftPress={() => goBack()} />
       <Text testID="login-heading" tx="UpdateProfile.title" preset="heading" style={$signIn} />
       {attemptsCount > 2 && <Text tx="UpdateProfile.hint" size="sm" weight="light" style={$hint} />}
-
       <Text tx="UpdateProfile.details" preset="formLabel" style={$enterDetails} />
-      <ImagePickerWall onImagesUpdate={handleImagesUpdate} />
+      <ImagePickerWall onImagesUpdate={handleImagesUpdate} isEditing={true}/>
       <ListView
         contentContainerStyle={$listContentContainer}
         data={profileDetails}

@@ -1,6 +1,6 @@
 import React, { FC } from "react"
-import { observer } from 'mobx-react-lite';
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { observer } from "mobx-react-lite"
+import { Image, ImageStyle, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import {
   CircularPlayerRatingBar,
   PlayerDetails,
@@ -17,62 +17,74 @@ import { AppStackScreenProps, ProfileStackScreenProps} from "../navigators"
 import { DemoTabScreenProps } from "../navigators/DemoNavigator"
 import { spacing } from "../theme"
 import { useStores } from "../models"
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface ProfilePreviewScreen extends ProfileStackScreenProps<"ProfilePreview"> {}
 
-export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(function ProfilePreviewScreen(_props) {
-  const { tempUserStore, authenticationStore } = useStores()
-  return (
-    <View style={$containerWithFAB}>
-      <Screen preset="auto" contentContainerStyle={$container} safeAreaEdges={["top", "bottom"]}>
-        <Header title={tempUserStore.firstName} leftIcon="menu" rightIcon="settings" safeAreaEdges={[]} />
-        <View style={$profileImageContainer}>
-          <AutoImage
-            style={$autoImage}
-            source={{
-              uri: tempUserStore.imageFiles[0].imageURL,
-            }}
+export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
+  function ProfilePreviewScreen(_props) {
+    const { tempUserStore, authenticationStore } = useStores()
+    // Utility function to get the correct image URI
+    const getImageUri = (imageObj) => {
+      return imageObj?.imageURL || imageObj?.uri
+    }
+      // Function to render image or default icon
+  const renderImageOrIcon = (image, index) => {
+    const uri = getImageUri(image);
+    return uri ? (
+      <Image key={index} source={{ uri }} style={$autoImage} />
+    ) : (
+      <View style={$iconContainer}>
+        <Icon name="camera-alt" size={300} color="#000" style={$cameraIcon} />
+      </View>
+    )
+  };
+
+    return (
+      <View style={$containerWithFAB}>
+        <Screen preset="auto" contentContainerStyle={$container} safeAreaEdges={["top", "bottom"]}>
+          <Header
+            title={tempUserStore.firstName}
+            leftIcon="menu"
+            rightIcon="settings"
+            safeAreaEdges={[]}
           />
-          <View style={$ratingBar}>
-            <CircularPlayerRatingBar
-              rating={Number(tempUserStore.sport[0].game_level)}
-              maxRating={7}
-              size={100}
-              strokeWidth={10}
-            />
-          </View>
-        </View>
-        <PlayerDetails heading={"Player Details"} isEditing={true} />
-        <AutoImage
-          style={$autoImage}
-          source={{
-            uri: tempUserStore.imageFiles[1].imageURL,
-          }}
-        />
-        <Card heading="Description" content={tempUserStore.description} />
-        <AutoImage
-          style={$autoImage}
-          source={{
-            uri: tempUserStore.imageFiles[2].imageURL,
-          }}
-        />
-      </Screen>
-      {/* Right-floating FAB */}
-      <Button onPress={() => {}} style={$rightFAB}>
-        <View style={$iconStyle}>
-          <Icon size={34} name={"thumbs-up"} />
-        </View>
-      </Button>
-      {/* Right-floating FAB */}
-      <Button onPress={() => {}} style={$leftFAB}>
-        <View style={$iconStyle}>
-          <Icon size={34} name={"thumbs-down"} />
-        </View>
-      </Button>
-    </View>
-  )
-})
+          {/* Ensure you have a valid index check for tempUserStore.imageFiles */}
+          {tempUserStore.imageFiles[0] && (
+            <View style={$profileImageContainer}>
+              {tempUserStore.imageFiles[0]
+                ? renderImageOrIcon(tempUserStore.imageFiles[0], 0)
+                : renderImageOrIcon(undefined, 0)}
+              {/* Rating bar and other components */}
+            </View>
+          )}
+          <PlayerDetails heading={"Player Details"} isEditing={true} />
+          {/* Ensure you have a valid index check for tempUserStore.imageFiles */}
+          {tempUserStore.imageFiles[1] && (
+            <View style={$profileImageContainer}>
+              {tempUserStore.imageFiles[1]
+                ? renderImageOrIcon(tempUserStore.imageFiles[1], 1)
+                : renderImageOrIcon(undefined, 1)}
+              {/* Rating bar and other components */}
+            </View>
+          )}
+          {/* Other components */}
+          <Card heading="Description" content={tempUserStore.description} />
+          {tempUserStore.imageFiles[2] && (
+            <View style={$profileImageContainer}>
+              {tempUserStore.imageFiles[2]
+                ? renderImageOrIcon(tempUserStore.imageFiles[2], 2)
+                : renderImageOrIcon(undefined, 2)}
+              {/* Rating bar and other components */}
+            </View>
+          )}
+        </Screen>
+        {/* FAB buttons */}
+      </View>
+    )
+  },
+)
+
 const $profileImageContainer: ViewStyle = {
   position: "relative",
 }
@@ -91,6 +103,18 @@ const $ratingBar: ViewStyle = {
 const $containerWithFAB : ViewStyle = {
   flex: 1,
 }
+const $cameraIcon = {
+  opacity: 0.5,
+}
+const $iconContainer: ViewStyle = {
+  width: '100%', // Match the width of $autoImage
+  height: 400, // Match the height of $autoImage
+  justifyContent: 'center', // Center content vertically
+  alignItems: 'center', // Center content horizontally
+  borderRadius: 8, // Match the borderRadius of $autoImage
+  marginBottom: 16, // Match the marginBottom of $autoImage
+  backgroundColor: '#f0f0f0', // Optional: background color for the container
+};
 const $autoImage: ImageStyle = {
     width: '100%', // Make the image full width considering the padding of the screen
     height: 400, // Adjust the height as necessary

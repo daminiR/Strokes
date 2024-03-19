@@ -60,6 +60,9 @@ export const UserStoreModel = types
     setNeighborhood(neighborhood: string) {
       self.neighborhood = neighborhood
     },
+    setSport(squash_level: string) {
+      self.sport = [{sport: "squash", game_level: squash_level}]
+    },
     setDescription(description: string) {
       self.description = description
     },
