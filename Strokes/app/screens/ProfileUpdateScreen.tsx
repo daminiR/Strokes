@@ -14,7 +14,7 @@ import { colors, spacing } from "../theme"
 
 interface ProfileUpdateProps extends ProfileStackScreenProps<"ProfileUpdate"> {}
 
-  export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function ProfileUpdateScreen(_props) {
+export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function ProfileUpdateScreen(_props) {
   const authPasswordInput = useRef<TextInput>(null)
   const [signUpError, setSignUpError] = useState<string | null>(null)
   const route = useRoute()
@@ -28,40 +28,13 @@ interface ProfileUpdateProps extends ProfileStackScreenProps<"ProfileUpdate"> {}
   const tx = "Genders.gender"
   const i18nText = tx && translate(tx)
   const error = ""
-  //useEffect(() => {
-    //if (shouldHydrate) {
-      //// Only hydrate from userStore if coming from Profile Welcome screen
-      ////userStore.setImageFiles([
-        ////{
-          ////imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-30203d2574996d496b73-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-0.jpg.jpeg",
-          ////filePath: "all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-30203d2574996d496b73-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-0.jpg.jpeg",
-          ////img_idx: 0,
-        ////},
-        ////{
-          ////imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-e17ffbbd29ce6c01cb28-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-1.jpg.jpeg",
-          ////filePath: "ll_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-e17ffbbd29ce6c01cb28-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-1.jpg.jpeg",
-          ////img_idx: 1,
-        ////},
-        ////{
-          ////imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-72f2288ae034de867efe-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-2.jpg.jpeg",
-          ////filePath: "all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-72f2288ae034de867efe-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-2.jpg.jpeg",
-          ////img_idx: 2,
-        ////},
-      ////])
-      //tempUserStore.hydrateFromUserStore();
-      //setIsHydrated(true); // Set isHydrated to true once hydration is complete
-    //}
-    //// Cleanup or other logic remains unchangedJ
-    //return () => {};
-  //}, [shouldHydrate]);
-
-const handleImagesUpdate = (images: ImageData[]) => {
+  const handleImagesUpdate = (images: ImageData[]) => {
   tempUserStore.setImageFiles(images) // Assuming your store has a method to update image files
 }
 const updateUserChanges = () => {
   mongoDBStore.updateUserInMongoDB()
+  goBack()
 }
-
   const test = () => {
     authenticationStore.setIsAuthenticated(true)
   }
@@ -84,22 +57,10 @@ const updateUserChanges = () => {
 
   const profileDetails =[
   {
-    label: "Phone Number",
-    value: tempUserStore.phoneNumber,
-    iconName: "phone",
-    case: "phoneNumber",
-  },
-  {
     label: "Squash Level",
     value: tempUserStore.sport[0].game_level,
     iconName: "squash_level",
     case: "squash_level",
-  },
-  {
-    label: "Email",
-    value: tempUserStore.email,
-    iconName: "email",
-    case: "email",
   },
   {
     label: "First Name",

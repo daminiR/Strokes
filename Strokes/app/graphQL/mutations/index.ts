@@ -38,7 +38,7 @@ const ADD_PROFILE2 = gql`
     $first_name: String!
     $last_name: String!
     $gender: String!
-    $image_set: [Upload!]!
+    $image_set: [FileUploadInput!]!
     $sports: [SquashNodeInput!]!
     $age: Int!
     $description: String!
@@ -68,34 +68,34 @@ const ADD_PROFILE2 = gql`
 const UPDATE_USER_PROFILE = gql`
   mutation UpdateUserProfile(
     $_id: String!
-    $first_name: String!
-    $last_name: String!
+    $firstName: String!
+    $lastName: String!
     $gender: String!
-    $add_local_images: [ImageData]
+    $add_local_images: [FileUploadInput!]!
     $remove_uploaded_images: [DataInput]
     $original_uploaded_image_set: [DataInput!]!
     $sports: [SquashNodeInput!]!
-    $location: LocationInput!
+    $neighborhood: LocationInput!
     $age: Int!
     $description: String!
   ) {
     updateUserProfile(
       _id: $_id
-      first_name: $first_name
+      firstName: $firstName
       gender: $gender
       age: $age
       sports: $sports
-      location: $location
-      last_name: $last_name
-      add_local_images: $add_local_images
-      remove_uploaded_images: $remove_uploaded_images
-      original_uploaded_image_set: $original_uploaded_image_set
+      neighborhood: $neighborhood
+      lastName: $lastName
+      addLocalImages: $add_local_images
+      removeUploadedImages: $remove_uploaded_images
+      originalImages: $original_uploaded_image_set
       description: $description
     ) {
       _id
-      first_name
-      last_name
-      location {
+      firstName
+      lastName
+      neighborhood {
         city
         state
         country

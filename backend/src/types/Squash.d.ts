@@ -4,6 +4,10 @@ interface Data {
   imageURL: string;
   filePath: string;
 }
+export interface FileUploadType {
+  img_idx: Int!;
+  ReactNativeFile: Upload!;
+}
 interface DisplayData {
   imageURL: string;
   filePath: string;

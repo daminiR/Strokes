@@ -70,7 +70,6 @@ export const UserStoreModel = types
       self._id = _id
     },
     setFromMongoDb(userData){
-      console.log(userData.gender)
       self.email = userData.email
       self.age = userData.age
       self.phoneNumber = userData.phoneNumber

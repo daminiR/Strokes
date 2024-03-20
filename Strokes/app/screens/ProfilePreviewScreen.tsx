@@ -56,6 +56,14 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
                 ? renderImageOrIcon(tempUserStore.imageFiles[0], 0)
                 : renderImageOrIcon(undefined, 0)}
               {/* Rating bar and other components */}
+              <View style={$ratingBar}>
+                <CircularPlayerRatingBar
+                  rating={Number(tempUserStore.sport[0].game_level)}
+                  maxRating={7}
+                  size={100}
+                  strokeWidth={10}
+                />
+              </View>
             </View>
           )}
           <PlayerDetails heading={"Player Details"} isEditing={true} />

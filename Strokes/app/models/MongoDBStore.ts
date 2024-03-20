@@ -6,6 +6,24 @@ import {ReactNativeFile} from 'apollo-upload-client'
 import { authExchange } from '@urql/extractFiles';
 import * as graphQL from '@graphQL'
 
+function cleanGraphQLResponse(object) {
+  // If the object is an array, apply the function to each element
+  if (Array.isArray(object)) {
+    return object.map(cleanGraphQLResponse);
+  }
+  // If the object is an actual object, clean it
+  else if (object !== null && typeof object === 'object') {
+    const { __typename, ...cleanedObject } = object; // Destructure to remove __typename
+    // Apply the function recursively to all values
+    Object.keys(cleanedObject).forEach(
+      key => (cleanedObject[key] = cleanGraphQLResponse(cleanedObject[key]))
+    );
+    return cleanedObject;
+  }
+  // Base case: the item is neither an object nor an array
+  return object;
+}
+
 interface UserData {
   phoneNumber: string;
   email: string;
@@ -20,26 +38,16 @@ interface UserData {
 }
 
 function createReactNativeFile(imageFiles) {
-  return imageFiles.map(
-    ({ uri, img_idx }, index) =>
-      new ReactNativeFile({
-        uri: uri, // Assuming `uri` is correctly provided in the input object
-        type: "image/jpg", // Adjust type based on actual file type or metadata if available
-        name: `pic-${img_idx}.jpg`, // Use img_idx or index as needed for unique naming
-      }),
-  )
+  return imageFiles.map(({ uri, img_idx }) => ({
+    img_idx: img_idx, // Preserve the image index
+    ReactNativeFile: new ReactNativeFile({
+      uri: uri, // Assuming `uri` is correctly provided in the input object
+      type: "image/jpg", // Adjust type based on actual file type or metadata if available
+      name: `pic-${img_idx}.jpg`, // Use img_idx for unique naming
+    }),
+  }));
 }
 
-
-//function createReactNativeFile(imageFiles) {
-  //return imageFiles.map((file, index) => ({
-    //file: new ReactNativeFile({
-      //uri: file,
-      //type: "image/jpg", // Adjust type based on actual file type or metadata if available
-      //name: `pic-${index}.jpg`, // Example naming convention
-    //}),
-  //}));
-//}
 
 function processImageUpdates(mixedImages, originalImageFiles) {
   // Initialize containers for the processed results
@@ -66,6 +74,26 @@ function processImageUpdates(mixedImages, originalImageFiles) {
 
   return { addLocalImages, removeUploadedImages };
 }
+// Deep comparison function
+function deepCompare(obj1, obj2) {
+  if (obj1 === obj2) return true;
+  if (typeof obj1 !== 'object' || typeof obj2 !== 'object' || obj1 == null || obj2 == null) return false;
+
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) return false;
+
+  for (let key of keys1) {
+    if (!keys2.includes(key)) return false;
+    if (typeof obj1[key] === 'function' || typeof obj2[key] === 'function') continue;
+
+    if (!deepCompare(obj1[key], obj2[key])) return false;
+  }
+
+  return true;
+}
+
 
 const MongoDBStore = types
   .model("MongoDBStore", {
@@ -76,39 +104,62 @@ const MongoDBStore = types
       try {
         const tempUserStore = getRootStore(self).tempUserStore
         const userStore = getRootStore(self).userStore
+
+        // Check for changes in fields and embedded objects
+        const fieldsToUpdate = [
+          "firstName",
+          "lastName",
+          "age",
+          "gender",
+          "sports",
+          "description",
+          "neighborhood",
+        ]
+        const hasDifferences = fieldsToUpdate.some(
+          (field) => !deepCompare(tempUserStore[field], userStore[field]),
+        )
+
         const { addLocalImages, removeUploadedImages } = processImageUpdates(
           tempUserStore.imageFiles,
           userStore.imageFiles,
         )
-        const add_local_images_rn = createReactNativeFile(addLocalImages)
-        console.log(
-          "outputs for image manipulation",
-          addLocalImages,
-          removeUploadedImages,
-          userStore.imageFiles,
-          tempUserStore.imageFiles,
-        )
-        //const response = yield client.mutate({
-        //mutation: graphQL.UPDATE_USER_PROFILE,
-        //variables: {
-        //_id: tempUserStore._id,
-        //firstName: tempUserStore.firstName,
-        //lastName: tempUserStore.lastName,
-        //age: tempUserStore.age,
-        //add_local_images: add_local_images_rn,
-        //remove_uploaded_images: removeUploadedImages,
-        //original_uploaded_image_set: userStore.imageFiles,
-        //gender: tempUserStore.gender,
-        //sports: { sport: "Squash", game_level: "1" },
-        //description: tempUserStore.description,
-        //location: tempUserStore.neighborhood,
-        ////newUserToken: token,
-        //},
-        //})
-        // Handle success or update state as needed
+        const hasImageUpdates = addLocalImages.length > 0 || removeUploadedImages.length > 0
+
+        if (!hasDifferences && !hasImageUpdates) {
+          console.log("No changes detected, skipping update.")
+          return // Skip mutation if there are no differences
+        }
+
+        // Prepare images for GraphQL mutation
+        const addLocalImagesRN = createReactNativeFile(addLocalImages)
+
+        // Proceed with the mutation
+        const response = yield client.mutate({
+          mutation: graphQL.UPDATE_USER_PROFILE,
+          variables: {
+            _id: userStore._id,
+            add_local_images: addLocalImagesRN,
+            remove_uploaded_images: removeUploadedImages,
+            original_uploaded_image_set: userStore.imageFiles,
+            firstName: tempUserStore.firstName,
+            lastName: tempUserStore.lastName,
+            age: tempUserStore.age,
+            gender: tempUserStore.gender,
+            sports: tempUserStore.sport,
+            description: tempUserStore.description,
+            neighborhood: tempUserStore.neighborhood,
+          },
+        })
+
+        // Clean response and update userStore with new data
+        const cleanedResponse = cleanGraphQLResponse(response.data.updateUserProfile)
+        userStore.setFromMongoDb({
+          ...cleanedResponse,
+          email: userStore.email,
+          phoneNumber: userStore.phoneNumber,
+        })
       } catch (error) {
-        console.error("Error creating user:", error)
-        // Handle error or set error state
+        console.error("Error updating user:", error)
       }
     }),
     createUserInMongoDB: flow(function* createUser() {
@@ -127,7 +178,7 @@ const MongoDBStore = types
             lastName: userStore.lastName,
             age: 33,
             gender: userStore.gender,
-            sports: { sport: "Squash", game_level: "1" },
+            sports: userStore.sport,
             description: userStore.description,
             location: userStore.neighborhood,
             //newUserToken: token,

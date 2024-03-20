@@ -3,6 +3,10 @@ export const LocationType = `
     state: String!,
     country: String!
 `;
+export const FileUploadType = `
+  img_idx: Int!,
+  ReactNativeFile: FileUpload!
+`
 export const MessageType = `
  _id: ID!,
  sender: String!,

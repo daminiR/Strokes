@@ -7,6 +7,7 @@ import {
   SquashNodeType,
   DataType,
   ImageData,
+  FileUploadType,
   ageRange,
   PotentialMatchUserType,
   LikedByUserType,
@@ -37,6 +38,9 @@ export const typeDefs = gql`
   }
   input LocationInput {
     ${LocationType}
+  }
+  input FileUploadInput {
+    ${FileUploadType}
   }
   type LocationType {
     ${LocationType}
@@ -124,17 +128,16 @@ export const typeDefs = gql`
 
     updateUserProfile(
       _id: String!
-      first_name: String!
-      last_name: String!
-      image_set: [FileUpload!]!
+      firstName: String!
+      lastName: String!
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
-      location:LocationInput!
+      neighborhood:LocationInput!
       description: String!
-      add_local_images: [ImageData],
-      remove_uploaded_images: [DataInput],
-      original_uploaded_image_set: [DataInput!]!,
+      addLocalImages: [FileUploadInput!]!,
+      removeUploadedImages: [DataInput],
+      originalImages: [DataInput!]!,
     ): Squash
 
     createSquash2(
