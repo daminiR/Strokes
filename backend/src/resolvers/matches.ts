@@ -1,6 +1,10 @@
 import Squash from '../models/Squash';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
+import { CHAT_TIMER } from '../constants'
+import {getMatchedUserToken, sendAdminMatchMessages, createGroupChannel} from '../utils'
+import axios from 'axios'
+
 export const resolvers = {
   Query: {
     matchesNotOptim: async (
@@ -53,39 +57,38 @@ export const resolvers = {
       info
     ) => {
       const { _id, offset, limit, location, sport, game_levels, ageRange } = sanitize(unSanitizedData)
-      console.log("why matches erro", _id)
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
       const filter = {
         $and: [
           {
-            _id: { $ne: _id },
+            _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec",
           },
-          {
-            "location.city": location.city,
-          },
-          {
-            active: true,
-          },
-          {
-            sports: {
-              $elemMatch: { sport: sport, game_level: { $in: game_levels } },
-            },
-          },
-          {
-            age: { $gt: minAge, $lt: maxAge },
-          },
+          //{
+            //"location.state": location.state,
+          //},
+          //{
+            //active: true,
+          //},
+          //{
+            //sports: {
+              //$elemMatch: { sport: sport, game_level: { $in: game_levels } },
+            //},
+          //},
+          //{
+            //age: { $gt: minAge, $lt: maxAge },
+          //},
         ],
       };
       const fieldsNeeded = {
         _id: 1,
-        first_name: 1,
+        firstName: 1,
         age: 1,
         gender: 1,
         sports: 1,
         description: 1,
         image_set: 1,
-        location: 1,
+        neighborhood: 1,
       };
       const users = await Squash.find(filter, fieldsNeeded)
         .skip(offset)
@@ -101,20 +104,47 @@ export const resolvers = {
       context,
       info
     ) => {
-      const { currentUserId, potentialMatchId, currentUser, potentialMatch } = sanitize(unSanitizedData)
-      //const user = context.user;
-      //if (user?.sub != currentUserId) throw new AuthenticationError("not logged in");
-      const doc = await Squash.findOneAndUpdate(
+      const { currentUserId, potentialMatchId, currentUser, potentialMatch } =
+        sanitize(unSanitizedData);
+      //const chat_timer = 1.21e+9
+      //two days
+      const unix = Date.now() - CHAT_TIMER;
+      // note: don't need to update matches archives for potential match because
+      //that needs to be on the potential matches server load on their id
+      const trieal = await Squash.findOneAndUpdate(
         { _id: currentUserId },
-        { $addToSet: { matches: potentialMatch } },
-        { new: true }
+        { $set: { "matches.$[elem].archived": true } },
+        { arrayFilters: [{ "elem.createdAt": { $lte: unix } }], new: true }
       );
-      const potentialMatchDoc = await Squash.findOneAndUpdate(
-        { _id: potentialMatchId },
-        { $push: { matches: currentUser } },
-        { new: true }
-      );
-      return potentialMatchDoc;
+      createGroupChannel(currentUserId, potentialMatchId)
+        .then(async (channel_response) => {
+          await Squash.findOneAndUpdate(
+            { _id: currentUserId },
+            { $addToSet: { matches: potentialMatch } },
+            { new: true }
+          );
+          const potentialMatchDoc = await Squash.findOneAndUpdate(
+            { _id: potentialMatchId },
+            { $push: { matches: currentUser } },
+            { new: true }
+          );
+          getMatchedUserToken(potentialMatchId)
+            .then((matchUserToken) => {
+              sendAdminMatchMessages(
+                channel_response,
+                trieal?.firstName,
+                matchUserToken
+              );
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+            return potentialMatchDoc;
+        })
+        .catch((err) => {
+          console.log(err);
+          return trieal;
+        });
     },
   },
 };

@@ -1,20 +1,27 @@
 import Squash from '../models/Squash';
+import mongoose from 'mongoose';
 import _ from 'lodash'
-import {
-  deleteFilesFromAWS,
-  createAWSUpload,
-} from "../utils/awsUpload";
+import { manageImages } from "../utils/awsUpload";
 import {
   SPORT_CHANGES_PER_DAY,
 } from "../constants/";
 import sanitize from 'mongo-sanitize'
+import { filterMatches } from '../utils/matches';
 
 export const resolvers = {
   Query: {
     squash: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
-      console.log("id in sqash", id)
-      const squash_val = await Squash.findById(id);
+      // change matches to only get matches that are beyond certain dates
+      console.log(unSanitizedId);
+      var squash_val = await Squash.findById(id);
+      if (squash_val) {
+        if (squash_val.matches) {
+          const new_squash = filterMatches(squash_val);
+          console.log(new_squash);
+          return new_squash;
+        }
+      }
       return squash_val;
     },
     squashes: async (parents, unSanitizedId, context, info) => {
@@ -27,63 +34,70 @@ export const resolvers = {
   },
   Mutation: {
     updateUserProfile: async (root, unSanitizedData, context) => {
+      // Assuming context provides user authentication details
+      //const userId = context.isAuthenticated(); // Adjust according to your authentication logic
+      //if (!userId) {
+        //throw new Error("Unauthorized");
+      //}
       const {
         _id,
-        image_set,
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         gender,
         age,
         sports,
-        location,
+        neighborhood,
         description,
-        remove_uploaded_images,
-        add_local_images,
-        original_uploaded_image_set,
-      } = sanitize(unSanitizedData);
+        addLocalImages,
+        removeUploadedImages,
+        originalImages
+      } = unSanitizedData;
 
-      //const user = context.user;
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
+      //if (userId !== _id) {
+        //throw new Error("Unauthorized: You can only update your own profile.");
+      //}
 
-      const removed_image_set = await deleteFilesFromAWS(
-        remove_uploaded_images,
-        original_uploaded_image_set,
-        add_local_images.length
-      );
-      const data_set = await createAWSUpload(add_local_images, _id);
-      const final_image_set = removed_image_set.concat(data_set);
-      const check_doc_sports = await Squash.findById(_id);
-      var sportChangesPerDay = check_doc_sports?.sportChangesPerDay;
-      const sportsOld = _.map(check_doc_sports?.sports, (sportObj) => {
-        return sportObj.sport;
-      });
-      const sportsNew = _.map(sports, (sportObj) => {
-        return sportObj.sport;
-      });
-      if (!_.isEqual(check_doc_sports?.sports, sports)) {
-        sportChangesPerDay = sportChangesPerDay
-          ? sportChangesPerDay - 1
-          : SPORT_CHANGES_PER_DAY;
-      }
-      const doc = await Squash.findOneAndUpdate(
-        { _id: _id },
-        {
-          $set: {
-            _id: _id,
+      const session = await mongoose.startSession();
+      session.startTransaction();
+
+      try {
+        // Handling image removal from AWS and constructing the new image set
+        const currentSquashProfile = await Squash.findById(_id).session(
+          session
+        );
+        if (!currentSquashProfile) {
+          throw new Error("User profile not found.");
+        }
+         const  final_image_set = await manageImages(
+           addLocalImages,
+           removeUploadedImages,
+           originalImages,
+           _id
+         );
+        // Updating the Squash model
+        const updatedProfile = await Squash.findOneAndUpdate(
+          { _id: _id },
+          {
+            firstName,
+            lastName,
+            gender,
+            age,
+            sports,
+            neighborhood,
+            description,
             image_set: final_image_set,
-            first_name: first_name,
-            last_name: last_name,
-            gender: gender,
-            location: location,
-            age: age,
-            sports: sports,
-            description: description,
-            sportChangesPerDay: sportChangesPerDay,
+            // Include other fields as necessary
           },
-        },
-        { new: true }
-      );
-      return doc;
+          { new: true, session }
+        );
+        await session.commitTransaction();
+        return updatedProfile;
+      } catch (error) {
+        await session.abortTransaction();
+        throw error; // Re-throw the error for external handling
+      } finally {
+        session.endSession();
+      }
     },
   },
 };

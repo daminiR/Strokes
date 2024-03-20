@@ -7,6 +7,7 @@ import {
   SquashNodeType,
   DataType,
   ImageData,
+  FileUploadType,
   ageRange,
   PotentialMatchUserType,
   LikedByUserType,
@@ -37,6 +38,9 @@ export const typeDefs = gql`
   }
   input LocationInput {
     ${LocationType}
+  }
+  input FileUploadInput {
+    ${FileUploadType}
   }
   type LocationType {
     ${LocationType}
@@ -109,6 +113,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
+    updateAllUserSchema(_id: String!): String
     deleteImage(_id: String, img_idx: Int): [Data!]!
 
     updateLikes(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): Squash
@@ -117,30 +122,34 @@ export const typeDefs = gql`
 
     postMessage2(sender: String, receiver: String, text: String): ID!
 
+    uploadImage(
+    image: FileUpload!
+    ):Boolean
+
     updateUserProfile(
       _id: String!
-      first_name: String!
-      last_name: String!
+      firstName: String!
+      lastName: String!
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
-      location:LocationInput!
+      neighborhood:LocationInput!
       description: String!
-      add_local_images: [ImageData],
-      remove_uploaded_images: [DataInput],
-      original_uploaded_image_set: [DataInput!]!,
+      addLocalImages: [FileUploadInput!]!,
+      removeUploadedImages: [DataInput],
+      originalImages: [DataInput!]!,
     ): Squash
 
     createSquash2(
       _id: String!
-      first_name: String!
-      last_name: String!
+      firstName: String!
+      lastName: String!
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
-      location: LocationInput!
+      neighborhood: LocationInput!
       description: String!
-      image_set: [ImageData!]!
+      image_set: [FileUpload!]
       matches : [PotentialMatchInput!]
       blocked_me : [PotentialMatchInput!]
       i_blocked : [PotentialMatchInput!]
@@ -154,13 +163,13 @@ export const typeDefs = gql`
 
     createSquashTestSamples(
       _id: String!
-      first_name: String!
+      firstName: String!
       email: String!
-      last_name: String!
+      lastName: String!
       age: Int!
       gender: String!
       sports: [SquashNodeInput!]!
-      location: LocationInput!
+      neighborhood: LocationInput!
       description: String!
       image_set: [DataInput!]!
       matches : [PotentialMatchInput!]
@@ -171,7 +180,7 @@ export const typeDefs = gql`
       likedByUSers: [String!]
       phoneNumber: String
     ): Squash!
-
     softDeleteUser(_id: String): String!
+    softUnDeleteUser(_id: String): String!
   }
 `;

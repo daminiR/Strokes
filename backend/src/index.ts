@@ -9,9 +9,9 @@ import {resolvers as createUser} from './resolvers/createUSer'
 import {resolvers as likesDislikes} from './resolvers/likesDislikes'
 import {resolvers as matches} from './resolvers/matches'
 import {resolvers as testResolvers} from './resolvers/testResolvers'
-import {resolvers as random} from './resolvers/random'
 import {resolvers as updateUser} from './resolvers/updateUser'
 import {resolvers as uploads} from './resolvers/uploads'
+import {resolvers as update} from './resolvers/admin_resolvers/update_schema'
 
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/typeDefs';
@@ -21,8 +21,8 @@ const startServer = async () => {
   const uri = process.env.ATLAS_URI as any
   const collectionName = process.env.COLLECTION_NAME as any
   const app = express()
-  app.use(graphqlUploadExpress())
-  const httpServer = createServer(app)
+  app.use(graphqlUploadExpress());
+  const httpServer = createServer(app);
   const resolvers2 = mergeResolvers(
     [
       createUser,
@@ -32,6 +32,7 @@ const startServer = async () => {
       matches,
       updateUser,
       uploads,
+      update
     ]
   );
   const schema = makeExecutableSchema({
@@ -40,8 +41,7 @@ const startServer = async () => {
   });
   const server = new ApolloServer({
     schema: schema,
-    context: async ({ req }) => {
-    }
+    context: async ({ req }) => {},
   });
   await server.start()
   server.applyMiddleware({ app });
