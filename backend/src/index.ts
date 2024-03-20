@@ -44,7 +44,8 @@ const startServer = async () => {
     context: async ({ req }) => {},
   });
   await server.start()
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app: app as any });
+
   mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
