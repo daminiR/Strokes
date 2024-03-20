@@ -4,6 +4,10 @@ interface Data {
   imageURL: string;
   filePath: string;
 }
+export interface FileUploadType {
+  img_idx: Int!;
+  ReactNativeFile: Upload!;
+}
 interface DisplayData {
   imageURL: string;
   filePath: string;
@@ -38,7 +42,7 @@ export interface FilterT {
 }
 
 export interface PotentialMatchType {
-    first_name: string
+    firstName: string
     _id: string
     age: number
     gender: string
@@ -47,24 +51,25 @@ export interface PotentialMatchType {
     image_set: ImageSetT[]
 }
 export interface LikedByUserType {
-    first_name: string
+    firstName: string
     _id: string
     age: number
     profileImage: ImageSetT
 }
 export type PotentialMatchT = PotentialMatchType[]
+export type PotentialMatchSingleT= PotentialMatchType
 export type LikedByUserT = LikedByUserType[]
 export type SportsList = Sport[]
 export interface SquashDocument extends Document {
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   age : number
   gender: string
   sports: SportsList
-  location: LocationT
+  neighborhood: LocationT
   description: [string]
   image_set: ImageSetT[]
-  matched : PotentialMatchT
+  matches : PotentialMatchT
   blocked_me : PotentialMatchT
   i_blocked : PotentialMatchT
   likes : PotentialMatchT
