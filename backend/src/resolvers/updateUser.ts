@@ -1,4 +1,5 @@
 import Squash from '../models/Squash';
+import mongoose from 'mongoose';
 import _ from 'lodash'
 import { manageImages } from "../utils/awsUpload";
 import {
@@ -34,12 +35,10 @@ export const resolvers = {
   Mutation: {
     updateUserProfile: async (root, unSanitizedData, context) => {
       // Assuming context provides user authentication details
-      const userId = context.isAuthenticated(); // Adjust according to your authentication logic
-
-      if (!userId) {
-        throw new Error("Unauthorized");
-      }
-
+      //const userId = context.isAuthenticated(); // Adjust according to your authentication logic
+      //if (!userId) {
+        //throw new Error("Unauthorized");
+      //}
       const {
         _id,
         firstName,
@@ -47,15 +46,16 @@ export const resolvers = {
         gender,
         age,
         sports,
-        location,
+        neighborhood,
         description,
         addLocalImages,
         removeUploadedImages,
-      } = args;
+        originalImages
+      } = unSanitizedData;
 
-      if (userId !== _id) {
-        throw new Error("Unauthorized: You can only update your own profile.");
-      }
+      //if (userId !== _id) {
+        //throw new Error("Unauthorized: You can only update your own profile.");
+      //}
 
       const session = await mongoose.startSession();
       session.startTransaction();
@@ -68,10 +68,12 @@ export const resolvers = {
         if (!currentSquashProfile) {
           throw new Error("User profile not found.");
         }
-
-         const { uploadedImages, deletedImageKeys } = await manageImages(addLocalImages, removeUploadedImages, _id);
-
-
+         const  final_image_set = await manageImages(
+           addLocalImages,
+           removeUploadedImages,
+           originalImages,
+           _id
+         );
         // Updating the Squash model
         const updatedProfile = await Squash.findOneAndUpdate(
           { _id: _id },
@@ -81,9 +83,9 @@ export const resolvers = {
             gender,
             age,
             sports,
-            location,
+            neighborhood,
             description,
-            image_set: updatedImageSet,
+            image_set: final_image_set,
             // Include other fields as necessary
           },
           { new: true, session }

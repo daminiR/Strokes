@@ -19,26 +19,12 @@ type RootStackParamList = {
 };
 
 const fieldConfigs = {
-  phoneNumber: {
-    method: "setPhoneNumber",
-    keyboardType: "number-pad",
-    labelTx: "UpdateProfile.phoneFieldLabel",
-    placeholderTx: "phoneNumber",
-    placeholder: "phoneNumber",
-  },
   squash_level: {
     method: "setSport",
     keyboardType: "default",
     labelTx: "UpdateProfile.sportFieldLabel",
     placeholderTx: "UpdateProfile.sportFieldLabel",
     placeholder: "sport[0].game_level",
-  },
-  email: {
-    method: "setEmail",
-    keyboardType: "email-address",
-    labelTx: "UpdateProfile.emailFieldLabel",
-    placeholderTx: "UpdateProfile.emailFieldPlaceholder",
-    placeholder: "email",
   },
   firstName: {
     method: "setFirstName",
@@ -108,8 +94,6 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
     const initialValue = getValueByPath(tempUserStore, fieldPath)
     return initialValue !== undefined ? String(initialValue) : '';
   });
-
-
   const setGender = (gender) => {
     tempUserStore.setGender(gender)
   }
@@ -117,7 +101,6 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
     // Optionally, render a loading indicator or return null
     return <Text>Loading...</Text>
   }
-
   function getValueByPath(obj, path) {
     return path
       .split(/[\.\[\]\'\"]/)

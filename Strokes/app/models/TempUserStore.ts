@@ -20,9 +20,7 @@ const NeighborhoodModel = types.model({
 export const TempStoreModel = types
   .model("UserStoreModel", {
     age: types.maybeNull(types.integer), // Assuming you're providing a unique identifier when creating a user instance
-    phoneNumber: types.maybeNull(types.string),
     isHydrated: types.maybeNull(types.boolean),
-    email: types.maybeNull(types.string),
     sport: types.optional(types.array(GameLevelModel), []),
     imageFiles: types.optional(types.array(types.frozen()), []),
     gender: types.optional(types.enumeration("Gender", ["male", "female", "other"]), "other"),
@@ -85,11 +83,11 @@ export const TempStoreModel = types
         description: userStore.description,
         firstName: userStore.firstName,
         lastName: userStore.lastName,
-        neighborhood: {
+        neighborhood: NeighborhoodModel.create({
           city: userStore.neighborhood.city,
           state: userStore.neighborhood.state,
           country: userStore.neighborhood.country,
-        },
+        }),
         // Any additional fields you wish to hydrate...
       }
       applySnapshot(self, newSnapshot)
