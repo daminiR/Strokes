@@ -31,9 +31,9 @@ export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function Pro
   const handleImagesUpdate = (images: ImageData[]) => {
   tempUserStore.setImageFiles(images) // Assuming your store has a method to update image files
 }
-const updateUserChanges = () => {
-  mongoDBStore.updateUserInMongoDB()
-  goBack()
+const updateUserChanges = async () => {
+  await mongoDBStore.updateUserInMongoDB()
+  navigate("ProfileWelcome")
 }
   const test = () => {
     authenticationStore.setIsAuthenticated(true)
@@ -106,7 +106,7 @@ const updateUserChanges = () => {
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Header leftIcon={"back"}
+      <Header
       onLeftPress={() => goBack()}
       rightText="Save" leftText="Cancel"
       onRightPress={() => updateUserChanges()}/>

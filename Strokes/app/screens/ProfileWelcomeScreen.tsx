@@ -30,35 +30,14 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
   const { navigation } = _props
   const {
     tempUserStore,
+    userStore,
     authenticationStore: { logout },
   } = useStores()
 
-  //function goNext() {
-    //navigation.navigate("Demo", { screen: "DemoShowroom", params: {} })
-  //}
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // Your hydration logic here
-      //userStore.setImageFiles([
-        //{
-          //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-30203d2574996d496b73-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-0.jpg.jpeg",
-          //filePath: "all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-30203d2574996d496b73-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-0.jpg.jpeg",
-          //img_idx: 0,
-        //},
-        //{
-          //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-e17ffbbd29ce6c01cb28-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-1.jpg.jpeg",
-          //filePath: "ll_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-e17ffbbd29ce6c01cb28-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-1.jpg.jpeg",
-          //img_idx: 1,
-        //},
-        //{
-          //imageURL: "https://sport-aws-images.s3.amazonaws.com/all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-72f2288ae034de867efe-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-2.jpg.jpeg",
-          //filePath: "all_images/0c951930-a533-4430-a582-5ce7ec6c61bc/20240304085248-72f2288ae034de867efe-0c951930-a533-4430-a582-5ce7ec6c61bc-pic-2.jpg.jpeg",
-          //img_idx: 2,
-        //},
-      //])
       tempUserStore.hydrateFromUserStore();
     });
-
     // Return the cleanup function
     return unsubscribe;
   }, [navigation, tempUserStore]);
@@ -72,6 +51,8 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
   )
 
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
+  const imageFile = userStore.imageFiles.find(file => file.img_idx === 0);
+  const imageUri = imageFile ? imageFile.imageURL : undefined;
 
   return (
     <Screen
@@ -83,7 +64,7 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
         {/* Profile Image Container */}
         <View style={$profileImageContainer}>
           <Image
-            source={{ uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg" }}
+            source={{ uri: imageUri }}
             style={$profileImage}
           />
           <TouchableOpacity style={$editIconContainer}>

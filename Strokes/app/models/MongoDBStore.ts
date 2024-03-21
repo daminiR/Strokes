@@ -201,10 +201,14 @@ const MongoDBStore = types
         })
         // Assuming response.data.user contains the user data
         const userStore = getRootStore(self).userStore
-        const userData = response.data.squash
         // Do something with the user data, e.g., update the store or return the data
-        userStore.setFromMongoDb(userData)
-        return userData
+        const cleanedResponse = cleanGraphQLResponse(response.data.squash)
+        userStore.setFromMongoDb({
+          ...cleanedResponse,
+          email: userStore.email,
+          phoneNumber: userStore.phoneNumber,
+        })
+        return cleanedResponse
       } catch (error) {
         console.error("Error querying user:", error)
         // Handle error or set error state
