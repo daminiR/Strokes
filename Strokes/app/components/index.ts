@@ -1,4 +1,6 @@
 export * from "./AutoImage"
+export * from "./SportCard"
+export * from "./SBItem"
 export * from "./UpdateProfileCard"
 export * from "./ImagePickerWall"
 export * from "./Button"

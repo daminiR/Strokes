@@ -111,7 +111,7 @@ const MongoDBStore = types
           "lastName",
           "age",
           "gender",
-          "sports",
+          "sport",
           "description",
           "neighborhood",
         ]
