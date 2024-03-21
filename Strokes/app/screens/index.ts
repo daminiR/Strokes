@@ -1,5 +1,6 @@
 export * from "./WelcomeScreen"
 export * from "./UpdateSingleField"
+export * from "./FadeCardScreen"
 export * from "./SettingsScreen"
 export * from "./LoginScreen"
 export * from "./SignUpScreen"

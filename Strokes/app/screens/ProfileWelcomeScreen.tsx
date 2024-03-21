@@ -40,7 +40,7 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
     });
     // Return the cleanup function
     return unsubscribe;
-  }, [navigation, tempUserStore]);
+  }, [navigation]);
 
   useHeader(
     {

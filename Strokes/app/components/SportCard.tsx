@@ -1,30 +1,26 @@
-import React, { FC } from "react"
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+
+import React from 'react';
+import { View, ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import {
   CircularPlayerRatingBar,
   PlayerDetails,
-  PlayerRatingBar,
   Header,
   Card,
   Button,
-  ListItem,
   AutoImage,
-  Screen,
   Text,
-} from "../components"
+} from '../components';
 import { observer } from 'mobx-react-lite';
-import { DemoTabScreenProps } from "../navigators/DemoNavigator"
-import { spacing } from "../theme"
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import { useStores } from "../models"
+import { spacing } from '../theme';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useStores } from '../models';
 
-
-export const SportSwipeScreen: FC<DemoTabScreenProps<'SportSwipe'>> = observer((_props) => {
-  const { userStore, authenticationStore } = useStores()
+export const SportCard = observer(() => {
+  const { userStore } = useStores();
   return (
     <View style={$containerWithFAB}>
-      <Screen preset="auto" contentContainerStyle={$container} safeAreaEdges={["top", "bottom"]}>
-        <Header title="Damini" leftIcon="menu" rightIcon="settings" safeAreaEdges={[]} />
+      <View style={$container}>
+        <Header title="Damini" leftIcon="menu" rightIcon="settings" />
         <View style={$profileImageContainer}>
           <AutoImage
             style={$autoImage}
@@ -55,22 +51,21 @@ export const SportSwipeScreen: FC<DemoTabScreenProps<'SportSwipe'>> = observer((
             uri: userStore.imageFiles[2].imageURL,
           }}
         />
-      </Screen>
-      {/* Right-floating FAB */}
+      </View>
       <Button onPress={() => {}} style={$rightFAB}>
         <View style={$iconStyle}>
           <Icon size={34} name={"thumbs-up"} />
         </View>
       </Button>
-      {/* Right-floating FAB */}
       <Button onPress={() => {}} style={$leftFAB}>
         <View style={$iconStyle}>
           <Icon size={34} name={"thumbs-down"} />
         </View>
       </Button>
     </View>
-  )
-})
+  );
+});
+
 const $profileImageContainer: ViewStyle = {
   position: "relative",
 }
@@ -168,3 +163,4 @@ const $logo: ImageStyle = {
   height: 38,
   width: 38,
 }
+
