@@ -1,8 +1,9 @@
 import { observer } from "mobx-react-lite"
 import { type ContentStyle } from "@shopify/flash-list"
 import { navigate, goBack} from "../navigators"
+import { translate } from "../i18n"
 import React, { FC } from "react"
-import { Image, TouchableOpacity, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Image, Linking, TouchableOpacity, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { isRTL } from "../i18n"
 import { useStores } from "../models"
@@ -33,6 +34,12 @@ export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScre
   const {
     authenticationStore: { logout },
   } = useStores()
+  const openURL = (url) => {
+    Linking.openURL(url).catch(err =>
+      Alert.alert('Cannot open URL', err.message)
+    );
+  };
+
 
   useHeader(
     {
@@ -42,20 +49,21 @@ export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScre
     [goBack],
   )
 
+
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
   const settingsMethods = [
     {
       label: "Terms And Conditions",
       iconName: "phone",
-      onPress: () => console.log("Terms and Conditions"), // Placeholder function, adjust as needed
+      onPress: () => openURL(translate("settings.termsAndConditionsURL")),
     },
     {
       label: "Privacy Policy",
       iconName: "privacy",
-      onPress: () => console.log("Privacy Policy"), // Placeholder function, adjust as needed
+      onPress: () => openURL(translate("settings.privacyPolicy")),
     },
     // Add more settings items as needed
-  ];
+  ]
 
 
   return (
@@ -75,8 +83,7 @@ export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScre
               topSeparator={true}
               bottomSeparator={true}
               rightIcon={"caretRight"}
-              //onPress={() => navigate("SingleUpdate", { field: `${item.case}` })}
-              //onPress={() => navigate("SingleUpdate", { field: `${item.case}` })}
+              onPress={item.onPress}
 
             />
         )}

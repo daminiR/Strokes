@@ -197,6 +197,10 @@ const en = {
     demoViaTxProp: "Via `tx` Prop",
     demoViaSpecifiedTxProp: "Via `{{prop}}Tx` Prop",
   },
+  settings: {
+    termsAndConditionsURL: "https://daminir.github.io/Playarmo/Terms%20and%20Conditions%202/",
+    privacyPolicy: "https://daminir.github.io/Playarmo/Privacy%20Policy%20Stuff/",
+  },
   demoDebugScreen: {
     howTo: "HOW TO",
     title: "Debug",
