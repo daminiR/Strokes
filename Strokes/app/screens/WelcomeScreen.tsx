@@ -17,8 +17,9 @@ interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
 export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(_props) {
   const { navigation } = _props
   const {
-    authenticationStore: { logout },
+    authenticationStore: { logout , setIsAuthenticated},
   } = useStores()
+    //setIsAuthenticated(false);
 
   function goNext() {
     navigation.navigate("Demo", { screen: "DemoShowroom", params: {} })

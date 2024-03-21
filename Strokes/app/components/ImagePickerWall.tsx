@@ -20,7 +20,7 @@ export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate
   const initializeImagesFromStore = useCallback(() => {
     const store = isEditing ? tempUserStore : userStore // Choose the store based on isEditing
     if (store.imageFiles.length > 0) {
-      return store.imageFiles
+      return [...store.imageFiles].sort((a, b) => a.img_idx - b.img_idx);
     }
     // Return default placeholders if no images are in the chosen store
     return [
