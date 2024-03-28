@@ -1,5 +1,5 @@
 import React from "react";
-import type { StyleProp, ViewStyle, ViewProps, ImageSourcePropType } from "react-native";
+import type { StyleProp, ImageStyle, ViewStyle, ViewProps, ImageSourcePropType } from "react-native";
 import { LongPressGestureHandler } from "react-native-gesture-handler";
 import type { AnimateProps } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
@@ -37,12 +37,12 @@ export const SBItem: React.FC<Props> = (props) => {
       }}
     >
       <Animated.View testID={testID} style={{ flex: 1 }} {...animatedViewProps}>
-          <AutoImage
-            style={$autoImage}
-            source={{
-              uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
-            }}
-          />
+        <AutoImage
+          style={$autoImage}
+          source={{
+            uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+          }}
+        />
       </Animated.View>
     </LongPressGestureHandler>
   )
