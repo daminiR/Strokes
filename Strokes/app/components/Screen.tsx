@@ -274,6 +274,7 @@ const $outerStyle: ViewStyle = {
 }
 
 const $innerStyle: ViewStyle = {
+  flexGrow: 1,
   justifyContent: "flex-start",
   alignItems: "stretch",
 }

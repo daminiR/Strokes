@@ -1,7 +1,5 @@
 import { observer } from "mobx-react-lite"
-import Config from 'react-native-config';
 import React, {useEffect, useRef, useState, useMemo} from "react"
-import { isRTL, translate, TxKeyPath } from "../i18n"
 import { TextInput, Dimensions, TextStyle, ViewStyle, View } from "react-native"
 import { Button, Icon, Screen, Text, SBItem, TextField, SelectField, Toggle, SportCard} from "../components"
 import { useStores } from "../models"
@@ -9,12 +7,22 @@ import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
 import { interpolate } from "react-native-reanimated"
 import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel"
+import Swiper from 'react-native-deck-swiper';
 
-const PAGE_WIDTH = Dimensions.get('window').width;
+
+const PAGE_WIDTH = Dimensions.get('window').width
+const PAGE_HEIGHT = Dimensions.get('window').height
+const cards = [
+  { text: 'Card 1' },
+  { text: 'Card 2' },
+  // Add more cards as needed
+];
+
 
 interface FaceCardProps extends AppStackScreenProps<"FaceCardProps"> {}
 
 export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps(_props) {
+   const [index, setIndex] = useState(0);
   const { userStore, authenticationStore } = useStores()
   const animationStyle: TAnimationStyle = React.useCallback(
     (value: number) => {
@@ -32,47 +40,76 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
     },
     [],
   );
+   const data = [
+    { title: 'First Item', id: 'item1' },
+    { title: 'Second Item', id: 'item2' },
+    { title: 'Third Item', id: 'item3' },
+    // Add more items as necessary
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
   const width = Dimensions.get('window').width;
   useEffect(() => {
     // Pre-fill logic if necessary
     return () => userStore.reset()
   }, [userStore])
+  const onSwiped = () => {
+    console.log("Swiped card")
+  }
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const goToNextItem = () => {
+    const nextIndex = (currentIndex + 1) % data.length // Loop back to the first item at the end
+    setCurrentIndex(nextIndex)
+  }
 
   return (
-    <Screen
-      preset="auto"
-      style={$screenContentContainer}
-      contentContainerStyle={$contentContainer}
-      safeAreaEdges={["top", "bottom"]}
-    >
-      <View style={$carouselContainer}>
-        <Carousel
-          loop
-          style={{
-            width: PAGE_WIDTH,
-            height: 240,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          width={PAGE_WIDTH * 0.7}
-          height={240}
-          data={[...new Array(6).keys()]}
-          renderItem={({ index }) => {
-            //return <SportCard />
-             return <SBItem key={index} index={index} />;
-          }}
-          customAnimation={animationStyle}
-        />
-      </View>
+    <Screen preset="auto" style={$screenContentContainer} safeAreaEdges={["top"]}>
+      <Swiper
+        containerStyle={$swiperStyle}
+        cardStyle={$cardStyle}
+        cards={cards}
+        renderCard={({ index }) => {
+          return <SportCard />
+        }}
+        onSwiped={onSwiped}
+        onSwipedAll={() => {
+          console.log("onSwipedAll")
+        }}
+        cardIndex={index}
+        backgroundColor={"#4FD0E9"}
+        horizontalSwipe={false}
+        verticalSwipe={false}
+        stackSize={2}
+      ></Swiper>
     </Screen>
   )
 
 })
 
+const $cardStyle: ViewStyle = {
+  flex: 1, // Ensure the card expands to fill available space
+  marginTop: -60, // Removes margins
+  marginLeft: -20, // Removes margins
+  padding: 0, // Removes margins
+  width: '100%',
+  height: '100%'
+  //justifyContent: "center", // Centers content vertically
+  //alignItems: "center", // Centers the swiper horizontally
+};
+const $swiperStyle: ViewStyle = {
+  flex: 1, // Use flex to ensure it expands to fill all available space
+  height: '100%', // Ensures it spans the full height
+  paddingHorizontal: 0, // Removes horizontal padding
+  paddingVertical: 0, // Removes vertical padding
+  marginBottom: 0, // Removes margins
+};
+
 const $screenContentContainer: ViewStyle = {
   flex: 1,
-  //paddingVertical: spacing.xxl,
-  //paddingHorizontal: spacing.lg,
+  paddingVertical: 0,
+  paddingHorizontal: 0,
+  height: '100%',
+  //justifyContent: "center", // Centers the swiper vertically
+  //alignItems: "center", // Centers the swiper horizontally
 }
 const $contentContainer = {
   flexGrow: 1, // Allows the content to expand to fill the screen
@@ -84,38 +121,4 @@ const $carouselContainer = {
   justifyContent: "center",
   alignItems: "center",
 }
-const $carousel = {
-  maxWidth: PAGE_WIDTH, // Ensure the Carousel does not exceed screen width
-  maxHeight: "100%", // Limit Carousel's height to 100% of its container
-}
 
-const $signIn: TextStyle = {
-  marginBottom: spacing.sm,
-}
-
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $hint: TextStyle = {
-  color: colors.tint,
-  marginBottom: spacing.md,
-}
-
-const $textField: ViewStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $tapButton: ViewStyle = {
-  marginTop: spacing.xs,
-}
-
-const $inputWrapperStyle: ViewStyle = {
-  marginBottom: spacing.lg,
-  flexDirection: "row", // Aligns children side by side
-  justifyContent: "space-around", // Distributes children evenly with space around them
-  alignItems: "center", // Centers children vertically in the container
-  flexWrap: "wrap", // Allows items to wrap to the next line if the container is too narrow
-  backgroundColor: colors.palette.neutral200,
-  overflow: "hidden",
-}

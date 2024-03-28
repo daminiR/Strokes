@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, ImageStyle, TextStyle, ViewStyle } from 'react-native';
+import { View, TouchableOpacity, ScrollView, ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import {
   CircularPlayerRatingBar,
   PlayerDetails,
@@ -11,7 +11,7 @@ import {
   Text,
 } from '../components';
 import { observer } from 'mobx-react-lite';
-import { spacing } from '../theme';
+import { colors, spacing } from '../theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useStores } from '../models';
 
@@ -19,39 +19,43 @@ export const SportCard = observer(() => {
   const { userStore } = useStores();
   return (
     <View style={$containerWithFAB}>
-      <View style={$container}>
-        <Header title="Damini" leftIcon="menu" rightIcon="settings" />
-        <View style={$profileImageContainer}>
-          <AutoImage
-            style={$autoImage}
-            source={{
-              uri: userStore.imageFiles[0].imageURL,
-            }}
-          />
-          <View style={$ratingBar}>
-            <CircularPlayerRatingBar
-              rating={Number(userStore.sport[0].game_level)}
-              maxRating={7}
-              size={100}
-              strokeWidth={10}
+      <ScrollView style={$scrollViewContainer}>
+        <TouchableOpacity activeOpacity={1}>
+          <View style={$container}>
+            <Header title="Damini" leftIcon="menu" rightIcon="settings" />
+            <View style={$profileImageContainer}>
+              <AutoImage
+                style={$autoImage}
+                source={{
+                  uri: userStore.imageFiles[0].imageURL,
+                }}
+              />
+              <View style={$ratingBar}>
+                <CircularPlayerRatingBar
+                  rating={Number(userStore.sport[0].game_level)}
+                  maxRating={7}
+                  size={100}
+                  strokeWidth={10}
+                />
+              </View>
+            </View>
+            <PlayerDetails heading={"Player Details"} isEditing={false} />
+            <AutoImage
+              style={$autoImage}
+              source={{
+                uri: userStore.imageFiles[1].imageURL,
+              }}
+            />
+            <Card heading="Description" content={userStore.description} />
+            <AutoImage
+              style={$autoImage}
+              source={{
+                uri: userStore.imageFiles[2].imageURL,
+              }}
             />
           </View>
-        </View>
-        <PlayerDetails heading={"Player Details"} isEditing={false} />
-        <AutoImage
-          style={$autoImage}
-          source={{
-            uri: userStore.imageFiles[1].imageURL,
-          }}
-        />
-        <Card heading="Description" content={userStore.description} />
-        <AutoImage
-          style={$autoImage}
-          source={{
-            uri: userStore.imageFiles[2].imageURL,
-          }}
-        />
-      </View>
+        </TouchableOpacity>
+      </ScrollView>
       <Button onPress={() => {}} style={$rightFAB}>
         <View style={$iconStyle}>
           <Icon size={34} name={"thumbs-up"} />
@@ -63,7 +67,7 @@ export const SportCard = observer(() => {
         </View>
       </Button>
     </View>
-  );
+  )
 });
 
 const $profileImageContainer: ViewStyle = {
@@ -79,7 +83,6 @@ const $ratingBar: ViewStyle = {
   backgroundColor: "transparent", // Make background transparent
   transform: [{ translateX: -75 }], // Shift left by half the width of the rating bar
 }
-
 
 const $containerWithFAB : ViewStyle = {
   flex: 1,
@@ -127,6 +130,10 @@ const $leftFAB: ViewStyle = {
     shadowRadius: 2,
   }
 
+const $scrollViewContainer: ViewStyle = {
+  //backgroundColor: "rgba(0,0,0,1)",
+  backgroundColor: colors.background,
+}
 const $screenContentContainer: ViewStyle = {
   paddingVertical: spacing.xxl,
   paddingHorizontal: spacing.lg,
