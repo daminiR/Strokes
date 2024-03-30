@@ -18,7 +18,6 @@ import { useStores } from '../models';
 export const SportCard = observer(() => {
   const { userStore } = useStores();
   return (
-    <View style={$containerWithFAB}>
       <ScrollView style={$scrollViewContainer}>
         <TouchableOpacity activeOpacity={1}>
           <View style={$container}>
@@ -56,17 +55,6 @@ export const SportCard = observer(() => {
           </View>
         </TouchableOpacity>
       </ScrollView>
-      <Button onPress={() => {}} style={$rightFAB}>
-        <View style={$iconStyle}>
-          <Icon size={34} name={"thumbs-up"} />
-        </View>
-      </Button>
-      <Button onPress={() => {}} style={$leftFAB}>
-        <View style={$iconStyle}>
-          <Icon size={34} name={"thumbs-down"} />
-        </View>
-      </Button>
-    </View>
   )
 });
 
