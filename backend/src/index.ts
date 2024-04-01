@@ -4,17 +4,17 @@ import  express from 'express';
 import { ApolloServer}  from 'apollo-server-express';
 import  mongoose, {ConnectOptions} from 'mongoose';
 import { mergeResolvers } from '@graphql-tools/merge';
-import {resolvers as deleteUser} from './resolvers/deleteUser'
-import {resolvers as createUser} from './resolvers/createUSer'
-import {resolvers as likesDislikes} from './resolvers/likesDislikes'
-import {resolvers as matches} from './resolvers/matches'
-import {resolvers as testResolvers} from './resolvers/testResolvers'
-import {resolvers as updateUser} from './resolvers/updateUser'
-import {resolvers as uploads} from './resolvers/uploads'
-import {resolvers as update} from './resolvers/admin_resolvers/update_schema'
+import {resolvers as deleteUser} from './resolvers/prod/deleteUser'
+import {resolvers as createUser} from './resolvers/prod/createUSer'
+import {resolvers as likesDislikes} from './resolvers/prod/likesDislikes'
+import {resolvers as matches} from './resolvers/prod/matches'
+import {resolvers as updateUser} from './resolvers/prod/updateUser'
+import {resolvers as uploads} from './resolvers/prod/uploads'
+import {resolvers as update} from './resolvers/admin/update_schema'
+import {resolvers as testResolvers} from './resolvers/test/createUser'
 
 import {graphqlUploadExpress} from 'graphql-upload'
-import { typeDefs } from './typeDefs/typeDefs';
+import { typeDefs } from './typeDefs/prod/typeDefs';
 import { createServer } from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 const startServer = async () => {

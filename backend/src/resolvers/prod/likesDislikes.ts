@@ -1,4 +1,4 @@
-import Squash from '../models/Squash';
+import Squash from '../../models/Squash';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 

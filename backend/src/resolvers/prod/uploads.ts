@@ -1,4 +1,4 @@
-import Squash from '../models/Squash';
+import Squash from '../../models/Squash';
 import { GraphQLUpload } from 'graphql-upload'
 import sanitize from 'mongo-sanitize'
 import * as path from 'path';
