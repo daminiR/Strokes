@@ -1,12 +1,9 @@
-import Squash from '../models/Squash';
+import Squash from '../../models/Squash';
 import mongoose from 'mongoose';
 import _ from 'lodash'
-import { manageImages } from "../utils/awsUpload";
-import {
-  SPORT_CHANGES_PER_DAY,
-} from "../constants/";
+import { manageImages } from "../../utils/awsUpload";
 import sanitize from 'mongo-sanitize'
-import { filterMatches } from '../utils/matches';
+import { filterMatches } from '../../utils/matches';
 
 export const resolvers = {
   Query: {

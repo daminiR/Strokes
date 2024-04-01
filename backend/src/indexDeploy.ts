@@ -4,16 +4,15 @@ import  express from 'express';
 import { ApolloServer, gql }  from 'apollo-server-lambda';
 import  mongoose, {ConnectOptions} from 'mongoose';
 import { mergeResolvers } from '@graphql-tools/merge';
-import {resolvers as deleteUser} from './resolvers/deleteUser'
-import {resolvers as createUser} from './resolvers/createUSer'
-import {resolvers as likesDislikes} from './resolvers/likesDislikes'
-import {resolvers as matches} from './resolvers/matches'
-import {resolvers as random} from './resolvers/random'
-import {resolvers as updateUser} from './resolvers/updateUser'
-import {resolvers as uploads} from './resolvers/uploads'
+import {resolvers as deleteUser} from './resolvers/prod/deleteUser'
+import {resolvers as createUser} from './resolvers/prod/createUSer'
+import {resolvers as likesDislikes} from './resolvers/prod/likesDislikes'
+import {resolvers as matches} from './resolvers/prod/matches'
+import {resolvers as updateUser} from './resolvers/prod/updateUser'
+import {resolvers as uploads} from './resolvers/prod/uploads'
 
 import {graphqlUploadExpress} from 'graphql-upload'
-import { typeDefs } from './typeDefs/typeDefs';
+import { typeDefs } from './typeDefs/prod/typeDefs';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
 
@@ -27,7 +26,7 @@ const startServer = async () => {
       deleteUser,
       likesDislikes,
       matches,
-      random,
+      //random,
       updateUser,
       uploads
     ]

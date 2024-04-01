@@ -1,8 +1,8 @@
-import Squash from '../models/Squash';
+import Squash from '../../models/Squash';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
-import { CHAT_TIMER } from '../constants'
-import {getMatchedUserToken, sendAdminMatchMessages, createGroupChannel} from '../utils'
+import { CHAT_TIMER } from '../../constants'
+import {getMatchedUserToken, sendAdminMatchMessages, createGroupChannel} from '../../utils'
 import axios from 'axios'
 
 export const resolvers = {

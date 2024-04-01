@@ -1,19 +1,11 @@
-import Squash from '../models/Squash';
-import { GraphQLUpload } from 'graphql-upload'
-import { ObjectId} from 'mongodb'
-import { sanitizeFile } from '../utils/fileNaming'
+import Squash from '../../models/Squash';
 import sanitize from 'mongo-sanitize'
-import * as path from 'path';
 import _ from 'lodash'
-import {Data, DisplayData} from '../types/Squash'
-import {
-  createAWSUpload,
-} from "../utils/awsUpload";
 import {
   SWIPIES_PER_DAY_LIMIT,
   LIKES_PER_DAY_LIMIT,
   SPORT_CHANGES_PER_DAY,
-} from "../constants/";
+} from "../../constants/";
 //import { PubSub } from 'graphql-subscriptions';
 //const pubsub = new PubSub()
 export const resolvers = {
@@ -60,7 +52,7 @@ export const resolvers = {
         phoneNumber: phoneNumber,
         email: email,
         matches: [],
-        likes: ["ba98a8c9-5939-4418-807b-320fdc0e0fec"],
+        //likes: ["ba98a8c9-5939-4418-807b-320fdc0e0fec"],
         active: true,
         swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
         visableLikePerDay: LIKES_PER_DAY_LIMIT,
@@ -88,9 +80,5 @@ export const resolvers = {
       console.log(doc1);
       return doc;
     },
-    //},
-    //testMut(root, args){
-      //return args.name
-    //},
   }
 }

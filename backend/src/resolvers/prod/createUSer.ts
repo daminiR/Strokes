@@ -1,15 +1,15 @@
-import Squash from '../models/Squash';
+import Squash from '../../models/Squash';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 import {
   createAWSUpload,
   deleteImagesFromS3
-} from "../utils/awsUpload";
+} from "../../utils/awsUpload";
 import {
   SWIPIES_PER_DAY_LIMIT,
   LIKES_PER_DAY_LIMIT,
   SPORT_CHANGES_PER_DAY,
-} from "../constants/";
+} from "../../constants";
 export const resolvers = {
   Mutation: {
     uploadImage: async (root, unSanitizedData, context) => {
