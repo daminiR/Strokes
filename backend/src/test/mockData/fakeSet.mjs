@@ -51,7 +51,7 @@ function generateMultipleUsers(count) {
   }
   return users;
 }
-const users = generateMultipleUsers(1);
+const users = generateMultipleUsers(10);
 const csvStream = csv.format({ headers: true });
 const writableStream = fs.createWriteStream('/home/damini/activityBook/backend/src/test/mockData/fakeUsers.csv');
 
@@ -73,10 +73,13 @@ users.forEach(row => {
     state: row.neighborhood.state,
     country: row.neighborhood.country,
     description: row.description,
+    img_idx1: 1,
     imageURL1: row.image_set[0].imageURL,
     filePath1: row.image_set[0].filePath,
+    img_idx2: 2,
     imageURL2: row.image_set[1].imageURL,
     filePath2: row.image_set[1].filePath,
+    img_idx3: 3,
     imageURL3: row.image_set[2].imageURL,
     filePath3: row.image_set[2].filePath,
     phoneNumber: row.phoneNumber,
