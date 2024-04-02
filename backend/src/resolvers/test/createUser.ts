@@ -43,7 +43,7 @@ export const resolvers = {
         _id: _id,
         image_set: image_set,
         firstName: firstName,
-        last_name: lastName,
+        lastName: lastName,
         gender: gender,
         age: age,
         neighborhood: neighborhood,

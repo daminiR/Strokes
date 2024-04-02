@@ -15,8 +15,8 @@ const PAGE_WIDTH = Dimensions.get('window').width
 const PAGE_HEIGHT = Dimensions.get('window').height
 const cards = [
   { text: 'Card 1' },
-  //{ text: 'Card 2' },
-  //{ text: 'Card 3' },
+  { text: 'Card 2' },
+  { text: 'Card 3' },
   //{ text: 'Card 4' },
   //{ text: 'Card 2' },
   // Add more cards as needed

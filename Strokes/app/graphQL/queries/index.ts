@@ -44,8 +44,23 @@ const MESSAGE_POSTED = gql`
 }`
 
 const GET_POTENTIAL_MATCHES = gql`
-  query QueryProssibleMatches ($_id: String!, $offset: Int, $limit: Int, $neighborhood: LocationInput!, $sport: String!, $game_levels: [String!]!, $ageRange: AgeRangeInput){
-    queryProssibleMatches (_id: $_id offset: $offset, limit:$limit, neighborhood: $neighborhood, game_levels:$game_levels, sport: $sport, ageRange: $ageRange){
+  query QueryProssibleMatches(
+    $_id: String!
+    $offset: Int
+    $limit: Int
+    $neighborhood: LocationInput!
+    $gamelLevelRange: GameLevelRange
+    $ageRange: AgeRangeInput
+  ) {
+    queryProssibleMatches(
+      _id: $_id
+      offset: $offset
+      limit: $limit
+      neighborhood: $neighborhood
+      game_levels: $game_levels
+      sport: $sport
+      ageRange: $ageRange
+    ) {
       neighborhood {
         city
         state

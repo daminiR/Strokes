@@ -20,7 +20,7 @@ export const DeletedType = `
 `;
 export const SquashNodeType = `
     sport: String!,
-    game_level: String!,
+    game_level: Float!,
 `
 export const DataType = `
     img_idx: Int!,
@@ -30,6 +30,10 @@ export const DataType = `
 export const ImageData = `
     img_idx: Int!,
     file: FileUpload!
+`
+export const gameLevelRange = `
+    minGameLevel: Int!,
+    maxGameLevel: Int!
 `
 export const ageRange = `
     minAge: Int!,
