@@ -707,7 +707,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
         <stringProp name="ThreadGroup.on_sample_error">stopthread</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
+          <stringProp name="LoopController.loops">2</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
@@ -719,7 +719,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
       <hashTree>
         <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
-          <stringProp name="LoopController.loops">80</stringProp>
+          <stringProp name="LoopController.loops">3</stringProp>
         </LoopController>
         <hashTree>
           <RegExUserParameters guiclass="RegExUserParametersGui" testclass="RegExUserParameters" testname="RegEx User Parameters" enabled="true">
@@ -729,15 +729,15 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
           </RegExUserParameters>
           <hashTree/>
           <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-            <stringProp name="delimiter">;</stringProp>
+            <stringProp name="delimiter">,</stringProp>
             <stringProp name="fileEncoding"></stringProp>
-            <stringProp name="filename">/home/damini/activityBook/backend/src/admin/createData/sampleUserData.csv</stringProp>
+            <stringProp name="filename">/home/damini/activityBook/backend/src/test/mockData/fakeUsers.csv</stringProp>
             <boolProp name="ignoreFirstLine">true</boolProp>
-            <boolProp name="quotedData">false</boolProp>
-            <boolProp name="recycle">true</boolProp>
-            <stringProp name="shareMode">shareMode.all</stringProp>
+            <boolProp name="quotedData">true</boolProp>
+            <boolProp name="recycle">false</boolProp>
+            <stringProp name="shareMode">shareMode.thread</stringProp>
             <boolProp name="stopThread">false</boolProp>
-            <stringProp name="variableNames"> _id,first_name,last_name,genderUser,age,sports,image_set,description,email,location</stringProp>
+            <stringProp name="variableNames">_id,firstName,lastName,age,gender,sport,game_level,city,state,country,description,img_idx1,imageURL1,filePath1,img_idx2,imageURL2,filePath2,img_idx3,imageURL3,filePath3,phoneNumber,email </stringProp>
           </CSVDataSet>
           <hashTree/>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
@@ -942,17 +942,21 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $description: String!, $image_set:[DataInput!]!, $email: String!, $location:LocationInput!){createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, email: $email, location: $location, description: $description, image_set: $image_set){_id}}&quot;,&#xd;
+                  <stringProp name="Argument.value">{&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $firstName: String!, $lastName: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $description: String!, $image_set:[DataInput!]!, $email: String!, $neighborhood:LocationInput!){createSquashTestSamples(_id: $_id, firstName: $firstName, lastName: $lastName, gender: $gender, age:$age, sports:$sports, email: $email, neighborhood: $neighborhood, description: $description, image_set: $image_set){_id}}&quot;,&#xd;
 &quot;variables&quot;:&#xd;
 {&#xd;
   &quot;_id&quot;:&quot;${_id}&quot;,&#xd;
-  &quot;first_name&quot;:&quot;${first_name}&quot;,&#xd;
-  &quot;last_name&quot;: &quot;${last_name}&quot;,&#xd;
-  &quot;gender&quot;: &quot;${genderUser}&quot;,&#xd;
+  &quot;firstName&quot;:&quot;${firstName}&quot;,&#xd;
+  &quot;lastName&quot;: &quot;${lastName}&quot;,&#xd;
+  &quot;gender&quot;: &quot;${gender}&quot;,&#xd;
   &quot;age&quot;: ${age},&#xd;
-  &quot;sports&quot;: ${sports},&#xd;
-  &quot;image_set&quot;:${image_set},&#xd;
-  &quot;location&quot;:${location},&#xd;
+  &quot;sports&quot;: [{&quot;sport&quot;: &quot;${sport}&quot;, &quot;game_level&quot;: ${game_level}}],&#xd;
+  &quot;image_set&quot;:[&#xd;
+  {&quot;img_idx&quot;: ${img_idx1}, &quot;imageURL&quot;: &quot;${imageURL1}&quot;, &quot;filePath&quot;: &quot;${filePath1}&quot;},&#xd;
+  {&quot;img_idx&quot;: ${img_idx2}, &quot;imageURL&quot;: &quot;${imageURL2}&quot;, &quot;filePath&quot;: &quot;${filePath2}&quot;},&#xd;
+  {&quot;img_idx&quot;: ${img_idx3}, &quot;imageURL&quot;: &quot;${imageURL3}&quot;, &quot;filePath&quot;: &quot;${filePath3}&quot;}&#xd;
+  ],&#xd;
+  &quot;neighborhood&quot;:{&quot;city&quot;:&quot;${city}&quot;, &quot;state&quot;:&quot;${state}&quot;, &quot;country&quot;:&quot;${country}&quot;},&#xd;
   &quot;email&quot;:&quot;${email}&quot;,&#xd;
   &quot;description&quot;:&quot;${description}&quot;&#xd;
 }&#xd;
@@ -1021,6 +1025,43 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
           <stringProp name="RegExUserParameters.param_names_gr_nr"></stringProp>
           <stringProp name="RegExUserParameters.param_values_gr_nr"></stringProp>
         </RegExUserParameters>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
         <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Analyze Query All Possible Matches" enabled="false">
@@ -1534,7 +1575,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
         </RegExUserParameters>
         <hashTree/>
       </hashTree>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
@@ -1571,7 +1612,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
-      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="false">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>

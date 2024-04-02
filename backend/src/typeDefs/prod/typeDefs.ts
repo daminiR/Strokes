@@ -7,6 +7,7 @@ import {
   SquashNodeType,
   DataType,
   ImageData,
+  gameLevelRange,
   FileUploadType,
   ageRange,
   PotentialMatchUserType,
@@ -29,6 +30,9 @@ export const typeDefs = gql`
   }
   input AgeRangeInput {
     ${ageRange}
+  }
+  input GameLevelRangeInput {
+    ${gameLevelRange}
   }
   type DeletedT {
     ${DeletedType}
@@ -180,6 +184,7 @@ export const typeDefs = gql`
       likedByUSers: [String!]
       phoneNumber: String
     ): Squash!
+
     softDeleteUser(_id: String): String!
     softUnDeleteUser(_id: String): String!
   }

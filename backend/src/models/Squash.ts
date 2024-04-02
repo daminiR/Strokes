@@ -63,7 +63,7 @@ var squashSchema = new Schema(
     sports: {
       type: [
         {
-          game_level: { type: String, enum: LEVELS },
+          game_level: { type: Number, min: 1, max: 8},
           sport: { type: String, enum: SPORTS },
         },
       ],

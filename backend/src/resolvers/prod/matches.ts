@@ -56,7 +56,7 @@ export const resolvers = {
       context,
       info
     ) => {
-      const { _id, offset, limit, location, sport, game_levels, ageRange } = sanitize(unSanitizedData)
+      const { _id, offset, limit, location, game_levels, ageRange } = sanitize(unSanitizedData)
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
       const filter = {

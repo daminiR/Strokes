@@ -180,7 +180,7 @@ const MongoDBStore = types
             gender: userStore.gender,
             sports: userStore.sport,
             description: userStore.description,
-            location: userStore.neighborhood,
+            neighborhood: userStore.neighborhood,
             //newUserToken: token,
           },
         })
@@ -188,6 +188,31 @@ const MongoDBStore = types
       } catch (error) {
         console.error("Error creating user:", error)
         // Handle error or set error state
+      }
+    }),
+    queryPotentialMatches: flow(function* (filters) {
+      const userStore = getRootStore(self).userStore
+      try {
+        const response = yield client.query({
+          query: graphQL.GET_POTENTIAL_MATCHES,
+          variables: {
+            _id: userStore._id,
+            offset: 10,
+            limit: 10,
+            ageRange: { minAge: 20, maxAge: 80 },
+            gamelLevelRange: { minGameLevel: 1, maxGameLevel: 8 },
+            neighborhood: userStore.neighborhood,
+          }, // Pass filters directly to the query
+          fetchPolicy: "network-only",
+        })
+        // Assuming response.data.queryPossibleMatches contains the match data
+        const matchesData = cleanGraphQLResponse(response.data.queryPossibleMatches)
+        return matchesData
+        //self.matches.replace(matchesData) // Replace existing matches with new ones
+        // Optionally: store matches for persistence or further processing
+      } catch (error) {
+        console.error("Error querying potential matches:", error)
+        throw error
       }
     }),
     queryUserFromMongoDB: flow(function* queryUser(id) {
