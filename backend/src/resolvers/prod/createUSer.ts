@@ -12,9 +12,6 @@ import {
 } from "../../constants";
 export const resolvers = {
   Mutation: {
-    uploadImage: async (root, unSanitizedData, context) => {
-      return true;
-    },
     createSquash2: async (root, unSanitizedData, context) => {
       const {
         _id,

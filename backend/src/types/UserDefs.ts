@@ -32,17 +32,17 @@ export const ImageData = `
     img_idx: Int!,
     file: FileUpload!
 `
-export const GameLevelRangeType = `
-    minGameLevel: Int!,
-    maxGameLevel: Int!
-`
-export const AgeRangeType = `
-    minAge: Int!,
-    maxAge: Int!
+export const RangeType = `
+    min: Int!,
+    max: Int!
 `
 export const FilterType = `
-  ageRange: String,
-  game_level: String
+  ageRange: AgeRangeType!,
+  gameLevel: GameLevelRangeType!
+`;
+export const FilterInputType = `
+  ageRange: AgeRangeInput!,
+  gameLevel: GameLevelRangeInput!
 `;
 export const PotentialMatchUserType = `
     _id: ID!
@@ -99,20 +99,20 @@ export const SquashType = `
     age: Int!
     gender: String!
     sports: [SquashNode!]!
-    neighborhood: Location!
+    neighborhood: LocationType!
     description: String
     image_set: [Data!]!
     matches : [PotentialMatch!]
     blocked_me : [PotentialMatch!]
     i_blocked : [PotentialMatch!]
-    matchQueue: [MatchQueue!]
+    matchQueue: [MatchQueueType!]
     likes : [String!]
     swipesPerDay: Int!
     sportChangesPerDay: Int!
     visableLikePerDay: Int!
     dislikes : [String!]
-    likedByUSers: [DeletedType!]
-    deleted: DeletedT
+    likedByUSers: [LikedByUser!]
+    deleted: DeletedType
     phoneNumber: String
     email: String
   `
