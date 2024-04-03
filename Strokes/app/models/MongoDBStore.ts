@@ -1,9 +1,7 @@
 import { types, flow } from 'mobx-state-tree';
 import client from '../services/api/apollo-client';
 import { getRootStore } from './helpers/getRootStore';
-import RNFetchBlob from 'rn-fetch-blob';
 import {ReactNativeFile} from 'apollo-upload-client'
-import { authExchange } from '@urql/extractFiles';
 import * as graphQL from '@graphQL'
 
 function cleanGraphQLResponse(object) {
