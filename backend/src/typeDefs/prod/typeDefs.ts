@@ -1,20 +1,18 @@
 import { gql } from "apollo-server-lambda";
 import {
   LocationType,
-  MessageType,
+  RangeType,
+  FilterInputType,
   DeletedType,
   SquashNodeType,
   DataType,
   ImageData,
   FilterType,
   MatchQueueType,
-  GameLevelRangeType,
   FileUploadType,
-  AgeRangeType,
   PotentialMatchUserType,
   LikedByUserType,
   LikedByUserInputType,
-  userExistT,
   PotentialMatchUserInputType,
   SquashType,
   SquashInputType,
@@ -22,33 +20,34 @@ import {
 //TODO: change inout ype for age to be Int! but after you configure the birthdate resolver
 //TODO: need to add apollo server error handling
 //TODO: ADD enum check for states and countt maybe
+
 export const typeDefs = gql`
-  type Message {
-    ${MessageType}
+  type LocationType {
+    ${LocationType}
   }
-  type Location {
+  input LocationInput {
     ${LocationType}
   }
   input AgeRangeInput {
-    ${AgeRangeType}
+    ${RangeType}
   }
   input GameLevelRangeInput {
-    ${GameLevelRangeType}
+    ${RangeType}
   }
-  type DeletedT {
+  type AgeRangeType {
+    ${RangeType}
+  }
+  type GameLevelRangeType {
+    ${RangeType}
+  }
+  type DeletedType {
     ${DeletedType}
   }
   input DeletedInput {
     ${DeletedType}
   }
-  input LocationInput {
-    ${LocationType}
-  }
   input FileUploadInput {
     ${FileUploadType}
-  }
-  type LocationType {
-    ${LocationType}
   }
   input LikedByUserInput {
     ${LikedByUserInputType}
@@ -56,17 +55,11 @@ export const typeDefs = gql`
   type LikedByUser {
     ${LikedByUserType}
   }
-  type userExistType {
-    ${userExistT}
-  }
   scalar FileUpload
   type Query {
-    messages(currentUserID: String!, matchedUserID:String!, offset: Int!, limit: Int!): [Message!]
-    hello: String!
     squash(id: String!): Squash
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
-    checkPhoneInput (phoneNumber: String!): userExistType!
     queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
     matchesNotOptim(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
     getSwipesPerDay(_id: String!): Int!
@@ -92,13 +85,13 @@ export const typeDefs = gql`
   input MatchQueueInput {
       ${MatchQueueType}
   }
-  type MatchQueue {
+  type MatchQueueType {
       ${MatchQueueType}
   }
   input FilterInput {
-      ${FilterType}
+      ${FilterInputType}
   }
-  type Filter {
+  type FilterType {
       ${FilterType}
   }
 
@@ -112,21 +105,12 @@ export const typeDefs = gql`
   input ImageData{
     ${ImageData}
   }
-  type DataOutput{
+  type DataOutput {
     imageURL: String!
     filePath: String!
   }
   type Data{
     ${DataType}
-  }
-  type Result {
-    _id: String!
-    }
-  type Message2 {
-    sender: String!
-    }
-  type Subscription {
-    messagePosted: Message
   }
 
   type Mutation {
@@ -136,12 +120,6 @@ export const typeDefs = gql`
     updateLikes(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): Squash
     updateDislikes(_id: String!, dislikes: [String!], isFromLikes: Boolean!): Squash
     updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): Squash
-
-    postMessage2(sender: String, receiver: String, text: String): ID!
-
-    uploadImage(
-    image: FileUpload!
-    ):Boolean
 
     updateUserProfile(
       _id: String!
@@ -177,6 +155,7 @@ export const typeDefs = gql`
       email: String
       newUserToken: String
       matchQueue: [MatchQueueInput!]
+      preferences: FilterInput!
     ): Squash!
 
     createSquashTestSamples(
@@ -198,6 +177,7 @@ export const typeDefs = gql`
       likedByUSers: [String!]
       phoneNumber: String
       matchQueue: [MatchQueueInput!]
+      preferences: FilterInput!
     ): Squash!
 
     softDeleteUser(_id: String): String!
