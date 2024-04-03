@@ -1,4 +1,3 @@
-//import {gql} from 'apollo-server-express';
 import { gql } from "apollo-server-lambda";
 import {
   LocationType,
@@ -7,16 +6,18 @@ import {
   SquashNodeType,
   DataType,
   ImageData,
-  gameLevelRange,
+  FilterType,
+  MatchQueueType,
+  GameLevelRangeType,
   FileUploadType,
-  ageRange,
+  AgeRangeType,
   PotentialMatchUserType,
   LikedByUserType,
   LikedByUserInputType,
   userExistT,
   PotentialMatchUserInputType,
   SquashType,
-  SquashInputType
+  SquashInputType,
 } from '../../types/UserDefs'
 //TODO: change inout ype for age to be Int! but after you configure the birthdate resolver
 //TODO: need to add apollo server error handling
@@ -29,10 +30,10 @@ export const typeDefs = gql`
     ${LocationType}
   }
   input AgeRangeInput {
-    ${ageRange}
+    ${AgeRangeType}
   }
   input GameLevelRangeInput {
-    ${gameLevelRange}
+    ${GameLevelRangeType}
   }
   type DeletedT {
     ${DeletedType}
@@ -87,6 +88,18 @@ export const typeDefs = gql`
   }
   input PotentialMatchInput {
       ${PotentialMatchUserInputType}
+  }
+  input MatchQueueInput {
+      ${MatchQueueType}
+  }
+  type MatchQueue {
+      ${MatchQueueType}
+  }
+  input FilterInput {
+      ${FilterType}
+  }
+  type Filter {
+      ${FilterType}
   }
 
   type DisplayImage {
@@ -163,6 +176,7 @@ export const typeDefs = gql`
       phoneNumber: String
       email: String
       newUserToken: String
+      matchQueue: [MatchQueueInput!]
     ): Squash!
 
     createSquashTestSamples(
@@ -183,6 +197,7 @@ export const typeDefs = gql`
       dislikes : [String!]
       likedByUSers: [String!]
       phoneNumber: String
+      matchQueue: [MatchQueueInput!]
     ): Squash!
 
     softDeleteUser(_id: String): String!

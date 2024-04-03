@@ -35,10 +35,9 @@ export interface LocationT {
   state: string;
   country: string;
 }
-export interface FilterT {
-  ageRange: string;
-  sport: string;
-  filterLevel: string;
+export interface FilterType {
+  ageRange: { minAge: number; maxAge: number };
+  game_level: { minGameLevel: number; maxGameLevel: number };
 }
 
 export interface PotentialMatchType {
@@ -50,6 +49,11 @@ export interface PotentialMatchType {
     description: string
     image_set: ImageSetT[]
 }
+export interface MatchQueueType {
+    _id: string
+    interacted: boolean
+}
+
 export interface LikedByUserType {
     firstName: string
     _id: string
@@ -57,9 +61,11 @@ export interface LikedByUserType {
     profileImage: ImageSetT
 }
 export type PotentialMatchT = PotentialMatchType[]
+export type MatchQueueT = MatchQueueType[]
 export type PotentialMatchSingleT= PotentialMatchType
 export type LikedByUserT = LikedByUserType[]
 export type SportsList = Sport[]
+
 export interface SquashDocument extends Document {
   firstName: string
   lastName: string
@@ -82,5 +88,7 @@ export interface SquashDocument extends Document {
   swipesPerDay : number
   visableLikePerDay : number
   sportChangesPerDay : number
+  preferences: FilterType
+  matchQueue: [MatchQueueT!]
 }
 
