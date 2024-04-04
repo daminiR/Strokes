@@ -7,7 +7,6 @@ import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
 import { interpolate } from "react-native-reanimated"
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Carousel, { TAnimationStyle } from "react-native-reanimated-carousel"
 import Swiper from 'react-native-deck-swiper';
 
 
@@ -26,11 +25,11 @@ const cards = [
 interface FaceCardProps extends AppStackScreenProps<"FaceCardProps"> {}
 
 export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps(_props) {
-   const swiperRef = useRef(null);
-   const [index, setIndex] = useState(0);
+  const swiperRef = useRef(null);
+  const [index, setIndex] = useState(0)
   const { userStore, authenticationStore } = useStores()
-  const [isLastCard, setIsLastCard] = useState(cards.length === 0);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [isLastCard, setIsLastCard] = useState(cards.length === 0)
+  const [activeIndex, setActiveIndex] = useState(0)
   const width = Dimensions.get("window").width
   useEffect(() => {
     // Pre-fill logic if necessary

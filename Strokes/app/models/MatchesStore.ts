@@ -48,7 +48,7 @@ export const MatchModel = types
        try {
          const newMatches = yield mongoDBStore.queryPotentialMatches(filters)
          self.setMatchPool(newMatches)
-         yield AsyncStorage.setItem("matches", JSON.stringify(newMatches))
+         //yield AsyncStorage.setItem("matches", JSON.stringify(newMatches))
        } catch (error) {
          console.error("Failed to fetch and update matches:", error)
        }

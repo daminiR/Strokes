@@ -30,30 +30,35 @@ export const AuthenticationStoreModel = types
   })
   .actions((self) => ({
     checkCognitoUserSession() {
-      const cognitoUser = userPool.getCurrentUser()
-
-      if (cognitoUser != null) {
-        cognitoUser.getSession(function (err, session) {
-          if (err) {
-            console.error(err)
-            return
-          }
-          if (session.isValid()) {
-            console.log("User is signed in")
-            // Optionally, refresh or retrieve new tokens
-            self.setIsAuthenticated(true)
-          } else {
-            console.log("Session is invalid")
-            self.setIsAuthenticated(false)
-          }
-        })
-      } else {
-        console.log("No current Cognito user")
-        self.setIsAuthenticated(false)
-        // Handle the case where there is no user
-      }
+      var userPool = new CognitoUserPool(poolData);
+            userPool.storage.sync(function (err, result) {
+              if (err) {
+                console.error("Error syncing storage:", err)
+                self.setIsAuthenticated(false)
+              } else if (result === "SUCCESS") {
+                var cognitoUser = userPool.getCurrentUser()
+                if (cognitoUser != null) {
+                  cognitoUser.getSession(function (err, session) {
+                    if (err) {
+                      console.error(err)
+                      self.setIsAuthenticated(false)
+                      return
+                    }
+                    if (session.isValid()) {
+                      console.log("User is signed in")
+                      self.setIsAuthenticated(true)
+                    } else {
+                      console.log("Session is invalid")
+                      self.setIsAuthenticated(false)
+                    }
+                  })
+                } else {
+                  console.log("No current Cognito user")
+                  self.setIsAuthenticated(false)
+                }
+              }
+            })
     },
-
     setIsAuthenticated(isAuthenticated: Boolean) {
       self.isAuthenticated = isAuthenticated
     },
@@ -66,7 +71,6 @@ export const AuthenticationStoreModel = types
           new CognitoUserAttribute({ Name: "phone_number", Value: userStore.phoneNumber }),
           new CognitoUserAttribute({ Name: "gender", Value: userStore.gender }),
         ]
-
         const signUpResult = yield new Promise((resolve, reject) => {
           userPool.signUp(
             userStore.phoneNumber,
@@ -258,9 +262,6 @@ export const AuthenticationStoreModel = types
               userStore.setID(userSub)
               mongoDBStore.queryUserFromMongoDB(userSub)
               self.setIsAuthenticated(true)
-
-
-
               // mongodb hydrate userstore hydrate
               //self.setUser(cognitoUser)
               //self.setError(null)
@@ -331,6 +332,11 @@ export const AuthenticationStoreModel = types
 
     setError(error: string | null) {
       self.error = error
+    },
+  }))
+  .actions(self => ({
+    afterCreate() {
+      self.checkCognitoUserSession();
     },
   }))
 
