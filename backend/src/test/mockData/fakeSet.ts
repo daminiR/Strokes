@@ -5,7 +5,7 @@ import { write, format } from 'fast-csv';
 import { CITIES } from '../../constants/index';
 
 interface Sport {
-  game_level: number;
+  gameLevel: number;
   sport: string;
 }
 
@@ -47,7 +47,7 @@ function generateUser(): User {
     age: faker.datatype.number({ min: 18, max: 100 }),
     gender: faker.helpers.arrayElement(['male', 'female']),
     sports: [{
-      game_level: faker.datatype.number({ min: 1, max: 7 }),
+      gameLevel: faker.datatype.number({ min: 1, max: 7 }),
       sport: "Squash",
     }],
     neighborhood: {
@@ -88,7 +88,7 @@ users.forEach((row: any) => {
     age: row.age,
     gender: row.gender,
     sport: row.sports[0].sport,
-    game_level: row.sports[0].game_level,
+    gameLevel: row.sports[0].gameLevel,
     city: row.neighborhood.city,
     state: row.neighborhood.state,
     country: row.neighborhood.country,

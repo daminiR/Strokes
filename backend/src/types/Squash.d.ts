@@ -28,7 +28,7 @@ export interface DeleteT {
 }
 export interface Sport {
   sport: string;
-  game_level: number;
+  gameLevel: number;
 }
 export interface LocationT {
   city: string;
@@ -36,8 +36,8 @@ export interface LocationT {
   country: string;
 }
 export interface FilterType {
-  ageRange: { minAge: number; maxAge: number };
-  game_level: { minGameLevel: number; maxGameLevel: number };
+  ageRange: { min: number; max: number };
+  gameLevel: { min: number; max: number };
 }
 
 export interface PotentialMatchType {

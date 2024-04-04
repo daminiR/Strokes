@@ -20,7 +20,7 @@ export const DeletedType = `
 `
 export const SquashNodeType = `
     sport: String!,
-    game_level: Float!,
+    gameLevel: Float!,
 `
 
 export const DataType = `

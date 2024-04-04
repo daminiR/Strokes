@@ -13,7 +13,7 @@ export const resolvers = {
       context,
       info
     ) => {
-      const { _id, offset, limit, location, sport, game_levels, ageRange, dislikes } = sanitize(unSanitizedData)
+      const { _id, offset, limit, location, sport, gameLevelRange, ageRange, dislikes } = sanitize(unSanitizedData)
       //const user = context.user;
       //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       const minAge = ageRange.minAge;
@@ -50,9 +50,9 @@ export const resolvers = {
       context,
       info
     ) => {
-      const { _id, offset, limit, location, game_levels, ageRange } = sanitize(unSanitizedData)
-      const minAge = ageRange.minAge;
-      const maxAge = ageRange.maxAge;
+      const { _id, offset, limit, location, gameLevelRange, ageRange } = sanitize(unSanitizedData)
+      const minAge = ageRange.min;
+      const maxAge = ageRange.max;
       const filter = {
         $and: [
           {
