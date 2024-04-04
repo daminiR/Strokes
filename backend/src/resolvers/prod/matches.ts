@@ -7,13 +7,17 @@ import axios from 'axios'
 
 export const resolvers = {
   Query: {
-    matchesNotOptim: async (
-      parents,
-      unSanitizedData,
-      context,
-      info
-    ) => {
-      const { _id, offset, limit, location, sport, gameLevelRange, ageRange, dislikes } = sanitize(unSanitizedData)
+    matchesNotOptim: async (parents, unSanitizedData, context, info) => {
+      const {
+        _id,
+        offset,
+        limit,
+        location,
+        sport,
+        gameLevelRange,
+        ageRange,
+        dislikes,
+      } = sanitize(unSanitizedData);
       //const user = context.user;
       //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       const minAge = ageRange.minAge;
@@ -44,22 +48,32 @@ export const resolvers = {
       );
       return users;
     },
-    queryProssibleMatches: async (
-      parents,
-      unSanitizedData,
-      context,
-      info
-    ) => {
-      const { _id, offset, limit, location, gameLevelRange, ageRange } = sanitize(unSanitizedData)
+    queryProssibleMatches: async (parents, unSanitizedData, context, info) => {
+      const { _id, offset, limit, location, gameLevelRange, ageRange } =
+        sanitize(unSanitizedData);
       const minAge = ageRange.min;
       const maxAge = ageRange.max;
+
+      // Retrieve the user by _id to access their matchQueue
+      const currentUser = await Squash.findById(_id);
+
+      if (!currentUser) {
+        console.log(`User with ID ${_id} not found`);
+        return [];
+      }
+
+      // Filter matchQueue for interacted being false
+      const matchQueueIds = currentUser.matchQueue
+        .filter((match) => !match.interacted)
+        .map((match) => match._id);
+
+      // Define a filter to fetch users by IDs in the filtered matchQueue and within the age range
       const filter = {
-        $and: [
-          {
-            _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec",
-          },
-        ],
+        _id: { $in: matchQueueIds },
+        age: { $gte: minAge, $lte: maxAge },
+        // Add additional filters as needed (e.g., for gameLevelRange or location)
       };
+
       const fieldsNeeded = {
         _id: 1,
         firstName: 1,
@@ -70,20 +84,19 @@ export const resolvers = {
         image_set: 1,
         neighborhood: 1,
       };
+
+      // Fetch potential matches based on the criteria
       const users = await Squash.find(filter, fieldsNeeded)
         .skip(offset)
-        .limit(limit);
-      console.log(users)
+        .limit(limit)
+        .exec(); // Ensure the query is executed
+
+      console.log(users);
       return users;
     },
   },
   Mutation: {
-    updateMatches: async (
-      parents,
-      unSanitizedData,
-      context,
-      info
-    ) => {
+    updateMatches: async (parents, unSanitizedData, context, info) => {
       const { currentUserId, potentialMatchId, currentUser, potentialMatch } =
         sanitize(unSanitizedData);
       //const chat_timer = 1.21e+9
@@ -119,7 +132,7 @@ export const resolvers = {
             .catch((err) => {
               console.log(err);
             });
-            return potentialMatchDoc;
+          return potentialMatchDoc;
         })
         .catch((err) => {
           console.log(err);

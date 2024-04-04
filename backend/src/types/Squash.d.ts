@@ -88,6 +88,6 @@ export interface SquashDocument extends Document {
   visableLikePerDay : number
   sportChangesPerDay : number
   preferences: FilterType
-  matchQueue: [MatchQueueT!]
+  matchQueue: MatchQueueT
 }
 
