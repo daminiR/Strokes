@@ -33,12 +33,6 @@ export const resolvers = {
             active: true,
           },
           {
-            //sports: { sport: sport, game_level: { $in: game_levels  } },
-            sports: {
-              $elemMatch: { sport: sport, game_level: { $in: ["2", "0"] } },
-            },
-          },
-          {
             age: { $gt: minAge, $lt: maxAge },
           },
         ],
@@ -64,20 +58,6 @@ export const resolvers = {
           {
             _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec",
           },
-          //{
-            //"location.state": location.state,
-          //},
-          //{
-            //active: true,
-          //},
-          //{
-            //sports: {
-              //$elemMatch: { sport: sport, game_level: { $in: game_levels } },
-            //},
-          //},
-          //{
-            //age: { $gt: minAge, $lt: maxAge },
-          //},
         ],
       };
       const fieldsNeeded = {
@@ -85,7 +65,7 @@ export const resolvers = {
         firstName: 1,
         age: 1,
         gender: 1,
-        sports: 1,
+        sport: 1,
         description: 1,
         image_set: 1,
         neighborhood: 1,

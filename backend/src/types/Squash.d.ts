@@ -45,7 +45,7 @@ export interface PotentialMatchType {
     _id: string
     age: number
     gender: string
-    sports: Sport[],
+    sport: Sport,
     description: string
     image_set: ImageSetT[]
 }
@@ -64,14 +64,13 @@ export type PotentialMatchT = PotentialMatchType[]
 export type MatchQueueT = MatchQueueType[]
 export type PotentialMatchSingleT= PotentialMatchType
 export type LikedByUserT = LikedByUserType[]
-export type SportsList = Sport[]
 
 export interface SquashDocument extends Document {
   firstName: string
   lastName: string
   age : number
   gender: string
-  sports: SportsList
+  sport: Sport
   neighborhood: LocationT
   description: [string]
   image_set: ImageSetT[]
