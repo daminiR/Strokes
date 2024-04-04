@@ -9,8 +9,6 @@ export const resolvers = {
   Mutation: {
     deleteImage: async (parents, unSanitizedData, context, info) => {
       const { _id, img_idx } = sanitize(unSanitizedData);
-      //const user = context.user;
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       const filter = { _id: _id };
       const update = { $pull: { image_set: { img_idx: img_idx } } };
       const squash_doc = await Squash.findOneAndUpdate(filter, update, {

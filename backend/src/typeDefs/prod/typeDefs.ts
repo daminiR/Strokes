@@ -127,7 +127,7 @@ export const typeDefs = gql`
       lastName: String!
       age: Int!
       gender: String!
-      sports: [SquashNodeInput!]!
+      sport: SquashNodeInput!
       neighborhood:LocationInput!
       description: String!
       addLocalImages: [FileUploadInput!]!,
@@ -141,7 +141,7 @@ export const typeDefs = gql`
       lastName: String!
       age: Int!
       gender: String!
-      sports: [SquashNodeInput!]!
+      sport: SquashNodeInput!
       neighborhood: LocationInput!
       description: String!
       image_set: [FileUpload!]
@@ -165,7 +165,7 @@ export const typeDefs = gql`
       lastName: String!
       age: Int!
       gender: String!
-      sports: [SquashNodeInput!]!
+      sport: SquashNodeInput!
       neighborhood: LocationInput!
       description: String!
       image_set: [DataInput!]!

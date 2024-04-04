@@ -49,7 +49,7 @@ export const PotentialMatchUserType = `
     firstName: String!
     age: Int!
     gender: String!
-    sports: [SquashNode!]!
+    sport: SquashNode!
     description: String
     neighborhood: LocationType!
     image_set: [Data!]!
@@ -63,7 +63,7 @@ export const LikedByUserType = `
     firstName: String!
     age: Int!
     gender: String!
-    sports: [SquashNode!]!
+    sport: SquashNode!
     description: String
     neighborhood: LocationType!
     image_set: [Data!]!
@@ -73,7 +73,7 @@ export const LikedByUserInputType = `
     firstName: String!
     age: Int!
     gender: String!
-    sports: [SquashNodeInput!]!
+    sport: SquashNodeInput
     description: String
     image_set: [DataInput!]!
     neighborhood: LocationInput!
@@ -87,7 +87,7 @@ export const PotentialMatchUserInputType = `
     firstName: String!
     age: Int!
     gender: String!
-    sports: [SquashNodeInput!]!
+    sport: SquashNodeInput
     description: String
     image_set: [DataInput!]!
     neighborhood: LocationInput!
@@ -98,7 +98,7 @@ export const SquashType = `
     _id: ID!
     age: Int!
     gender: String!
-    sports: [SquashNode!]!
+    sport: SquashNode!
     neighborhood: LocationType!
     description: String
     image_set: [Data!]!
@@ -123,14 +123,14 @@ export const SquashInputType = `
     _id: ID!
     age: Int!
     gender: String!
-    sports: [SquashNodeInput!]!
+    sport: SquashNodeInput!
     neighborhood: LocationInput!
     description: String
     image_set: [DataInput!]!
     deleted: DeletedInput
     matches : [PotentialMatchInput!]
-    blocked_me : [PotentialMatchInput!]
-    i_blocked : [PotentialMatchInput!]
+    blocked_me : [String!]
+    i_blocked : [String!]
     likes : [String!]
     dislikes : [String!]
     swipesPerDay: Int!
