@@ -60,8 +60,8 @@ export const typeDefs = gql`
     squash(id: String!): Squash
     squashes(limit: Int): [Squash!]
     display(filaname: String): String
-    queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
-    matchesNotOptim(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, game_levels:[String!]!, ageRange: AgeRangeInput): [Squash!]
+    queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [Squash!]
+    matchesNotOptim(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [Squash!]
     getSwipesPerDay(_id: String!): Int!
   }
   input SquashNodeInput {
