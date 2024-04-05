@@ -10,11 +10,26 @@ import {
 //const pubsub = new PubSub()
 export const resolvers = {
   Mutation: {
-    createSquashTestSamples: async (
-      root,
-      unSanitizedData,
-      context,
-    ) => {
+    updateAllSportFields: async () => {
+      try {
+        const result = await Squash.updateMany(
+          {}, // An empty filter selects all documents in the collection
+          {
+            $set: { sport : {sportName: "Squash", gameLevel: 4} }, // Set the new sport structure for all documents
+          }
+        );
+
+        console.log("Number of documents modified:", result.modifiedCount);
+        return result;
+      } catch (error) {
+        console.error(
+          "Error updating the sport field for all documents:",
+          error
+        );
+        throw error; // or handle it as needed
+      }
+    },
+    createSquashTestSamples: async (root, unSanitizedData, context) => {
       const {
         _id,
         image_set,
@@ -26,18 +41,13 @@ export const resolvers = {
         neighborhood,
         description,
         phoneNumber,
-        email
+        email,
       } = sanitize(unSanitizedData);
 
       //const data_set = await createAWSUpload(image_set, _id);
-      const isFound = await Squash.findOne(
-        { _id:_id},
-        { new: true }
-      );
-      if(isFound !== null) {
-      const doc = await Squash.remove(
-        { _id:_id},
-      )
+      const isFound = await Squash.findOne({ _id: _id }, { new: true });
+      if (isFound !== null) {
+        const doc = await Squash.remove({ _id: _id });
       }
       const doc = await Squash.create({
         _id: _id,
@@ -58,7 +68,9 @@ export const resolvers = {
         visableLikePerDay: LIKES_PER_DAY_LIMIT,
         sportChangesPerDay: SPORT_CHANGES_PER_DAY,
       });
-      const profileImage = _.find(doc?.image_set, imgObj => {imgObj.img_idx == 0})
+      const profileImage = _.find(doc?.image_set, (imgObj) => {
+        imgObj.img_idx == 0;
+      });
       const likedByUser = {
         firstName: doc?.firstName,
         _id: _id,
@@ -71,8 +83,8 @@ export const resolvers = {
       };
       //const update = { $addToSet: { likedByUSers: likedByUser}}
       const doc1 = await Squash.findOneAndUpdate(
-        { _id:"ba98a8c9-5939-4418-807b-320fdc0e0fec"},
-        { $addToSet: { likedByUSers: likedByUser }},
+        { _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec" },
+        { $addToSet: { likedByUSers: likedByUser } },
         //{ likedByUSers: [ likedByUser ] },
         { new: true }
       );
@@ -80,5 +92,5 @@ export const resolvers = {
       console.log(doc1);
       return doc;
     },
-  }
-}
+  },
+};

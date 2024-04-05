@@ -39,7 +39,7 @@ const ADD_PROFILE2 = gql`
     $last_name: String!
     $gender: String!
     $image_set: [FileUploadInput!]!
-    $sports: [SquashNodeInput!]!
+    $sport: SquashNodeInput!
     $age: Int!
     $description: String!
     $location: LocationInput!
@@ -52,7 +52,7 @@ const ADD_PROFILE2 = gql`
       first_name: $first_name
       gender: $gender
       age: $age
-      sports: $sports
+      sport: $sport
       location: $location
       last_name: $last_name
       image_set: $image_set
@@ -74,7 +74,7 @@ const UPDATE_USER_PROFILE = gql`
     $add_local_images: [FileUploadInput!]!
     $remove_uploaded_images: [DataInput]
     $original_uploaded_image_set: [DataInput!]!
-    $sports: [SquashNodeInput!]!
+    $sport: SquashNodeInput!
     $neighborhood: LocationInput!
     $age: Int!
     $description: String!
@@ -84,7 +84,7 @@ const UPDATE_USER_PROFILE = gql`
       firstName: $firstName
       gender: $gender
       age: $age
-      sports: $sports
+      sport: $sport
       neighborhood: $neighborhood
       lastName: $lastName
       addLocalImages: $add_local_images
@@ -102,9 +102,9 @@ const UPDATE_USER_PROFILE = gql`
       }
       age
       gender
-      sports {
+      sport {
         sport
-        game_level
+        gameLevel
       }
       description
       image_set {
@@ -130,9 +130,9 @@ const UPDATE_DISLIKES = gql`
       first_name
       age
       gender
-      sports {
+      sport {
         sport
-        game_level
+        gameLevel
       }
       description
       image_set {
@@ -162,9 +162,9 @@ const UPDATE_MATCHES = gql`
       last_name
       age
       gender
-      sports {
+      sport {
         sport
-        game_level
+        gameLevel
       }
       location {
         city
@@ -189,9 +189,9 @@ const UPDATE_MATCHES = gql`
         first_name
         age
         gender
-        sports {
+        sport {
           sport
-          game_level
+          gameLevel
         }
         description
         image_set {
@@ -211,9 +211,9 @@ const UPDATE_LIKES = gql`
       first_name
       age
       gender
-      sports {
+      sport {
         sport
-        game_level
+        gameLevel
       }
       description
       image_set {

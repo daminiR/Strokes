@@ -15,6 +15,7 @@ import {resolvers as testResolvers} from './resolvers/test/createUser'
 
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/prod/typeDefs';
+import { typeDefsTest } from './typeDefs/test/typeDefs';
 import { createServer } from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 const startServer = async () => {
@@ -36,7 +37,7 @@ const startServer = async () => {
     ]
   );
   const schema = makeExecutableSchema({
-    typeDefs: typeDefs,
+    typeDefs: [typeDefs, typeDefsTest],
     resolvers: resolvers2,
   });
   const server = new ApolloServer({

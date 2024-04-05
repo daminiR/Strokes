@@ -57,11 +57,11 @@ const GET_POTENTIAL_MATCHES = gql`
       offset: $offset
       limit: $limit
       neighborhood: $neighborhood
-      game_levels: $game_levels
+      gamelLevelRange: $gamelLevelRange
       sport: $sport
       ageRange: $ageRange
     ) {
-      neighborhood {
+      neighborhood
         city
         state
         country
@@ -70,9 +70,9 @@ const GET_POTENTIAL_MATCHES = gql`
       firstName
       age
       gender
-      sports {
+      sport {
         sport
-        game_level
+      gameLevel
       }
       description
       image_set {
@@ -101,9 +101,9 @@ const READ_SQUASH = gql`
         isDeleted
         deletedAt
       }
-      sports {
+      sport {
         sport
-        game_level
+        gameLevel
       }
       neighborhood {
         city
@@ -133,9 +133,9 @@ const READ_SQUASH = gql`
           country
         }
         gender
-        sports {
+        sport {
           sport
-          game_level
+          gameLevel
         }
         description
         image_set {
@@ -154,9 +154,9 @@ const READ_SQUASH = gql`
           country
         }
         gender
-        sports {
+        sport {
           sport
-          game_level
+          gameLevel
         }
         description
         image_set {
@@ -184,7 +184,7 @@ const GET_SPORTS_LIST = gql`
       sportItems @client
       {
           sport
-          game_level
+          gameLevel
       }
     }
 `;

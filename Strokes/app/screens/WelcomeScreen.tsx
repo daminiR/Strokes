@@ -17,7 +17,7 @@ interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
 export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeScreen(_props) {
   const { navigation } = _props
   const {
-    authenticationStore: { logout , setIsAuthenticated},
+    authenticationStore: { signOut, logout , setIsAuthenticated},
   } = useStores()
     //setIsAuthenticated(false);
   function goNext() {
@@ -55,6 +55,13 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
           onPress={goNext}
         />
       </View>
+      <Button
+        testID="login-button"
+        tx="UpdateProfile.logout"
+        //style={$tapButton}
+        preset="reversed"
+        onPress={signOut}
+      />
     </View>
   )
 })
