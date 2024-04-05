@@ -18,7 +18,7 @@ export const DeletedType = `
  isDeleted: Boolean,
  deletedAt: String,
 `
-export const SquashNodeType = `
+export const SportNodeType = `
     sportName: String!,
     gameLevel: Float!,
 `
@@ -49,7 +49,7 @@ export const PotentialMatchUserType = `
     firstName: String!
     age: Int!
     gender: String!
-    sport: SquashNode!
+    sport: SportNode!
     description: String
     neighborhood: LocationType!
     image_set: [Data!]!
@@ -63,7 +63,7 @@ export const LikedByUserType = `
     firstName: String!
     age: Int!
     gender: String!
-    sport: SquashNode!
+    sport: SportNode!
     description: String
     neighborhood: LocationType!
     image_set: [Data!]!
@@ -73,7 +73,7 @@ export const LikedByUserInputType = `
     firstName: String!
     age: Int!
     gender: String!
-    sport: SquashNodeInput
+    sport: SportNodeInput
     description: String
     image_set: [DataInput!]!
     neighborhood: LocationInput!
@@ -87,18 +87,18 @@ export const PotentialMatchUserInputType = `
     firstName: String!
     age: Int!
     gender: String!
-    sport: SquashNodeInput
+    sport: SportNodeInput
     description: String
     image_set: [DataInput!]!
     neighborhood: LocationInput!
 `
-export const SquashType = `
+export const UserType = `
     firstName: String!
     lastName: String!
     _id: ID!
     age: Int!
     gender: String!
-    sport: SquashNode!
+    sport: SportNode!
     neighborhood: LocationType!
     description: String
     image_set: [Data!]!
@@ -117,13 +117,13 @@ export const SquashType = `
     email: String
   `
 
-export const SquashInputType = `
+export const UserInputType = `
     firstName: String!
     lastName: String!
     _id: ID!
     age: Int!
     gender: String!
-    sport: SquashNodeInput!
+    sport: SportNodeInput!
     neighborhood: LocationInput!
     description: String
     image_set: [DataInput!]!

@@ -1,4 +1,4 @@
-import Squash from '../../models/Squash';
+import User from '../../models/User';
 import _ from 'lodash'
 export const resolvers = {
   Mutation: {
@@ -50,7 +50,7 @@ export const resolvers = {
           "sports": { "sport": {$in: sportsRemoved} },
         },
       };
-      Squash.updateMany(
+      User.updateMany(
         filter2,
         options2,
         { timestamps: true }

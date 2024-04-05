@@ -1,4 +1,4 @@
-import Squash from '../../models/Squash';
+import User from '../../models/User';
 import _ from 'lodash'
 export const resolvers = {
   Mutation: {
@@ -10,7 +10,7 @@ export const resolvers = {
           "matches.$[].createdAt": new Date(),
         },
       };
-      Squash.updateMany(
+      User.updateMany(
         filter,
         options,
         { timestamps: true }

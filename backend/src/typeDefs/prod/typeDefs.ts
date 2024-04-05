@@ -2,11 +2,11 @@ import { gql } from "apollo-server-lambda";
 import {
   LocationType,
   RangeType,
+  ImageData,
   FilterInputType,
   DeletedType,
-  SquashNodeType,
+  SportNodeType,
   DataType,
-  ImageData,
   FilterType,
   MatchQueueType,
   FileUploadType,
@@ -14,8 +14,8 @@ import {
   LikedByUserType,
   LikedByUserInputType,
   PotentialMatchUserInputType,
-  SquashType,
-  SquashInputType,
+  UserType,
+  UserInputType,
 } from '../../types/UserDefs'
 //TODO: change inout ype for age to be Int! but after you configure the birthdate resolver
 //TODO: need to add apollo server error handling
@@ -57,23 +57,23 @@ export const typeDefs = gql`
   }
   scalar FileUpload
   type Query {
-    fetchProfileById(id: String!): Squash
-    fetchAllProfiles(limit: Int): [Squash!]
-    fetchFilteredMatchQueue(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [Squash!]
-    fetchNonInteractedMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [Squash!]
+    fetchProfileById(id: String!): User
+    fetchAllProfiles(limit: Int): [User!]
+    fetchFilteredMatchQueue(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [User!]
+    fetchNonInteractedMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [User!]
     retrieveSwipeLimits(_id: String!): Int!
   }
-  input SquashNodeInput {
-    ${SquashNodeType}
+  input SportNodeInput {
+    ${SportNodeType}
   }
-  type SquashNode {
-    ${SquashNodeType}
+  type SportNode {
+    ${SportNodeType}
   }
-  type Squash {
-      ${SquashType}
+  type User {
+      ${UserType}
   }
-  input SquashInput {
-      ${SquashInputType}
+  input UserInput {
+      ${UserInputType}
   }
   type PotentialMatch {
       ${PotentialMatchUserType}
@@ -115,30 +115,30 @@ export const typeDefs = gql`
   type Mutation {
     updateAllUserSchema(_id: String!): String
     deleteImage(_id: String, img_idx: Int): [Data!]!
-    recordLikesAndUpdateCount(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): Squash
-    recordDislikesAndUpdateCount(_id: String!, dislikes: [String!], isFromLikes: Boolean!): Squash
-    updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): Squash
+    recordLikesAndUpdateCount(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): User
+    recordDislikesAndUpdateCount(_id: String!, dislikes: [String!], isFromLikes: Boolean!): User
+    updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): User
     updateProfile(
       _id: String!
       firstName: String!
       lastName: String!
       age: Int!
       gender: String!
-      sport: SquashNodeInput!
+      sport: SportNodeInput!
       neighborhood:LocationInput!
       description: String!
       addLocalImages: [FileUploadInput!]!,
       removeUploadedImages: [DataInput],
       originalImages: [DataInput!]!,
-    ): Squash
+    ): User
 
-    registerNewSquashPlayer(
+    registerNewPlayer(
       _id: String!
       firstName: String!
       lastName: String!
       age: Int!
       gender: String!
-      sport: SquashNodeInput!
+      sport: SportNodeInput!
       neighborhood: LocationInput!
       description: String!
       image_set: [FileUpload!]
@@ -153,16 +153,15 @@ export const typeDefs = gql`
       newUserToken: String
       matchQueue: [MatchQueueInput!]
       preferences: FilterInput!
-    ): Squash!
-
-    registerNewSquashPlayerTest(
+    ): User!
+    registerNewPlayerTest(
       _id: String!
       firstName: String!
       email: String!
       lastName: String!
       age: Int!
       gender: String!
-      sport: SquashNodeInput!
+      sport: SportNodeInput!
       neighborhood: LocationInput!
       description: String!
       image_set: [DataInput!]!
@@ -175,8 +174,7 @@ export const typeDefs = gql`
       phoneNumber: String
       matchQueue: [MatchQueueInput!]
       preferences: FilterInput!
-    ): Squash!
-
+    ): User!
     softDeletePlayer(_id: String): String!
     softUnDeletePlayer(_id: String): String!
   }

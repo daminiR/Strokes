@@ -1,4 +1,4 @@
-import Squash from '../../models/Squash';
+import User from '../../models/User';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 
@@ -6,7 +6,7 @@ export const resolvers = {
   Query: {
     retrieveSwipeLimits: async (parents, unSanitizedId, context, info) => {
       const _id = sanitize(unSanitizedId);
-      const userData = await Squash.findById(_id);
+      const userData = await User.findById(_id);
       return userData ? userData.swipesPerDay : 0;
     },
   },
@@ -16,7 +16,7 @@ export const resolvers = {
         unSanitizedData
       );
       if (!isFromLikes) {
-        const doc = await Squash.findOneAndUpdate(
+        const doc = await User.findOneAndUpdate(
           { $and: [{ _id: _id }, { $gt: { swipesPerDay: 0 } }] },
           {
             $addToSet: { likes: { $each: likes } },
@@ -36,10 +36,10 @@ export const resolvers = {
           neighborhood: doc?.neighborhood,
         };
         const update = { $addToSet: { likedByUSers: likedByUser } };
-        await Squash.updateMany(filter, update);
+        await User.updateMany(filter, update);
         return doc;
       } else {
-        const doc = await Squash.findOneAndUpdate(
+        const doc = await User.findOneAndUpdate(
           {
             $and: [
               { _id: _id },
@@ -67,7 +67,7 @@ export const resolvers = {
           neighborhood: doc?.neighborhood,
         };
         const update = { $addToSet: { likedByUSers: likedByUser } };
-        await Squash.updateMany(filter, update);
+        await User.updateMany(filter, update);
         return doc;
       }
     },
@@ -76,7 +76,7 @@ export const resolvers = {
       const { _id, dislikes, isFromLikes } = sanitize(unSanitizedData);
       //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       if (!isFromLikes) {
-        const doc = await Squash.findOneAndUpdate(
+        const doc = await User.findOneAndUpdate(
           { $and: [{ _id: _id }, { $gt: { swipesPerDay: 0 } }] },
           {
             $addToSet: { dislikes: { $each: dislikes } },
@@ -86,7 +86,7 @@ export const resolvers = {
         );
         return doc;
       } else {
-        const doc = await Squash.findOneAndUpdate(
+        const doc = await User.findOneAndUpdate(
           {
             $and: [
               { _id: _id },

@@ -1,4 +1,4 @@
-import Squash from '../../models/Squash';
+import User from '../../models/User';
 import mongoose from 'mongoose';
 import _ from 'lodash'
 import { manageImages } from "../../utils/awsUpload";
@@ -10,7 +10,7 @@ export const resolvers = {
     fetchProfileById: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
       // change matches to only get matches that are beyond certain dates
-      var squash_val = await Squash.findById(id);
+      var squash_val = await User.findById(id);
       if (squash_val) {
         if (squash_val.matches) {
           const new_squash = filterMatches(squash_val);
@@ -21,7 +21,7 @@ export const resolvers = {
     },
     fetchAllProfiles: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
-      const squashes = await Squash.find({ id });
+      const squashes = await User.find({ id });
       return squashes;
     },
   },
@@ -47,7 +47,7 @@ export const resolvers = {
 
       try {
         // Handling image removal from AWS and constructing the new image set
-        const currentSquashProfile = await Squash.findById(_id).session(
+        const currentSquashProfile = await User.findById(_id).session(
           session
         );
         if (!currentSquashProfile) {
@@ -60,7 +60,7 @@ export const resolvers = {
            _id
          );
         // Updating the Squash model
-        const updatedProfile = await Squash.findOneAndUpdate(
+        const updatedProfile = await User.findOneAndUpdate(
           { _id: _id },
           {
             firstName,

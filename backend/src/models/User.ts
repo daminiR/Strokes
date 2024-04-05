@@ -1,15 +1,16 @@
 import { model, Schema } from "mongoose";
-import { DeleteT, SquashDocument } from "../types/Squash.d";
+import { DeleteT, UserDocument } from "../types/Squash";
 import { LocationSchema } from "./LocationSchema"
 import { PotentialMatchSchema } from "./PotentialMatchSchema"
 import { LikedByUserSchema } from "./LikeByUserSchema"
-import { GENDERS, SPORTS } from "../constants/";
-import * as validation from "../validation/"
+import { GENDERS, SPORTS } from "../constants";
+import * as validation from "../validation"
 
 // TODO: need to decide on what age requirement you need for your app -> 18 for now, also max requirement?
 // TODO: need to figure away to allow enum values only once!
 // TODO: need to check if age above 40s is really the persons age
-var squashSchema = new Schema(
+
+var userSchema = new Schema(
   {
     _id: {
       type: String!,
@@ -128,7 +129,6 @@ var squashSchema = new Schema(
     i_blocked: [PotentialMatchSchema],
     blocked_me: [PotentialMatchSchema],
     matches: { type: [PotentialMatchSchema], required: false },
-    // new additions
     deleted: {
       type: <DeleteT>{},
       required: false,
@@ -146,5 +146,7 @@ var squashSchema = new Schema(
   },
   { timestamps: true }
 );
-const Squash = model<SquashDocument>('Squash', squashSchema)
-export default Squash
+
+const User = model<UserDocument>('User', userSchema)
+
+export default User
