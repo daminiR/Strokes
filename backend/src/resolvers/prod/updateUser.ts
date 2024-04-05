@@ -15,7 +15,6 @@ export const resolvers = {
       if (squash_val) {
         if (squash_val.matches) {
           const new_squash = filterMatches(squash_val);
-          console.log(new_squash);
           return new_squash;
         }
       }

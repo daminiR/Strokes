@@ -27,7 +27,7 @@ export interface DeleteT {
   deletedAt: ISODate;
 }
 export interface Sport {
-  sport: string;
+  sportName: string;
   gameLevel: number;
 }
 export interface LocationT {
