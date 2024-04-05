@@ -8,17 +8,40 @@ import { filterMatches } from '../../utils/matches';
 export const resolvers = {
   Query: {
     fetchProfileById: async (parents, unSanitizedId, context, info) => {
-      const { id } = sanitize(unSanitizedId);
-      // change matches to only get matches that are beyond certain dates
-      var squash_val = await User.findById(id);
-      if (squash_val) {
-        if (squash_val.matches) {
-          const new_squash = filterMatches(squash_val);
-          return new_squash;
+      try {
+        const { id } = sanitize(unSanitizedId);
+        const userDocument = await User.findById(id);
+
+        if (!userDocument) {
+          console.error(`No user found with ID ${id}`);
+          return null;
+        }
+
+        if (userDocument.matches) {
+          const updatedUser = filterMatches(userDocument);
+          console.log("Updated user with filtered matches", updatedUser);
+          return updatedUser;
+        }
+
+        return userDocument;
+      } catch (error) {
+        // Check if error is an instance of Error
+        if (error instanceof Error) {
+          console.error(
+            `Error fetching profile by ID: ${error.message}`,
+            error
+          );
+          throw new Error("Failed to fetch user profile.");
+        } else {
+          // Handle unexpected errors, which might not be an instance of Error
+          console.error("An unexpected error occurred:", error);
+          throw new Error(
+            "An unexpected error occurred while fetching user profile."
+          );
         }
       }
-      return squash_val;
     },
+
     fetchAllProfiles: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
       const squashes = await User.find({ id });
@@ -38,27 +61,24 @@ export const resolvers = {
         description,
         addLocalImages,
         removeUploadedImages,
-        originalImages
+        originalImages,
       } = unSanitizedData;
-
 
       const session = await mongoose.startSession();
       session.startTransaction();
 
       try {
         // Handling image removal from AWS and constructing the new image set
-        const currentSquashProfile = await User.findById(_id).session(
-          session
-        );
+        const currentSquashProfile = await User.findById(_id).session(session);
         if (!currentSquashProfile) {
           throw new Error("User profile not found.");
         }
-         const  final_image_set = await manageImages(
-           addLocalImages,
-           removeUploadedImages,
-           originalImages,
-           _id
-         );
+        const final_image_set = await manageImages(
+          addLocalImages,
+          removeUploadedImages,
+          originalImages,
+          _id
+        );
         // Updating the Squash model
         const updatedProfile = await User.findOneAndUpdate(
           { _id: _id },

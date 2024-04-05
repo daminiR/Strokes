@@ -4,7 +4,6 @@ import { navigate, goBack} from "../navigators"
 import { translate } from "../i18n"
 import React, { FC } from "react"
 import { Image, Linking, TouchableOpacity, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { isRTL } from "../i18n"
 import { useStores } from "../models"
 import { AppStackScreenProps, ProfileStackScreenProps} from "../navigators"

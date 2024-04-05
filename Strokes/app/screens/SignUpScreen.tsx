@@ -152,7 +152,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         //onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
       <TextField
-        value={userStore?.sport[0]?.game_level ?? undefined}
+        value={userStore?.sport.gameLevel ?? undefined}
         onChangeText={userStore.setSport}
         containerStyle={$textField}
         autoCapitalize="none"

@@ -24,7 +24,7 @@ const fieldConfigs = {
     keyboardType: "default",
     labelTx: "UpdateProfile.sportFieldLabel",
     placeholderTx: "UpdateProfile.sportFieldLabel",
-    placeholder: "sport[0].game_level",
+    placeholder: "sport.gameLevel",
   },
   firstName: {
     method: "setFirstName",

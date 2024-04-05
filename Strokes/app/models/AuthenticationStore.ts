@@ -10,16 +10,12 @@ const FileType = types.model("FileType", {
   type: types.optional(types.string, "image/jpeg"), // Default to 'image/jpeg'
   name: types.string,
 })
-
 // Define a model for User
-
 const poolData = {
           UserPoolId: process.env.REACT_APP_USER_POOL_ID3,
           ClientId: process.env.REACT_APP_APP_CLIENT_ID3,
 };
-
 const userPool = new CognitoUserPool(poolData);
-
  //Define the AuthStore model
 export const AuthenticationStoreModel = types
   .model("AuthenticationStoreModel", {
@@ -256,13 +252,13 @@ export const AuthenticationStoreModel = types
           Pool: userPool,
         }
         const cognitoUser = new CognitoUser(userData)
-        yield new Promise((resolve, reject) => {
+        yield new Promise( (resolve, reject) => {
           cognitoUser.authenticateUser(authDetails, {
-            onSuccess: (result) => {
+            onSuccess: async (result) => {
               console.log(result)
               const userSub = result.idToken.payload.sub;
               userStore.setID(userSub)
-              mongoDBStore.queryUserFromMongoDB(userSub)
+              await mongoDBStore.queryUserFromMongoDB(userSub)
               self.setIsAuthenticated(true)
               // mongodb hydrate userstore hydrate
               //self.setUser(cognitoUser)

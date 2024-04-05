@@ -30,7 +30,7 @@ interface UserData {
   last_name: string;
   age: number;
   gender: string;
-  sports: string;
+  sport: string;
   description: string;
   location: string;
 }
@@ -43,7 +43,7 @@ function createReactNativeFile(imageFiles) {
       type: "image/jpg", // Adjust type based on actual file type or metadata if available
       name: `pic-${img_idx}.jpg`, // Use img_idx for unique naming
     }),
-  }));
+  }))
 }
 
 
@@ -143,18 +143,19 @@ const MongoDBStore = types
             lastName: tempUserStore.lastName,
             age: tempUserStore.age,
             gender: tempUserStore.gender,
-            sports: tempUserStore.sport,
+            sport: tempUserStore.sport,
             description: tempUserStore.description,
             neighborhood: tempUserStore.neighborhood,
           },
         })
 
         // Clean response and update userStore with new data
-        const cleanedResponse = cleanGraphQLResponse(response.data.updateUserProfile)
+        const cleanedResponse = cleanGraphQLResponse(response.data.updateProfile)
         userStore.setFromMongoDb({
           ...cleanedResponse,
           email: userStore.email,
           phoneNumber: userStore.phoneNumber,
+
         })
       } catch (error) {
         console.error("Error updating user:", error)
@@ -176,7 +177,7 @@ const MongoDBStore = types
             lastName: userStore.lastName,
             age: 33,
             gender: userStore.gender,
-            sports: userStore.sport,
+            sport: userStore.sport,
             description: userStore.description,
             neighborhood: userStore.neighborhood,
             //newUserToken: token,
@@ -225,7 +226,7 @@ const MongoDBStore = types
         // Assuming response.data.user contains the user data
         const userStore = getRootStore(self).userStore
         // Do something with the user data, e.g., update the store or return the data
-        const cleanedResponse = cleanGraphQLResponse(response.data.squash)
+        const cleanedResponse = cleanGraphQLResponse(response.data.fetchProfileById)
         userStore.setFromMongoDb({
           ...cleanedResponse,
           email: userStore.email,

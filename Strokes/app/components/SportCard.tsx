@@ -31,7 +31,7 @@ export const SportCard = observer(() => {
               />
               <View style={$ratingBar}>
                 <CircularPlayerRatingBar
-                  rating={Number(userStore.sport[0].game_level)}
+                  rating={Number(userStore.sport.gameLevel)}
                   maxRating={7}
                   size={100}
                   strokeWidth={10}
