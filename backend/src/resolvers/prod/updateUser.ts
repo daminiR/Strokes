@@ -7,10 +7,9 @@ import { filterMatches } from '../../utils/matches';
 
 export const resolvers = {
   Query: {
-    squash: async (parents, unSanitizedId, context, info) => {
+    fetchProfileById: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
       // change matches to only get matches that are beyond certain dates
-      console.log(unSanitizedId);
       var squash_val = await Squash.findById(id);
       if (squash_val) {
         if (squash_val.matches) {
@@ -20,21 +19,14 @@ export const resolvers = {
       }
       return squash_val;
     },
-    squashes: async (parents, unSanitizedId, context, info) => {
-      //const user = context.user;
+    fetchAllProfiles: async (parents, unSanitizedId, context, info) => {
       const { id } = sanitize(unSanitizedId);
-      //if (user?.sub != id) throw new AuthenticationError("not logged in");
       const squashes = await Squash.find({ id });
       return squashes;
     },
   },
   Mutation: {
-    updateUserProfile: async (root, unSanitizedData, context) => {
-      // Assuming context provides user authentication details
-      //const userId = context.isAuthenticated(); // Adjust according to your authentication logic
-      //if (!userId) {
-        //throw new Error("Unauthorized");
-      //}
+    updateProfile: async (root, unSanitizedData, context) => {
       const {
         _id,
         firstName,
@@ -49,9 +41,6 @@ export const resolvers = {
         originalImages
       } = unSanitizedData;
 
-      //if (userId !== _id) {
-        //throw new Error("Unauthorized: You can only update your own profile.");
-      //}
 
       const session = await mongoose.startSession();
       session.startTransaction();

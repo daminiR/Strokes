@@ -5,7 +5,7 @@ import { ApolloServer}  from 'apollo-server-express';
 import  mongoose, {ConnectOptions} from 'mongoose';
 import { mergeResolvers } from '@graphql-tools/merge';
 import {resolvers as deleteUser} from './resolvers/prod/deleteUser'
-import {resolvers as createUser} from './resolvers/prod/createUSer'
+import {resolvers as createUser} from './resolvers/prod/createUser'
 import {resolvers as likesDislikes} from './resolvers/prod/likesDislikes'
 import {resolvers as matches} from './resolvers/prod/matches'
 import {resolvers as updateUser} from './resolvers/prod/updateUser'

@@ -7,7 +7,12 @@ import axios from 'axios'
 
 export const resolvers = {
   Query: {
-    matchesNotOptim: async (parents, unSanitizedData, context, info) => {
+    fetchNonInteractedMatches: async (
+      parents,
+      unSanitizedData,
+      context,
+      info
+    ) => {
       const {
         _id,
         offset,
@@ -18,8 +23,6 @@ export const resolvers = {
         ageRange,
         dislikes,
       } = sanitize(unSanitizedData);
-      //const user = context.user;
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       const minAge = ageRange.minAge;
       const maxAge = ageRange.maxAge;
       const filter = {
@@ -48,7 +51,12 @@ export const resolvers = {
       );
       return users;
     },
-    queryProssibleMatches: async (parents, unSanitizedData, context, info) => {
+    fetchFilteredMatchQueue: async (
+      parents,
+      unSanitizedData,
+      context,
+      info
+    ) => {
       const { _id, offset, limit, location, gameLevelRange, ageRange } =
         sanitize(unSanitizedData);
       const minAge = ageRange.min;
@@ -99,11 +107,7 @@ export const resolvers = {
     updateMatches: async (parents, unSanitizedData, context, info) => {
       const { currentUserId, potentialMatchId, currentUser, potentialMatch } =
         sanitize(unSanitizedData);
-      //const chat_timer = 1.21e+9
-      //two days
       const unix = Date.now() - CHAT_TIMER;
-      // note: don't need to update matches archives for potential match because
-      //that needs to be on the potential matches server load on their id
       const trieal = await Squash.findOneAndUpdate(
         { _id: currentUserId },
         { $set: { "matches.$[elem].archived": true } },

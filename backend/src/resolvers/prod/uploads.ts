@@ -1,7 +1,6 @@
 import Squash from '../../models/Squash';
 import { GraphQLUpload } from 'graphql-upload'
 import sanitize from 'mongo-sanitize'
-import * as path from 'path';
 import _ from 'lodash'
 
 export const resolvers = {

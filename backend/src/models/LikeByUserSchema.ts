@@ -1,18 +1,7 @@
-import { Types, model, Schema} from 'mongoose';
-import { DeleteT, SquashDocument, LikedByUserT, PotentialMatchT, LocationT, PotentialMatchType, PotentialMatchSingleT} from '../types/Squash.d'
+import { Schema } from "mongoose";
 import { LocationSchema } from "./LocationSchema"
 import * as validation from "../validation/"
-const uri = process.env.ATLAS_URI as any
-import {
-  GENDERS,
-  LOCATIONS,
-  CITIES,
-  STATES,
-  COUNTRY,
-  LEVELS,
-  SPORTS,
-  MAX_SPORTS_LIMIT
-} from "../constants/";
+import { GENDERS, LEVELS, SPORTS } from "../constants/";
 
 const LikedByUserSchema = new Schema(
   {
@@ -38,11 +27,11 @@ const LikedByUserSchema = new Schema(
       required: true,
       enum: GENDERS,
     },
-    sports: {
+    sport: {
       type: [
         {
-          game_level: { type: String, enum: LEVELS },
-          sport: { type: String, enum: SPORTS },
+          gameLevel: { type: String, enum: LEVELS },
+          sportName: { type: String, enum: SPORTS },
         },
       ],
       required: true,

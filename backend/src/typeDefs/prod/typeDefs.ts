@@ -57,12 +57,11 @@ export const typeDefs = gql`
   }
   scalar FileUpload
   type Query {
-    squash(id: String!): Squash
-    squashes(limit: Int): [Squash!]
-    display(filaname: String): String
-    queryProssibleMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [Squash!]
-    matchesNotOptim(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [Squash!]
-    getSwipesPerDay(_id: String!): Int!
+    fetchProfileById(id: String!): Squash
+    fetchAllProfiles(limit: Int): [Squash!]
+    fetchFilteredMatchQueue(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [Squash!]
+    fetchNonInteractedMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [Squash!]
+    retrieveSwipeLimits(_id: String!): Int!
   }
   input SquashNodeInput {
     ${SquashNodeType}
@@ -116,12 +115,10 @@ export const typeDefs = gql`
   type Mutation {
     updateAllUserSchema(_id: String!): String
     deleteImage(_id: String, img_idx: Int): [Data!]!
-
-    updateLikes(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): Squash
-    updateDislikes(_id: String!, dislikes: [String!], isFromLikes: Boolean!): Squash
+    recordLikesAndUpdateCount(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): Squash
+    recordDislikesAndUpdateCount(_id: String!, dislikes: [String!], isFromLikes: Boolean!): Squash
     updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): Squash
-
-    updateUserProfile(
+    updateProfile(
       _id: String!
       firstName: String!
       lastName: String!
@@ -135,7 +132,7 @@ export const typeDefs = gql`
       originalImages: [DataInput!]!,
     ): Squash
 
-    createSquash2(
+    registerNewSquashPlayer(
       _id: String!
       firstName: String!
       lastName: String!
@@ -158,7 +155,7 @@ export const typeDefs = gql`
       preferences: FilterInput!
     ): Squash!
 
-    createSquashTestSamples(
+    registerNewSquashPlayerTest(
       _id: String!
       firstName: String!
       email: String!
@@ -180,7 +177,7 @@ export const typeDefs = gql`
       preferences: FilterInput!
     ): Squash!
 
-    softDeleteUser(_id: String): String!
-    softUnDeleteUser(_id: String): String!
+    softDeletePlayer(_id: String): String!
+    softUnDeletePlayer(_id: String): String!
   }
 `;
