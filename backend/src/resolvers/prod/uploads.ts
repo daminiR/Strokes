@@ -1,4 +1,4 @@
-import Squash from '../../models/Squash';
+import User from '../../models/User';
 import { GraphQLUpload } from 'graphql-upload'
 import sanitize from 'mongo-sanitize'
 import _ from 'lodash'
@@ -10,7 +10,7 @@ export const resolvers = {
       const { _id, img_idx } = sanitize(unSanitizedData);
       const filter = { _id: _id };
       const update = { $pull: { image_set: { img_idx: img_idx } } };
-      const squash_doc = await Squash.findOneAndUpdate(filter, update, {
+      const squash_doc = await User.findOneAndUpdate(filter, update, {
         new: false,
       });
       let file_to_del = squash_doc!.image_set.find(

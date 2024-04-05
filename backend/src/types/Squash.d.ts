@@ -65,7 +65,7 @@ export type MatchQueueT = MatchQueueType[]
 export type PotentialMatchSingleT= PotentialMatchType
 export type LikedByUserT = LikedByUserType[]
 
-export interface SquashDocument extends Document {
+export interface UserDocument extends Document {
   firstName: string
   lastName: string
   age : number

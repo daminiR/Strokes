@@ -1,9 +1,8 @@
-import Squash from '../../models/Squash';
+import User from '../../models/User';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 import { CHAT_TIMER } from '../../constants'
 import {getMatchedUserToken, sendAdminMatchMessages, createGroupChannel} from '../../utils'
-import axios from 'axios'
 
 export const resolvers = {
   Query: {
@@ -44,7 +43,7 @@ export const resolvers = {
           },
         ],
       };
-      const users = await Squash.find(filter).skip(offset).limit(limit);
+      const users = await User.find(filter).skip(offset).limit(limit);
       console.log(
         "All users that are a potential match to current!",
         users.length
@@ -63,7 +62,7 @@ export const resolvers = {
       const maxAge = ageRange.max;
 
       // Retrieve the user by _id to access their matchQueue
-      const currentUser = await Squash.findById(_id);
+      const currentUser = await User.findById(_id);
 
       if (!currentUser) {
         console.log(`User with ID ${_id} not found`);
@@ -94,7 +93,7 @@ export const resolvers = {
       };
 
       // Fetch potential matches based on the criteria
-      const users = await Squash.find(filter, fieldsNeeded)
+      const users = await User.find(filter, fieldsNeeded)
         .skip(offset)
         .limit(limit)
         .exec(); // Ensure the query is executed
@@ -108,19 +107,19 @@ export const resolvers = {
       const { currentUserId, potentialMatchId, currentUser, potentialMatch } =
         sanitize(unSanitizedData);
       const unix = Date.now() - CHAT_TIMER;
-      const trieal = await Squash.findOneAndUpdate(
+      const trieal = await User.findOneAndUpdate(
         { _id: currentUserId },
         { $set: { "matches.$[elem].archived": true } },
         { arrayFilters: [{ "elem.createdAt": { $lte: unix } }], new: true }
       );
       createGroupChannel(currentUserId, potentialMatchId)
         .then(async (channel_response) => {
-          await Squash.findOneAndUpdate(
+          await User.findOneAndUpdate(
             { _id: currentUserId },
             { $addToSet: { matches: potentialMatch } },
             { new: true }
           );
-          const potentialMatchDoc = await Squash.findOneAndUpdate(
+          const potentialMatchDoc = await User.findOneAndUpdate(
             { _id: potentialMatchId },
             { $push: { matches: currentUser } },
             { new: true }

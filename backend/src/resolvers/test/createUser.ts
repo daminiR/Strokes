@@ -1,4 +1,4 @@
-import Squash from '../../models/Squash';
+import User from '../../models/User';
 import sanitize from 'mongo-sanitize'
 import _ from 'lodash'
 import {
@@ -11,7 +11,7 @@ export const resolvers = {
   Mutation: {
     updateAllSportFieldsTest: async () => {
       try {
-        const result = await Squash.updateMany(
+        const result = await User.updateMany(
           {}, // An empty filter selects all documents in the collection
           {
             $set: { sport : {sportName: "Squash", gameLevel: 4} }, // Set the new sport structure for all documents
@@ -28,7 +28,7 @@ export const resolvers = {
         throw error; // or handle it as needed
       }
     },
-    registerNewSquashPlayerTest: async (root, unSanitizedData, context) => {
+    registerNewPlayerTest: async (root, unSanitizedData, context) => {
       const {
         _id,
         image_set,
@@ -44,11 +44,11 @@ export const resolvers = {
       } = sanitize(unSanitizedData);
 
       //const data_set = await createAWSUpload(image_set, _id);
-      const isFound = await Squash.findOne({ _id: _id }, { new: true });
+      const isFound = await User.findOne({ _id: _id }, { new: true });
       if (isFound !== null) {
-        const doc = await Squash.remove({ _id: _id });
+        const doc = await User.remove({ _id: _id });
       }
-      const doc = await Squash.create({
+      const doc = await User.create({
         _id: _id,
         image_set: image_set,
         firstName: firstName,
@@ -80,7 +80,7 @@ export const resolvers = {
         image_set: doc?.image_set,
         neighborhood: doc?.neighborhood,
       };
-      const doc1 = await Squash.findOneAndUpdate(
+      const doc1 = await User.findOneAndUpdate(
         { _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec" },
         { $addToSet: { likedByUSers: likedByUser } },
         { new: true }

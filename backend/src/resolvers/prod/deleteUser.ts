@@ -1,11 +1,11 @@
-import Squash from '../../models/Squash';
+import User from '../../models/User';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 export const resolvers = {
   Mutation: {
     softDeletePlayer: async (root, unSanitizedId, context) => {
       const _id = sanitize(unSanitizedId);
-      const doc = await Squash.findOneAndUpdate(
+      const doc = await User.findOneAndUpdate(
         { _id: _id },
         { $set: { deleted: { isDeleted: true, deletedAt: new Date() } } },
         { new: true }
@@ -15,7 +15,7 @@ export const resolvers = {
     },
     softUnDeletePlayer: async (root, unSanitizedId, context) => {
       const _id = sanitize(unSanitizedId);
-      const doc = await Squash.findOneAndUpdate(
+      const doc = await User.findOneAndUpdate(
         { _id: _id },
         { $set: { "deleted.isDeleted" : false } },
         { new: true }

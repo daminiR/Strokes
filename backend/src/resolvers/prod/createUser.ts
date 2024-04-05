@@ -1,4 +1,4 @@
-import Squash from '../../models/Squash';
+import User from '../../models/User';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 import {
@@ -13,7 +13,7 @@ import {
 
 export const resolvers = {
   Mutation: {
-    registerNewSquashPlayer : async (root, unSanitizedData, context) => {
+    registerNewPlayer : async (root, unSanitizedData, context) => {
       const {
         _id,
         image_set,
@@ -46,7 +46,7 @@ export const resolvers = {
 
       // Attempt to create Squash document
       try {
-        doc = await Squash.create({
+        doc = await User.create({
           _id: _id,
           image_set: data_set,
           firstName: firstName,
