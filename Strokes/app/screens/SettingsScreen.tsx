@@ -35,12 +35,8 @@ export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScre
     authenticationStore: { logout },
   } = useStores()
   const openURL = (url) => {
-    Linking.openURL(url).catch(err =>
-      Alert.alert('Cannot open URL', err.message)
-    );
+    Linking.openURL(url).catch((err) => Alert.alert("Cannot open URL", err.message))
   };
-
-
   useHeader(
     {
       leftIcon: "back",
@@ -48,8 +44,6 @@ export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScre
     },
     [goBack],
   )
-
-
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
   const settingsMethods = [
     {
@@ -98,6 +92,7 @@ export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScre
     </Screen>
   )
 })
+
 const $listContentContainer: ContentStyle = {
   paddingHorizontal: spacing.md, // Adjust if necessary to align with the card's horizontal margin
   paddingTop: spacing.lg + spacing.xl,
