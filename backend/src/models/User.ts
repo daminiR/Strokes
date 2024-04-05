@@ -52,23 +52,12 @@ var userSchema = new Schema(
       enum: GENDERS,
     },
     sport: {
-      type: [
+      type:
         {
           gameLevel: { type: Number, min: 1, max: 8},
           sportName: { type: String, enum: SPORTS },
         },
-      ],
       required: true,
-      validate: [
-        {
-          validator: validation.imageArrayMinLimit,
-          message: "Cannot have no sport, choose atleast one",
-        },
-        {
-          validator: validation.sportsArrayMaxLimit,
-          message: "Cannot have more than 5 chossen sports at a time",
-        },
-      ],
     },
     neighborhood: {
       type: LocationSchema,

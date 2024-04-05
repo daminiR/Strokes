@@ -28,23 +28,11 @@ const LikedByUserSchema = new Schema(
       enum: GENDERS,
     },
     sport: {
-      type: [
-        {
-          gameLevel: { type: String, enum: LEVELS },
-          sportName: { type: String, enum: SPORTS },
-        },
-      ],
+      type: {
+        gameLevel: { type: String, enum: LEVELS },
+        sportName: { type: String, enum: SPORTS },
+      },
       required: true,
-      validate: [
-        {
-          validator: validation.imageArrayMinLimit,
-          message: "Cannot have no sport, choose atleast one",
-        },
-        {
-          validator: validation.sportsArrayMaxLimit,
-          message: "Cannot have more than 5 chossen sports at a time",
-        },
-      ],
     },
     description: {
       type: String,

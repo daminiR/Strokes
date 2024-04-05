@@ -7,12 +7,11 @@ export const LocationModel = types.model("LocationModel", {
   city: types.maybeNull(types.string),
   state: types.maybeNull(types.string),
   country: types.maybeNull(types.string),
-});
+})
 export const SportModel = types.model("SportModel", {
-  sport: types.maybeNull(types.string),
-  game_level: types.maybeNull(types.number),
-});
-
+  sportName: types.maybeNull(types.string),
+  gameLevel: types.maybeNull(types.number),
+})
 export const ImageModel = types.model("ImageModel", {
   img_idx: types.maybeNull(types.number),
   imageURL: types.maybeNull(types.string),
@@ -23,7 +22,7 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
   firstName: types.maybeNull(types.string),
   age: types.maybeNull(types.number),
   gender: types.maybeNull(types.string),
-  sports: types.array(SportModel),
+  sport: types.maybeNull(SportModel),
   description: types.maybeNull(types.string),
   image_set: types.array(ImageModel),
   neighborhood: LocationModel,

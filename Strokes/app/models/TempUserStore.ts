@@ -1,6 +1,5 @@
 import { applySnapshot, types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
 import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
-//import MongoDBStore from './MongoDBStore';
 import { getRootStore } from './helpers/getRootStore';
 
 const ImageDataModel = types.model({
@@ -8,8 +7,8 @@ const ImageDataModel = types.model({
   img_idx: types.integer,
 })
 const GameLevelModel = types.model({
-  game_level: types.maybeNull(types.string),
-  sport: types.maybeNull(types.string),
+  gameLevel: types.maybeNull(types.number),
+  sportName: types.maybeNull(types.string),
 })
 const NeighborhoodModel = types.model({
   city: types.maybeNull(types.string),
@@ -21,7 +20,7 @@ export const TempStoreModel = types
   .model("UserStoreModel", {
     age: types.maybeNull(types.integer), // Assuming you're providing a unique identifier when creating a user instance
     isHydrated: types.maybeNull(types.boolean),
-    sport: types.optional(types.array(GameLevelModel), []),
+    sport: types.maybeNull(GameLevelModel),
     imageFiles: types.optional(types.array(types.frozen()), []),
     gender: types.optional(types.enumeration("Gender", ["male", "female", "other"]), "other"),
     description: types.maybeNull(types.string),
@@ -37,7 +36,7 @@ export const TempStoreModel = types
       self.email = email
     },
     setSport(squash_level: string) {
-      self.sport = [{sport: "squash", game_level: squash_level}]
+      self.sport = [{sportName: "squash", gameLevel: squash_level}]
     },
     setPhoneNumber(phoneNumber: string) {
       self.phoneNumber = phoneNumber
@@ -77,7 +76,10 @@ export const TempStoreModel = types
         email: userStore.email,
         age: userStore.age,
         phoneNumber: userStore.phoneNumber,
-        sport: userStore.sport.map((sport) => ({ ...sport })), // Assuming sport is an array of objects
+        sport: GameLevelModel.create({
+          sportName: userStore.sport.sportName,
+          gameLevel: userStore.sport.gameLevel,
+        }),
         imageFiles: userStore.imageFiles.map((imageFile) => cast(imageFile)), // Use cast for MST types
         gender: userStore.gender,
         description: userStore.description,

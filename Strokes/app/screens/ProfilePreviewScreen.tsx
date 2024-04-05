@@ -58,7 +58,7 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
               {/* Rating bar and other components */}
               <View style={$ratingBar}>
                 <CircularPlayerRatingBar
-                  rating={Number(tempUserStore.sport[0].game_level)}
+                  rating={Number(tempUserStore.sport.gameLevel)}
                   maxRating={7}
                   size={100}
                   strokeWidth={10}

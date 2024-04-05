@@ -58,7 +58,7 @@ const updateUserChanges = async () => {
   const profileDetails =[
   {
     label: "Squash Level",
-    value: tempUserStore.sport[0].game_level,
+    value: tempUserStore.sport.gameLevel,
     iconName: "squash_level",
     case: "squash_level",
   },

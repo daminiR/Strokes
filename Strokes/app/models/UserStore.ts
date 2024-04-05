@@ -1,6 +1,5 @@
 import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
 import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
-//import MongoDBStore from './MongoDBStore';
 import { getRootStore } from './helpers/getRootStore';
 
 const ImageDataModel = types.model({
@@ -8,8 +7,8 @@ const ImageDataModel = types.model({
   img_idx: types.integer,
 })
 const GameLevelModel = types.model({
-  game_level: types.maybeNull(types.string),
-  sport: types.maybeNull(types.string),
+  gameLevel: types.maybeNull(types.number),
+  sportName: types.maybeNull(types.string),
 })
 const NeighborhoodModel = types.model({
   city: types.maybeNull(types.string),
@@ -24,7 +23,7 @@ export const UserStoreModel = types
     authPassword: types.maybeNull(types.string),
     phoneNumber: types.maybeNull(types.string),
     email: types.maybeNull(types.string),
-    sport: types.optional(types.array(GameLevelModel), []),
+    sport: types.maybeNull(GameLevelModel),
     imageFiles: types.optional(types.array(types.frozen()), []),
     gender: types.optional(types.enumeration("Gender", ["male", "female", "other"]), "other"),
     description: types.maybeNull(types.string),
@@ -61,7 +60,7 @@ export const UserStoreModel = types
       self.neighborhood = neighborhood
     },
     setSport(squash_level: string) {
-      self.sport = [{sport: "squash", game_level: squash_level}]
+      self.sport = [{sportName: "squash", gameLevel: squash_level}]
     },
     setDescription(description: string) {
       self.description = description
@@ -73,7 +72,7 @@ export const UserStoreModel = types
       self.email = userData.email
       self.age = userData.age
       self.phoneNumber = userData.phoneNumber
-      self.sport = userData.sports
+      self.sport = userData.sport
       self.firstName = userData.firstName
       self.lastName = userData.lastName
       self.gender = userData.gender
