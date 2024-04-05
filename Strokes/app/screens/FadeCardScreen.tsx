@@ -5,10 +5,10 @@ import { Button, Screen, Text, SBItem, TextField, SelectField, Toggle, SportCard
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
-import { interpolate } from "react-native-reanimated"
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Swiper from 'react-native-deck-swiper';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const ROOT_STATE_STORAGE_KEY = "root-v1";
 
 const PAGE_WIDTH = Dimensions.get('window').width
 const PAGE_HEIGHT = Dimensions.get('window').height
@@ -41,6 +41,17 @@ const onSwiped = (cardIndex: number) => {
     setIsLastCard(true)
   }
 }
+const logCurrentState = async () => {
+  const currentState = await AsyncStorage.getItem(ROOT_STATE_STORAGE_KEY);
+  console.log('Current State:', currentState);
+};
+useEffect(() => {
+  const fetchData = async () => {
+    await logCurrentState() // Assuming logCurrentState is an async function
+  }
+
+  fetchData()
+}, [])
   return (
     <Screen preset="auto" style={$screenContentContainer} safeAreaEdges={["top"]}>
       {cards.length > 0 ? (

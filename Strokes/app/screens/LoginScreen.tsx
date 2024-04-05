@@ -6,6 +6,8 @@ import { navigate, goBack} from "../navigators"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const ROOT_STATE_STORAGE_KEY = "root-v1";
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -33,6 +35,17 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   function login() {
     authenticationStore.signIn()
   }
+const logCurrentState = async () => {
+  const currentState = await AsyncStorage.getItem(ROOT_STATE_STORAGE_KEY);
+  console.log('Current State:', currentState);
+};
+useEffect(() => {
+  const fetchData = async () => {
+    await logCurrentState() // Assuming logCurrentState is an async function
+  }
+
+  fetchData()
+}, [])
 
 
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(

@@ -19,7 +19,7 @@ if (__DEV__) {
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
-import React from "react"
+import React, {useEffect} from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import * as Linking from "expo-linking"
 import { ApolloProvider } from '@apollo/client';
@@ -68,6 +68,7 @@ interface AppProps {
  * @param {AppProps} props - The props for the `App` component.
  * @returns {JSX.Element} The rendered `App` component.
  */
+import { AsyncStorage } from "@react-native-async-storage/async-storage";
 function App(props: AppProps) {
   const { hideSplashScreen } = props
   const {
@@ -77,6 +78,14 @@ function App(props: AppProps) {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   const [areFontsLoaded] = useFonts(customFontsToLoad)
+
+  const logCurrentState = async () => {
+    const currentState = await AsyncStorage.getItem(ROOT_STATE_STORAGE_KEY)
+    console.log("Current State:", currentState)
+  }
+  useEffect(() => {
+    logCurrentState()
+  }, [])
 
   const { rehydrated } = useInitialRootStore(() => {
     // This runs after the root store has been initialized and rehydrated.

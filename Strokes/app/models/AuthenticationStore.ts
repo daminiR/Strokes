@@ -1,5 +1,6 @@
 import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
 import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserStoreModel } from "./UserStore"
 import { getRootStore } from "./helpers/getRootStore"
 import { removeStore } from "./helpers/removeRootStore"
@@ -315,7 +316,8 @@ export const AuthenticationStoreModel = types
           self.setIsAuthenticated(false)
           // Optional: Clear any user data from your application state
           // Perform any additional cleanup or redirection as needed
-          removeStore()
+          yield removeStore()
+          yield AsyncStorage.clear()
         } catch (error) {
           console.error("An error occurred during sign out:", error)
           // Handle the sign-out error (e.g., display a notification to the user)
