@@ -4,6 +4,7 @@ import { LocationSchema } from "./LocationSchema"
 import { PotentialMatchSchema } from "./PotentialMatchSchema"
 import { LikedByUserSchema } from "./LikeByUserSchema"
 import { GENDERS, SPORTS } from "../constants/";
+import * as validation from "../validation/"
 
 // TODO: need to decide on what age requirement you need for your app -> 18 for now, also max requirement?
 // TODO: need to figure away to allow enum values only once!

@@ -10,6 +10,7 @@ import {
   LIKES_PER_DAY_LIMIT,
   SPORT_CHANGES_PER_DAY,
 } from "../../constants";
+
 export const resolvers = {
   Mutation: {
     registerNewSquashPlayer : async (root, unSanitizedData, context) => {
