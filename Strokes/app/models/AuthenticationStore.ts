@@ -1,8 +1,8 @@
 import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
 import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
-import MongoDBStore from './MongoDBStore';
-import {UserStoreModel} from './UserStore';
-import { getRootStore } from './helpers/getRootStore';
+import { UserStoreModel } from "./UserStore"
+import { getRootStore } from "./helpers/getRootStore"
+import { removeStore } from "./helpers/removeRootStore"
 
 const FileType = types.model("FileType", {
   uri: types.string,
@@ -47,6 +47,7 @@ export const AuthenticationStoreModel = types
                     if (session.isValid()) {
                       console.log("User is signed in")
                       self.setIsAuthenticated(true)
+                      // rehydrate userStore and match store here
                     } else {
                       console.log("Session is invalid")
                       self.setIsAuthenticated(false)
@@ -308,13 +309,13 @@ export const AuthenticationStoreModel = types
 
     signOut: flow(function* signOut() {
       const cognitoUser = userPool.getCurrentUser()
-
       if (cognitoUser != null) {
         try {
           cognitoUser.signOut()
           self.setIsAuthenticated(false)
           // Optional: Clear any user data from your application state
           // Perform any additional cleanup or redirection as needed
+          removeStore()
         } catch (error) {
           console.error("An error occurred during sign out:", error)
           // Handle the sign-out error (e.g., display a notification to the user)

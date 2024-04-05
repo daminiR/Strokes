@@ -20,11 +20,9 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
     authenticationStore: { logout , setIsAuthenticated},
   } = useStores()
     //setIsAuthenticated(false);
-
   function goNext() {
     navigation.navigate("Demo", { screen: "DemoShowroom", params: {} })
   }
-
   useHeader(
     {
       rightTx: "common.logOut",
@@ -32,9 +30,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
     },
     [logout],
   )
-
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
-
   return (
     <View style={$container}>
       <View style={$topContainer}>
