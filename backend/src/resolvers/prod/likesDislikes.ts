@@ -4,23 +4,17 @@ import sanitize from 'mongo-sanitize'
 
 export const resolvers = {
   Query: {
-    getSwipesPerDay: async (parents, unSanitizedId, context, info) => {
+    retrieveSwipeLimits: async (parents, unSanitizedId, context, info) => {
       const _id = sanitize(unSanitizedId);
-      //const user = context.user;
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
       const userData = await Squash.findById(_id);
       return userData ? userData.swipesPerDay : 0;
     },
   },
   Mutation: {
-    updateLikes: async (parents, unSanitizedData, context, info) => {
+    recordLikesAndUpdateCount: async (parents, unSanitizedData, context, info) => {
       const { _id, likes, currentUserData, isFromLikes } = sanitize(
         unSanitizedData
       );
-      //const user = context.user;
-      //if (user?.sub != _id) throw new AuthenticationError("not logged in");
-      // the one who swiped get one less swipe so for _id, decease swipe
-      // only upser documents if likes/dislikes are more than 0
       if (!isFromLikes) {
         const doc = await Squash.findOneAndUpdate(
           { $and: [{ _id: _id }, { $gt: { swipesPerDay: 0 } }] },
@@ -31,9 +25,6 @@ export const resolvers = {
           { new: true }
         );
         const filter = { _id: likes };
-        //const profileImage = _.find(doc?.image_set, (imgObj) => {
-        //imgObj.img_idx == 0;
-        //});
         const likedByUser = {
           firstName: doc?.firstName,
           _id: _id,
@@ -80,7 +71,7 @@ export const resolvers = {
         return doc;
       }
     },
-    updateDislikes: async (parents, unSanitizedData, context, info) => {
+    recordDislikesAndUpdateCount: async (parents, unSanitizedData, context, info) => {
       //const user = context.user;
       const { _id, dislikes, isFromLikes } = sanitize(unSanitizedData);
       //if (user?.sub != _id) throw new AuthenticationError("not logged in");
@@ -93,8 +84,6 @@ export const resolvers = {
           },
           { new: true }
         );
-        console.log("Updated user dislikes ", dislikes);
-        console.log("doc", doc);
         return doc;
       } else {
         const doc = await Squash.findOneAndUpdate(
@@ -110,8 +99,6 @@ export const resolvers = {
           },
           { new: true }
         );
-        console.log("Updated user dislikes ", dislikes);
-        console.log("doc", doc);
         return doc;
       }
     },

@@ -3,7 +3,7 @@ import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 export const resolvers = {
   Mutation: {
-    softDeleteUser: async (root, unSanitizedId, context) => {
+    softDeletePlayer: async (root, unSanitizedId, context) => {
       const _id = sanitize(unSanitizedId);
       const doc = await Squash.findOneAndUpdate(
         { _id: _id },
@@ -13,7 +13,7 @@ export const resolvers = {
       console.log("user soft deleted", doc);
       return "Done";
     },
-    softUnDeleteUser: async (root, unSanitizedId, context) => {
+    softUnDeletePlayer: async (root, unSanitizedId, context) => {
       const _id = sanitize(unSanitizedId);
       const doc = await Squash.findOneAndUpdate(
         { _id: _id },

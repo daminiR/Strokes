@@ -6,11 +6,10 @@ import {
   LIKES_PER_DAY_LIMIT,
   SPORT_CHANGES_PER_DAY,
 } from "../../constants/";
-//import { PubSub } from 'graphql-subscriptions';
-//const pubsub = new PubSub()
+
 export const resolvers = {
   Mutation: {
-    updateAllSportFields: async () => {
+    updateAllSportFieldsTest: async () => {
       try {
         const result = await Squash.updateMany(
           {}, // An empty filter selects all documents in the collection
@@ -29,7 +28,7 @@ export const resolvers = {
         throw error; // or handle it as needed
       }
     },
-    createSquashTestSamples: async (root, unSanitizedData, context) => {
+    registerNewSquashPlayerTest: async (root, unSanitizedData, context) => {
       const {
         _id,
         image_set,
@@ -81,11 +80,9 @@ export const resolvers = {
         image_set: doc?.image_set,
         neighborhood: doc?.neighborhood,
       };
-      //const update = { $addToSet: { likedByUSers: likedByUser}}
       const doc1 = await Squash.findOneAndUpdate(
         { _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec" },
         { $addToSet: { likedByUSers: likedByUser } },
-        //{ likedByUSers: [ likedByUser ] },
         { new: true }
       );
       console.log(doc);

@@ -1,20 +1,9 @@
-import { Types, model, Schema} from 'mongoose';
-import { DeleteT, SquashDocument, LikedByUserT, PotentialMatchT, LocationT, PotentialMatchType, PotentialMatchSingleT} from '../types/Squash.d'
+import { model, Schema } from "mongoose";
+import { DeleteT, SquashDocument } from "../types/Squash.d";
 import { LocationSchema } from "./LocationSchema"
 import { PotentialMatchSchema } from "./PotentialMatchSchema"
 import { LikedByUserSchema } from "./LikeByUserSchema"
-import * as validation from "../validation/"
-const uri = process.env.ATLAS_URI as any
-import {
-  GENDERS,
-  LOCATIONS,
-  CITIES,
-  STATES,
-  COUNTRY,
-  LEVELS,
-  SPORTS,
-  MAX_SPORTS_LIMIT
-} from "../constants/";
+import { GENDERS, SPORTS } from "../constants/";
 
 // TODO: need to decide on what age requirement you need for your app -> 18 for now, also max requirement?
 // TODO: need to figure away to allow enum values only once!

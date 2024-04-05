@@ -12,7 +12,7 @@ import {
 } from "../../constants";
 export const resolvers = {
   Mutation: {
-    createSquash2: async (root, unSanitizedData, context) => {
+    registerNewSquashPlayer : async (root, unSanitizedData, context) => {
       const {
         _id,
         image_set,
@@ -27,10 +27,8 @@ export const resolvers = {
         email,
         newusertoken,
       } = sanitize(unSanitizedData);
-
       let data_set;
       let doc;
-
       // Handle errors for createAWSUpload separately
       try {
         data_set = await createAWSUpload(image_set, _id);

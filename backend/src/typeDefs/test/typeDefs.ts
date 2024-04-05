@@ -23,6 +23,6 @@ import {
 
 export const typeDefsTest = gql`
   type Mutation {
-    updateAllSportFields: Squash
+    updateAllSportFieldsTest: Squash
   }
 `;
