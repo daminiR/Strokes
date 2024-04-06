@@ -62,24 +62,16 @@ export const resolvers = {
         // Ensure _id is valid, otherwise throw an error
         if (!_id) throw new Error("Invalid user ID");
 
-        //const currentUser = await User.findById(_id)
-        //.select("matchQueue")
-        //.exec();
         const currentUser = await User.findById(_id)
-          .select("matchQueue -_id")
+          .select("matchQueue")
           .exec();
-
         if (!currentUser) throw new Error(`User with ID ${_id} not found`);
-        console.log("here now2", currentUser);
-        console.log("here now2", currentUser.matchQueue);
-        console.log("here now2", currentUser._id);
-        if (!Array.isArray(currentUser))
+        if (!Array.isArray(currentUser.matchQueue))
           throw new Error("matchQueue is not an array");
 
         const nonInteractedIds = currentUser.matchQueue
           .filter((match) => !match.interacted && match._id) // Ensure match._id is present
           .map((match) => match._id);
-
         if (nonInteractedIds.length === 0) {
           console.log("No non-interacted matches found in matchQueue");
           return [];
@@ -95,7 +87,21 @@ export const resolvers = {
           .select(fieldsNeeded)
           .exec();
 
-        return userProfiles;
+        const potentialMatches = userProfiles.map((user) => ({
+          _id: user._id,
+          firstName: user.firstName,
+          image_set: user.image_set,
+          age: user.age,
+          archived: false, // Assuming default false as no archived info in find
+          neighborhood: user.neighborhood,
+          gender: user.gender,
+          sport: user.sport,
+          createdAt: Date.now(), // Assuming createdAt is a Date object
+          updatedAt: Date.now(), // Assuming updatedAt is a Date object
+          description: user.description,
+        }));
+
+        return potentialMatches;
       } catch (error) {
         // More granular error handling based on error type
         if (error instanceof TypeError) {

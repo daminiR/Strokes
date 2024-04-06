@@ -53,6 +53,8 @@ export const PotentialMatchUserType = `
     description: String
     neighborhood: LocationType!
     image_set: [Data!]!
+    createdAt: String,
+    updatedAt: String
 `
 export const MatchQueueType = `
     _id: ID!

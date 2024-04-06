@@ -51,12 +51,61 @@ var userSchema = new Schema(
       required: true,
       enum: GENDERS,
     },
-    sport: {
-      type:
+    matchQueue: {
+      type: [
         {
-          gameLevel: { type: Number, min: 1, max: 8},
-          sportName: { type: String, enum: SPORTS },
+          _id: { type: String, required: true },
+          interacted: { type: Boolean, required: true, default: false },
+          createdAt: { type: Date, required: true, default: Date.now },
+          updatedAt: { type: Date, required: true, default: Date.now },
         },
+      ],
+      required: true,
+    },
+    lastMatchQueuFetched: { type: Date, default: Date.now }, // Tracks the last time the match queue was fetched from the server
+    preferencessHash: { type: String, default: "" }, // A hash or string representation of the filters used to fetch the match queue
+    preferences: {
+      type: {
+        gameLevel: {
+          type: {
+            min: {
+              type: Number,
+              required: true,
+              min: 1,
+              max: 8,
+            },
+            max: {
+              type: Number,
+              required: true,
+              min: 1,
+              max: 8,
+            },
+          },
+        },
+        age: {
+          type: {
+            min: {
+              type: Number,
+              required: true,
+              min: 18,
+              max: 90,
+            },
+            max: {
+              type: Number,
+              required: true,
+              min: 18,
+              max: 90,
+            },
+          },
+        },
+      },
+      required: true,
+    },
+    sport: {
+      type: {
+        gameLevel: { type: Number, min: 1, max: 8 },
+        sportName: { type: String, enum: SPORTS },
+      },
       required: true,
     },
     neighborhood: {
