@@ -56,50 +56,58 @@ export const resolvers = {
       context,
       info
     ) => {
-      const { _id, offset, limit, location, gameLevelRange, ageRange } =
-        sanitize(unSanitizedData);
-      const minAge = ageRange.min;
-      const maxAge = ageRange.max;
+      const { _id } = sanitize(unSanitizedData);
 
-      // Retrieve the user by _id to access their matchQueue
-      const currentUser = await User.findById(_id);
+      try {
+        // Ensure _id is valid, otherwise throw an error
+        if (!_id) throw new Error("Invalid user ID");
 
-      if (!currentUser) {
-        console.log(`User with ID ${_id} not found`);
-        return [];
+        //const currentUser = await User.findById(_id)
+        //.select("matchQueue")
+        //.exec();
+        const currentUser = await User.findById(_id)
+          .select("matchQueue -_id")
+          .exec();
+
+        if (!currentUser) throw new Error(`User with ID ${_id} not found`);
+        console.log("here now2", currentUser);
+        console.log("here now2", currentUser.matchQueue);
+        console.log("here now2", currentUser._id);
+        if (!Array.isArray(currentUser))
+          throw new Error("matchQueue is not an array");
+
+        const nonInteractedIds = currentUser.matchQueue
+          .filter((match) => !match.interacted && match._id) // Ensure match._id is present
+          .map((match) => match._id);
+
+        if (nonInteractedIds.length === 0) {
+          console.log("No non-interacted matches found in matchQueue");
+          return [];
+        }
+        console.log(nonInteractedIds);
+
+        const fieldsNeeded =
+          "firstName age gender sport description image_set neighborhood";
+
+        const userProfiles = await User.find({
+          _id: { $in: nonInteractedIds },
+        })
+          .select(fieldsNeeded)
+          .exec();
+
+        return userProfiles;
+      } catch (error) {
+        // More granular error handling based on error type
+        if (error instanceof TypeError) {
+          console.error("TypeError occurred:", error.message);
+        } else if (error instanceof TypeError) {
+          // Handle specific errors if you expect them
+          console.error("Specific error occurred:", error.message);
+        } else {
+          console.error("An unknown error occurred");
+        }
+        throw new Error("Failed to fetch filtered match queue");
       }
-
-      // Filter matchQueue for interacted being false
-      const matchQueueIds = currentUser.matchQueue
-        .filter((match) => !match.interacted)
-        .map((match) => match._id);
-
-      // Define a filter to fetch users by IDs in the filtered matchQueue and within the age range
-      const filter = {
-        _id: { $in: matchQueueIds },
-        age: { $gte: minAge, $lte: maxAge },
-        // Add additional filters as needed (e.g., for gameLevelRange or location)
-      };
-
-      const fieldsNeeded = {
-        _id: 1,
-        firstName: 1,
-        age: 1,
-        gender: 1,
-        sport: 1,
-        description: 1,
-        image_set: 1,
-        neighborhood: 1,
-      };
-
-      // Fetch potential matches based on the criteria
-      const users = await User.find(filter, fieldsNeeded)
-        .skip(offset)
-        .limit(limit)
-        .exec(); // Ensure the query is executed
-
-      console.log(users);
-      return users;
     },
   },
   Mutation: {

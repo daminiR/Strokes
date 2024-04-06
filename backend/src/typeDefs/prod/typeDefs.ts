@@ -59,7 +59,7 @@ export const typeDefs = gql`
   type Query {
     fetchProfileById(id: String!): User
     fetchAllProfiles(limit: Int): [User!]
-    fetchFilteredMatchQueue(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [User!]
+    fetchFilteredMatchQueue(_id: String!): [PotentialMatch!]
     fetchNonInteractedMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [User!]
     retrieveSwipeLimits(_id: String!): Int!
   }

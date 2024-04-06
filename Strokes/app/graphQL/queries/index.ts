@@ -16,20 +16,9 @@ const SWIPED_LEFT = gql`
 const GET_POTENTIAL_MATCHES = gql`
   query fetchFilteredMatchQueue(
     $_id: String!
-    $offset: Int
-    $limit: Int
-    $neighborhood: LocationInput!
-    $gamelLevelRange: GameLevelRange
-    $ageRange: AgeRangeInput
   ) {
     fetchFilteredMatchQueue(
       _id: $_id
-      offset: $offset
-      limit: $limit
-      neighborhood: $neighborhood
-      gamelLevelRange: $gamelLevelRange
-      sport: $sport
-      ageRange: $ageRange
     ) {
       neighborhood {
         city
