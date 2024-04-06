@@ -44,7 +44,7 @@ const PotentialMatchSchema = new Schema(
       default: false,
       required: true,
     },
-    location: {
+    neighborhood: {
       type: LocationSchema,
       required: true,
     },
