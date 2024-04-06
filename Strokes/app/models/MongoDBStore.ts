@@ -189,23 +189,24 @@ const MongoDBStore = types
         // Handle error or set error state
       }
     }),
-    queryPotentialMatches: flow(function* (filters) {
+    queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore
+      const matchStore = getRootStore(self).matchStore
       try {
         const response = yield client.query({
           query: graphQL.GET_POTENTIAL_MATCHES,
           variables: {
             _id: userStore._id,
-            offset: 10,
-            limit: 10,
-            ageRange: { minAge: 20, maxAge: 80 },
-            gamelLevelRange: { minGameLevel: 1, maxGameLevel: 8 },
-            neighborhood: userStore.neighborhood,
-          }, // Pass filters directly to the query
+          },
           fetchPolicy: "network-only",
         })
         // Assuming response.data.queryPossibleMatches contains the match data
-        const matchesData = cleanGraphQLResponse(response.data.queryPossibleMatches)
+        const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
+        matchStore.setMatchPool({
+          matchesData,
+        })
+
+
         return matchesData
         //self.matches.replace(matchesData) // Replace existing matches with new ones
         // Optionally: store matches for persistence or further processing

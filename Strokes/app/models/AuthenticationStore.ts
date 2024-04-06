@@ -27,6 +27,7 @@ export const AuthenticationStoreModel = types
   })
   .actions((self) => ({
     checkCognitoUserSession() {
+      const mongoDBStore = getRoot(self).mongoDBStore
       var userPool = new CognitoUserPool(poolData);
             userPool.storage.sync(function (err, result) {
               if (err) {
@@ -44,7 +45,9 @@ export const AuthenticationStoreModel = types
                     if (session.isValid()) {
                       console.log("User is signed in")
                       self.setIsAuthenticated(true)
-                      // rehydrate userStore and match store here
+                      mongoDBStore.queryPotentialMatches()
+
+
                     } else {
                       console.log("Session is invalid")
                       self.setIsAuthenticated(false)
