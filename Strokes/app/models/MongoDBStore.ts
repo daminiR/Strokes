@@ -192,8 +192,9 @@ const MongoDBStore = types
     queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
-      //console.log("date", matchStore)
-      //const timeElapsed = Date.now() - new Date(matchStore.matchPool[0].createdAt).getTime();
+      console.log("here", userStore.matchQueue)
+      const timeElapsed = Date.now() - new Date(userStore.matchQueue[0].createdAt).getTime();
+      console.log(timeElapsed)
       const oneDayInMs = 5 * 60 * 1000
       try {
         //if (timeElapsed < oneDayInMs) {
@@ -206,6 +207,7 @@ const MongoDBStore = types
           })
           const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
           matchStore.setMatchPool(matchesData)
+          //matchStore.reset()
           return matchesData
         //}
       } catch (error) {

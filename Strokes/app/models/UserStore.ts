@@ -6,6 +6,10 @@ const ImageDataModel = types.model({
   file: types.maybeNull(types.string),
   img_idx: types.integer,
 })
+const MatchQueueModel = types.model({
+  _id: types.maybeNull(types.string),
+  interacted: types.boolean,
+})
 const GameLevelModel = types.model({
   gameLevel: types.maybeNull(types.number),
   sportName: types.maybeNull(types.string),
@@ -29,6 +33,7 @@ export const UserStoreModel = types
     description: types.maybeNull(types.string),
     firstName: types.maybeNull(types.string),
     lastName: types.maybeNull(types.string),
+    matchQueue: types.array(MatchQueueModel),
     neighborhood: types.maybeNull(NeighborhoodModel),
   })
   .actions((self) => ({

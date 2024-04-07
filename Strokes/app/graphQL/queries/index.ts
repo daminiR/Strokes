@@ -73,6 +73,10 @@ const READ_SQUASH = gql`
         imageURL
         filePath
       }
+      matchQueue {
+        _id
+        interacted
+      }
       likes
       dislikes
       likedByUSers {
