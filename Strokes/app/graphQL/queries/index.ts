@@ -76,6 +76,8 @@ const READ_SQUASH = gql`
       matchQueue {
         _id
         interacted
+        createdAt
+        updatedAt
       }
       likes
       dislikes

@@ -59,6 +59,8 @@ export const PotentialMatchUserType = `
 export const MatchQueueType = `
     _id: ID!
     interacted: Boolean!
+    createdAt: String
+    updatedAt: String
 `
 export const LikedByUserType = `
     _id: ID!
