@@ -202,11 +202,7 @@ const MongoDBStore = types
         })
         // Assuming response.data.queryPossibleMatches contains the match data
         const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
-        matchStore.setMatchPool({
-          matchesData,
-        })
-
-
+        matchStore.setMatchPool(matchesData)
         return matchesData
         //self.matches.replace(matchesData) // Replace existing matches with new ones
         // Optionally: store matches for persistence or further processing
