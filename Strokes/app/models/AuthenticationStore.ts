@@ -45,7 +45,9 @@ export const AuthenticationStoreModel = types
                     if (session.isValid()) {
                       console.log("User is signed in")
                       self.setIsAuthenticated(true)
-                      mongoDBStore.queryPotentialMatches()
+                      mongoDBStore.shouldQuery()
+                      //mongoDBStore.queryUserFromMongoDB()
+                      //mongoDBStore.queryPotentialMatches()
 
 
                     } else {

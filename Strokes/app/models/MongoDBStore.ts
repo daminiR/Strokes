@@ -189,15 +189,21 @@ const MongoDBStore = types
         // Handle error or set error state
       }
     }),
+    shouldQuery: flow(function* () {
+      const userStore = getRootStore(self).userStore
+      const matchStore = getRootStore(self).matchStore
+      const stringTimestamp = userStore.matchQueue[0].createdAt
+      const dateObject = new Date(parseInt(stringTimestamp, 10));
+      const timeElapsed = Date.now() - dateObject.getTime();
+      const oneDayInMs = 24 * 60 * 60 * 1000
+        if (timeElapsed < oneDayInMs) {
+          self.queryPotentialMatches()
+        }
+    }),
     queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
-      console.log("here", userStore.matchQueue)
-      const timeElapsed = Date.now() - new Date(userStore.matchQueue[0].createdAt).getTime();
-      console.log(timeElapsed)
-      const oneDayInMs = 5 * 60 * 1000
       try {
-        //if (timeElapsed < oneDayInMs) {
           const response = yield client.query({
             query: graphQL.GET_POTENTIAL_MATCHES,
             variables: {
@@ -209,7 +215,6 @@ const MongoDBStore = types
           matchStore.setMatchPool(matchesData)
           //matchStore.reset()
           return matchesData
-        //}
       } catch (error) {
         console.error("Error querying potential matches:", error)
         throw error

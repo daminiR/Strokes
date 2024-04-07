@@ -1,14 +1,31 @@
-import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
-import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
-import { getRootStore } from './helpers/getRootStore';
+import { types, IType, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
 
 const ImageDataModel = types.model({
   file: types.maybeNull(types.string),
   img_idx: types.integer,
 })
+// Custom MST type for handling Date objects
+const MSTDate: IType<string, string, Date> = types.custom({
+  name: "MSTDate",
+  fromSnapshot(value: string): Date {
+    return new Date(value);
+  },
+  toSnapshot(value: Date): string {
+    return value.toISOString();
+  },
+  isTargetType(value: Date | string): value is Date {
+    return value instanceof Date;
+  },
+  getValidationMessage(snapshotValue: string): string {
+    return isNaN(Date.parse(snapshotValue)) ? "Invalid date" : "";
+  }
+});
+
 const MatchQueueModel = types.model({
   _id: types.maybeNull(types.string),
   interacted: types.boolean,
+  createdAt: types.string,
+  updatedAt: types.string,
 })
 const GameLevelModel = types.model({
   gameLevel: types.maybeNull(types.number),
@@ -84,6 +101,7 @@ export const UserStoreModel = types
       self.imageFiles = cast(userData.image_set)
       self.neighborhood = userData.neighborhood
       self.description = userData.description
+      self.matchQueue = userData.matchQueue
     },
     reset() {
       //self._id = ""
