@@ -29,34 +29,30 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
 });
 
 
-export const MatchStore = types
+const MatchesStoreModel = types
   .model("MatchStore", {
-    _id: types.maybeNull(types.string), // Assuming you're providing a unique identifier when creating a user instance
     matchPool: types.array(PotentialMatchModel),
   })
   .actions((self) => ({
-    setMatchPool(matches: SnapshotOrInstance<typeof PotentialMatchModel>[]) {
+    setMatchPool(matches: any) {
       self.matchPool.replace(matches)
     },
-    reset() {},
-  }))
-  .actions((self) => {
-     fetchAndUpdateMatches: flow(function* (filters) {
-       // Example API call to fetch matches based on filters
+    fetchAndUpdateMatches: flow(function* (filters) {
+      // Example API call to fetch matches based on filters
       const mongoDBStore = getRootStore(self).mongoDBStore
-       try {
-         const newMatches = yield mongoDBStore.queryPotentialMatches(filters)
-         self.setMatchPool(newMatches)
-         //yield AsyncStorage.setItem("matches", JSON.stringify(newMatches))
-       } catch (error) {
-         console.error("Failed to fetch and update matches:", error)
-       }
-     })
-     applyFilters: flow(function* (filters) {
-       // Optionally: Modify this method to apply filters and fetch updated matches
-       //yield fetchAndUpdateMatches(filters)
-     })
-     loadStoredMatches : flow(function* () {
+      try {
+        const newMatches = yield mongoDBStore.queryPotentialMatches(filters)
+        self.setMatchPool(newMatches)
+        //yield AsyncStorage.setItem("matches", JSON.stringify(newMatches))
+      } catch (error) {
+        console.error("Failed to fetch and update matches:", error)
+      }
+    }),
+    applyFilters: flow(function* (filters) {
+      // Optionally: Modify this method to apply filters and fetch updated matches
+      //yield fetchAndUpdateMatches(filters)
+    }),
+    loadStoredMatches: flow(function* () {
       try {
         const storedMatches = yield AsyncStorage.getItem("matches")
         if (storedMatches) {
@@ -66,6 +62,7 @@ export const MatchStore = types
       } catch (error) {
         console.error("Failed to load stored matches:", error)
       }
-    })
-  })
+    }),
+  }))
     // Add other actions as needed
+export default MatchesStoreModel
