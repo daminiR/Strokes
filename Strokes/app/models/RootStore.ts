@@ -3,6 +3,7 @@ import { AuthenticationStoreModel } from "./AuthenticationStore"
 import { UserStoreModel } from "./UserStore"
 import { TempStoreModel } from "./TempUserStore"
 import { EpisodeStoreModel } from "./EpisodeStore"
+import { MatchStore } from "./MatchesStore"
 import MongoDBStore from "./MongoDBStore"
 
 /**
@@ -14,6 +15,7 @@ export const RootStoreModel = types.model("RootStore").props({
   tempUserStore: types.optional(TempStoreModel, {}),
   mongoDBStore: types.optional(MongoDBStore, {}),
   episodeStore: types.optional(EpisodeStoreModel, {}),
+  matchStore: types.optional(MatchStore, {}),
 })
 
 /**

@@ -192,20 +192,22 @@ const MongoDBStore = types
     queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
+      //console.log("date", matchStore)
+      //const timeElapsed = Date.now() - new Date(matchStore.matchPool[0].createdAt).getTime();
+      const oneDayInMs = 5 * 60 * 1000
       try {
-        const response = yield client.query({
-          query: graphQL.GET_POTENTIAL_MATCHES,
-          variables: {
-            _id: userStore._id,
-          },
-          fetchPolicy: "network-only",
-        })
-        // Assuming response.data.queryPossibleMatches contains the match data
-        const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
-        matchStore.setMatchPool(matchesData)
-        return matchesData
-        //self.matches.replace(matchesData) // Replace existing matches with new ones
-        // Optionally: store matches for persistence or further processing
+        //if (timeElapsed < oneDayInMs) {
+          const response = yield client.query({
+            query: graphQL.GET_POTENTIAL_MATCHES,
+            variables: {
+              _id: userStore._id,
+            },
+            fetchPolicy: "network-only",
+          })
+          const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
+          matchStore.setMatchPool(matchesData)
+          return matchesData
+        //}
       } catch (error) {
         console.error("Error querying potential matches:", error)
         throw error
