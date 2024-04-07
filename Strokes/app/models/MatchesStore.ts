@@ -29,8 +29,8 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
 });
 
 
-export const MatchModel = types
-  .model("MatchModel", {
+export const MatchStore = types
+  .model("MatchStore", {
     _id: types.maybeNull(types.string), // Assuming you're providing a unique identifier when creating a user instance
     matchPool: types.array(PotentialMatchModel),
   })
