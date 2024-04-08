@@ -195,29 +195,30 @@ const MongoDBStore = types
       }
     }),
     queryAfterFilterChange: flow(function* (filters) {
-      //TODO: add filters afterwards when needed
-      //TODO: do the hash thing
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
-      const newFiltersHash = hashObject(filters)
+      const newFiltersHash = hashObject(filters) // Ensure hashObject function is correctly implemented
+
       if (newFiltersHash !== matchStore.preferencesHash) {
         try {
           // Attempt to query potential matches with the new filters
           const potentialMatchesResponse = yield self.applyFilters(filters, newFiltersHash)
+          yield self.queryPotentialMatches()
 
           // If the query is successful, update the preferencesHash and possibly other state
-          matchStore.preferencesHash = newFiltersHash
-          // Optionally, update other parts of the state based on the response
-          // For example, update the match pool, last fetched timestamp, etc.
-          // self.matchPool = potentialMatchesResponse.matchPool;
+          matchStore.setPreferencesHash(newFiltersHash)
+          matchStore.setPreferences(filters) // Update preferences in the store
 
-          // Update preferences in the store if needed
-          matchStore.preferences = filters
+          console.log("Filters have changed. Potential matches queried successfully.")
         } catch (error) {
           // If the query fails, log the error and do not update the preferencesHash
           console.error("Failed to query potential matches:", error)
           // Optionally, handle the error by updating the state or notifying the user
         }
+      } else {
+        // This block executes if the new filters hash matches the existing one,
+        // indicating no change in the filters.
+        console.log("Filters have not changed. Query for potential matches was not performed.")
       }
     }),
     shouldQuery: flow(function* () {
@@ -237,8 +238,8 @@ const MongoDBStore = types
     applyFilters: flow(function* (newFilters, newFilterHash) {
       try {
         const userStore = getRootStore(self).userStore
-        const response = yield client.query({
-          query: graphQL.APPLY_FILTERS,
+        const response = yield client.mutate({
+          mutation: graphQL.APPLY_FILTERS,
           variables: {
             _id: userStore._id,
             preferences: newFilters,

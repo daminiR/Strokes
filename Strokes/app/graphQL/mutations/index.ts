@@ -3,7 +3,7 @@ import { gql, useMutation } from 'urql';
 
 const APPLY_FILTERS = gql`
   mutation ApplyFilters($_id: String!, $preferencesHash: String!, $preferences: FilterInput!) {
-    applyFilters(_id: $_id, preferencesHash: $preferencesHash, preferences: $preferences)
+    applyFilters(_id: $_id, preferencesHash: $preferencesHash, preferences: $preferences){_id}
   }
 `
 const ADD_PROFILE2 = gql`

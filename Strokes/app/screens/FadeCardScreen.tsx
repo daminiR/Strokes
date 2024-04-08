@@ -24,18 +24,28 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   const [isVisible, setIsVisible] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const width = Dimensions.get("window").width
-  const onApplyFilters = (ageRange, gameLevelRange) => {
-    mongoDBStore.queryAfterFilterChange({
-      age: {
-        min: ageRange[0],
-        max: ageRange[1],
-      },
-      gameLevel: {
-        min: gameLevelRange[0],
-        max: gameLevelRange[1],
-      },
-    })
+  const onClose = () => {
+  setIsVisible(false)
+}
+  const onApplyFilters = async (ageRange, gameLevelRange) => {
+    try {
+      await mongoDBStore.queryAfterFilterChange({
+        age: {
+          min: ageRange[0],
+          max: ageRange[1],
+        },
+        gameLevel: {
+          min: gameLevelRange[0],
+          max: gameLevelRange[1],
+        },
+      })
+      onClose()
+      console.log("Filters applied successfully.")
+    } catch (error) {
+      console.error("Failed to apply filters:", error)
+    }
   }
+
   const onFilter = () => {
   setIsVisible(true)
 }
@@ -56,9 +66,6 @@ const onSwiped = (cardIndex: number) => {
     setIsLastCard(true)
   }
 }
-const onClose = () => {
-  setIsVisible(false)
-}
   return (
     <Screen preset="auto" style={$screenContentContainer} safeAreaEdges={["top"]}>
       <FilterModal
@@ -70,6 +77,7 @@ const onClose = () => {
       {cards.length > 0 ? (
         <>
           <Swiper
+            key={JSON.stringify(cards)}
             containerStyle={$swiperStyle}
             ref={swiperRef}
             cardStyle={$cardStyle}
