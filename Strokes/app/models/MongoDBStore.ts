@@ -199,10 +199,10 @@ const MongoDBStore = types
       const timeElapsed = Date.now() - dateObject.getTime();
       const oneDayInMs = 24 * 60 * 60 * 1000
       //const oneDayInMs =  60
-        if (timeElapsed > oneDayInMs) {
+        //if (timeElapsed > oneDayInMs) {
           //alsoFetch new lastFetched if there is new data last fetched should have been updated in trgiger
           self.queryPotentialMatches()
-        }
+        //}
     }),
     queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore

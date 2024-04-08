@@ -719,7 +719,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
       <hashTree>
         <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
-          <stringProp name="LoopController.loops">3</stringProp>
+          <stringProp name="LoopController.loops">1000</stringProp>
         </LoopController>
         <hashTree>
           <RegExUserParameters guiclass="RegExUserParametersGui" testclass="RegExUserParameters" testname="RegEx User Parameters" enabled="true">
