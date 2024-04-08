@@ -1,23 +1,37 @@
-
 import React from 'react';
 import { View, TouchableOpacity, ScrollView, ImageStyle, TextStyle, ViewStyle } from 'react-native';
-import {
-  CircularPlayerRatingBar,
-  PlayerDetails,
-  Header,
-  Card,
-  Button,
-  AutoImage,
-  Text,
-} from '../components';
+import { CircularPlayerRatingBar, PlayerDetails, Header, Card, AutoImage } from "../components"
 import { observer } from 'mobx-react-lite';
 import { colors, spacing } from '../theme';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useStores } from '../models';
 
-export const SportCard = observer(() => {
-  const { userStore } = useStores();
-  return (
+interface Match {
+  _id: string
+  firstName: string
+  age: number
+  gender: string
+  description: string
+  sport: { sportName: string; gameLevel: number }
+  neighborhood: {
+    city: string
+    state: string
+    country: string
+  }
+  image_set: [
+    {
+      imageURL: string
+      img_idx: number
+    },
+  ]
+}
+
+// Update your SportCard props to include a match of type Match
+interface SportCardProps {
+  match: Match
+}
+
+export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
+  console.log("matchdatae", match.image_set[0].imageURL)
+    return (
       <ScrollView style={$scrollViewContainer}>
         <TouchableOpacity activeOpacity={1}>
           <View style={$container}>
@@ -26,37 +40,45 @@ export const SportCard = observer(() => {
               <AutoImage
                 style={$autoImage}
                 source={{
-                  uri: userStore.imageFiles[0].imageURL,
+                  uri: match.image_set[0].imageURL,
                 }}
               />
               <View style={$ratingBar}>
                 <CircularPlayerRatingBar
-                  rating={Number(userStore.sport.gameLevel)}
+                  rating={Number(match.sport.gameLevel)}
                   maxRating={7}
                   size={100}
                   strokeWidth={10}
                 />
               </View>
             </View>
-            <PlayerDetails heading={"Player Details"} isEditing={false} />
-            <AutoImage
-              style={$autoImage}
-              source={{
-                uri: userStore.imageFiles[1].imageURL,
+            <PlayerDetails
+              heading={"Player Details"}
+              isEditing={false}
+              playerDetails={{
+                age: match.age,
+                gender: match.gender,
+                neighborhood: match.neighborhood,
               }}
             />
-            <Card heading="Description" content={userStore.description} />
             <AutoImage
               style={$autoImage}
               source={{
-                uri: userStore.imageFiles[2].imageURL,
+                uri: match.image_set[1].imageURL,
+              }}
+            />
+            <Card heading="Description" content={match.description} />
+            <AutoImage
+              style={$autoImage}
+              source={{
+                uri: match.image_set[2].imageURL,
               }}
             />
           </View>
         </TouchableOpacity>
       </ScrollView>
-  )
-});
+    )
+  })
 
 const $profileImageContainer: ViewStyle = {
   position: "relative",

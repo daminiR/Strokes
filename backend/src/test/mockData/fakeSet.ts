@@ -6,7 +6,7 @@ import { CITIES } from '../../constants/index';
 
 interface Sport {
   gameLevel: number;
-  sport: string;
+  sportName: string;
 }
 
 interface Neighborhood {
@@ -27,7 +27,7 @@ interface User {
   lastName: string;
   age: number;
   gender: string;
-  sports: Sport[];
+  sport: Sport
   neighborhood: Neighborhood;
   description: string;
   image_set: ImageSet[];
@@ -37,19 +37,19 @@ interface User {
 
 
 function generateUser(): User {
-  const image1 = faker.image.avatar();
-  const image2 = faker.image.avatar();
-  const image3 = faker.image.avatar();
+  const image1 = faker.image.url();
+  const image2 = faker.image.url();
+  const image3 = faker.image.url();
   return {
     _id: faker.datatype.uuid(),
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     age: faker.datatype.number({ min: 18, max: 100 }),
     gender: faker.helpers.arrayElement(['male', 'female']),
-    sports: [{
+    sport: {
       gameLevel: faker.datatype.number({ min: 1, max: 7 }),
-      sport: "Squash",
-    }],
+      sportName: "Squash",
+    },
     neighborhood: {
       city: faker.helpers.arrayElement(CITIES),
       state: "MA",
@@ -87,8 +87,8 @@ users.forEach((row: any) => {
     lastName: row.lastName,
     age: row.age,
     gender: row.gender,
-    sport: row.sports[0].sport,
-    gameLevel: row.sports[0].gameLevel,
+    sport: row.sport.sportName,
+    gameLevel: row.sport.gameLevel,
     city: row.neighborhood.city,
     state: row.neighborhood.state,
     country: row.neighborhood.country,

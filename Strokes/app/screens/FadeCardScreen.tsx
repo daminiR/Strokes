@@ -10,12 +10,12 @@ import Swiper from 'react-native-deck-swiper';
 
 const PAGE_WIDTH = Dimensions.get('window').width
 const PAGE_HEIGHT = Dimensions.get('window').height
-const cards = [
-  { text: 'Card 1' },
-  { text: 'Card 2' },
-  { text: 'Card 3' },
-  // Add more cards as needed
-];
+//const cards = [
+  //{ text: 'Card 1' },
+  //{ text: 'Card 2' },
+  //{ text: 'Card 3' },
+   //Add more cards as needed
+//];
 
 
 interface FaceCardProps extends AppStackScreenProps<"FaceCardProps"> {}
@@ -23,7 +23,8 @@ interface FaceCardProps extends AppStackScreenProps<"FaceCardProps"> {}
 export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps(_props) {
   const swiperRef = useRef(null);
   const [index, setIndex] = useState(0)
-  const { userStore, authenticationStore } = useStores()
+  const { userStore, authenticationStore, matchStore } = useStores()
+  const { matchPool: cards } = matchStore;
   const [isLastCard, setIsLastCard] = useState(cards.length === 0)
   const [activeIndex, setActiveIndex] = useState(0)
   const width = Dimensions.get("window").width
@@ -46,8 +47,8 @@ const onSwiped = (cardIndex: number) => {
             ref={swiperRef}
             cardStyle={$cardStyle}
             cards={cards}
-            renderCard={({ index }) => {
-              return <SportCard />
+            renderCard={(card) => {
+              return <SportCard match={card}/>
             }}
             onSwiped={onSwiped}
             onSwipedAll={() => {

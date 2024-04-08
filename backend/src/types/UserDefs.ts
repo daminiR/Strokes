@@ -37,11 +37,11 @@ export const RangeType = `
     max: Int!
 `
 export const FilterType = `
-  ageRange: AgeRangeType!,
+  age: AgeRangeType!,
   gameLevel: GameLevelRangeType!
 `;
 export const FilterInputType = `
-  ageRange: AgeRangeInput!,
+  age: AgeRangeInput!,
   gameLevel: GameLevelRangeInput!
 `;
 export const PotentialMatchUserType = `
@@ -120,6 +120,7 @@ export const UserType = `
     deleted: DeletedType
     phoneNumber: String
     email: String
+    preferences: FilterType!
   `
 
 export const UserInputType = `
@@ -146,4 +147,5 @@ export const UserInputType = `
     phoneNumber: String
     email: String
     matchQueue: [MatchQueueInput!]
+    preferences: FilterInput!
   `
