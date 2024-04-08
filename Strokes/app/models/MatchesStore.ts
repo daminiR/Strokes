@@ -30,7 +30,7 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
 const MatchesStoreModel = types
   .model("MatchStore", {
     matchPool: types.array(PotentialMatchModel),
-    lastFetched: types.maybeNull(types.boolean),
+    lastFetched: types.maybeNull(types.string),
   })
   .actions((self) => ({
     setLastFetched(lastFetched: any) {

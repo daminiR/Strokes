@@ -57,7 +57,7 @@ export const typeDefs = gql`
   }
   type FetchFilteredMatchQueueResult {
   potentialMatches: [PotentialMatch!]
-  lastFetched: Boolean
+  lastFetched: String
 }
 
   scalar FileUpload
