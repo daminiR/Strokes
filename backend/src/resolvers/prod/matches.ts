@@ -63,7 +63,7 @@ export const resolvers = {
         if (!_id) throw new Error("Invalid user ID");
 
         const currentUser = await User.findById(_id)
-          .select("matchQueue")
+          .select("matchQueue lastFetched")
           .exec();
         if (!currentUser) throw new Error(`User with ID ${_id} not found`);
         if (!Array.isArray(currentUser.matchQueue))
@@ -99,10 +99,11 @@ export const resolvers = {
           createdAt: Date.now(), // Assuming createdAt is a Date object
           updatedAt: Date.now(), // Assuming updatedAt is a Date object
           description: user.description,
-        }));
-
-        return potentialMatches;
-      } catch (error) {
+        }))
+        return {
+          potentialMatches: potentialMatches,
+          lastFetched: currentUser.lastFetched,
+        };      } catch (error) {
         // More granular error handling based on error type
         if (error instanceof TypeError) {
           console.error("TypeError occurred:", error.message);

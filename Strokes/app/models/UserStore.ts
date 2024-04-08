@@ -1,4 +1,5 @@
 import { types, IType, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
+import { getRootStore } from './helpers/getRootStore';
 
 const ImageDataModel = types.model({
   file: types.maybeNull(types.string),
@@ -50,7 +51,6 @@ export const UserStoreModel = types
     description: types.maybeNull(types.string),
     firstName: types.maybeNull(types.string),
     lastName: types.maybeNull(types.string),
-    matchQueue: types.array(MatchQueueModel),
     neighborhood: types.maybeNull(NeighborhoodModel),
   })
   .actions((self) => ({
@@ -91,6 +91,8 @@ export const UserStoreModel = types
       self._id = _id
     },
     setFromMongoDb(userData){
+      const matchStore = getRootStore(self).matchStore
+      matchStore.setLastFetched(userData.lastFetched)
       self.email = userData.email
       self.age = userData.age
       self.phoneNumber = userData.phoneNumber
@@ -101,7 +103,6 @@ export const UserStoreModel = types
       self.imageFiles = cast(userData.image_set)
       self.neighborhood = userData.neighborhood
       self.description = userData.description
-      self.matchQueue = userData.matchQueue
     },
     reset() {
       //self._id = ""

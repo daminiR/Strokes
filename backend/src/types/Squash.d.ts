@@ -85,6 +85,7 @@ export interface UserDocument extends Document {
   phoneNumber : String
   email : String
   swipesPerDay : number
+  lastFetched : string
   visableLikePerDay : number
   sportChangesPerDay : number
   preferences: FilterType

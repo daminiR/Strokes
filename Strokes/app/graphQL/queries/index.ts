@@ -14,30 +14,29 @@ const SWIPED_LEFT = gql`
   }
 `
 const GET_POTENTIAL_MATCHES = gql`
-  query fetchFilteredMatchQueue(
-    $_id: String!
-  ) {
-    fetchFilteredMatchQueue(
-      _id: $_id
-    ) {
-      neighborhood {
-        city
-        state
-        country
+  query fetchFilteredMatchQueue($_id: String!) {
+    fetchFilteredMatchQueue(_id: $_id) {
+      potentialMatches {
+        neighborhood {
+          city
+          state
+          country
+        }
+        _id
+        firstName
+        age
+        gender
+        sport {
+          sportName
+          gameLevel
+        }
+        description
+        image_set {
+          img_idx
+          imageURL
+        }
       }
-      _id
-      firstName
-      age
-      gender
-      sport {
-        sportName
-        gameLevel
-      }
-      description
-      image_set {
-        img_idx
-        imageURL
-      }
+      lastFetched
     }
   }
 `
@@ -73,12 +72,7 @@ const READ_SQUASH = gql`
         imageURL
         filePath
       }
-      matchQueue {
-        _id
-        interacted
-        createdAt
-        updatedAt
-      }
+      lastFetched
       likes
       dislikes
       likedByUSers {
