@@ -1,22 +1,17 @@
 import { observer } from "mobx-react-lite"
 import React, {useEffect, useRef, useState, useMemo} from "react"
 import { TextInput, Dimensions, TextStyle, ViewStyle, View } from "react-native"
-import { Button, Screen, Text, SBItem, TextField, SelectField, Toggle, SportCard} from "../components"
+import { Button, Screen, FilterModal, Text, SBItem, TextField, SelectField, Toggle, SportCard} from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Swiper from 'react-native-deck-swiper';
+import { useHeader } from "../utils/useHeader"
+import { navigate, goBack} from "../navigators"
 
 const PAGE_WIDTH = Dimensions.get('window').width
 const PAGE_HEIGHT = Dimensions.get('window').height
-//const cards = [
-  //{ text: 'Card 1' },
-  //{ text: 'Card 2' },
-  //{ text: 'Card 3' },
-   //Add more cards as needed
-//];
-
 
 interface FaceCardProps extends AppStackScreenProps<"FaceCardProps"> {}
 
@@ -28,6 +23,13 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   const [isLastCard, setIsLastCard] = useState(cards.length === 0)
   const [activeIndex, setActiveIndex] = useState(0)
   const width = Dimensions.get("window").width
+  useHeader(
+    {
+      rightIcon: "settings",
+      //onLeftPress: goBack,
+    },
+    [goBack],
+  )
   useEffect(() => {
     // Pre-fill logic if necessary
     return () => userStore.reset()
@@ -40,6 +42,7 @@ const onSwiped = (cardIndex: number) => {
 }
   return (
     <Screen preset="auto" style={$screenContentContainer} safeAreaEdges={["top"]}>
+      <FilterModal visible={true}/>
       {cards.length > 0 ? (
         <>
           <Swiper
@@ -48,7 +51,7 @@ const onSwiped = (cardIndex: number) => {
             cardStyle={$cardStyle}
             cards={cards}
             renderCard={(card) => {
-              return <SportCard match={card}/>
+              return <SportCard match={card} />
             }}
             onSwiped={onSwiped}
             onSwipedAll={() => {

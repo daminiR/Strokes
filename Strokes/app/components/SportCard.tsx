@@ -1,9 +1,7 @@
-import React from 'react';
-import { View, TouchableOpacity, ScrollView, ImageStyle, TextStyle, ViewStyle } from 'react-native';
-import { useHeader } from "../utils/useHeader"
+import React from "react"
+import { View, TouchableOpacity, ScrollView, ImageStyle, TextStyle, ViewStyle } from "react-native"
 import { CircularPlayerRatingBar, PlayerDetails, Header, Card, AutoImage } from "../components"
 import { observer } from 'mobx-react-lite';
-import { navigate, goBack} from "../navigators"
 import { colors, spacing } from '../theme';
 
 interface Match {
@@ -32,13 +30,6 @@ interface SportCardProps {
 }
 
 export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
-  useHeader(
-    {
-      rightIcon: "settings",
-      //onLeftPress: goBack,
-    },
-    [goBack],
-  )
     return (
       <ScrollView style={$scrollViewContainer}>
         <TouchableOpacity activeOpacity={1}>
