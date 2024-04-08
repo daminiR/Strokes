@@ -1,6 +1,11 @@
 //import { gql, useMutation } from '@apollo/client'
 import { gql, useMutation } from 'urql';
 
+const APPLY_FILTERS = gql`
+  mutation ApplyFilters($_id: String!, $preferencesHash: String!, $preferences: FilterInput!) {
+    applyFilters(_id: $_id, preferencesHash: $preferencesHash, preferences: $preferences)
+  }
+`
 const ADD_PROFILE2 = gql`
   mutation RegisterNewPlayer(
     $_id: String!
@@ -206,4 +211,5 @@ export {
   UPDATE_MATCHES,
   SOFT_DELETE_PROFILE,
   SOFT_UN_DELETE_PROFILE,
+  APPLY_FILTERS,
 };

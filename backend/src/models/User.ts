@@ -62,7 +62,7 @@ var userSchema = new Schema(
       ],
       required: true,
     },
-    lastFetched: { type: Date, default: Date.now }, // Tracks the last time the match queue was fetched from the server
+    lastFetchedFromTrigger: { type: Date, default: Date.now }, // Tracks the last time the match queue was fetched from the server
     preferencesHash: { type: String, default: "" }, // A hash or string representation of the filters used to fetch the match queue
     preferences: {
       type: {

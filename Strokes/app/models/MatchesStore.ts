@@ -38,7 +38,7 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
 const MatchesStoreModel = types
   .model("MatchStore", {
     matchPool: types.array(PotentialMatchModel),
-    lastFetched: types.maybeNull(types.string),
+    lastFetchedFromTrigger: types.maybeNull(types.string),
     preferencesHash: types.maybeNull(types.string),
     preferences: types.maybeNull(PreferencesModel),
   })
@@ -47,13 +47,13 @@ const MatchesStoreModel = types
       // Using yield within a flow to handle the asynchronous call
       const mongoDBStore = getRootStore(self).mongoDBStore
       const potentialMatches = yield mongoDBStore.queryPotentialMatches()
-      self.lastFetched = userData.lastFetched
+      self.lastFetchedFromTrigger = userData.lastFetchedFromTrigger
       self.preferences = userData.preferences
       self.preferencesHash = userData.preferencesHash
       // You can now use potentialMatches if needed
     }),
-    setLastFetched(lastFetched: any) {
-      self.lastFetched = lastFetched
+    setLastFetched(lastFetchedFromTrigger: any) {
+      self.lastFetchedFromTrigger = lastFetchedFromTrigger
     },
     setMatchPool(matches: any) {
       self.matchPool.replace(matches)

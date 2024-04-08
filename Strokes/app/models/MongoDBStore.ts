@@ -3,6 +3,7 @@ import client from '../services/api/apollo-client';
 import { getRootStore } from './helpers/getRootStore';
 import {ReactNativeFile} from 'apollo-upload-client'
 import * as graphQL from '@graphQL'
+import {SHA256} from 'crypto-js';
 
 function hashObject(obj) {
   const objString = JSON.stringify(obj);
@@ -160,7 +161,6 @@ const MongoDBStore = types
           ...cleanedResponse,
           email: userStore.email,
           phoneNumber: userStore.phoneNumber,
-
         })
       } catch (error) {
         console.error("Error updating user:", error)
@@ -200,19 +200,19 @@ const MongoDBStore = types
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
       const newFiltersHash = hashObject(filters)
-      if (newFiltersHash !== self.preferencesHash) {
+      if (newFiltersHash !== matchStore.preferencesHash) {
         try {
           // Attempt to query potential matches with the new filters
-          const potentialMatchesResponse = yield self.queryPotentialMatchesAfterFilters(filters)
+          const potentialMatchesResponse = yield self.applyFilters(filters, newFiltersHash)
 
           // If the query is successful, update the preferencesHash and possibly other state
-          self.preferencesHash = newFiltersHash
+          matchStore.preferencesHash = newFiltersHash
           // Optionally, update other parts of the state based on the response
           // For example, update the match pool, last fetched timestamp, etc.
           // self.matchPool = potentialMatchesResponse.matchPool;
 
           // Update preferences in the store if needed
-          self.preferences = filters
+          matchStore.preferences = filters
         } catch (error) {
           // If the query fails, log the error and do not update the preferencesHash
           console.error("Failed to query potential matches:", error)
@@ -223,33 +223,35 @@ const MongoDBStore = types
     shouldQuery: flow(function* () {
       //TODO: add filters afterwards when needed
       //TODO: do the hash thing
-      const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
       const stringTimestamp = matchStore.lastFetched
-      const dateObject = new Date(parseInt(stringTimestamp, 10));
-      const timeElapsed = Date.now() - dateObject.getTime();
+      const dateObject = new Date(parseInt(stringTimestamp, 10))
+      const timeElapsed = Date.now() - dateObject.getTime()
       const oneDayInMs = 24 * 60 * 60 * 1000
       //const oneDayInMs =  60
-        //if (timeElapsed > oneDayInMs) {
-          //alsoFetch new lastFetched if there is new data last fetched should have been updated in trgiger
-          self.queryPotentialMatches()
-        //}
+      //if (timeElapsed > oneDayInMs) {
+      //alsoFetch new lastFetched if there is new data last fetched should have been updated in trgiger
+      self.queryPotentialMatches()
+      //}
     }),
     applyFilters: flow(function* (newFilters, newFilterHash) {
       try {
-          const response = yield client.query({
-            query: graphQL.GET_POTENTIAL_MATCHES_AFTER_FILTERS,
-            variables: {
-              preferences: filters,
-            },
-            fetchPolicy: "network-only",
-          })
-          const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
-          matchStore.setMatchPool(matchesData.potentialMatches)
-          matchStore.setLastFetched(matchesData.lastFetched)
-          return matchesData
+        const userStore = getRootStore(self).userStore
+        const response = yield client.query({
+          query: graphQL.APPLY_FILTERS,
+          variables: {
+            _id: userStore._id,
+            preferences: newFilters,
+            preferencesHash: newFilterHash,
+          },
+          fetchPolicy: "network-only",
+        })
+        //const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
+        //matchStore.setMatchPool(matchesData.potentialMatches)
+        //matchStore.setLastFetched(matchesData.lastFetched)
+        //return matchesData
       } catch (error) {
-        console.error("Error querying potential matches:", error)
+        console.error("Error applyign filters:", error)
         throw error
       }
     }),
@@ -257,17 +259,18 @@ const MongoDBStore = types
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
       try {
-          const response = yield client.query({
-            query: graphQL.GET_POTENTIAL_MATCHES,
-            variables: {
-              _id: userStore._id,
-            },
-            fetchPolicy: "network-only",
-          })
-          const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
-          matchStore.setMatchPool(matchesData.potentialMatches)
-          matchStore.setLastFetched(matchesData.lastFetched)
-          return matchesData
+        const response = yield client.query({
+          query: graphQL.GET_POTENTIAL_MATCHES,
+          variables: {
+            _id: userStore._id,
+          },
+          fetchPolicy: "network-only",
+        })
+        const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
+        const potentialMatches = matchesData.potentialMatches ?? []
+        matchStore.setMatchPool(potentialMatches)
+        matchStore.setLastFetched(matchesData.lastFetched)
+        return matchesData
       } catch (error) {
         console.error("Error querying potential matches:", error)
         throw error

@@ -109,7 +109,7 @@ export const UserType = `
     matches : [PotentialMatch!]
     blocked_me : [PotentialMatch!]
     i_blocked : [PotentialMatch!]
-    lastFetched: String
+    lastFetchedFromTrigger: String
     matchQueue: [MatchQueueType!]
     likes : [String!]
     swipesPerDay: Int!
@@ -143,7 +143,7 @@ export const UserInputType = `
     swipesPerDay: Int!
     sportChangesPerDay: Int!
     visableLikePerDay: Int!
-    lastFetched: String
+    lastFetchedFromTrigger: String
     likedByUSers: [LikedByUserInput!]
     phoneNumber: String
     email: String
