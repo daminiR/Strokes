@@ -58,9 +58,19 @@ export const resolvers = {
           description: description,
           phoneNumber: phonenumber,
           email: email,
+          preferences: {
+            gameLevel: {
+              min: Math.max(1, sport.gameLevel - 1), // Ensuring it doesn't go below 1
+              max: sport.gameLevel + 1,
+            },
+            age: {
+              min: age - 5,
+              max: age + 5,
+            },
+          },
           active: true,
           swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
-          visableLikePerDay: LIKES_PER_DAY_LIMIT ,
+          visableLikePerDay: LIKES_PER_DAY_LIMIT,
           sportChangesPerDay: SPORT_CHANGES_PER_DAY,
         });
           console.log("Squash Document Created");
