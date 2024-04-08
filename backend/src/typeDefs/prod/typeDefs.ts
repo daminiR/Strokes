@@ -55,11 +55,16 @@ export const typeDefs = gql`
   type LikedByUser {
     ${LikedByUserType}
   }
+  type FetchFilteredMatchQueueResult {
+  potentialMatches: [PotentialMatch!]
+  lastFetched: Boolean
+}
+
   scalar FileUpload
   type Query {
     fetchProfileById(id: String!): User
     fetchAllProfiles(limit: Int): [User!]
-    fetchFilteredMatchQueue(_id: String!): [PotentialMatch!]
+    fetchFilteredMatchQueue(_id: String!): FetchFilteredMatchQueueResult
     fetchNonInteractedMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [User!]
     retrieveSwipeLimits(_id: String!): Int!
   }

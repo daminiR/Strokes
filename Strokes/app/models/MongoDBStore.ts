@@ -192,11 +192,13 @@ const MongoDBStore = types
     shouldQuery: flow(function* () {
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
-      const stringTimestamp = userStore.matchQueue[0].createdAt
+      const stringTimestamp = matchStore.lastFetched
       const dateObject = new Date(parseInt(stringTimestamp, 10));
       const timeElapsed = Date.now() - dateObject.getTime();
-      const oneDayInMs = 24 * 60 * 60 * 1000
-        if (timeElapsed < oneDayInMs) {
+      //const oneDayInMs = 24 * 60 * 60 * 1000
+      const oneDayInMs =  60 * 1000
+        if (timeElapsed > oneDayInMs) {
+          //alsoFetch new lastFetched if there is new data last fetched should have been updated in trgiger
           self.queryPotentialMatches()
         }
     }),
@@ -212,8 +214,8 @@ const MongoDBStore = types
             fetchPolicy: "network-only",
           })
           const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
-          matchStore.setMatchPool(matchesData)
-          //matchStore.reset()
+          matchStore.setMatchPool(matchesData.potentialMatches)
+          matchStore.setLastFetched(matchesData.lastFetched)
           return matchesData
       } catch (error) {
         console.error("Error querying potential matches:", error)

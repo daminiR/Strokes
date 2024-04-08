@@ -30,8 +30,12 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
 const MatchesStoreModel = types
   .model("MatchStore", {
     matchPool: types.array(PotentialMatchModel),
+    lastFetched: types.maybeNull(types.boolean),
   })
   .actions((self) => ({
+    setLastFetched(lastFetched: any) {
+      self.lastFetched = lastFetched
+    },
     setMatchPool(matches: any) {
       self.matchPool.replace(matches)
     },
