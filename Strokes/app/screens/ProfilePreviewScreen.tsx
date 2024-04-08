@@ -66,7 +66,15 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
               </View>
             </View>
           )}
-          <PlayerDetails heading={"Player Details"} isEditing={true} />
+          <PlayerDetails
+            heading={"Player Details"}
+            isEditing={true}
+            playerDetails={{
+              age: tempUserStore.age,
+              gender: tempUserStore.gender,
+              neighborhood: tempUserStore.neighborhood,
+            }}
+          />
           {/* Ensure you have a valid index check for tempUserStore.imageFiles */}
           {tempUserStore.imageFiles[1] && (
             <View style={$profileImageContainer}>

@@ -54,9 +54,9 @@ export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
             </View>
             <PlayerDetails
               heading={"Player Details"}
-              isEditing={false}
+              isEditing={true}
               playerDetails={{
-                age: match.age,
+                age: String(match.age),
                 gender: match.gender,
                 neighborhood: match.neighborhood,
               }}
