@@ -100,6 +100,7 @@ export const resolvers = {
           updatedAt: Date.now(), // Assuming updatedAt is a Date object
           description: user.description,
         }))
+        console.log(currentUser.lastFetched)
         return {
           potentialMatches: potentialMatches,
           lastFetched: currentUser.lastFetched,

@@ -46,18 +46,16 @@ export const AuthenticationStoreModel = types
                       console.log("User is signed in")
                       self.setIsAuthenticated(true)
                       mongoDBStore.shouldQuery()
-                      //mongoDBStore.queryUserFromMongoDB()
-                      //mongoDBStore.queryPotentialMatches()
-
-
                     } else {
                       console.log("Session is invalid")
                       self.setIsAuthenticated(false)
+                      self.signOut()
                     }
                   })
                 } else {
                   console.log("No current Cognito user")
                   self.setIsAuthenticated(false)
+                  self.signOut()
                 }
               }
             })

@@ -190,6 +190,8 @@ const MongoDBStore = types
       }
     }),
     shouldQuery: flow(function* () {
+      //TODO: add filters afterwards when needed
+      //TODO: do the hash thing
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
       const stringTimestamp = matchStore.lastFetched
