@@ -36,7 +36,7 @@ const GET_POTENTIAL_MATCHES = gql`
           imageURL
         }
       }
-      lastFetched
+      lastFetchedFromTrigger
     }
   }
 `
@@ -72,7 +72,7 @@ const READ_SQUASH = gql`
         imageURL
         filePath
       }
-      lastFetched
+      lastFetchedFromTrigger
       likes
       dislikes
       likedByUSers {

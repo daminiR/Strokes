@@ -24,7 +24,7 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   const [isVisible, setIsVisible] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const width = Dimensions.get("window").width
-  const onApplyFilters = () => {
+  const onApplyFilters = (ageRange, gameLevelRange) => {
     mongoDBStore.queryAfterFilterChange({
       age: {
         min: ageRange[0],

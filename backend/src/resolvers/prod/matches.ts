@@ -100,10 +100,9 @@ export const resolvers = {
           updatedAt: Date.now(), // Assuming updatedAt is a Date object
           description: user.description,
         }))
-        console.log(currentUser.lastFetched)
         return {
           potentialMatches: potentialMatches,
-          lastFetched: currentUser.lastFetched,
+          lastFetchedFromTrigger: currentUser.lastFetchedFromTrigger,
         };      } catch (error) {
         // More granular error handling based on error type
         if (error instanceof TypeError) {

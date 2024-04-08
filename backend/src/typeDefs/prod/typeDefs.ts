@@ -57,7 +57,7 @@ export const typeDefs = gql`
   }
   type FetchFilteredMatchQueueResult {
   potentialMatches: [PotentialMatch!]
-  lastFetched: String
+  lastFetchedFromTrigger: String
 }
 
   scalar FileUpload
@@ -122,6 +122,11 @@ export const typeDefs = gql`
     deleteImage(_id: String, img_idx: Int): [Data!]!
     recordLikesAndUpdateCount(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): User
     recordDislikesAndUpdateCount(_id: String!, dislikes: [String!], isFromLikes: Boolean!): User
+    applyFilters(
+      _id: String!
+      preferencesHash: String!
+      preferences: FilterInput!
+    ) : User
     updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): User
     updateProfile(
       _id: String!
