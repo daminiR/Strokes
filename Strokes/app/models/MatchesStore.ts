@@ -55,6 +55,12 @@ const MatchesStoreModel = types
     setLastFetched(lastFetchedFromTrigger: any) {
       self.lastFetchedFromTrigger = lastFetchedFromTrigger
     },
+    setPreferencesHash(newPreferencesHash: string) {
+      self.preferencesHash = newPreferencesHash
+    },
+      setPreferences(newPreferences: SnapshotIn<typeof PreferencesModel>) {
+        self.preferences = newPreferences
+      },
     setMatchPool(matches: any) {
       self.matchPool.replace(matches)
     },
