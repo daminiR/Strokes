@@ -6,5 +6,6 @@ import { gql } from "apollo-server-lambda";
 export const typeDefsTest = gql`
   type Mutation {
     updateAllSportFieldsTest: User
+    updatePlayerPreferencesTest(_id: String!): User
   }
 `;

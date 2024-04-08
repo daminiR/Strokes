@@ -121,6 +121,7 @@ export const UserType = `
     phoneNumber: String
     email: String
     preferences: FilterType!
+    preferencesHash: String!
   `
 
 export const UserInputType = `
@@ -148,4 +149,5 @@ export const UserInputType = `
     email: String
     matchQueue: [MatchQueueInput!]
     preferences: FilterInput!
+    preferencesHash: String!
   `

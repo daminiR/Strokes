@@ -43,7 +43,6 @@ export const resolvers = {
         email,
       } = sanitize(unSanitizedData);
 
-      //const data_set = await createAWSUpload(image_set, _id);
       const isFound = await User.findOne({ _id: _id }, { new: true });
       if (isFound !== null) {
         const doc = await User.remove({ _id: _id });
@@ -67,26 +66,6 @@ export const resolvers = {
         visableLikePerDay: LIKES_PER_DAY_LIMIT,
         sportChangesPerDay: SPORT_CHANGES_PER_DAY,
       });
-      //const profileImage = _.find(doc?.image_set, (imgObj) => {
-        //imgObj.img_idx == 0;
-      //});
-      //const likedByUser = {
-        //firstName: doc?.firstName,
-        //_id: _id,
-        //age: doc?.age,
-        //gender: doc?.gender,
-        //sport: doc?.sport,
-        //description: doc?.description,
-        //image_set: doc?.image_set,
-        //neighborhood: doc?.neighborhood,
-      //};
-      //const doc1 = await User.findOneAndUpdate(
-        //{ _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec" },
-        //{ $addToSet: { likedByUSers: likedByUser } },
-        //{ new: true }
-      //);
-      console.log(doc);
-      //console.log(doc1);
       return doc;
     },
   },

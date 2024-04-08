@@ -18,15 +18,31 @@ interface FaceCardProps extends AppStackScreenProps<"FaceCardProps"> {}
 export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps(_props) {
   const swiperRef = useRef(null);
   const [index, setIndex] = useState(0)
-  const { userStore, authenticationStore, matchStore } = useStores()
+  const { mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
   const { matchPool: cards } = matchStore;
   const [isLastCard, setIsLastCard] = useState(cards.length === 0)
+  const [isVisible, setIsVisible] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const width = Dimensions.get("window").width
+  const onApplyFilters = () => {
+    mongoDBStore.queryAfterFilterChange({
+      age: {
+        min: ageRange[0],
+        max: ageRange[1],
+      },
+      gameLevel: {
+        min: gameLevelRange[0],
+        max: gameLevelRange[1],
+      },
+    })
+  }
+  const onFilter = () => {
+  setIsVisible(true)
+}
   useHeader(
     {
       rightIcon: "settings",
-      //onLeftPress: goBack,
+      onRightPress: onFilter,
     },
     [goBack],
   )
@@ -40,9 +56,17 @@ const onSwiped = (cardIndex: number) => {
     setIsLastCard(true)
   }
 }
+const onClose = () => {
+  setIsVisible(false)
+}
   return (
     <Screen preset="auto" style={$screenContentContainer} safeAreaEdges={["top"]}>
-      <FilterModal visible={true}/>
+      <FilterModal
+        onApplyFilters={onApplyFilters}
+        isVisible={isVisible}
+        onClose={onClose}
+        filters={matchStore.preferences}
+      />
       {cards.length > 0 ? (
         <>
           <Swiper

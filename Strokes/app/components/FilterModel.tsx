@@ -5,9 +5,9 @@ import { colors, spacing, typography } from '../theme'; // Import your theme set
 import { Button } from '../components'; // Assuming you have a custom Button component
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-export const FilterModal = ({ isVisible, onClose, onApplyFilters }) => {
-  const [ageRange, setAgeRange] = useState([18, 60]);
-  const [gameLevelRange, setGameLevelRange] = useState([1, 7]);
+export const FilterModal = ({ isVisible, onClose, onApplyFilters, filters}) => {
+  const [ageRange, setAgeRange] = useState([filters.age.min, filters.age.max]);
+  const [gameLevelRange, setGameLevelRange] = useState([filters.gameLevel.min, filters.gameLevel.max]);
 
   return (
     <Modal visible={isVisible} animationType="slide" transparent={true}>

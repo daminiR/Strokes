@@ -16,6 +16,14 @@ export const ImageModel = types.model("ImageModel", {
   img_idx: types.maybeNull(types.number),
   imageURL: types.maybeNull(types.string),
 });
+const Range = types.model("RangeModel", {
+  min: types.maybeNull(types.number),
+  max: types.maybeNull(types.number),
+});
+export const PreferencesModel = types.model("PreferencesModel", {
+  age: types.maybeNull(Range),
+  gameLevel: types.maybeNull(Range),
+});
 
 export const PotentialMatchModel = types.model("PotentialMatchModel", {
   _id: types.maybeNull(types.string),
@@ -31,8 +39,19 @@ const MatchesStoreModel = types
   .model("MatchStore", {
     matchPool: types.array(PotentialMatchModel),
     lastFetched: types.maybeNull(types.string),
+    preferencesHash: types.maybeNull(types.string),
+    preferences: types.maybeNull(PreferencesModel),
   })
   .actions((self) => ({
+    setInit: flow(function* (userData: any) {
+      // Using yield within a flow to handle the asynchronous call
+      const mongoDBStore = getRootStore(self).mongoDBStore
+      const potentialMatches = yield mongoDBStore.queryPotentialMatches()
+      self.lastFetched = userData.lastFetched
+      self.preferences = userData.preferences
+      self.preferencesHash = userData.preferencesHash
+      // You can now use potentialMatches if needed
+    }),
     setLastFetched(lastFetched: any) {
       self.lastFetched = lastFetched
     },
