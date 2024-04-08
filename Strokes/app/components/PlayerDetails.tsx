@@ -9,7 +9,11 @@ import { observer } from 'mobx-react-lite';
 interface PlayerDetails {
   age: string;
   gender: string;
-  neighborhood: string;
+  neighborhood: {
+    city: string
+    state: string
+    country: string
+  }
 }
 interface PlayerDetailsProps {
   heading: string;
@@ -17,27 +21,25 @@ interface PlayerDetailsProps {
 
 // TODO: this needs serious tlc :)
 export const PlayerDetails: FC<PlayerDetailsProps & { isEditing: boolean, playerDetails: PlayerDetails}> = observer(({ heading, isEditing, playerDetails}) => {
-  const { userStore, tempUserStore } = useStores();
-  const store = isEditing ? tempUserStore : userStore;
   return (
     <View style={styles.card}>
       <View style={styles.iconRow}>
         {/* Like Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"birthday-cake"} />
-          <Text style={$iconTileLabel}>{store.age}</Text>
+          <Text style={$iconTileLabel}>{playerDetails.age}</Text>
         </View>
         <View style={styles.divider} />
         {/* Comment Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name="venus-mars" />
-          <Text style={$iconTileLabel}>{store.gender}</Text>
+          <Text style={$iconTileLabel}>{playerDetails.gender}</Text>
         </View>
         <View style={styles.divider} />
         {/* Share Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"map-marker-alt"} />
-          <Text style={$iconTileLabel}>{store.neighborhood.city}</Text>
+          <Text style={$iconTileLabel}>{playerDetails.neighborhood.city}</Text>
         </View>
       </View>
     </View>
