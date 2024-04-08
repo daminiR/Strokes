@@ -6,11 +6,17 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { useStores } from "../models"
 import { observer } from 'mobx-react-lite';
 
+interface PlayerDetails {
+  age: string;
+  gender: string;
+  neighborhood: string;
+}
 interface PlayerDetailsProps {
   heading: string;
 }
 
-export const PlayerDetails: FC<PlayerDetailsProps & { isEditing: boolean }> = observer(({ heading, isEditing }) => {
+// TODO: this needs serious tlc :)
+export const PlayerDetails: FC<PlayerDetailsProps & { isEditing: boolean, playerDetails: PlayerDetails}> = observer(({ heading, isEditing, playerDetails}) => {
   const { userStore, tempUserStore } = useStores();
   const store = isEditing ? tempUserStore : userStore;
   return (

@@ -17,7 +17,6 @@ export const resolvers = {
             $set: { sport : {sportName: "Squash", gameLevel: 4} }, // Set the new sport structure for all documents
           }
         );
-
         console.log("Number of documents modified:", result.modifiedCount);
         return result;
       } catch (error) {
@@ -40,6 +39,7 @@ export const resolvers = {
         neighborhood,
         description,
         phoneNumber,
+        preferences,
         email,
       } = sanitize(unSanitizedData);
 
@@ -59,34 +59,34 @@ export const resolvers = {
         sport: sport,
         description: description,
         phoneNumber: phoneNumber,
+        preferences: preferences,
         email: email,
         matches: [],
-        //likes: ["ba98a8c9-5939-4418-807b-320fdc0e0fec"],
         active: true,
         swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
         visableLikePerDay: LIKES_PER_DAY_LIMIT,
         sportChangesPerDay: SPORT_CHANGES_PER_DAY,
       });
-      const profileImage = _.find(doc?.image_set, (imgObj) => {
-        imgObj.img_idx == 0;
-      });
-      const likedByUser = {
-        firstName: doc?.firstName,
-        _id: _id,
-        age: doc?.age,
-        gender: doc?.gender,
-        sport: doc?.sport,
-        description: doc?.description,
-        image_set: doc?.image_set,
-        neighborhood: doc?.neighborhood,
-      };
-      const doc1 = await User.findOneAndUpdate(
-        { _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec" },
-        { $addToSet: { likedByUSers: likedByUser } },
-        { new: true }
-      );
+      //const profileImage = _.find(doc?.image_set, (imgObj) => {
+        //imgObj.img_idx == 0;
+      //});
+      //const likedByUser = {
+        //firstName: doc?.firstName,
+        //_id: _id,
+        //age: doc?.age,
+        //gender: doc?.gender,
+        //sport: doc?.sport,
+        //description: doc?.description,
+        //image_set: doc?.image_set,
+        //neighborhood: doc?.neighborhood,
+      //};
+      //const doc1 = await User.findOneAndUpdate(
+        //{ _id: "ba98a8c9-5939-4418-807b-320fdc0e0fec" },
+        //{ $addToSet: { likedByUSers: likedByUser } },
+        //{ new: true }
+      //);
       console.log(doc);
-      console.log(doc1);
+      //console.log(doc1);
       return doc;
     },
   },
