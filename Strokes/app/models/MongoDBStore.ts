@@ -197,8 +197,8 @@ const MongoDBStore = types
       const stringTimestamp = matchStore.lastFetched
       const dateObject = new Date(parseInt(stringTimestamp, 10));
       const timeElapsed = Date.now() - dateObject.getTime();
-      //const oneDayInMs = 24 * 60 * 60 * 1000
-      const oneDayInMs =  60 * 1000
+      const oneDayInMs = 24 * 60 * 60 * 1000
+      //const oneDayInMs =  60
         if (timeElapsed > oneDayInMs) {
           //alsoFetch new lastFetched if there is new data last fetched should have been updated in trgiger
           self.queryPotentialMatches()
