@@ -4,6 +4,8 @@ import fs from 'fs';
 import { write, format } from 'fast-csv';
 import { CITIES } from '../../constants/index';
 
+const FAKE_DATA_COUNT = 1000
+
 interface Sport {
   gameLevel: number;
   sportName: string;
@@ -70,7 +72,7 @@ function generateMultipleUsers(count: number): User[] {
   return Array.from({ length: count }, generateUser);
 }
 
-const users = generateMultipleUsers(5);
+const users = generateMultipleUsers(FAKE_DATA_COUNT);
 const csvStream = format({ headers: true });
 const writableStream = fs.createWriteStream('/home/damini/activityBook/backend/src/test/mockData/fakeUsers.csv');
 
