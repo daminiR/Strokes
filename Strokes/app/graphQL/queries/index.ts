@@ -96,6 +96,16 @@ const READ_SQUASH = gql`
           filePath
         }
       }
+      preferences {
+        age {
+          min
+          max
+        }
+        gameLevel {
+          min
+          max
+        }
+      }
       matches {
         _id
         firstName
@@ -119,7 +129,7 @@ const READ_SQUASH = gql`
       }
     }
   }
-`;
+`
 
 export {
   GET_POTENTIAL_MATCHES,

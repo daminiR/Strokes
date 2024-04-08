@@ -90,5 +90,6 @@ export interface UserDocument extends Document {
   sportChangesPerDay : number
   preferences: FilterType
   matchQueue: MatchQueueT
+  preferencesHash: string!
 }
 

@@ -1,4 +1,5 @@
 import User from '../../models/User';
+import { SHA256 } from 'crypto-js';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 import {
@@ -46,6 +47,18 @@ export const resolvers = {
 
       // Attempt to create Squash document
       try {
+        const preferences = {
+          gameLevel: {
+            min: Math.max(1, sport.gameLevel - 1), // Ensuring it doesn't go below 1
+            max: sport.gameLevel + 1,
+          },
+          age: {
+            min: age - 5,
+            max: age + 5,
+          },
+        };
+        const preferencesString = JSON.stringify(preferences);
+        const preferencesHash = SHA256(preferencesString).toString();
         doc = await User.create({
           _id: _id,
           image_set: data_set,
@@ -58,22 +71,14 @@ export const resolvers = {
           description: description,
           phoneNumber: phonenumber,
           email: email,
-          preferences: {
-            gameLevel: {
-              min: Math.max(1, sport.gameLevel - 1), // Ensuring it doesn't go below 1
-              max: sport.gameLevel + 1,
-            },
-            age: {
-              min: age - 5,
-              max: age + 5,
-            },
-          },
+          preferences: preferences,
+          preferencesHash: preferencesHash,
           active: true,
           swipesPerDay: SWIPIES_PER_DAY_LIMIT + LIKES_PER_DAY_LIMIT,
           visableLikePerDay: LIKES_PER_DAY_LIMIT,
           sportChangesPerDay: SPORT_CHANGES_PER_DAY,
         });
-          console.log("Squash Document Created");
+        console.log("Squash Document Created");
       } catch (error) {
         const creationError =
           error instanceof Error

@@ -11,7 +11,8 @@ import {resolvers as matches} from './resolvers/prod/matches'
 import {resolvers as updateUser} from './resolvers/prod/updateUser'
 import {resolvers as uploads} from './resolvers/prod/uploads'
 import {resolvers as update} from './resolvers/admin/update_schema'
-import {resolvers as testResolvers} from './resolvers/test/createUser'
+import {resolvers as testCreateUser} from './resolvers/test/createUser'
+import {resolvers as testUpload} from './resolvers/test/updateUser'
 
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/prod/typeDefs';
@@ -29,11 +30,13 @@ const startServer = async () => {
       createUser,
       deleteUser,
       likesDislikes,
-      testResolvers,
       matches,
       updateUser,
       uploads,
-      update
+      update,
+      // tests
+      testCreateUser,
+      testUpload
     ]
   );
   const schema = makeExecutableSchema({

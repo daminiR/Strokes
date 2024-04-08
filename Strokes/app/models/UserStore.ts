@@ -75,7 +75,7 @@ export const UserStoreModel = types
     },
     setFromMongoDb(userData){
       const matchStore = getRootStore(self).matchStore
-      matchStore.setLastFetched(userData.lastFetched)
+      matchStore.setInit(userData)
       self.email = userData.email
       self.age = userData.age
       self.phoneNumber = userData.phoneNumber
