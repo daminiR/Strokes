@@ -7,7 +7,6 @@ export const resolvers = {
       try {
         console.log(likedId, likedId)
         const existingLike = await Like.findOne({ likerId, likedId });
-        console.log(existingLike)
         if (existingLike) {
           return {
             success: false,

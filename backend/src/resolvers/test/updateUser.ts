@@ -1,5 +1,6 @@
 import User from '../../models/User';
 import Like from '../../models/Likes';
+import Match from '../../models/Match';
 import sanitize from 'mongo-sanitize'
 import _ from 'lodash'
 import { SHA256 } from 'crypto-js';
@@ -42,7 +43,64 @@ export const resolvers = {
         throw new Error("User not found");
       }
     },
-    simulateRandomLikes: async (_, { currentUserId }) => {
+        removeAllMatchesForUserTest: async (_, { userId }) => {
+      try {
+        // Remove all matches where the user is either user1Id or user2Id
+        const removedMatches = await Match.deleteMany({
+          $or: [{ user1Id: userId }, { user2Id: userId }]
+        });
+
+        // Construct a result summary
+        const result = {
+          removedMatchesCount: removedMatches.deletedCount,
+          success: true,
+          message: `Removed ${removedMatches.deletedCount} matches.`,
+        };
+
+        return result;
+      } catch (error) {
+        console.error("Error removing matches for user:", error);
+        return {
+          success: false,
+          message: "Failed to remove matches.",
+          removedMatchesCount: 0,
+        };
+      }
+    },
+    removeAllLikesForUserTest: async (_, { userId }) => {
+      try {
+        // Ensure the user exists
+        const userExists = await User.exists({ _id: userId });
+        if (!userExists) {
+          throw new Error("User not found");
+        }
+
+        // Remove all likes where the user is the liker
+        const removedAsLiker = await Like.deleteMany({ likerId: userId });
+
+        // Remove all likes where the user is the liked
+        const removedAsLiked = await Like.deleteMany({ likedId: userId });
+
+        // Construct a result summary
+        const result = {
+          removedAsLikerCount: removedAsLiker.deletedCount,
+          removedAsLikedCount: removedAsLiked.deletedCount,
+          success: true,
+          message: `Removed ${removedAsLiker.deletedCount + removedAsLiked.deletedCount} likes.`,
+        };
+
+        return result;
+      } catch (error) {
+        console.error("Error removing likes for user:", error);
+        return {
+          success: false,
+          message: "Failed to remove likes.",
+          removedAsLikerCount: 0,
+          removedAsLikedCount: 0,
+        };
+      }
+    },
+    simulateRandomLikesTest: async (_, { currentUserId }) => {
       try {
         const currentUser = await User.findById(currentUserId);
         if (!currentUser || !currentUser.matchQueue) {

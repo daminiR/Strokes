@@ -53,7 +53,6 @@ const MatchesStoreModel = types
       while (!success && attemptCount < 1) {
         // Retry up to 3 times
         try {
-          console.log("likedId", likedId)
           success = yield mongoDBStore.recordLike(likedId)
 
           if (success) {
