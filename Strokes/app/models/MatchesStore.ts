@@ -53,10 +53,10 @@ const MatchesStoreModel = types
       self.filtersChangesPerDay = userData.filtersChangesPerDay
       // You can now use potentialMatches if needed
     }),
-    setFilersChangedPerDay(filtersChangesPerDay: number) {
+    setFiltersChangesPerDay(filtersChangesPerDay: number) {
       self.filtersChangesPerDay = filtersChangesPerDay
     },
-    setLastFetched(lastFetchedFromTrigger: any) {
+    setLastFetchedFromTrigger(lastFetchedFromTrigger: any) {
       self.lastFetchedFromTrigger = lastFetchedFromTrigger
     },
     setPreferencesHash(newPreferencesHash: string) {

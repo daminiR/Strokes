@@ -46,6 +46,7 @@ export const AuthenticationStoreModel = types
                       console.log("User is signed in")
                       self.setIsAuthenticated(true)
                       mongoDBStore.shouldQuery()
+                      mongoDBStore.getUserLimitsAndStats()
                     } else {
                       console.log("Session is invalid")
                       self.setIsAuthenticated(false)
