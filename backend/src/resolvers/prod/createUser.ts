@@ -1,4 +1,6 @@
 import User from '../../models/User';
+import { PotentialMatchPool} from '../../models/PotentialMatchPool';
+import { fetchPotentialMatchesForNewPlayer } from './../../services/userService';
 import { SHA256 } from 'crypto-js';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
@@ -14,7 +16,7 @@ import {
 
 export const resolvers = {
   Mutation: {
-    registerNewPlayer : async (root, unSanitizedData, context) => {
+    registerNewPlayer: async (root, unSanitizedData, context) => {
       const {
         _id,
         image_set,
@@ -30,7 +32,8 @@ export const resolvers = {
         newusertoken,
       } = sanitize(unSanitizedData);
       let data_set;
-      let doc;
+      let userDoc;
+      let potentialMatchPoolDoc;
       // Handle errors for createAWSUpload separately
       try {
         data_set = await createAWSUpload(image_set, _id);
@@ -59,7 +62,7 @@ export const resolvers = {
         };
         const preferencesString = JSON.stringify(preferences);
         const preferencesHash = SHA256(preferencesString).toString();
-        doc = await User.create({
+        userDoc = await User.create({
           _id: _id,
           image_set: data_set,
           firstName: firstName,
@@ -105,7 +108,51 @@ export const resolvers = {
         );
       }
       // Return the created document
-      return doc;
+      try {
+        // This is a placeholder for your logic to generate potential matches based on your criteria.
+        // Replace this with your actual logic to fetch potential matches.
+        const potentialMatches = await fetchPotentialMatchesForNewPlayer(_id, {
+          age,
+          sport,
+        });
+
+        potentialMatchPoolDoc = await PotentialMatchPool.create({
+          userId: _id,
+          potentialMatches: potentialMatches.map((match) => ({
+            matchUserId: match._id,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            interacted: false,
+          })),
+        });
+
+        console.log("PotentialMatchPool document created");
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(
+            "Error creating PotentialMatchPool document:",
+            error.message
+          );
+          throw new Error(
+            "Failed to create PotentialMatchPool document: " + error.message
+          );
+        } else {
+          // Handle cases where 'error' might not be an Error object
+          console.error("An unexpected error occurred", error);
+          // Since 'error' is of type 'unknown', you can't directly concatenate it with a string.
+          // You may choose to throw a generic error or handle it differently.
+          throw new Error(
+            "Failed to create PotentialMatchPool document due to an unexpected error."
+          );
+        }
+      }
+
+      // Return both the user document and the PotentialMatchPool document in the response
+      // Adjust this return statement based on how you want to structure the response
+      return {
+        user: userDoc,
+        potentialMatchPool: potentialMatchPoolDoc,
+      };
     },
   },
 };
