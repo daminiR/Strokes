@@ -1,4 +1,5 @@
 import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
+import { Alert } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { getRootStore } from './helpers/getRootStore';
 
@@ -43,6 +44,42 @@ const MatchesStoreModel = types
     filtersChangesPerDay: types.maybeNull(types.number),
   })
   .actions((self) => ({
+    likeAction: flow(function* (likedId) {
+      const mongoDBStore = getRootStore(self).mongoDBStore
+      let attemptCount = 0
+      let success = false
+
+      while (!success && attemptCount < 3) {
+        // Retry up to 3 times
+        try {
+          success = yield mongoDBStore.recordLike(likedId)
+
+          if (success) {
+            // Remove the liked user from the matchPool
+            self.matchPool = self.matchPool.filter((user) => user._id !== likedId)
+            // Exit the loop if like is successfully recorded
+            break
+          } else {
+            attemptCount++
+            console.log(`Attempt ${attemptCount}: Failed to record like.`)
+          }
+        } catch (error) {
+          console.error(`Error on attempt ${attemptCount} recording like:`, error)
+          attemptCount++
+          // Wait for a second before retrying (simple exponential backoff could be implemented here)
+          yield new Promise((resolve) => setTimeout(resolve, 1000 * attemptCount))
+        }
+      }
+
+      if (!success) {
+        // After retries, if like is still not successful, provide feedback to the user
+        Alert.alert(
+          "Like Failed",
+          "Could not record the like due to an internal server error. Please try again later.",
+          [{ text: "OK" }],
+        )
+      }
+    }),
     setInit: flow(function* (userData: any) {
       // Using yield within a flow to handle the asynchronous call
       const mongoDBStore = getRootStore(self).mongoDBStore
@@ -62,9 +99,9 @@ const MatchesStoreModel = types
     setPreferencesHash(newPreferencesHash: string) {
       self.preferencesHash = newPreferencesHash
     },
-      setPreferences(newPreferences: SnapshotIn<typeof PreferencesModel>) {
-        self.preferences = newPreferences
-      },
+    setPreferences(newPreferences: SnapshotIn<typeof PreferencesModel>) {
+      self.preferences = newPreferences
+    },
     setMatchPool(matches: any) {
       self.matchPool.replace(matches)
     },

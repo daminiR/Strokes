@@ -10,7 +10,7 @@ export const resolvers = {
     getUserLimitsAndStats: async (_, { id }) => {
       try {
         const user = await User.findById(id).select(
-          "_id visibleLikePerDay filtersChangesPerDay lastFetchedFromTrigger likes dislikes"
+          "_id visibleLikePerDay filtersChangesPerDay lastFetchedFromTrigger dislikes"
         );
         if (!user) {
           throw new Error("User not found");

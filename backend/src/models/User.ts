@@ -2,13 +2,8 @@ import { model, Schema } from "mongoose";
 import { DeleteT, UserDocument } from "../types/Squash";
 import { LocationSchema } from "./LocationSchema"
 import { PotentialMatchSchema } from "./PotentialMatchSchema"
-import { LikedByUserSchema } from "./LikeByUserSchema"
 import { GENDERS, SPORTS } from "../constants";
 import * as validation from "../validation"
-
-// TODO: need to decide on what age requirement you need for your app -> 18 for now, also max requirement?
-// TODO: need to figure away to allow enum values only once!
-// TODO: need to check if age above 40s is really the persons age
 
 var userSchema = new Schema(
   {
@@ -148,21 +143,12 @@ var userSchema = new Schema(
         "Please fill a valid email address",
       ],
     },
-    likes: {
-      type: [String],
-      required: false,
-    },
-    likedByUSers: {
-      type: [LikedByUserSchema],
-      required: false,
-    },
     dislikes: {
       type: [String],
       required: false,
     },
     i_blocked: [PotentialMatchSchema],
     blocked_me: [PotentialMatchSchema],
-    matches: { type: [PotentialMatchSchema], required: false },
     deleted: {
       type: <DeleteT>{},
       required: false,
