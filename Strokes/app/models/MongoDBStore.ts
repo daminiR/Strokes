@@ -228,6 +228,42 @@ const MongoDBStore = types
         // Handle error or set error state
       }
     }),
+    createMatch: flow(function* createMatch(user1Id, user2Id) {
+      return client
+        .mutate({
+          mutation: graphQL.CREATE_MATCH_MUTATION,
+          variables: { user1Id, user2Id },
+        })
+        .then((response) => {
+          const { success, match } = response.data.createMatch
+          if (success && match) {
+            console.log("Match created successfully:", match)
+            return match
+          } else {
+            console.error("Failed to create match.")
+            return null
+          }
+        })
+        .catch((error) => {
+          console.error("Error creating match:", error)
+          return null
+        })
+    }),
+    checkForMutualLike: flow(function* checkForMutualLike(likedId) {
+      const currentUserId = getRootStore(self).userStore._id
+      return client
+        .query({
+          query: graphQL.CHECK_FOR_MUTUAL_LIKE_QUERY,
+          variables: { currentUserId, likedId },
+        })
+        .then((response) => {
+          return response.data.checkForMutualLike.isMutual
+        })
+        .catch((error) => {
+          console.error("Failed to check for mutual like:", error)
+          return false
+        })
+    }),
     recordLike: flow(function* applyFilters(likedId) {
       const likerId = getRootStore(self).userStore._id
       try {
