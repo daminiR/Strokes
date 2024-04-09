@@ -40,5 +40,29 @@ export const resolvers = {
       }
     },
   },
-  Query: {},
+  Query: {
+    checkForMutualLike: async (_, { currentUserId, likedId }) => {
+      try {
+        // Check if there's a like from the current user to likedId
+        const likeTo = await Like.findOne({
+          likerId: currentUserId,
+          likedId: likedId,
+        });
+
+        // Check if there's a like from likedId to the current user
+        const likeFrom = await Like.findOne({
+          likerId: likedId,
+          likedId: currentUserId,
+        });
+
+        // A mutual like exists if both likeTo and likeFrom are not null
+        const isMutual = !!likeTo && !!likeFrom;
+
+        return { isMutual };
+      } catch (error) {
+        console.error("Error checking for mutual like:", error);
+        throw new Error("Failed to check for mutual like.");
+      }
+    },
+  },
 };

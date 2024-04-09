@@ -12,16 +12,20 @@ const likesSchema = new Schema<LikeDocument>(
     likerId: {
       type: String,
       required: true,
+      index: true,
     },
     likedId: {
       type: String,
       required: true,
+      index: true,
     },
   },
   {
     timestamps: true, // Mongoose automatically adds createdAt and updatedAt fields
   }
 );
+
+likesSchema.index({ likerId: 1, likedId: 1 });
 
 // Create the Mongoose model from the schema
 const Like = model<LikeDocument>('Like', likesSchema);

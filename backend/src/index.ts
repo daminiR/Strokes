@@ -17,10 +17,13 @@ import {resolvers as testUpload} from './resolvers/test/updateUser'
 import {resolvers as  addLikeResolvers} from './resolvers/prod/likes/addLike'
 import {resolvers as removeLikeResolvers} from './resolvers/prod/likes/removeLike'
 
+import {resolvers as  matchResolvers} from './resolvers/prod/matches/updateMatches'
+
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/prod/typeDefs';
 import { typeDefsTest } from './typeDefs/test/typeDefs'
 import { likesTypeDefs } from './typeDefs/prod/likesTypeDefs'
+import { matchesTypeDefs } from './typeDefs/prod/matchesTypeDefs'
 import { createServer } from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 const startServer = async () => {
@@ -38,6 +41,8 @@ const startServer = async () => {
       updateUser,
       uploads,
       update,
+      //match collection
+      matchResolvers,
       //likes collection
       addLikeResolvers,
       removeLikeResolvers,
@@ -47,7 +52,7 @@ const startServer = async () => {
     ]
   );
   const schema = makeExecutableSchema({
-    typeDefs: [typeDefs, typeDefsTest, likesTypeDefs],
+    typeDefs: [typeDefs, typeDefsTest, likesTypeDefs, matchesTypeDefs],
     resolvers: resolvers2,
   });
   const server = new ApolloServer({

@@ -57,6 +57,16 @@ const MatchesStoreModel = types
           if (success) {
             // Remove the liked user from the matchPool
             self.matchPool = self.matchPool.filter((user) => user._id !== likedId)
+
+            // Check for mutual like indicating a match
+            const isMatch = yield mongoDBStore.checkForMutualLike(likedId)
+
+            if (isMatch) {
+              // Record the match in the matches collection
+              yield mongoDBStore.createMatch(likedId)
+              // Optionally, update UI or state to reflect the new match
+            }
+
             // Exit the loop if like is successfully recorded
             break
           } else {
