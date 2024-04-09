@@ -121,11 +121,17 @@ export const typeDefs = gql`
     imageURL: String!
     filePath: String!
   }
+  type UpdateMatchQueueResponse {
+  success: Boolean!
+  message: String
+}
+
   type Data{
     ${DataType}
   }
 
   type Mutation {
+    updateMatchQueueInteracted(currentUserId: String!, likedId: String!, interacted: Boolean!): UpdateMatchQueueResponse!
     updateAllUserSchema(_id: String!): String
     deleteImage(_id: String, img_idx: Int): [Data!]!
     recordLikesAndUpdateCount(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): User

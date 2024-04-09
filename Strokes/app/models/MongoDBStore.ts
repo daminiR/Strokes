@@ -349,6 +349,35 @@ const MongoDBStore = types
       self.queryPotentialMatches()
       //}
     }),
+    // Function to update the interacted status in matchQueue
+    updateMatchQueueInteracted: flow(function* updatedMatchInteracted(
+      currentUserId,
+      likedId,
+      interacted,
+    ) {
+      try {
+        const result = yield client.mutate({
+          mutation: graphQL.UPDATE_MATCH_QUEUE_INTERACTED_MUTATION,
+          variables: {
+            currentUserId,
+            likedId,
+            interacted,
+          },
+        })
+
+        // Assuming your GraphQL API returns a success field in the response
+        if (result.data.updateMatchQueueInteracted.success) {
+          console.log("Successfully updated matchQueue interacted status")
+          return true
+        } else {
+          console.error("Failed to update matchQueue interacted status")
+          return false
+        }
+      } catch (error) {
+        console.error("Error updating matchQueue interacted status:", error)
+        return false
+      }
+    }),
     queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore

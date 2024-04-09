@@ -79,7 +79,7 @@ export const resolvers = {
         console.log(nonInteractedIds);
 
         const fieldsNeeded =
-          "firstName age gender sport description image_set neighborhood";
+          "firstName age gender sport description image_set neighborhood _id";
 
         const userProfiles = await User.find({
           _id: { $in: nonInteractedIds },
