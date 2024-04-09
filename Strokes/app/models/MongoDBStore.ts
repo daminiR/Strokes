@@ -194,6 +194,26 @@ const MongoDBStore = types
         // Handle error or set error state
       }
     }),
+    applyFilters: flow(function* applyFilters(newFilters, newFilterHash) {
+      try {
+        const userStore = getRootStore(self).userStore
+        const response = yield client.mutate({
+          mutation: graphQL.APPLY_FILTERS,
+          variables: {
+            _id: userStore._id,
+            preferences: newFilters,
+            preferencesHash: newFilterHash,
+          },
+          fetchPolicy: "network-only",
+        })
+        console.log(response)
+        const filterData = cleanGraphQLResponse(response.data.applyFilters)
+        return filterData.filtersChangesPerDay
+      } catch (error) {
+        console.error("Error applyign filters:", error)
+        throw error
+      }
+    }),
     queryAfterFilterChange: flow(function* (filters) {
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
@@ -208,7 +228,8 @@ const MongoDBStore = types
           // If the query is successful, update the preferencesHash and possibly other state
           matchStore.setPreferencesHash(newFiltersHash)
           matchStore.setPreferences(filters) // Update preferences in the store
-
+          console.log("perday", potentialMatchesResponse)
+          matchStore.setFilersChangedPerDay(potentialMatchesResponse) // Update preferences in the store
           console.log("Filters have changed. Potential matches queried successfully.")
         } catch (error) {
           // If the query fails, log the error and do not update the preferencesHash
@@ -234,27 +255,6 @@ const MongoDBStore = types
       //alsoFetch new lastFetched if there is new data last fetched should have been updated in trgiger
       self.queryPotentialMatches()
       //}
-    }),
-    applyFilters: flow(function* (newFilters, newFilterHash) {
-      try {
-        const userStore = getRootStore(self).userStore
-        const response = yield client.mutate({
-          mutation: graphQL.APPLY_FILTERS,
-          variables: {
-            _id: userStore._id,
-            preferences: newFilters,
-            preferencesHash: newFilterHash,
-          },
-          fetchPolicy: "network-only",
-        })
-        //const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
-        //matchStore.setMatchPool(matchesData.potentialMatches)
-        //matchStore.setLastFetched(matchesData.lastFetched)
-        //return matchesData
-      } catch (error) {
-        console.error("Error applyign filters:", error)
-        throw error
-      }
     }),
     queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore

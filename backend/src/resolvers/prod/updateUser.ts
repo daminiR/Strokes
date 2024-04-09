@@ -59,14 +59,23 @@ export const resolvers = {
       const session = await mongoose.startSession();
       await session.startTransaction();
 
+      let updatedDoc = null; // Initialize a variable to hold the updated document
+
       try {
         const currentUser = await User.findById(_id).session(session);
         if (!currentUser) {
           throw new Error("User not found.");
         }
+        // Check if filtersChangesPerDay is less than 0, if so, exit early
+        if (currentUser.filtersChangesPerDay < 0) {
+          console.log(
+            "User has exceeded the daily limit for changing filters."
+          );
+          await session.abortTransaction(); // It's important to abort the transaction since we're exiting early
+          return null; // Indicate that no update was performed due to the limit
+        }
 
         if (preferencesHash !== currentUser.preferencesHash) {
-          // Define the match criteria based on the updated preferences
           const matchCriteria = {
             _id: { $ne: _id },
             age: { $gte: preferences.age.min, $lte: preferences.age.max },
@@ -76,7 +85,6 @@ export const resolvers = {
             },
           };
 
-          // Fetch potential matches based on criteria
           const potentialMatches = await User.aggregate([
             { $match: matchCriteria },
             { $sample: { size: 30 } }, // Randomly select 30 users
@@ -86,22 +94,24 @@ export const resolvers = {
 
           if (potentialMatches && Array.isArray(potentialMatches)) {
             const matchQueue = potentialMatches
-              .filter((match) => match._id) // Ensure there's an _id to avoid adding empty objects
+              .filter((match) => match._id) // Ensure there's an _id
               .map((match) => ({
-                _id: match._id, // Using the _id from the matched documents
-                interacted: false, // Default value for new entries
-                createdAt: currentDate, // Set to the current date
-                updatedAt: currentDate, // Set to the current date
+                _id: match._id,
+                interacted: false,
+                createdAt: currentDate,
+                updatedAt: currentDate,
               }));
 
-            // Update the user document with the new preferences, preferencesHash, and matchQueue
-            await User.findOneAndUpdate(
+            updatedDoc = await User.findOneAndUpdate(
               { _id: _id },
               {
-                preferences: preferences,
-                preferencesHash: preferencesHash,
-                matchQueue: matchQueue,
-                lastFetched: currentDate,
+                $set: {
+                  preferences: preferences,
+                  preferencesHash: preferencesHash,
+                  matchQueue: matchQueue,
+                  lastFetched: currentDate,
+                },
+                $inc: { filtersChangesPerDay: -1 },
               },
               { new: true, session }
             );
@@ -110,11 +120,11 @@ export const resolvers = {
               "No potential matches found or potentialMatches is not an array"
             );
           }
-          await session.commitTransaction();
-        } else {
-          // Commit the transaction to close it properly even if no update is made
-          await session.commitTransaction();
         }
+
+        await session.commitTransaction();
+        console.log(updatedDoc);
+        return updatedDoc; // Return the updated document (or null if no updates were made)
       } catch (error) {
         await session.abortTransaction();
         throw error;

@@ -1,6 +1,5 @@
 import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
 import { getRootStore } from './helpers/getRootStore';
 
 export const LocationModel = types.model("LocationModel", {
@@ -41,6 +40,7 @@ const MatchesStoreModel = types
     lastFetchedFromTrigger: types.maybeNull(types.string),
     preferencesHash: types.maybeNull(types.string),
     preferences: types.maybeNull(PreferencesModel),
+    filtersChangesPerDay: types.maybeNull(types.number),
   })
   .actions((self) => ({
     setInit: flow(function* (userData: any) {
@@ -50,8 +50,12 @@ const MatchesStoreModel = types
       self.lastFetchedFromTrigger = userData.lastFetchedFromTrigger
       self.preferences = userData.preferences
       self.preferencesHash = userData.preferencesHash
+      self.filtersChangesPerDay = userData.filtersChangesPerDay
       // You can now use potentialMatches if needed
     }),
+    setFilersChangedPerDay(filtersChangesPerDay: number) {
+      self.filtersChangesPerDay = filtersChangesPerDay
+    },
     setLastFetched(lastFetchedFromTrigger: any) {
       self.lastFetchedFromTrigger = lastFetchedFromTrigger
     },
@@ -74,10 +78,6 @@ const MatchesStoreModel = types
       } catch (error) {
         console.error("Failed to fetch and update matches:", error)
       }
-    }),
-    applyFilters: flow(function* (filters) {
-      // Optionally: Modify this method to apply filters and fetch updated matches
-      //yield fetchAndUpdateMatches(filters)
     }),
     loadStoredMatches: flow(function* () {
       try {

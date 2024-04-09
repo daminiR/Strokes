@@ -25,30 +25,38 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   const [activeIndex, setActiveIndex] = useState(0)
   const width = Dimensions.get("window").width
   const onClose = () => {
-  setIsVisible(false)
-}
-  const onApplyFilters = async (ageRange, gameLevelRange) => {
-    try {
-      await mongoDBStore.queryAfterFilterChange({
-        age: {
-          min: ageRange[0],
-          max: ageRange[1],
-        },
-        gameLevel: {
-          min: gameLevelRange[0],
-          max: gameLevelRange[1],
-        },
-      })
-      onClose()
-      console.log("Filters applied successfully.")
-    } catch (error) {
-      console.error("Failed to apply filters:", error)
-    }
+    setIsVisible(false)
   }
+  const onApplyFilters = async (ageRange, gameLevelRange) => {
+  // Check if the user has filter changes left for the day
+  if (matchStore.filtersChangesPerDay <= 0) {
+    // Display an error message to the user
+    alert("You cannot change filters anymore today.")
+    return // Exit the function early
+  }
+  try {
+    await mongoDBStore.queryAfterFilterChange({
+      age: {
+        min: ageRange[0],
+        max: ageRange[1],
+      },
+      gameLevel: {
+        min: gameLevelRange[0],
+        max: gameLevelRange[1],
+      },
+    })
+
+    // Assuming there's a mechanism to decrement filtersChangedPerDay in your store
+    onClose() // Close the modal if the operation is successful
+    console.log("Filters applied successfully.")
+  } catch (error) {
+    console.error("Failed to apply filters:", error)
+  }
+}
 
   const onFilter = () => {
-  setIsVisible(true)
-}
+    setIsVisible(true)
+  }
   useHeader(
     {
       rightIcon: "settings",
