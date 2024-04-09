@@ -301,7 +301,6 @@ const MongoDBStore = types
           },
           fetchPolicy: "network-only",
         })
-        console.log(response)
         const filterData = cleanGraphQLResponse(response.data.applyFilters)
         return filterData.filtersChangesPerDay
       } catch (error) {
