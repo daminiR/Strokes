@@ -228,7 +228,8 @@ const MongoDBStore = types
         // Handle error or set error state
       }
     }),
-    createMatch: flow(function* createMatch(user1Id, user2Id) {
+    createMatch: flow(function* createMatch(user2Id) {
+      const user1Id  = getRootStore(self).userStore._id
       return client
         .mutate({
           mutation: graphQL.CREATE_MATCH_MUTATION,

@@ -70,6 +70,8 @@ const MatchesStoreModel = types
               // Record the match in the matches collection
               yield mongoDBStore.createMatch(likedId)
               // Optionally, update UI or state to reflect the new match
+               Alert.alert('Congratulations! You have a new match.');
+
             }
 
             // Exit the loop if like is successfully recorded
