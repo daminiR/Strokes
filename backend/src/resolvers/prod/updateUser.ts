@@ -63,6 +63,53 @@ export const resolvers = {
     },
   },
   Mutation: {
+    updateMatchQueueInteracted: async (
+      _,
+      { currentUserId, likedId, interacted }
+    ) => {
+      try {
+        // Find the current user
+        const user = await User.findById(currentUserId);
+        if (!user) {
+          return {
+            success: false,
+            message: "User not found",
+          };
+        }
+
+        // Check if the likedId exists in the matchQueue and update interacted
+        let found = false;
+        user.matchQueue = user.matchQueue.map((item) => {
+          if (item._id === likedId) {
+            // Ensure your schema matches this structure
+            found = true;
+            return { ...item, interacted };
+          }
+          return item;
+        });
+
+        if (!found) {
+          return {
+            success: false,
+            message: "Liked user not found in matchQueue",
+          };
+        }
+
+        // Save the updated user
+        await user.save();
+
+        return {
+          success: true,
+          message: "MatchQueue updated successfully",
+        };
+      } catch (error) {
+        console.error(error);
+        return {
+          success: false,
+          message: "Failed to update MatchQueue",
+        };
+      }
+    },
     applyFilters: async (root, unSanitizedData, context) => {
       const {
         _id,

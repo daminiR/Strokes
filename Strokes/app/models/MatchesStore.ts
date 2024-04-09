@@ -46,17 +46,22 @@ const MatchesStoreModel = types
   .actions((self) => ({
     likeAction: flow(function* (likedId) {
       const mongoDBStore = getRootStore(self).mongoDBStore
+      const userStore = getRootStore(self).userStore
       let attemptCount = 0
       let success = false
 
-      while (!success && attemptCount < 3) {
+      while (!success && attemptCount < 1) {
         // Retry up to 3 times
         try {
+          console.log("likedId", likedId)
           success = yield mongoDBStore.recordLike(likedId)
 
           if (success) {
             // Remove the liked user from the matchPool
             self.matchPool = self.matchPool.filter((user) => user._id !== likedId)
+
+            // Update the interacted status in matchQueue
+            yield mongoDBStore.updateMatchQueueInteracted(userStore._id, likedId, true)
 
             // Check for mutual like indicating a match
             const isMatch = yield mongoDBStore.checkForMutualLike(likedId)
