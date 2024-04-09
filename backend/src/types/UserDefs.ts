@@ -72,6 +72,14 @@ export const LikedByUserType = `
     neighborhood: LocationType!
     image_set: [Data!]!
 `
+export const UserStatsType = `
+    _id: ID!
+    visibleLikePerDay: Int
+    filtersChangesPerDay: Int
+    lastFetchedFromTrigger: String
+    likes: [String]
+    dislikes: [String]
+`
 export const LikedByUserInputType = `
     _id: ID!
     firstName: String!

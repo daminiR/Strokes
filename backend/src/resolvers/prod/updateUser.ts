@@ -7,6 +7,20 @@ import { filterMatches } from '../../utils/matches';
 
 export const resolvers = {
   Query: {
+    getUserLimitsAndStats: async (_, { id }) => {
+      try {
+        const user = await User.findById(id).select(
+          "_id visibleLikePerDay filtersChangesPerDay lastFetchedFromTrigger likes dislikes"
+        );
+        if (!user) {
+          throw new Error("User not found");
+        }
+        return user; // The User model's structure should match the UserStats type definition
+      } catch (error) {
+        console.error("Error fetching user limits and stats:", error);
+        throw error;
+      }
+    },
     fetchProfileById: async (parents, unSanitizedId, context, info) => {
       try {
         const { id } = sanitize(unSanitizedId);

@@ -1,5 +1,6 @@
 import { gql } from "apollo-server-lambda";
 import {
+  UserStatsType,
   LocationType,
   RangeType,
   ImageData,
@@ -22,8 +23,14 @@ import {
 //TODO: ADD enum check for states and countt maybe
 
 export const typeDefs = gql`
+  type UserStats {
+    ${UserStatsType}
+  }
   type LocationType {
     ${LocationType}
+  }
+  type UserType {
+    ${UserType}
   }
   input LocationInput {
     ${LocationType}
@@ -67,6 +74,7 @@ export const typeDefs = gql`
     fetchFilteredMatchQueue(_id: String!): FetchFilteredMatchQueueResult
     fetchNonInteractedMatches(_id: String!, offset: Int, limit: Int, location: LocationInput!, sport: String!, gameLevelRange:[String!]!, ageRange: AgeRangeInput): [User!]
     retrieveSwipeLimits(_id: String!): Int!
+    getUserLimitsAndStats(id: String!): UserStats
   }
   input SportNodeInput {
     ${SportNodeType}
