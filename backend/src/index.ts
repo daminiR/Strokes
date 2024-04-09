@@ -19,11 +19,14 @@ import {resolvers as removeLikeResolvers} from './resolvers/prod/likes/removeLik
 
 import {resolvers as  matchResolvers} from './resolvers/prod/matches/updateMatches'
 
+import { resolvers as potentialMatchPoolResolvers } from "./resolvers/prod/potentialMatchPools/updatePotentialMatchPool";
+
 import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/prod/typeDefs';
 import { typeDefsTest } from './typeDefs/test/typeDefs'
 import { likesTypeDefs } from './typeDefs/prod/likesTypeDefs'
-import { matchesTypeDefs } from './typeDefs/prod/matchesTypeDefs'
+import { matchesTypeDefs } from "./typeDefs/prod/matchesTypeDefs";
+import { potentialMatchPoolTypeDefs } from "./typeDefs/prod/matchPoolTypeDefs";
 import { createServer } from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 const startServer = async () => {
@@ -52,7 +55,7 @@ const startServer = async () => {
     ]
   );
   const schema = makeExecutableSchema({
-    typeDefs: [typeDefs, typeDefsTest, likesTypeDefs, matchesTypeDefs],
+    typeDefs: [typeDefs, typeDefsTest, likesTypeDefs, matchesTypeDefs, potentialMatchPoolTypeDefs],
     resolvers: resolvers2,
   });
   const server = new ApolloServer({
