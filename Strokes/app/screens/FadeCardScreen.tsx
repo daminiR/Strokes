@@ -105,7 +105,8 @@ const onSwiped = (cardIndex: number) => {
           ></Swiper>
           <Button
             disabled={isLastCard}
-            onPress={() => {
+            onPress={async () => {
+              await matchStore.likeAction(cards[index]._id)
               swiperRef.current?.swipeRight()
             }}
             style={$rightFAB}

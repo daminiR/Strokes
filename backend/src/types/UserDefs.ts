@@ -77,7 +77,6 @@ export const UserStatsType = `
     visibleLikePerDay: Int
     filtersChangesPerDay: Int
     lastFetchedFromTrigger: String
-    likes: [String]
     dislikes: [String]
 `
 export const LikedByUserInputType = `
@@ -114,15 +113,12 @@ export const UserType = `
     neighborhood: LocationType!
     description: String
     image_set: [Data!]!
-    matches : [PotentialMatch!]
     blocked_me : [PotentialMatch!]
     i_blocked : [PotentialMatch!]
     lastFetchedFromTrigger: String
     matchQueue: [MatchQueueType!]
-    likes : [String!]
     visableLikePerDay: Int!
     dislikes : [String!]
-    likedByUSers: [LikedByUser!]
     deleted: DeletedType
     phoneNumber: String
     email: String
@@ -143,14 +139,11 @@ export const UserInputType = `
     filtersChangesPerDay: Int!
     image_set: [DataInput!]!
     deleted: DeletedInput
-    matches : [PotentialMatchInput!]
     blocked_me : [String!]
     i_blocked : [String!]
-    likes : [String!]
     dislikes : [String!]
     visableLikePerDay: Int!
     lastFetchedFromTrigger: String
-    likedByUSers: [LikedByUserInput!]
     phoneNumber: String
     email: String
     matchQueue: [MatchQueueInput!]

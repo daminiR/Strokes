@@ -228,6 +228,30 @@ const MongoDBStore = types
         // Handle error or set error state
       }
     }),
+    recordLike: flow(function* applyFilters(likedId) {
+      const likerId = getRootStore(self).userStore._id
+      try {
+        const result = yield client.mutate({
+          mutation: graphQL.ADD_LIKE_MUTATION,
+          variables: {
+            likerId,
+            likedId,
+          },
+        })
+        if (result.data.recordLike.success) {
+          // Handle success (e.g., update UI or state accordingly)
+          console.log(result.data.recordLike.message)
+          return true
+        } else {
+          // Handle failure (e.g., show an error message)
+          console.error(result.data.recordLike.message)
+          return false
+        }
+      } catch (error) {
+        console.error("Error recording like:", error)
+        return false
+      }
+    }),
     applyFilters: flow(function* applyFilters(newFilters, newFilterHash) {
       try {
         const userStore = getRootStore(self).userStore
