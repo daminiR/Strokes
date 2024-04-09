@@ -61,9 +61,8 @@ const READ_SQUASH = gql`
         state
         country
       }
-      swipesPerDay
       visableLikePerDay
-      sportChangesPerDay
+      filtersChangesPerDay
       description
       phoneNumber
       email

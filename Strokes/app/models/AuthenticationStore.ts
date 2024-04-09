@@ -271,6 +271,7 @@ export const AuthenticationStoreModel = types
             onFailure: (err) => {
               console.error("Error signing in:", err)
               self.setError(err.message || "Error signing in")
+              self.signOut()
               reject(err)
             },
           })

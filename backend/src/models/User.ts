@@ -32,11 +32,7 @@ var userSchema = new Schema(
       type: Number,
       required: true,
     },
-    sportChangesPerDay: {
-      type: Number,
-      required: true,
-    },
-    swipesPerDay: {
+    filtersChangesPerDay: {
       type: Number,
       required: true,
     },

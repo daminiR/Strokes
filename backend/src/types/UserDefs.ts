@@ -112,8 +112,6 @@ export const UserType = `
     lastFetchedFromTrigger: String
     matchQueue: [MatchQueueType!]
     likes : [String!]
-    swipesPerDay: Int!
-    sportChangesPerDay: Int!
     visableLikePerDay: Int!
     dislikes : [String!]
     likedByUSers: [LikedByUser!]
@@ -122,6 +120,7 @@ export const UserType = `
     email: String
     preferences: FilterType!
     preferencesHash: String!
+    filtersChangesPerDay: Int!
   `
 
 export const UserInputType = `
@@ -133,6 +132,7 @@ export const UserInputType = `
     sport: SportNodeInput!
     neighborhood: LocationInput!
     description: String
+    filtersChangesPerDay: Int!
     image_set: [DataInput!]!
     deleted: DeletedInput
     matches : [PotentialMatchInput!]
@@ -140,8 +140,6 @@ export const UserInputType = `
     i_blocked : [String!]
     likes : [String!]
     dislikes : [String!]
-    swipesPerDay: Int!
-    sportChangesPerDay: Int!
     visableLikePerDay: Int!
     lastFetchedFromTrigger: String
     likedByUSers: [LikedByUserInput!]
