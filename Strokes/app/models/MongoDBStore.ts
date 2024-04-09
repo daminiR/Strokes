@@ -262,8 +262,7 @@ const MongoDBStore = types
           // If the query is successful, update the preferencesHash and possibly other state
           matchStore.setPreferencesHash(newFiltersHash)
           matchStore.setPreferences(filters) // Update preferences in the store
-          console.log("perday", potentialMatchesResponse)
-          matchStore.setFilersChangedPerDay(potentialMatchesResponse) // Update preferences in the store
+          matchStore.setFiltersChangesPerDay(potentialMatchesResponse) // Update preferences in the store
           console.log("Filters have changed. Potential matches queried successfully.")
         } catch (error) {
           // If the query fails, log the error and do not update the preferencesHash
