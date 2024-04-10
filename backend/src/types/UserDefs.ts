@@ -45,7 +45,7 @@ export const FilterInputType = `
   gameLevel: GameLevelRangeInput!
 `;
 export const PotentialMatchUserType = `
-    _id: ID!
+    matchUserId: ID!
     firstName: String!
     age: Int!
     gender: String!
@@ -55,6 +55,7 @@ export const PotentialMatchUserType = `
     image_set: [Data!]!
     createdAt: String,
     updatedAt: String
+    interacted: Boolean!
 `
 export const MatchQueueType = `
     _id: ID!

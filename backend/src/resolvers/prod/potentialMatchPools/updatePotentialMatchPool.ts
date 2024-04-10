@@ -43,35 +43,56 @@ export const resolvers = {
 
     // Record an interaction with a potential match (like/dislike)
     interactWithPotentialMatch: async (_, { userId, matchUserId, interacted }) => {
-      try {
-        // This example assumes you update a single match's interacted status.
-        // Adjust the logic based on your specific requirements, e.g., if multiple matches can be interacted with at once.
-        const matchPool = await PotentialMatchPool.findOne({ userId });
+    try {
+      // Fetch the document for the current user's match pool
+      const matchPoolDoc = await PotentialMatchPool.findOne({ userId });
 
-        if (!matchPool) {
-          throw new Error("Match pool not found.");
-        }
-
-        const matchIndex = matchPool.potentialMatches.findIndex(match => match.matchUserId.toString() === matchUserId);
-        if (matchIndex === -1) {
-          throw new Error("Match not found in potential match pool.");
-        }
-
-        // Update the interacted flag for the specified match
-        matchPool.potentialMatches[matchIndex].interacted = interacted;
-        matchPool.potentialMatches[matchIndex].updatedAt = new Date();
-
-        await matchPool.save();
-
-        return {
-          success: true,
-          message: "Interaction recorded successfully.",
-          potentialMatch: matchPool.potentialMatches[matchIndex],
-        };
-      } catch (error) {
-        console.error("Error recording interaction with potential match:", error);
-        return { success: false, message: "Failed to record interaction with potential match." };
+      if (!matchPoolDoc) {
+        throw new Error("Match pool not found.");
       }
-    },
+
+      // Locate the specific potential match within the match pool
+      const matchIndex = matchPoolDoc.potentialMatches.findIndex(
+        (match) => match.matchUserId === matchUserId
+      );
+
+      if (matchIndex === -1) {
+        throw new Error("Match not found in potential match pool.");
+      }
+
+      // Update the 'interacted' status and 'updatedAt' timestamp for this match
+      matchPoolDoc.potentialMatches[matchIndex].interacted = interacted;
+      matchPoolDoc.potentialMatches[matchIndex].updatedAt = new Date();
+
+      // Save the updated match pool document
+      await matchPoolDoc.save();
+
+      return {
+        success: true,
+        message: "Interaction with potential match updated successfully.",
+        potentialMatch: matchPoolDoc.potentialMatches[matchIndex],
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(
+          "Error updating interaction with potential match:",
+          error.message
+        );
+        return {
+          success: false,
+          message:
+            "Failed to update interaction with potential match: " +
+            error.message,
+        };
+      } else {
+        console.error("An unexpected error occurred", error);
+        return {
+          success: false,
+          message:
+            "Failed to update interaction with potential match due to an unexpected error.",
+        };
+      }
+    }
   },
-};
+}
+}

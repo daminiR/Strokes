@@ -70,6 +70,9 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   }, [userStore])
 const onSwiped = (cardIndex: number) => {
   // Check if we've reached the last card
+  const newIndex = cardIndex + 1 // Assuming cardIndex is 0-based and increment for the next card
+  setIndex(newIndex) // Update the state to reflect the new index
+
   if (cardIndex === cards.length - 1) {
     setIsLastCard(true)
   }
@@ -106,7 +109,7 @@ const onSwiped = (cardIndex: number) => {
           <Button
             disabled={isLastCard}
             onPress={async () => {
-              await matchStore.likeAction(cards[index]._id)
+              await matchStore.likeAction(cards[index].matchUserId)
               swiperRef.current?.swipeRight()
             }}
             style={$rightFAB}

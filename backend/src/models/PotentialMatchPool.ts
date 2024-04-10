@@ -1,35 +1,76 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
+
+interface ImageSet {
+  img_idx: number;
+  imageURL: string;
+  filePath: string;
+}
+
+interface Neighborhood {
+  city: string;
+  state: string;
+  country: string;
+}
+
+interface Sport {
+  gameLevel: number;
+  sportName: string;
+}
 
 interface PotentialMatch {
-  matchUserId: Schema.Types.ObjectId;
+  matchUserId: string;
+  firstName: string;
+  image_set: ImageSet[];
+  age: number;
+  neighborhood: Neighborhood;
+  gender: string;
+  sport: Sport;
+  description?: string;
   createdAt: Date;
   updatedAt: Date;
   interacted: boolean;
 }
 
-// Extending Document to include the schema's fields for TypeScript
+// Assuming Document from mongoose
 interface PotentialMatchPoolDocument extends Document {
-  userId: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
+  userId: string;
   potentialMatches: PotentialMatch[];
 }
+export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
+  {
+    userId: { type: String, required: true },
+    potentialMatches: [
+      {
+        matchUserId: { type: String, ref: "User", required: true },
+        firstName: { type: String, required: true },
+        age: { type: Number, required: true },
+        neighborhood: {
+          city: { type: String, required: true },
+          state: { type: String, required: true },
+          country: { type: String, required: true },
+        },
+        gender: { type: String, required: true },
+        sport: {
+          gameLevel: { type: Number, required: true },
+          sportName: { type: String, required: true },
+        },
+        description: { type: String, required: false }, // Make this optional if descriptions can be empty
+        createdAt: { type: Date, default: Date.now },
+        updatedAt: { type: Date, default: Date.now },
+        interacted: { type: Boolean, default: false },
+        image_set: [
+          {
+            img_idx: { type: Number, required: true },
+            imageURL: { type: String, required: true },
+            filePath: { type: String, required: true },
+          },
+        ],
+      },
+    ],
+  },
+  { collection: "potentialMatchPools" }
+);
 
-const potentialMatchSchema = new Schema<PotentialMatch>({
-  matchUserId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-  interacted: { type: Boolean, default: false },
-});
-
-const potentialMatchPoolSchema = new Schema<PotentialMatchPoolDocument>({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  potentialMatches: [potentialMatchSchema]
-}, { timestamps: true });
-
-// Efficiently querying by userId
-potentialMatchPoolSchema.index({ userId: 1 });
-
-// Consider a multikey index if your query patterns require it
-// potentialMatchPoolSchema.index({ "potentialMatches.matchUserId": 1 }, { unique: false });
-
-export const PotentialMatchPool = model<PotentialMatchPoolDocument>('PotentialMatchPool', potentialMatchPoolSchema);
+export const PotentialMatchPool = model<PotentialMatchPoolDocument>("PotentialMatchPool", PotentialMatchSchema);
 

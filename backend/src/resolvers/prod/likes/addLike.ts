@@ -5,7 +5,6 @@ export const resolvers = {
   Mutation: {
     recordLike: async (_, { likerId, likedId }) => {
       try {
-        console.log(likedId, likedId)
         const existingLike = await Like.findOne({ likerId, likedId });
         if (existingLike) {
           return {

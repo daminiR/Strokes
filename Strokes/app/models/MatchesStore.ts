@@ -26,9 +26,10 @@ export const PreferencesModel = types.model("PreferencesModel", {
 });
 
 export const PotentialMatchModel = types.model("PotentialMatchModel", {
-  _id: types.maybeNull(types.string),
+  matchUserId: types.maybeNull(types.string),
   firstName: types.maybeNull(types.string),
   age: types.maybeNull(types.number),
+  interacted: types.maybeNull(types.boolean),
   gender: types.maybeNull(types.string),
   sport: types.maybeNull(SportModel),
   description: types.maybeNull(types.string),
@@ -54,10 +55,11 @@ const MatchesStoreModel = types
         // Retry up to 3 times
         try {
           success = yield mongoDBStore.recordLike(likedId)
+          console.log("check matchstore",self.matchPool)
 
           if (success) {
             // Remove the liked user from the matchPool
-            self.matchPool = self.matchPool.filter((user) => user._id !== likedId)
+            self.matchPool = self.matchPool.filter((user) => user.matchUserId !== likedId)
 
             // Update the interacted status in matchQueue
             yield mongoDBStore.updateMatchQueueInteracted(userStore._id, likedId, true)
