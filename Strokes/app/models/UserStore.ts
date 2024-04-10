@@ -5,12 +5,6 @@ const ImageDataModel = types.model({
   file: types.maybeNull(types.string),
   img_idx: types.integer,
 })
-const MatchQueueModel = types.model({
-  _id: types.maybeNull(types.string),
-  interacted: types.boolean,
-  createdAt: types.string,
-  updatedAt: types.string,
-})
 const GameLevelModel = types.model({
   gameLevel: types.maybeNull(types.number),
   sportName: types.maybeNull(types.string),
@@ -88,13 +82,6 @@ export const UserStoreModel = types
       self.description = userData.description
     },
     reset() {
-      //self._id = ""
-      //self.authPassword = ""
-      //self.firstName = ""
-      //self.lastName = ""
-      //self.gender = ""
-      //self.neighborhood = ""
-      //self.description = ""
     },
     // Add other actions as needed
   }))

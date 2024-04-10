@@ -1,4 +1,5 @@
-import User from '../../models/User';
+import User from "../../models/User";
+import { PotentialMatchPool } from "../../models/PotentialMatchPool";
 import mongoose from 'mongoose';
 import _ from 'lodash'
 import { manageImages } from "../../utils/awsUpload";
@@ -68,35 +69,26 @@ export const resolvers = {
       { currentUserId, likedId, interacted }
     ) => {
       try {
-        // Find the current user
-        const user = await User.findById(currentUserId);
-        if (!user) {
+        // Attempt to update the potential match interacted status
+        const updateResult = await PotentialMatchPool.updateOne(
+          { userId: currentUserId, "potentialMatches.matchUserId": likedId },
+          { $set: { "potentialMatches.$.interacted": interacted } }
+        );
+
+        if (updateResult.matchedCount === 0) {
           return {
             success: false,
-            message: "User not found",
+            message:
+              "User not found or liked user not found in potential matches",
           };
         }
 
-        // Check if the likedId exists in the matchQueue and update interacted
-        let found = false;
-        user.matchQueue = user.matchQueue.map((item) => {
-          if (item._id === likedId) {
-            // Ensure your schema matches this structure
-            found = true;
-            return { ...item, interacted };
-          }
-          return item;
-        });
-
-        if (!found) {
+        if (updateResult.modifiedCount === 0) {
           return {
             success: false,
-            message: "Liked user not found in matchQueue",
+            message: "Failed to update the interacted status",
           };
         }
-
-        // Save the updated user
-        await user.save();
 
         return {
           success: true,

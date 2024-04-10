@@ -17,12 +17,15 @@ const GET_POTENTIAL_MATCHES = gql`
   query fetchFilteredMatchQueue($_id: String!) {
     fetchFilteredMatchQueue(_id: $_id) {
       potentialMatches {
+        interacted
+        createdAt
+        updatedAt
         neighborhood {
           city
           state
           country
         }
-        _id
+        matchUserId
         firstName
         age
         gender
@@ -36,7 +39,6 @@ const GET_POTENTIAL_MATCHES = gql`
           imageURL
         }
       }
-      lastFetchedFromTrigger
     }
   }
 `

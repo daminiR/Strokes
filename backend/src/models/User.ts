@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 import { DeleteT, UserDocument } from "../types/Squash";
 import { LocationSchema } from "./LocationSchema"
-import { PotentialMatchSchema } from "./PotentialMatchSchema"
+import { PotentialMatchSchema } from "./PotentialMatchPool"
 import { GENDERS, SPORTS } from "../constants";
 import * as validation from "../validation"
 

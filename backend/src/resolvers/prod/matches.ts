@@ -1,4 +1,5 @@
-import User from '../../models/User';
+import User from "../../models/User";
+import { PotentialMatchPool } from "../../models/PotentialMatchPool";
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 import { CHAT_TIMER } from '../../constants'
@@ -57,64 +58,55 @@ export const resolvers = {
       info
     ) => {
       const { _id } = sanitize(unSanitizedData);
+       try {
+         // Ensure _id is valid, otherwise throw an error
+         if (!_id) throw new Error("Invalid user ID");
 
-      try {
-        // Ensure _id is valid, otherwise throw an error
-        if (!_id) throw new Error("Invalid user ID");
+         // Query the PotentialMatchPool collection for the current user's potential matches
+         const matchPoolDoc = await PotentialMatchPool.findOne({
+           userId: _id,
+         }).exec();
+         if (!matchPoolDoc)
+           throw new Error(`Match pool for user with ID ${_id} not found`);
 
-        const currentUser = await User.findById(_id)
-          .select("matchQueue lastFetched")
-          .exec();
-        if (!currentUser) throw new Error(`User with ID ${_id} not found`);
-        if (!Array.isArray(currentUser.matchQueue))
-          throw new Error("matchQueue is not an array");
+        console.log(matchPoolDoc.potentialMatches)
+         // Filter out matches that have not been interacted with
+         const potentialMatches = matchPoolDoc.potentialMatches
+           .filter((match) => !match.interacted)
+           .map((match) => ({
+             matchUserId: match.matchUserId,
+             firstName: match.firstName,
+             image_set: match.image_set,
+             age: match.age,
+             neighborhood: match.neighborhood,
+             gender: match.gender,
+             sport: match.sport,
+             createdAt: match.createdAt,
+             updatedAt: match.updatedAt,
+             description: match.description,
+             interacted: match.interacted,
+           }));
 
-        const nonInteractedIds = currentUser.matchQueue
-          .filter((match) => !match.interacted && match._id) // Ensure match._id is present
-          .map((match) => match._id);
-        if (nonInteractedIds.length === 0) {
-          console.log("No non-interacted matches found in matchQueue");
-          return [];
-        }
-        console.log(nonInteractedIds);
-
-        const fieldsNeeded =
-          "firstName age gender sport description image_set neighborhood _id";
-
-        const userProfiles = await User.find({
-          _id: { $in: nonInteractedIds },
-        })
-          .select(fieldsNeeded)
-          .exec();
-
-        const potentialMatches = userProfiles.map((user) => ({
-          _id: user._id,
-          firstName: user.firstName,
-          image_set: user.image_set,
-          age: user.age,
-          archived: false, // Assuming default false as no archived info in find
-          neighborhood: user.neighborhood,
-          gender: user.gender,
-          sport: user.sport,
-          createdAt: Date.now(), // Assuming createdAt is a Date object
-          updatedAt: Date.now(), // Assuming updatedAt is a Date object
-          description: user.description,
-        }))
-        return {
-          potentialMatches: potentialMatches,
-          lastFetchedFromTrigger: currentUser.lastFetchedFromTrigger,
-        };      } catch (error) {
-        // More granular error handling based on error type
-        if (error instanceof TypeError) {
-          console.error("TypeError occurred:", error.message);
-        } else if (error instanceof TypeError) {
-          // Handle specific errors if you expect them
-          console.error("Specific error occurred:", error.message);
-        } else {
-          console.error("An unknown error occurred");
-        }
-        throw new Error("Failed to fetch filtered match queue");
-      }
+         // Assuming lastFetchedFromTrigger is updated elsewhere in your application logic
+         return {
+           potentialMatches,
+           //lastFetchedFromTrigger: matchPoolDoc.updatedAt, // Or use a dedicated field if exists
+         };
+       } catch (error) {
+         if (error instanceof Error) {
+           // Now 'error' is safely typed as an instance of Error
+           console.error("Error fetching filtered match queue:", error.message);
+           throw new Error(
+             "Failed to fetch filtered match queue: " + error.message
+           );
+         } else {
+           // Handle or log the error differently if it's not an instance of Error
+           console.error("An unexpected error occurred:", error);
+           throw new Error(
+             "Failed to fetch filtered match queue due to an unexpected error."
+           );
+         }
+       }
     },
   },
   Mutation: {
