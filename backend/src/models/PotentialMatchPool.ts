@@ -72,5 +72,12 @@ export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
   { collection: "potentialMatchPools" }
 );
 
+// Add an index for the userId field
+PotentialMatchSchema.index({ userId: 1 }, { background: true });
+
+// Add a compound index for matchUserId within the potentialMatches array
+PotentialMatchSchema.index({ "potentialMatches.matchUserId": 1 }, { background: true });
+
+
 export const PotentialMatchPool = model<PotentialMatchPoolDocument>("PotentialMatchPool", PotentialMatchSchema);
 
