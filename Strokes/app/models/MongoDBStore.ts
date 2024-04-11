@@ -129,7 +129,6 @@ const MongoDBStore = types
           // For example, if you have observables for these in your userStore or another relevant store
           const stats = data.getUserLimitsAndStats
           //matchStore.setVisibleLikePerDay(stats.visibleLikePerDay)
-          matchStore.setFiltersChangesPerDay(stats.filtersChangesPerDay)
           matchStore.setLastFetchedFromTrigger(stats.lastFetchedFromTrigger)
           // Continue setting other relevant fields as needed
         }
@@ -302,7 +301,7 @@ const MongoDBStore = types
           fetchPolicy: "network-only",
         })
         const filterData = cleanGraphQLResponse(response.data.applyFilters)
-        return filterData.filtersChangesPerDay
+        return filterData
       } catch (error) {
         console.error("Error applyign filters:", error)
         throw error

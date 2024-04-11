@@ -69,12 +69,24 @@ export const resolvers = {
       { currentUserId, likedId, interacted }
     ) => {
       try {
-        // Attempt to update the potential match interacted status
+        // Prepare update operations
+        let updateOperations = {
+          $set: { "potentialMatches.$[elem].interacted": interacted },
+        };
+
+        // If interacted is true, prepare to decrement swipesPerDay
+        if (interacted) {
+          updateOperations["$inc"] = { swipesPerDay: -1 };
+        }
+
+        // Perform a single update operation
         const updateResult = await PotentialMatchPool.updateOne(
           { userId: currentUserId, "potentialMatches.matchUserId": likedId },
-          { $set: { "potentialMatches.$.interacted": interacted } }
+          updateOperations,
+          { arrayFilters: [{ "elem.matchUserId": likedId }] }
         );
 
+        // Check if the operation was successful
         if (updateResult.matchedCount === 0) {
           return {
             success: false,
@@ -84,15 +96,17 @@ export const resolvers = {
         }
 
         if (updateResult.modifiedCount === 0) {
+          // This might happen if the document was matched but not modified, e.g., setting interacted to its current value
           return {
             success: false,
-            message: "Failed to update the interacted status",
+            message:
+              "Failed to update the interacted status or decrement swipes",
           };
         }
 
         return {
           success: true,
-          message: "MatchQueue updated successfully",
+          message: "MatchQueue and swipesPerDay updated successfully",
         };
       } catch (error) {
         console.error(error);

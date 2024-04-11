@@ -8,11 +8,13 @@ const READ_SQUASHES = gql`
     }
   }
 `
+
 const SWIPED_LEFT = gql`
   query RetrieveSwipeLimits($phoneNumber: String!){
     retrieveSwipeLimits(_id: Number)
   }
 `
+
 const GET_POTENTIAL_MATCHES = gql`
   query fetchFilteredMatchQueue($_id: String!) {
     fetchFilteredMatchQueue(_id: $_id) {
@@ -47,7 +49,6 @@ const GET_USER_LIMITS_AND_STATS = gql`
     getUserLimitsAndStats(id: $id) {
       _id
       visibleLikePerDay
-      filtersChangesPerDay
       lastFetchedFromTrigger
       dislikes
     }
@@ -76,7 +77,6 @@ const READ_SQUASH = gql`
         country
       }
       visableLikePerDay
-      filtersChangesPerDay
       description
       phoneNumber
       email

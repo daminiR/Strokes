@@ -42,7 +42,6 @@ const MatchesStoreModel = types
     lastFetchedFromTrigger: types.maybeNull(types.string),
     preferencesHash: types.maybeNull(types.string),
     preferences: types.maybeNull(PreferencesModel),
-    filtersChangesPerDay: types.maybeNull(types.number),
   })
   .actions((self) => ({
     likeAction: flow(function* (likedId) {
@@ -105,12 +104,8 @@ const MatchesStoreModel = types
       self.lastFetchedFromTrigger = userData.lastFetchedFromTrigger
       self.preferences = userData.preferences
       self.preferencesHash = userData.preferencesHash
-      self.filtersChangesPerDay = userData.filtersChangesPerDay
       // You can now use potentialMatches if needed
     }),
-    setFiltersChangesPerDay(filtersChangesPerDay: number) {
-      self.filtersChangesPerDay = filtersChangesPerDay
-    },
     setLastFetchedFromTrigger(lastFetchedFromTrigger: any) {
       self.lastFetchedFromTrigger = lastFetchedFromTrigger
     },
