@@ -104,39 +104,6 @@ const MongoDBStore = types
     // Define any state properties you may need
   })
   .actions((self) => ({
-    getUserLimitsAndStats: flow(function* () {
-      try {
-        const userStore = getRootStore(self).userStore
-        const matchStore = getRootStore(self).matchStore
-        // Ensure you have the user's ID to fetch their data
-        if (!userStore._id) {
-          console.error("User ID not found")
-          return
-        }
-
-        const response = yield client.query({
-          query: graphQL.GET_USER_LIMITS_AND_STATS,
-          variables: {
-            id: userStore._id,
-          },
-          fetchPolicy: "network-only", // Optionally, adjust the fetch policy as needed
-        })
-
-        // Assuming the GraphQL query returns the fields directly under `getUserLimitsAndStats`
-        const { data } = response
-        if (data && data.getUserLimitsAndStats) {
-          // Here you could directly update your store with the fetched data
-          // For example, if you have observables for these in your userStore or another relevant store
-          const stats = data.getUserLimitsAndStats
-          //matchStore.setVisibleLikePerDay(stats.visibleLikePerDay)
-          matchStore.setLastFetchedFromTrigger(stats.lastFetchedFromTrigger)
-          // Continue setting other relevant fields as needed
-        }
-      } catch (error) {
-        console.error("Error fetching user limits and stats:", error)
-        // Handle error or set error state
-      }
-    }),
     updateUserInMongoDB: flow(function* updateUser() {
       try {
         const tempUserStore = getRootStore(self).tempUserStore

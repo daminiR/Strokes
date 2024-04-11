@@ -65,6 +65,7 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   }, [userStore])
 const onSwiped = (cardIndex: number) => {
   // Check if we've reached the last card
+  console.log(index)
   const newIndex = cardIndex + 1 // Assuming cardIndex is 0-based and increment for the next card
   setIndex(newIndex) // Update the state to reflect the new index
 
