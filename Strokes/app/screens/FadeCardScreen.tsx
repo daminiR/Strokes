@@ -29,11 +29,6 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   }
   const onApplyFilters = async (ageRange, gameLevelRange) => {
   // Check if the user has filter changes left for the day
-  if (matchStore.filtersChangesPerDay <= 0) {
-    // Display an error message to the user
-    alert("You cannot change filters anymore today.")
-    return // Exit the function early
-  }
   try {
     await mongoDBStore.queryAfterFilterChange({
       age: {

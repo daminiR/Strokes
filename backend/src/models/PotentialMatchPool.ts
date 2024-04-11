@@ -35,6 +35,7 @@ interface PotentialMatch {
 interface PotentialMatchPoolDocument extends Document {
   _id: Schema.Types.ObjectId;
   userId: string;
+  swipesPerDay: number; // Added swipesPerDay here
   potentialMatches: PotentialMatch[];
 }
 export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
@@ -68,6 +69,7 @@ export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
         ],
       },
     ],
+    swipesPerDay: { type: Number, required: true, default: 10 }, // Assuming a default of 10 swipes per day
   },
   { collection: "potentialMatchPools" }
 );

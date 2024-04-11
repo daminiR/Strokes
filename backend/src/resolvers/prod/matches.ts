@@ -58,55 +58,57 @@ export const resolvers = {
       info
     ) => {
       const { _id } = sanitize(unSanitizedData);
-       try {
-         // Ensure _id is valid, otherwise throw an error
-         if (!_id) throw new Error("Invalid user ID");
+      try {
+        // Ensure _id is valid, otherwise throw an error
+        if (!_id) throw new Error("Invalid user ID");
 
-         // Query the PotentialMatchPool collection for the current user's potential matches
-         const matchPoolDoc = await PotentialMatchPool.findOne({
-           userId: _id,
-         }).exec();
-         if (!matchPoolDoc)
-           throw new Error(`Match pool for user with ID ${_id} not found`);
+        // Query the PotentialMatchPool collection for the current user's potential matches
+        const matchPoolDoc = await PotentialMatchPool.findOne({
+          userId: _id,
+        }).exec();
+        if (!matchPoolDoc)
+          throw new Error(`Match pool for user with ID ${_id} not found`);
 
-        console.log(matchPoolDoc.potentialMatches)
-         // Filter out matches that have not been interacted with
-         const potentialMatches = matchPoolDoc.potentialMatches
-           .filter((match) => !match.interacted)
-           .map((match) => ({
-             matchUserId: match.matchUserId,
-             firstName: match.firstName,
-             image_set: match.image_set,
-             age: match.age,
-             neighborhood: match.neighborhood,
-             gender: match.gender,
-             sport: match.sport,
-             createdAt: match.createdAt,
-             updatedAt: match.updatedAt,
-             description: match.description,
-             interacted: match.interacted,
-           }));
+        // Check if swipesPerDay is less than or equal to 0, return an empty array if true
+        if (matchPoolDoc.swipesPerDay <= 0) {
+          return {
+            potentialMatches: [],
+          };
+        }
 
-         // Assuming lastFetchedFromTrigger is updated elsewhere in your application logic
-         return {
-           potentialMatches,
-           //lastFetchedFromTrigger: matchPoolDoc.updatedAt, // Or use a dedicated field if exists
-         };
-       } catch (error) {
-         if (error instanceof Error) {
-           // Now 'error' is safely typed as an instance of Error
-           console.error("Error fetching filtered match queue:", error.message);
-           throw new Error(
-             "Failed to fetch filtered match queue: " + error.message
-           );
-         } else {
-           // Handle or log the error differently if it's not an instance of Error
-           console.error("An unexpected error occurred:", error);
-           throw new Error(
-             "Failed to fetch filtered match queue due to an unexpected error."
-           );
-         }
-       }
+        // Proceed with filtering matches that have not been interacted with
+        const potentialMatches = matchPoolDoc.potentialMatches
+          .filter((match) => !match.interacted)
+          .map((match) => ({
+            matchUserId: match.matchUserId,
+            firstName: match.firstName,
+            image_set: match.image_set,
+            age: match.age,
+            neighborhood: match.neighborhood,
+            gender: match.gender,
+            sport: match.sport,
+            createdAt: match.createdAt,
+            updatedAt: match.updatedAt,
+            description: match.description,
+            interacted: match.interacted,
+          }));
+
+        return {
+          potentialMatches,
+        };
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Error fetching filtered match queue:", error.message);
+          throw new Error(
+            "Failed to fetch filtered match queue: " + error.message
+          );
+        } else {
+          console.error("An unexpected error occurred:", error);
+          throw new Error(
+            "Failed to fetch filtered match queue due to an unexpected error."
+          );
+        }
+      }
     },
   },
   Mutation: {
