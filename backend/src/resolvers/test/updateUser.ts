@@ -187,6 +187,7 @@ export const resolvers = {
                 interacted: false,
               })),
               lastUpdated: new Date(),
+              swipesPerDay: 30,
             },
           },
           { upsert: true }
@@ -263,11 +264,6 @@ export const resolvers = {
             likedId: currentUserId,
             success: !!likeActionResult,
           });
-
-          // Remove the selected potential match to avoid duplicates if randomizing
-          if (randomize) {
-            potentialMatches.splice(index, 1);
-          }
         }
 
         // Update the PotentialMatchPool document with the modified potentialMatches array if randomizing

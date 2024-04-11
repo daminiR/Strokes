@@ -44,16 +44,6 @@ const GET_POTENTIAL_MATCHES = gql`
     }
   }
 `
-const GET_USER_LIMITS_AND_STATS = gql`
-  query GetUserLimitsAndStats($id: String!) {
-    getUserLimitsAndStats(id: $id) {
-      _id
-      visibleLikePerDay
-      lastFetchedFromTrigger
-      dislikes
-    }
-  }
-`
 
 const READ_SQUASH = gql`
   query FetchProfileById($id: String!) {
@@ -96,5 +86,4 @@ export {
   READ_SQUASH,
   READ_SQUASHES,
   SWIPED_LEFT,
-  GET_USER_LIMITS_AND_STATS
 };

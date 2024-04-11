@@ -57,8 +57,16 @@ const MatchesStoreModel = types
 
           if (success) {
             // Remove the liked user from the matchPool
-            self.matchPool = self.matchPool.filter((user) => user.matchUserId !== likedId)
+            this.setState((prevState) => {
+              const updatedMatchPool = prevState.matchPool.map((user) => {
+                if (user.matchUserId === likedId) {
+                  return { ...user, interacted: true } // Set interacted to true for the liked user
+                }
+                return user // Return the user unmodified if not the liked user
+              })
 
+              return { matchPool: updatedMatchPool }
+            })
             // Update the interacted status in matchQueue
             yield mongoDBStore.updateMatchQueueInteracted(userStore._id, likedId, true)
 
@@ -69,8 +77,7 @@ const MatchesStoreModel = types
               // Record the match in the matches collection
               yield mongoDBStore.createMatch(likedId)
               // Optionally, update UI or state to reflect the new match
-               Alert.alert('Congratulations! You have a new match.');
-
+              Alert.alert("Congratulations! You have a new match.")
             }
 
             // Exit the loop if like is successfully recorded

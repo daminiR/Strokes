@@ -93,6 +93,7 @@ export const resolvers = {
             interacted: match.interacted,
           }));
 
+        console.log(potentialMatches.length)
         return {
           potentialMatches,
         };
