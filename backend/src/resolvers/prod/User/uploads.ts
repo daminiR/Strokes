@@ -1,4 +1,4 @@
-import User from '../../models/User';
+import User from '../../../models/User';
 import { GraphQLUpload } from 'graphql-upload'
 import sanitize from 'mongo-sanitize'
 import _ from 'lodash'

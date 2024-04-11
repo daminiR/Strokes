@@ -87,16 +87,6 @@ const READ_SQUASH = gql`
       }
       lastFetchedFromTrigger
       dislikes
-      preferences {
-        age {
-          min
-          max
-        }
-        gameLevel {
-          min
-          max
-        }
-      }
     }
   }
 `

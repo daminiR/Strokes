@@ -1,10 +1,10 @@
-import User from "../../models/User";
-import { PotentialMatchPool } from "../../models/PotentialMatchPool";
+import User from "../../../models/User";
+import { PotentialMatchPool } from "../../../models/PotentialMatchPool";
 import mongoose from 'mongoose';
 import _ from 'lodash'
-import { manageImages } from "../../utils/awsUpload";
+import { manageImages } from "../../../utils/awsUpload";
 import sanitize from 'mongo-sanitize'
-import { filterMatches } from '../../utils/matches';
+import { filterMatches } from '../../../utils/matches';
 
 export const resolvers = {
   Query: {
@@ -118,82 +118,85 @@ export const resolvers = {
     },
     applyFilters: async (root, unSanitizedData, context) => {
       const {
-        _id,
-        preferences, // The new preferences object
-        preferencesHash, // Provided in unSanitizedData
+        _id, // User ID
+        filters, // New filters object provided by the user
+        filtersHash, // Provided hash of the user's filters
       } = unSanitizedData;
 
       const session = await mongoose.startSession();
       await session.startTransaction();
 
-      let updatedDoc = null; // Initialize a variable to hold the updated document
+      let updatedPoolDoc = null; // Initialize a variable to hold the updated PotentialMatchPool document
 
       try {
-        const currentUser = await User.findById(_id).session(session);
-        if (!currentUser) {
-          throw new Error("User not found.");
-        }
-        // Check if filtersChangesPerDay is less than 0, if so, exit early
-        if (currentUser.filtersChangesPerDay < 0) {
-          console.log(
-            "User has exceeded the daily limit for changing filters."
-          );
-          await session.abortTransaction(); // It's important to abort the transaction since we're exiting early
-          return null; // Indicate that no update was performed due to the limit
+        // Fetch the current user's PotentialMatchPool document
+        const currentPool = await PotentialMatchPool.findOne({
+          userId: _id,
+        }).session(session);
+        if (!currentPool) {
+          throw new Error("PotentialMatchPool not found for the user.");
         }
 
-        if (preferencesHash !== currentUser.preferencesHash) {
+        // Exit early if the user has no swipes left for the day
+        if (currentPool.swipesPerDay <= 0) {
+          console.log("User has exhausted the daily swipes limit.");
+          await session.abortTransaction();
+          return null;
+        }
+
+        // Only proceed if the provided filtersHash is different from the stored one
+        if (filtersHash !== currentPool.filtersHash) {
           const matchCriteria = {
             _id: { $ne: _id },
-            age: { $gte: preferences.age.min, $lte: preferences.age.max },
+            age: { $gte: filters.ageRange.min, $lte: filters.ageRange.max },
             "sport.gameLevel": {
-              $gte: preferences.gameLevel.min,
-              $lte: preferences.gameLevel.max,
+              $gte: filters.gameLevelRange.min,
+              $lte: filters.gameLevelRange.max,
             },
           };
 
+          // Find potential matches based on the new filters
           const potentialMatches = await User.aggregate([
             { $match: matchCriteria },
-            { $sample: { size: 30 } }, // Randomly select 30 users
+            { $sample: { size: 30 } }, // Randomly select 30 users to be potential matches
           ]).session(session);
 
           const currentDate = new Date();
 
-          if (potentialMatches && Array.isArray(potentialMatches)) {
-            const matchQueue = potentialMatches
-              .filter((match) => match._id) // Ensure there's an _id
-              .map((match) => ({
-                _id: match._id,
-                interacted: false,
-                createdAt: currentDate,
-                updatedAt: currentDate,
-              }));
-
-            updatedDoc = await User.findOneAndUpdate(
-              { _id: _id },
-              {
-                $set: {
-                  preferences: preferences,
-                  preferencesHash: preferencesHash,
-                  matchQueue: matchQueue,
-                  lastFetched: currentDate,
-                },
-                $inc: { filtersChangesPerDay: -1 },
+          // Prepare the potentialMatches array for the PotentialMatchPool document
+          const updatedPotentialMatches = potentialMatches.map((match) => ({
+            matchUserId: match._id.toString(), // Convert ObjectId to string if necessary
+            firstName: match.firstName, // Assuming these fields are directly available from the aggregation
+            image_set: match.image_set, // This should match the ImageSet[] structure
+            age: match.age,
+            neighborhood: match.neighborhood, // Ensure this matches the Neighborhood structure
+            gender: match.gender,
+            sport: match.sport, // Ensure this matches the Sport structure
+            description: match.description, // Optional in your interface, so it's fine if it's not present in some documents
+            createdAt: currentDate, // Set to current time, assuming this is a new match being added
+            updatedAt: currentDate, // Also set to current time for the same reason
+            interacted: false, // Since these are new potential matches, interacted should initially be false
+          }));
+          // Update the PotentialMatchPool document with the new filters, filtersHash, and potential matches
+          updatedPoolDoc = await PotentialMatchPool.findOneAndUpdate(
+            { userId: _id },
+            {
+              $set: {
+                filters: filters,
+                filtersHash: filtersHash,
+                potentialMatches: updatedPotentialMatches,
               },
-              { new: true, session }
-            );
-          } else {
-            console.log(
-              "No potential matches found or potentialMatches is not an array"
-            );
-          }
+              $inc: { swipesPerDay: -1 },
+            },
+            { new: true, session }
+          );
         }
 
         await session.commitTransaction();
-        console.log(updatedDoc);
-        return updatedDoc; // Return the updated document (or null if no updates were made)
+        return updatedPoolDoc;
       } catch (error) {
         await session.abortTransaction();
+        console.error("Failed to apply filters:", error);
         throw error;
       } finally {
         await session.endSession();
