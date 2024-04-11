@@ -31,9 +31,22 @@ interface PotentialMatch {
   interacted: boolean;
 }
 
+interface Filters {
+  age: {
+    min: number;
+    max: number;
+  };
+  gameLevel: {
+    min: number;
+    max: number;
+  };
+}
+
 // Assuming Document from mongoose
 interface PotentialMatchPoolDocument extends Document {
   _id: Schema.Types.ObjectId;
+  filters: Filters;
+  filtersHash: string
   userId: string;
   swipesPerDay: number; // Added swipesPerDay here
   potentialMatches: PotentialMatch[];
@@ -41,6 +54,18 @@ interface PotentialMatchPoolDocument extends Document {
 export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
   {
     userId: { type: String, required: true },
+    filtersHash: { type: String, required: true },
+    filters: {
+      // Adding filters schema
+      age: {
+        min: { type: Number, required: true },
+        max: { type: Number, required: true },
+      },
+      gameLevel: {
+        min: { type: Number, required: true },
+        max: { type: Number, required: true },
+      },
+    },
     potentialMatches: [
       {
         matchUserId: { type: String, ref: "User", required: true },

@@ -1,9 +1,9 @@
-import User from "../../models/User";
-import { PotentialMatchPool } from "../../models/PotentialMatchPool";
+import User from "../../../models/User";
+import { PotentialMatchPool } from "../../../models/PotentialMatchPool";
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
-import { CHAT_TIMER } from '../../constants'
-import {getMatchedUserToken, sendAdminMatchMessages, createGroupChannel} from '../../utils'
+import { CHAT_TIMER } from '../../../constants'
+import {getMatchedUserToken, sendAdminMatchMessages, createGroupChannel} from '../../../utils'
 
 export const resolvers = {
   Query: {

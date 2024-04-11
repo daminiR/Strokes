@@ -54,7 +54,6 @@ const MatchesStoreModel = types
         // Retry up to 3 times
         try {
           success = yield mongoDBStore.recordLike(likedId)
-          console.log("check matchstore",self.matchPool)
 
           if (success) {
             // Remove the liked user from the matchPool
@@ -63,7 +62,7 @@ const MatchesStoreModel = types
             // Update the interacted status in matchQueue
             yield mongoDBStore.updateMatchQueueInteracted(userStore._id, likedId, true)
 
-            // Check for mutual like indicating a match
+            // Check for mutual like indickting a match
             const isMatch = yield mongoDBStore.checkForMutualLike(likedId)
 
             if (isMatch) {

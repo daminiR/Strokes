@@ -36,7 +36,7 @@ export interface LocationT {
   country: string;
 }
 export interface FilterType {
-  ageRange: { min: number; max: number };
+  age: { min: number; max: number };
   gameLevel: { min: number; max: number };
 }
 

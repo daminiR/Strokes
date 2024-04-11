@@ -17,11 +17,15 @@ export const typeDefsTest = gql`
     success: Boolean!
     message: String!
   }
+  type UpdateUsersResult {
+    success: Boolean!
+    message: String!
+  }
   type Mutation {
     removeAllMatchesForUserTest(userId: String!): RemoveMatchesResult!
     updateAllSportFieldsTest: User
-    updatePlayerPreferencesTest(_id: String!): User
-    simulateRandomLikesTest(currentUserId: String!): [LikeActionResult!]!
+    updatePlayerPreferencesTest: UpdateUsersResult
+    simulateRandomLikesTest(currentUserId: String!, randomize: Boolean): [LikeActionResult!]!
     removeAllLikesForUserTest(userId: String!): RemoveLikesResult!
   }
 `;

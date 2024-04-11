@@ -27,10 +27,6 @@ var userSchema = new Schema(
       type: Number,
       required: true,
     },
-    filtersChangesPerDay: {
-      type: Number,
-      required: true,
-    },
     age: {
       type: Number,
       required: true,
@@ -42,18 +38,6 @@ var userSchema = new Schema(
       required: true,
       enum: GENDERS,
     },
-    matchQueue: {
-      type: [
-        {
-          _id: { type: String, required: true },
-          interacted: { type: Boolean, required: true, default: false },
-          createdAt: { type: Date, required: true, default: Date.now },
-          updatedAt: { type: Date, required: true, default: Date.now },
-        },
-      ],
-      required: true,
-    },
-    lastFetchedFromTrigger: { type: Date, default: Date.now }, // Tracks the last time the match queue was fetched from the server
     preferencesHash: { type: String, default: "" }, // A hash or string representation of the filters used to fetch the match queue
     preferences: {
       type: {

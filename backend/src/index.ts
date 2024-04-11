@@ -4,12 +4,12 @@ import  express from 'express';
 import { ApolloServer}  from 'apollo-server-express';
 import  mongoose, {ConnectOptions} from 'mongoose';
 import { mergeResolvers } from '@graphql-tools/merge';
-import {resolvers as deleteUser} from './resolvers/prod/deleteUser'
-import {resolvers as createUser} from './resolvers/prod/createUser'
-import {resolvers as likesDislikes} from './resolvers/prod/likesDislikes'
-import {resolvers as matches} from './resolvers/prod/matches'
-import {resolvers as updateUser} from './resolvers/prod/updateUser'
-import {resolvers as uploads} from './resolvers/prod/uploads'
+import {resolvers as deleteUser} from './resolvers/prod/User/deleteUser'
+import {resolvers as createUser} from './resolvers/prod/User/createUser'
+import {resolvers as likesDislikes} from './resolvers/prod/User/likesDislikes'
+import {resolvers as matches} from './resolvers/prod/User/matches'
+import {resolvers as updateUser} from './resolvers/prod/User/updateUser'
+import {resolvers as uploads} from './resolvers/prod/User/uploads'
 import {resolvers as update} from './resolvers/admin/update_schema'
 import {resolvers as testCreateUser} from './resolvers/test/createUser'
 import {resolvers as testUpload} from './resolvers/test/updateUser'
