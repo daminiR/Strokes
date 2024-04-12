@@ -5,6 +5,9 @@ export const UPDATE_MATCH_QUEUE_INTERACTED_MUTATION = gql`
     updateMatchQueueInteracted(currentUserId: $currentUserId, likedId: $likedId, interacted: $interacted) {
       success
       message
+      data {
+        potentialMatches
+      }
     }
   }
 `;
