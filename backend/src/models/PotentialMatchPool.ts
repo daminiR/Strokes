@@ -55,12 +55,14 @@ interface PotentialMatchPoolDocument extends Document {
   userId: string;
   dislikes: Dislike[];
   swipesPerDay: number; // Added swipesPerDay here
+  lastUpdated: Boolean
   potentialMatches: PotentialMatch[];
 }
 export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
   {
     userId: { type: String, required: true },
     filtersHash: { type: String, required: true },
+    lastUpdated: { type: String, required: true },
     dislikes: [
       // Define dislikes as an array
       {

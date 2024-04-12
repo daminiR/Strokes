@@ -21,11 +21,20 @@ export const typeDefsTest = gql`
     success: Boolean!
     message: String!
   }
+  type RemoveDislikesResponse {
+    success: Boolean!
+    message: String!
+  }
   type Mutation {
     removeAllMatchesForUserTest(userId: String!): RemoveMatchesResult!
     updateAllSportFieldsTest: User
     updatePlayerPreferencesTest: UpdateUsersResult
-    simulateRandomLikesTest(currentUserId: String!, randomize: Boolean): [LikeActionResult!]!
+    simulateRandomLikesTest(
+      currentUserId: String!
+      randomize: Boolean
+    ): [LikeActionResult!]!
+    removeAllDislikesTest(userId: ID!): RemoveDislikesResponse!
     removeAllLikesForUserTest(userId: String!): RemoveLikesResult!
+    removeAllLikesByUser(userId: String!) : RemoveLikesResult!
   }
 `;

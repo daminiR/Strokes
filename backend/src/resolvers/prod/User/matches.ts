@@ -73,6 +73,10 @@ export const resolvers = {
         if (matchPoolDoc.swipesPerDay <= 0) {
           return {
             potentialMatches: [],
+            lastUpdated: matchPoolDoc.lastUpdated,
+            filters: matchPoolDoc.filters,
+            filtersHash: matchPoolDoc.filtersHash,
+            dislikes: matchPoolDoc.dislikes,
           };
         }
 
@@ -92,7 +96,6 @@ export const resolvers = {
             description: match.description,
             interacted: match.interacted,
           }));
-
         console.log(potentialMatches.length)
         return {
           potentialMatches:  potentialMatches,

@@ -20,13 +20,22 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   const [index, setIndex] = useState(0)
   const { mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
   const { matchPool: cards } = matchStore;
+  console.log("something is wrong with cards", cards, index)
   const [isLastCard, setIsLastCard] = useState(cards.length === 0)
   const [isVisible, setIsVisible] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isSwiping, setIsSwiping] = useState(false);
   const width = Dimensions.get("window").width
   const onClose = () => {
     setIsVisible(false)
   }
+  useEffect(() => {
+    console.log("cards legnth", cards.length)
+    if (cards.length > 0) {
+      setIsLastCard(false) // Reset isLastCard to false if cards length is more than 0
+    }
+    return () => userStore.reset()
+  }, [userStore])
   const onApplyFilters = async (age, gameLevel) => {
   // Check if the user has filter changes left for the day
   try {
@@ -63,12 +72,30 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
     // Pre-fill logic if necessary
     return () => userStore.reset()
   }, [userStore])
+  const handleSwipeAction = async (actionType) => {
+  if (!isSwiping && swiperRef.current) {
+    setIsSwiping(true);
+    await (actionType === 'like' ? matchStore.likeAction(cards[index].matchUserId) : matchStore.dislikeAction(cards[index].matchUserId));
+
+    // Perform the swipe action
+    if (actionType === 'like') {
+      swiperRef.current.swipeRight();
+    } else {
+      swiperRef.current.swipeLeft();
+    }
+
+    // Ensuring reset happens only after animation completion
+    setTimeout(() => {
+      setIsSwiping(false);
+    }, 500); // adjust based on your swipe animation duration
+  }
+};
+const handleSwipeRight = () => handleSwipeAction('like');
+const handleSwipeLeft = () => handleSwipeAction('dislike');
+
 const onSwiped = (cardIndex: number) => {
-  // Check if we've reached the last card
-  console.log(index)
   const newIndex = cardIndex + 1 // Assuming cardIndex is 0-based and increment for the next card
   setIndex(newIndex) // Update the state to reflect the new index
-
   if (cardIndex === cards.length - 1) {
     setIsLastCard(true)
   }
@@ -103,11 +130,9 @@ const onSwiped = (cardIndex: number) => {
             stackSize={2}
           ></Swiper>
           <Button
-            disabled={isLastCard}
-            onPress={async () => {
-              await matchStore.likeAction(cards[index].matchUserId)
-              swiperRef.current?.swipeRight()
-            }}
+            //disabled={isSwiping || index >= cards.length - 1}
+            disabled={isSwiping}
+            onPress={handleSwipeRight}
             style={$rightFAB}
           >
             <View style={$iconStyle}>
@@ -115,11 +140,8 @@ const onSwiped = (cardIndex: number) => {
             </View>
           </Button>
           <Button
-            disabled={isLastCard}
-            onPress={async() => {
-              await matchStore.dislikeAction(cards[index].matchUserId)
-              swiperRef.current?.swipeLeft()
-            }}
+            disabled={isSwiping}
+            onPress={handleSwipeLeft}
             style={$leftFAB}
           >
             <View style={$iconStyle}>

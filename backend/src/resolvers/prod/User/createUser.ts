@@ -53,11 +53,11 @@ export const resolvers = {
 
         // Generate filters and filtersHash
         const filters = {
-          ageRange: {
+          age: {
             min: Math.max(18, age - 5),
             max: Math.min(100, age + 5),
           },
-          gameLevelRange: {
+          gameLevel: {
             min: Math.max(1, sport.gameLevel - 2),
             max: Math.min(8, sport.gameLevel + 2),
           },
@@ -88,9 +88,10 @@ export const resolvers = {
             updatedAt: new Date(),
             interacted: false,
           })),
-          swipesPerDay: 10, // Default or calculated value
+          swipesPerDay: 30, // Default or calculated value
           filters: filters,
           filtersHash: filtersHash,
+          dislikes: []
         });
 
         // Attempt to create User document

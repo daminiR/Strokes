@@ -118,6 +118,102 @@ export const resolvers = {
         };
       }
     },
+    removeAllLikesByUser: async (_, { userId }) => {
+      try {
+        // Check if the user exists
+        const userExists = await User.findById(userId);
+        if (!userExists) {
+          throw new Error("User not found");
+        }
+
+        // Remove all likes where the user is the liker
+        const deletionResult = await Like.deleteMany({ likerId: userId });
+
+        // Check if likes were actually deleted
+        if (deletionResult.deletedCount === 0) {
+          return {
+            success: false,
+            message: "No likes found or removed for this user.",
+          };
+        }
+
+        return {
+          success: true,
+          message: `All likes by user ${userId} have been successfully removed.`,
+        };
+      } catch (error) {
+        console.error("Error removing likes:", error);
+        if (error instanceof Error) {
+          return {
+            success: false,
+            message: `Failed to remove likes: ${error.message}`,
+          };
+        } else {
+          return {
+            success: false,
+            message: "Failed to remove likes due to an unknown error.",
+          };
+        }
+      }
+    },
+    removeAllDislikesTest: async (_, { userId }) => {
+      try {
+        // Validate that the user ID is provided
+        if (!userId) {
+          throw new Error("User ID must be provided");
+        }
+
+        // Fetch the user's potential match pool to ensure it exists
+        const potentialMatchPool = await PotentialMatchPool.findOne({
+          userId: userId,
+        });
+        if (!potentialMatchPool) {
+          throw new Error(
+            "Potential match pool not found for the specified user"
+          );
+        }
+
+        // Update the PotentialMatchPool document by setting dislikes to an empty array
+        const updateResult = await PotentialMatchPool.updateOne(
+          { userId: userId },
+          {
+            $set: {
+              dislikes: [],
+            },
+          }
+        );
+
+        // Check if the document was successfully updated
+        if (updateResult.modifiedCount === 0) {
+          return {
+            success: false,
+            message:
+              "No updates performed. The user may already have no dislikes.",
+          };
+        }
+
+        return {
+          success: true,
+          message: "All dislikes have been successfully removed for the user.",
+        };
+      } catch (error) {
+        // Enhanced error handling with instance check
+        if (error instanceof Error) {
+          console.error("Error removing dislikes:", error.message);
+          return {
+            success: false,
+            message: `Failed to remove dislikes: ${error.message}`,
+          };
+        } else {
+          console.error("Error removing dislikes: An unknown error occurred.");
+          return {
+            success: false,
+            message: "Failed to remove dislikes due to an unknown error.",
+          };
+        }
+      }
+    },
+
     updatePotentialMatchesTest: async (_, { currentUserId }) => {
       try {
         // Fetch the current user
@@ -140,13 +236,21 @@ export const resolvers = {
         const likes = await Like.find({ likerId: currentUserId });
         const likedUserIds = likes.map((like) => like.likedId);
 
+        // Extract user IDs that the current user has disliked
+        const dislikedUserIds = potentialMatchPool.dislikes.map(
+          (dislike) => dislike._id
+        );
+
         // Retrieve filters from the PotentialMatchPool, fall back to default if necessary
         const { age = { min: 18, max: 100 }, gameLevel = { min: 1, max: 10 } } =
           potentialMatchPool.filters || {};
 
-        // Define match criteria excluding already liked users
+        // Define match criteria excluding already liked and disliked users
         const matchCriteria = {
-          _id: { $nin: likedUserIds, $ne: currentUserId },
+          _id: {
+            $nin: [...likedUserIds, ...dislikedUserIds],
+            $ne: currentUserId,
+          },
           age: { $gte: age.min, $lte: age.max },
           "sport.gameLevel": { $gte: gameLevel.min, $lte: gameLevel.max },
         };
@@ -201,7 +305,7 @@ export const resolvers = {
           message:
             "Potential match pool updated with 30 new matches for the user.",
         };
-      } catch (error: unknown) {
+      } catch (error) {
         // Log the error with a generic message if it's not an instance of Error
         if (error instanceof Error) {
           console.error("Error updating potential matches:", error.message);
