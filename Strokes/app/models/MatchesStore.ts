@@ -25,11 +25,6 @@ export const PreferencesModel = types.model("PreferencesModel", {
   age: types.maybeNull(Range),
   gameLevel: types.maybeNull(Range),
 });
-export const DislikesModel = types.model("DislikesModel", {
-  _id: types.maybeNull(types.string),
-  createdAt: types.maybeNull(types.string),
-  updatedAt: types.maybeNull(types.string),
-});
 
 export const PotentialMatchModel = types.model("PotentialMatchModel", {
   matchUserId: types.maybeNull(types.string),
@@ -45,7 +40,6 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
 const MatchesStoreModel = types
   .model("MatchStore", {
     matchPool: types.array(PotentialMatchModel),
-    //dislikes: types.array(DislikesModel),
     lastUpdated: types.maybeNull(types.string),
     filtersHash: types.maybeNull(types.string),
     filters: types.maybeNull(PreferencesModel),
@@ -57,7 +51,6 @@ const MatchesStoreModel = types
       const matchData = yield mongoDBStore.updateMatchQueueInteracted(userStore._id, likedId, false)
       if (matchData.success) {
         runInAction(() => {
-          //self.dislikes = matchData.data.dislikes
           self.matchPool = matchData.data.potentialMatches
         })
       } else {
@@ -83,7 +76,6 @@ const MatchesStoreModel = types
             )
             if (matchData.success) {
               runInAction(() => {
-                //self.dislikes = matchData.data.dislikes
                 self.matchPool = matchData.data.potentialMatches
               })
             } else {

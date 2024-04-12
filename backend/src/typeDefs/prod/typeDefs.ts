@@ -152,7 +152,6 @@ type DislikeRecord {
 }
 type MatchQueueData {
   potentialMatches: [PotentialMatch]
-  dislikes: [DislikeRecord]
 }
 type DislikeRecord {
   createdAt: String
