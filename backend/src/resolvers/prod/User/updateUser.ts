@@ -69,6 +69,33 @@ export const resolvers = {
       { currentUserId, matchUserId, isLiked }
     ) => {
       try {
+        // Fetch the current state of the PotentialMatchPool
+        const currentPool = await PotentialMatchPool.findOne({
+          userId: currentUserId,
+        });
+
+        if (!currentPool) {
+          throw new Error("No match pool found for this user.");
+        }
+
+        // Check if matchUserId is already in the dislikes
+        if (
+          currentPool.dislikes &&
+          currentPool.dislikes.some((dislike) => dislike._id === matchUserId)
+        ) {
+          // Set interacted to true for the disliked user before throwing error
+          await PotentialMatchPool.updateOne(
+            {
+              userId: currentUserId,
+              "potentialMatches.matchUserId": matchUserId,
+            },
+            { $set: { "potentialMatches.$[elem].interacted": true } },
+            { arrayFilters: [{ "elem.matchUserId": matchUserId }] }
+          );
+
+          throw new Error("This user has already been disliked.");
+        }
+
         // Prepare update operations
         let updateOperations = {
           $set: { "potentialMatches.$[elem].interacted": true },
@@ -101,13 +128,15 @@ export const resolvers = {
           const updatedUser = await PotentialMatchPool.findOne({
             userId: currentUserId,
           });
-          // Check if updatedUser is not null
           if (updatedUser) {
+            const uninteractedMatches = updatedUser.potentialMatches.filter(
+              (match) => !match.interacted
+            );
             return {
               success: true,
               message: "MatchQueue and swipesPerDay updated successfully",
               data: {
-                potentialMatches: updatedUser.potentialMatches,
+                potentialMatches: uninteractedMatches, // Only potential matches that haven't been interacted with
                 dislikes: updatedUser.dislikes,
               },
             };
@@ -121,11 +150,21 @@ export const resolvers = {
         }
       } catch (error) {
         console.error(error);
-        return {
-          success: false,
-          message: "Failed to update MatchQueue",
-        };
-      }
+        // Check if error is an instance of Error
+        if (error instanceof Error) {
+          return {
+            success: false,
+            message: "Failed to update MatchQueue: " + error.message,
+          };
+        }
+         else {
+          // Handle unexpected errors, which might not be an instance of Error
+          console.error("An unexpected error occurred:", error);
+          throw new Error(
+            "An unexpected error occurred while updating potential match pool."
+          );
+        }
+    }
     },
     applyFilters: async (root, unSanitizedData, context) => {
       const {

@@ -98,7 +98,6 @@ const MatchesStoreModel = types
             } else {
               console.error(matchData.message)
             }
-
             // Check for mutual like indicating a match
             const isMatch = yield mongoDBStore.checkForMutualLike(likedId)
             if (isMatch) {

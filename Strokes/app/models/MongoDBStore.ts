@@ -321,7 +321,6 @@ const MongoDBStore = types
       matchUserId,
       isLiked,
     ) {
-      console.log("matchid", matchUserId)
       try {
         const result = yield client.mutate({
           mutation: graphQL.UPDATE_MATCH_QUEUE_INTERACTED_MUTATION,
@@ -331,7 +330,6 @@ const MongoDBStore = types
             isLiked: isLiked,
           },
         })
-
         // Assuming your GraphQL API returns a success field in the response
         const cleanedResponse = cleanGraphQLResponse(result.data.updateMatchQueueInteracted)
         if (result.data.updateMatchQueueInteracted.success) {
