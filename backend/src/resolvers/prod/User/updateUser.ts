@@ -66,48 +66,59 @@ export const resolvers = {
   Mutation: {
     updateMatchQueueInteracted: async (
       _,
-      { currentUserId, likedId, interacted }
+      { currentUserId, matchUserId, isLiked }
     ) => {
       try {
         // Prepare update operations
         let updateOperations = {
-          $set: { "potentialMatches.$[elem].interacted": interacted },
+          $set: { "potentialMatches.$[elem].interacted": true },
+          $inc: { swipesPerDay: -1 }, // Decrement swipes regardless of like or dislike
         };
 
-        // If interacted is true, prepare to decrement swipesPerDay
-        if (interacted) {
-          updateOperations["$inc"] = { swipesPerDay: -1 };
+        // If it's a dislike, update the dislikes array
+        if (!isLiked) {
+          updateOperations["$push"] = {
+            dislikes: {
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              _id: matchUserId, // Assuming _id should be the ID of the disliked user
+            },
+          };
         }
 
         // Perform a single update operation
         const updateResult = await PotentialMatchPool.updateOne(
-          { userId: currentUserId, "potentialMatches.matchUserId": likedId },
+          {
+            userId: currentUserId,
+            "potentialMatches.matchUserId": matchUserId,
+          },
           updateOperations,
-          { arrayFilters: [{ "elem.matchUserId": likedId }] }
+          { arrayFilters: [{ "elem.matchUserId": matchUserId }] }
         );
 
-        // Check if the operation was successful
-        if (updateResult.matchedCount === 0) {
-          return {
-            success: false,
-            message:
-              "User not found or liked user not found in potential matches",
-          };
-        }
-
-        if (updateResult.modifiedCount === 0) {
-          // This might happen if the document was matched but not modified, e.g., setting interacted to its current value
+        // After updating, fetch the updated details
+        if (updateResult.matchedCount > 0 && updateResult.modifiedCount > 0) {
+          const updatedUser = await PotentialMatchPool.findOne({
+            userId: currentUserId,
+          });
+          // Check if updatedUser is not null
+          if (updatedUser) {
+            return {
+              success: true,
+              message: "MatchQueue and swipesPerDay updated successfully",
+              data: {
+                potentialMatches: updatedUser.potentialMatches,
+                dislikes: updatedUser.dislikes,
+              },
+            };
+          }
+        } else {
           return {
             success: false,
             message:
               "Failed to update the interacted status or decrement swipes",
           };
         }
-
-        return {
-          success: true,
-          message: "MatchQueue and swipesPerDay updated successfully",
-        };
       } catch (error) {
         console.error(error);
         return {

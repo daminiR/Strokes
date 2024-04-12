@@ -2,6 +2,7 @@ import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} 
 import { Alert } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { getRootStore } from './helpers/getRootStore';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 export const LocationModel = types.model("LocationModel", {
   city: types.maybeNull(types.string),
@@ -24,6 +25,11 @@ export const PreferencesModel = types.model("PreferencesModel", {
   age: types.maybeNull(Range),
   gameLevel: types.maybeNull(Range),
 });
+export const DislikesModel = types.model("DislikesModel", {
+  _id: types.maybeNull(types.string),
+  createdAt: types.maybeNull(types.string),
+  updatedAt: types.maybeNull(types.string),
+});
 
 export const PotentialMatchModel = types.model("PotentialMatchModel", {
   matchUserId: types.maybeNull(types.string),
@@ -39,40 +45,58 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
 const MatchesStoreModel = types
   .model("MatchStore", {
     matchPool: types.array(PotentialMatchModel),
-    lastFetchedFromTrigger: types.maybeNull(types.string),
-    preferencesHash: types.maybeNull(types.string),
-    preferences: types.maybeNull(PreferencesModel),
+    dislikes: types.array(DislikesModel),
+    lastUpdated: types.maybeNull(types.string),
+    filtersHash: types.maybeNull(types.string),
+    filters: types.maybeNull(PreferencesModel),
   })
   .actions((self) => ({
+    dislikeAction: flow(function* (likedId) {
+      const userStore = getRootStore(self).userStore
+      const mongoDBStore = getRootStore(self).mongoDBStore
+      const matchData = yield mongoDBStore.updateMatchQueueInteracted(userStore._id, likedId, false)
+      if (matchData.success) {
+        runInAction(() => {
+          self.dislikes = matchData.data.dislikes
+          self.matchPool = matchData.data.potentialMatches
+        })
+      } else {
+        console.error(matchData.message)
+      }
+    }),
     likeAction: flow(function* (likedId) {
       const mongoDBStore = getRootStore(self).mongoDBStore
       const userStore = getRootStore(self).userStore
       let attemptCount = 0
       let success = false
 
-      while (!success && attemptCount < 1) {
-        // Retry up to 3 times
+      while (!success && attemptCount < 3) {
+        // Adjusted to retry up to 3 times
         try {
           success = yield mongoDBStore.recordLike(likedId)
 
           if (success) {
-            // Remove the liked user from the matchPool
-            const matchedUser = self.matchPool.find((user) => user.matchUserId === likedId)
-            if (matchedUser) {
-              matchedUser.interacted = true; // Update the interacted flag directly
+            const matchData = yield mongoDBStore.updateMatchQueueInteracted(
+              userStore._id,
+              likedId,
+              true,
+            )
+            if (matchData.success) {
+              runInAction(() => {
+                self.dislikes = matchData.data.dislikes
+                self.matchPool = matchData.data.potentialMatches
+              })
+            } else {
+              console.error(matchData.message)
             }
-            // Update the interacted status in matchQueue
-            yield mongoDBStore.updateMatchQueueInteracted(userStore._id, likedId, true)
 
-            // Check for mutual like indickting a match
+            // Check for mutual like indicating a match
             const isMatch = yield mongoDBStore.checkForMutualLike(likedId)
-
             if (isMatch) {
               // Record the match in the matches collection
               yield mongoDBStore.createMatch(likedId)
               // Optionally, update UI or state to reflect the new match
-               Alert.alert('Congratulations! You have a new match.');
-
+              Alert.alert("Congratulations! You have a new match.")
             }
 
             // Exit the loop if like is successfully recorded
@@ -98,23 +122,26 @@ const MatchesStoreModel = types
         )
       }
     }),
-    setInit: flow(function* (userData: any) {
+    setInit: flow(function* (matchesData: any) {
       // Using yield within a flow to handle the asynchronous call
-      const mongoDBStore = getRootStore(self).mongoDBStore
-      const potentialMatches = yield mongoDBStore.queryPotentialMatches()
-      self.lastFetchedFromTrigger = userData.lastFetchedFromTrigger
-      self.preferences = userData.preferences
-      self.preferencesHash = userData.preferencesHash
+      self.matchPool = matchesData.potentialMatches ?? []
+      self.filters = matchesData.filters
+      self.filtersHash = matchesData.filtersHash
+      self.dislikes = matchesData.dislikes
+      self.lastUpdated = matchesData.lastUpdated
       // You can now use potentialMatches if needed
     }),
-    setLastFetchedFromTrigger(lastFetchedFromTrigger: any) {
-      self.lastFetchedFromTrigger = lastFetchedFromTrigger
+    setLastUpdated(lastUpdated: any) {
+      self.lastUpdated = lastUpdated
     },
-    setPreferencesHash(newPreferencesHash: string) {
-      self.preferencesHash = newPreferencesHash
+    setFiltersHash(newPreferencesHash: string) {
+      self.filtersHash = newPreferencesHash
     },
-    setPreferences(newPreferences: SnapshotIn<typeof PreferencesModel>) {
-      self.preferences = newPreferences
+    setFilters(newPreferences: SnapshotIn<typeof PreferencesModel>) {
+      self.filters = newPreferences
+    },
+    setDislikes(dislikes: SnapshotIn<typeof DislikesModel>) {
+      self.dislikes = dislikes
     },
     setMatchPool(matches: any) {
       self.matchPool.replace(matches)
@@ -125,7 +152,6 @@ const MatchesStoreModel = types
       try {
         const newMatches = yield mongoDBStore.queryPotentialMatches(filters)
         self.setMatchPool(newMatches)
-        //yield AsyncStorage.setItem("matches", JSON.stringify(newMatches))
       } catch (error) {
         console.error("Failed to fetch and update matches:", error)
       }

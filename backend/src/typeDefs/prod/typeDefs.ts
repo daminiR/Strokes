@@ -62,9 +62,20 @@ export const typeDefs = gql`
   type LikedByUser {
     ${LikedByUserType}
   }
+  type Filter {
+    ${FilterType}
+  }
+type DislikeRecord {
+  createdAt: String
+  updatedAt: String
+  _id: String
+}
   type FetchFilteredMatchQueueResult {
   potentialMatches: [PotentialMatch!]
-  lastFetchedFromTrigger: String
+  lastUpdated: String
+  filtersHash: String
+  filters: Filter
+  dislikes: [DislikeRecord]
 }
 
   scalar FileUpload
@@ -106,6 +117,19 @@ export const typeDefs = gql`
   type FilterType {
       ${FilterType}
   }
+  type PotentialMatch {
+    matchUserId: ID!
+    firstName: String
+    imageSet: [Data!]
+    age: Int
+    neighborhood: LocationType
+    gender: String
+    sport: SportNode
+    description: String
+    createdAt: String
+    updatedAt: String
+    interacted: Boolean
+  }
 
   type DisplayImage {
     imageURL: String!
@@ -124,14 +148,23 @@ export const typeDefs = gql`
   type UpdateMatchQueueResponse {
   success: Boolean!
   message: String
+  data: MatchQueueData
 }
-
+type MatchQueueData {
+  potentialMatches: [PotentialMatch]
+  dislikes: [DislikeRecord]
+}
+type DislikeRecord {
+  createdAt: String
+  updatedAt: String
+  _id: String
+}
   type Data{
     ${DataType}
   }
 
   type Mutation {
-    updateMatchQueueInteracted(currentUserId: String!, likedId: String!, interacted: Boolean!): UpdateMatchQueueResponse!
+    updateMatchQueueInteracted(currentUserId: String!, matchUserId: String!, isLiked: Boolean!): UpdateMatchQueueResponse!
     updateAllUserSchema(_id: String!): String
     deleteImage(_id: String, img_idx: Int): [Data!]!
     recordLikesAndUpdateCount(_id: String!, likes: [String!], currentUserData: PotentialMatchInput!, isFromLikes: Boolean!): User

@@ -286,8 +286,8 @@ const MongoDBStore = types
           yield self.queryPotentialMatches()
 
           // If the query is successful, update the preferencesHash and possibly other state
-          matchStore.setPreferencesHash(newFiltersHash)
-          matchStore.setPreferences(filters) // Update preferences in the store
+          matchStore.setFiltersHash(newFiltersHash)
+          matchStore.setFilters(filters) // Update preferences in the store
           matchStore.setFiltersChangesPerDay(potentialMatchesResponse) // Update preferences in the store
           console.log("Filters have changed. Potential matches queried successfully.")
         } catch (error) {
@@ -356,9 +356,7 @@ const MongoDBStore = types
           fetchPolicy: "network-only",
         })
         const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
-        const potentialMatches = matchesData.potentialMatches ?? []
-        matchStore.setMatchPool(potentialMatches)
-        matchStore.setLastFetchedFromTrigger(matchesData.lastFetchedFromTrigger)
+        matchStore.setInit(matchesData)
         return matchesData
       } catch (error) {
         console.error("Error querying potential matches:", error)

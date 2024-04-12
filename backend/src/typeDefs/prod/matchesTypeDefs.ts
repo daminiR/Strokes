@@ -3,7 +3,6 @@ export const matchesTypeDefs = gql`
   type MutualLikeResult {
     isMutual: Boolean!
   }
-
   type Match {
     _id: ID!
     user1Id: String!

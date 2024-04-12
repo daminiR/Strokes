@@ -20,7 +20,6 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   const [index, setIndex] = useState(0)
   const { mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
   const { matchPool: cards } = matchStore;
-  console.log("cards", cards)
   const [isLastCard, setIsLastCard] = useState(cards.length === 0)
   const [isVisible, setIsVisible] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
