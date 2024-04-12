@@ -45,7 +45,7 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
 const MatchesStoreModel = types
   .model("MatchStore", {
     matchPool: types.array(PotentialMatchModel),
-    dislikes: types.array(DislikesModel),
+    //dislikes: types.array(DislikesModel),
     lastUpdated: types.maybeNull(types.string),
     filtersHash: types.maybeNull(types.string),
     filters: types.maybeNull(PreferencesModel),
@@ -57,7 +57,7 @@ const MatchesStoreModel = types
       const matchData = yield mongoDBStore.updateMatchQueueInteracted(userStore._id, likedId, false)
       if (matchData.success) {
         runInAction(() => {
-          self.dislikes = matchData.data.dislikes
+          //self.dislikes = matchData.data.dislikes
           self.matchPool = matchData.data.potentialMatches
         })
       } else {
@@ -83,7 +83,7 @@ const MatchesStoreModel = types
             )
             if (matchData.success) {
               runInAction(() => {
-                self.dislikes = matchData.data.dislikes
+                //self.dislikes = matchData.data.dislikes
                 self.matchPool = matchData.data.potentialMatches
               })
             } else {
@@ -127,7 +127,6 @@ const MatchesStoreModel = types
       self.matchPool = matchesData.potentialMatches ?? []
       self.filters = matchesData.filters
       self.filtersHash = matchesData.filtersHash
-      self.dislikes = matchesData.dislikes
       self.lastUpdated = matchesData.lastUpdated
       // You can now use potentialMatches if needed
     }),
@@ -139,9 +138,6 @@ const MatchesStoreModel = types
     },
     setFilters(newPreferences: SnapshotIn<typeof PreferencesModel>) {
       self.filters = newPreferences
-    },
-    setDislikes(dislikes: SnapshotIn<typeof DislikesModel>) {
-      self.dislikes = dislikes
     },
     setMatchPool(matches: any) {
       self.matchPool.replace(matches)
