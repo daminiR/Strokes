@@ -18,6 +18,18 @@ const SWIPED_LEFT = gql`
 const GET_POTENTIAL_MATCHES = gql`
   query fetchFilteredMatchQueue($_id: String!) {
     fetchFilteredMatchQueue(_id: $_id) {
+      filters {
+        age {
+          min
+          max
+        }
+        gameLevel {
+          min
+          max
+        }
+      }
+      filtersHash
+      lastUpdated
       potentialMatches {
         interacted
         createdAt

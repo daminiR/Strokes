@@ -88,9 +88,7 @@ export interface UserDocument extends Document {
   lastFetchedFromTrigger : string
   visableLikePerDay : number
   sportChangesPerDay : number
-  preferences: FilterType
   matchQueue: MatchQueueT
-  preferencesHash: string!
   filtersChangesPerDay: numer!
 }
 

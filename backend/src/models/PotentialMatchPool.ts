@@ -41,6 +41,11 @@ interface Filters {
     max: number;
   };
 }
+interface Dislike {
+  _id: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 // Assuming Document from mongoose
 interface PotentialMatchPoolDocument extends Document {
@@ -48,6 +53,7 @@ interface PotentialMatchPoolDocument extends Document {
   filters: Filters;
   filtersHash: string
   userId: string;
+  dislikes: Dislike[];
   swipesPerDay: number; // Added swipesPerDay here
   potentialMatches: PotentialMatch[];
 }
@@ -55,6 +61,14 @@ export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
   {
     userId: { type: String, required: true },
     filtersHash: { type: String, required: true },
+    dislikes: [
+      // Define dislikes as an array
+      {
+        _id: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now },
+        updatedAt: { type: Date, default: Date.now },
+      },
+    ],
     filters: {
       // Adding filters schema
       age: {
