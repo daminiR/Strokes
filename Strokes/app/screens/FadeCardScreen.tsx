@@ -30,7 +30,6 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
     setIsVisible(false)
   }
   useEffect(() => {
-    console.log("cards legnth", cards.length)
     if (cards.length > 0) {
       setIsLastCard(false) // Reset isLastCard to false if cards length is more than 0
     }
@@ -73,29 +72,35 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
     return () => userStore.reset()
   }, [userStore])
   const handleSwipeAction = async (actionType) => {
-  if (!isSwiping && swiperRef.current) {
-    setIsSwiping(true);
-    await (actionType === 'like' ? matchStore.likeAction(cards[index].matchUserId) : matchStore.dislikeAction(cards[index].matchUserId));
-
-    // Perform the swipe action
-    if (actionType === 'like') {
-      swiperRef.current.swipeRight();
-    } else {
-      swiperRef.current.swipeLeft();
+    if (!isSwiping && swiperRef.current) {
+      setIsSwiping(true)
+      // Perform the swipe action first for better user experience
+      if (actionType === "like") {
+        swiperRef.current.swipeRight()
+      } else {
+        swiperRef.current.swipeLeft()
+      }
+      try {
+        // Await the asynchronous action after the swipe
+        await (actionType === "like"
+          ? matchStore.likeAction(cards[index].matchUserId)
+          : matchStore.dislikeAction(cards[index].matchUserId))
+      } catch (error) {
+        console.error("Failed to update match store:", error)
+      } finally {
+        // Reset swiping status after the action completes or fails
+        setTimeout(() => {
+          setIsSwiping(false)
+        }, 25) // Adjust based on your swipe animation duration
+      }
     }
-
-    // Ensuring reset happens only after animation completion
-    setTimeout(() => {
-      setIsSwiping(false);
-    }, 500); // adjust based on your swipe animation duration
   }
-};
 const handleSwipeRight = () => handleSwipeAction('like');
 const handleSwipeLeft = () => handleSwipeAction('dislike');
 
 const onSwiped = (cardIndex: number) => {
-  const newIndex = cardIndex + 1 // Assuming cardIndex is 0-based and increment for the next card
-  setIndex(newIndex) // Update the state to reflect the new index
+  //const newIndex = cardIndex + 1 // Assuming cardIndex is 0-based and increment for the next card
+  setIndex(cardIndex) // Update the state to reflect the new index
   if (cardIndex === cards.length - 1) {
     setIsLastCard(true)
   }

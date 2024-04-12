@@ -55,7 +55,6 @@ const MatchesStoreModel = types
           dislikedId,
           false,
         )
-
         if (matchData.success) {
           runInAction(() => {
             self.matchPool = matchData.data.potentialMatches
@@ -75,29 +74,31 @@ const MatchesStoreModel = types
       }
     }),
     likeAction: flow(function* (likedId) {
+      console.log(likedId)
       const mongoDBStore = getRootStore(self).mongoDBStore
       const userStore = getRootStore(self).userStore
       let attemptCount = 0
       let success = false
 
       while (!success && attemptCount < 3) {
-        // Adjusted to retry up to 3 times
         try {
           success = yield mongoDBStore.recordLike(likedId)
 
+          // Always update the interaction status regardless of like success
+          const matchData = yield mongoDBStore.updateMatchQueueInteracted(
+            userStore._id,
+            likedId,
+            true,
+          )
+          if (matchData.success) {
+            runInAction(() => {
+              self.matchPool = matchData.data.potentialMatches
+            })
+          } else {
+            console.error(matchData.message)
+          }
+
           if (success) {
-            const matchData = yield mongoDBStore.updateMatchQueueInteracted(
-              userStore._id,
-              likedId,
-              true,
-            )
-            if (matchData.success) {
-              runInAction(() => {
-                self.matchPool = matchData.data.potentialMatches
-              })
-            } else {
-              console.error(matchData.message)
-            }
             // Check for mutual like indicating a match
             const isMatch = yield mongoDBStore.checkForMutualLike(likedId)
             if (isMatch) {

@@ -271,7 +271,6 @@ export const resolvers = {
             },
           },
         ]);
-
         // Update the PotentialMatchPool document with new matches
         await PotentialMatchPool.updateOne(
           { userId: currentUserId },
