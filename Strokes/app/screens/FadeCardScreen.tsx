@@ -27,17 +27,17 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   const onClose = () => {
     setIsVisible(false)
   }
-  const onApplyFilters = async (ageRange, gameLevelRange) => {
+  const onApplyFilters = async (age, gameLevel) => {
   // Check if the user has filter changes left for the day
   try {
     await mongoDBStore.queryAfterFilterChange({
       age: {
-        min: ageRange[0],
-        max: ageRange[1],
+        min: age[0],
+        max: age[1],
       },
       gameLevel: {
-        min: gameLevelRange[0],
-        max: gameLevelRange[1],
+        min: gameLevel[0],
+        max: gameLevel[1],
       },
     })
 
@@ -79,7 +79,7 @@ const onSwiped = (cardIndex: number) => {
         onApplyFilters={onApplyFilters}
         isVisible={isVisible}
         onClose={onClose}
-        filters={matchStore.preferences}
+        filters={matchStore.filters}
       />
       {cards.length > 0 ? (
         <>
@@ -116,7 +116,8 @@ const onSwiped = (cardIndex: number) => {
           </Button>
           <Button
             disabled={isLastCard}
-            onPress={() => {
+            onPress={async() => {
+              await matchStore.dislikeAction(cards[index].matchUserId)
               swiperRef.current?.swipeLeft()
             }}
             style={$leftFAB}

@@ -6,8 +6,8 @@ import { Button } from '../components'; // Assuming you have a custom Button com
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export const FilterModal = ({ isVisible, onClose, onApplyFilters, filters}) => {
-  const [ageRange, setAgeRange] = useState([filters.age.min, filters.age.max]);
-  const [gameLevelRange, setGameLevelRange] = useState([filters.gameLevel.min, filters.gameLevel.max]);
+  const [age, setAge] = useState([filters.age.min, filters.age.max]);
+  const [gameLevel, setGameLevel] = useState([filters.gameLevel.min, filters.gameLevel.max]);
 
   return (
     <Modal visible={isVisible} animationType="slide" transparent={true}>
@@ -18,13 +18,13 @@ export const FilterModal = ({ isVisible, onClose, onApplyFilters, filters}) => {
           </TouchableOpacity>
           <View style={styles.ageRangeContainer}>
             <Text style={styles.ageRangeText}>
-              Age Range: {ageRange[0]} - {ageRange[1]}
+              Age Range: {age[0]} - {age[1]}
             </Text>
           </View>
           <MultiSlider
-            values={[ageRange[0], ageRange[1]]}
+            values={[age[0], age[1]]}
             sliderLength={280}
-            onValuesChange={setAgeRange}
+            onValuesChange={setAge}
             min={18}
             max={60}
             step={1}
@@ -37,13 +37,13 @@ export const FilterModal = ({ isVisible, onClose, onApplyFilters, filters}) => {
           />
           <View style={styles.ageRangeContainer}>
             <Text style={styles.ageRangeText}>
-              Game Level Range: {gameLevelRange[0]} - {gameLevelRange[1]}
+              Game Level Range: {gameLevel[0]} - {gameLevel[1]}
             </Text>
           </View>
           <MultiSlider
-            values={[gameLevelRange[0], gameLevelRange[1]]}
+            values={[gameLevel[0], gameLevel[1]]}
             sliderLength={280}
-            onValuesChange={setGameLevelRange}
+            onValuesChange={setGameLevel}
             min={1}
             max={7}
             step={1}
@@ -57,7 +57,7 @@ export const FilterModal = ({ isVisible, onClose, onApplyFilters, filters}) => {
           <View style={styles.buttonContainer}>
             <Button
               text="Apply"
-              onPress={() => onApplyFilters(ageRange, gameLevelRange)}
+              onPress={() => onApplyFilters(age, gameLevel)}
               style={styles.applyButton}
             />
           </View>

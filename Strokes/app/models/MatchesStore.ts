@@ -45,16 +45,33 @@ const MatchesStoreModel = types
     filters: types.maybeNull(PreferencesModel),
   })
   .actions((self) => ({
-    dislikeAction: flow(function* (likedId) {
-      const userStore = getRootStore(self).userStore
-      const mongoDBStore = getRootStore(self).mongoDBStore
-      const matchData = yield mongoDBStore.updateMatchQueueInteracted(userStore._id, likedId, false)
-      if (matchData.success) {
-        runInAction(() => {
-          self.matchPool = matchData.data.potentialMatches
-        })
-      } else {
-        console.error(matchData.message)
+    dislikeAction: flow(function* (dislikedId) {
+      try {
+        const userStore = getRootStore(self).userStore
+        const mongoDBStore = getRootStore(self).mongoDBStore
+        // Update the function call with the correct argument name for clarity
+        const matchData = yield mongoDBStore.updateMatchQueueInteracted(
+          userStore._id,
+          dislikedId,
+          false,
+        )
+
+        if (matchData.success) {
+          runInAction(() => {
+            self.matchPool = matchData.data.potentialMatches
+          })
+        } else {
+          console.error("Failed to update match queue:", matchData.message)
+          // Optionally, provide feedback to the user if the operation was not successful
+          Alert.alert("Update Failed", matchData.message)
+        }
+      } catch (error) {
+        console.error("Error during dislike action:", error)
+        // Optionally, notify the user about the error
+        Alert.alert(
+          "Error",
+          "An unexpected error occurred during the dislike action. Please try again.",
+        )
       }
     }),
     likeAction: flow(function* (likedId) {

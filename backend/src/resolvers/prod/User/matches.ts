@@ -95,7 +95,12 @@ export const resolvers = {
 
         console.log(potentialMatches.length)
         return {
-          potentialMatches,
+          potentialMatches:  potentialMatches,
+          lastUpdated:  new Date(),
+          filters:  matchPoolDoc.filters,
+          filtersHash:  matchPoolDoc.filtersHash,
+          dislikes: matchPoolDoc.dislikes
+
         };
       } catch (error) {
         if (error instanceof Error) {
