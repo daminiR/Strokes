@@ -28,37 +28,37 @@ export const AuthenticationStoreModel = types
   .actions((self) => ({
     checkCognitoUserSession() {
       const mongoDBStore = getRoot(self).mongoDBStore
-      var userPool = new CognitoUserPool(poolData);
-            userPool.storage.sync(function (err, result) {
+      var userPool = new CognitoUserPool(poolData)
+      userPool.storage.sync(function (err, result) {
+        if (err) {
+          console.error("Error syncing storage:", err)
+          self.setIsAuthenticated(false)
+        } else if (result === "SUCCESS") {
+          var cognitoUser = userPool.getCurrentUser()
+          if (cognitoUser != null) {
+            cognitoUser.getSession(function (err, session) {
               if (err) {
-                console.error("Error syncing storage:", err)
+                console.error(err)
                 self.setIsAuthenticated(false)
-              } else if (result === "SUCCESS") {
-                var cognitoUser = userPool.getCurrentUser()
-                if (cognitoUser != null) {
-                  cognitoUser.getSession(function (err, session) {
-                    if (err) {
-                      console.error(err)
-                      self.setIsAuthenticated(false)
-                      return
-                    }
-                    if (session.isValid()) {
-                      console.log("User is signed in")
-                      self.setIsAuthenticated(true)
-                      mongoDBStore.shouldQuery()
-                    } else {
-                      console.log("Session is invalid")
-                      self.setIsAuthenticated(false)
-                      self.signOut()
-                    }
-                  })
-                } else {
-                  console.log("No current Cognito user")
-                  self.setIsAuthenticated(false)
-                  self.signOut()
-                }
+                return
+              }
+              if (session.isValid()) {
+                console.log("User is signed in")
+                self.setIsAuthenticated(true)
+                mongoDBStore.shouldQuery()
+              } else {
+                console.log("Session is invalid")
+                self.setIsAuthenticated(false)
+                self.signOut()
               }
             })
+          } else {
+            console.log("No current Cognito user")
+            self.setIsAuthenticated(false)
+            self.signOut()
+          }
+        }
+      })
     },
     setIsAuthenticated(isAuthenticated: Boolean) {
       self.isAuthenticated = isAuthenticated

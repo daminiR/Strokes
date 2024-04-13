@@ -52,6 +52,7 @@ const rnrImages = [rnrImage1, rnrImage2, rnrImage3]
 export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = observer(
   function DemoPodcastListScreen(_props) {
     const { episodeStore } = useStores()
+    const { mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
 
     const [refreshing, setRefreshing] = React.useState(false)
     const [isLoading, setIsLoading] = React.useState(false)
@@ -142,7 +143,6 @@ const EpisodeCard = observer(function EpisodeCard({
   const imageUri = useMemo<ImageSourcePropType>(() => {
     return rnrImages[Math.floor(Math.random() * rnrImages.length)]
   }, [])
-
 
   /**
    * Android has a "longpress" accessibility action. iOS does not, so we just have to use a hint.

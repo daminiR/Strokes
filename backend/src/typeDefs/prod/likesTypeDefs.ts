@@ -1,11 +1,46 @@
 import { gql } from "apollo-server-lambda";
+import {
+  UserStatsType,
+  LocationType,
+  RangeType,
+  ImageData,
+  FilterInputType,
+  DeletedType,
+  SportNodeType,
+  DataType,
+  FilterType,
+  MatchQueueType,
+  FileUploadType,
+  PotentialMatchUserType,
+  LikedByUserType,
+  LikedByUserInputType,
+  PotentialMatchUserInputType,
+  UserType,
+  UserInputType,
+} from '../../types/UserDefs'
 
 export const likesTypeDefs = gql`
   extend type Query {
-     #Fetch users who liked the current user
+    #Fetch users who liked the current user
     fetchLikesReceived(userId: String!): [User!]
     #Fetch users liked by the current user
     fetchLikesGiven(userId: String!): [User!]
+    fetchLikedIds(userId: ID!, page: Int!, limit: Int!): [LikedProfile!]
+  }
+
+  type LikedProfile {
+    matchUserId: ID!
+    firstName: String
+    imageSet: [Data!]
+    age: Int
+    neighborhood: LocationType
+    gender: String
+    sport: SportNode
+    description: String
+    createdAt: String
+    updatedAt: String
+    interacted: Boolean
+    isBlurred: Boolean
   }
 
   extend type Mutation {
@@ -14,7 +49,6 @@ export const likesTypeDefs = gql`
     #Optional: Unlike a user
     removeLike(likerId: String!, likedId: String!): LikeResponse
   }
-
   #Represents the outcome of a like action
   type LikeResponse {
     success: Boolean!

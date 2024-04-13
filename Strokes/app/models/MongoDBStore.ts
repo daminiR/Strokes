@@ -296,6 +296,7 @@ const MongoDBStore = types
       //if (timeElapsed > oneDayInMs) {
       //alsoFetch new lastFetched if there is new data last fetched should have been updated in trgiger
       self.queryPotentialMatches()
+      self.queryLikedUserProfiles(2, 10)
       //}
     }),
     // Function to update the interacted status in matchQueue
@@ -325,6 +326,27 @@ const MongoDBStore = types
         console.error("Error updating matchQueue interacted status:", error)
         throw error
       }
+    }),
+    queryLikedUserProfiles: flow(function* updateMatchQueueInteracted(page, limit) {
+        const userId = getRootStore(self).userStore._id// Assuming this is how you access userStore
+        const likedUserStore = getRootStore(self).likedUserStore;  // Assuming there's a store for liked profiles
+        try {
+            const response = yield client.query({
+                query: graphQL.GET_LIKED_USER_PROFILES,
+                variables: {
+                    userId: userId,
+                    page: page,
+                    limit: limit
+                },
+                fetchPolicy: "network-only",  // Ensures fresh data on every call
+            });
+            const likedProfilesData = cleanGraphQLResponse(response.data.fetchLikedIds) // Assuming response is structured correctly
+            likedUserStore.setProfiles(likedProfilesData);  // Set or update the liked profiles in the store
+            return likedProfilesData;  // Return data for further processing if necessary
+        } catch (error) {
+            console.error("Error querying liked user profiles:", error);
+            throw error;
+        }
     }),
     queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore

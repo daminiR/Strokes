@@ -141,7 +141,6 @@ const $screenContentContainer: ViewStyle = {
   paddingHorizontal: spacing.lg,
 }
 const $container: ViewStyle = {
-  paddingTop: spacing.lg + spacing.xl,
   paddingHorizontal: spacing.lg,
 }
 

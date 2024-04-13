@@ -45,8 +45,6 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
         <Screen preset="auto" contentContainerStyle={$container} safeAreaEdges={["top", "bottom"]}>
           <Header
             title={tempUserStore.firstName}
-            leftIcon="menu"
-            rightIcon="settings"
             safeAreaEdges={[]}
           />
           {/* Ensure you have a valid index check for tempUserStore.imageFiles */}
@@ -55,15 +53,6 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
               {tempUserStore.imageFiles[0]
                 ? renderImageOrIcon(tempUserStore.imageFiles[0], 0)
                 : renderImageOrIcon(undefined, 0)}
-              {/* Rating bar and other components */}
-              <View style={$ratingBar}>
-                <CircularPlayerRatingBar
-                  rating={Number(tempUserStore.sport.gameLevel)}
-                  maxRating={7}
-                  size={100}
-                  strokeWidth={10}
-                />
-              </View>
             </View>
           )}
           <PlayerDetails
@@ -73,6 +62,7 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
               age: tempUserStore.age,
               gender: tempUserStore.gender,
               neighborhood: tempUserStore.neighborhood,
+              sport: tempUserStore.sport,
             }}
           />
           {/* Ensure you have a valid index check for tempUserStore.imageFiles */}
@@ -179,7 +169,6 @@ const $screenContentContainer: ViewStyle = {
   paddingHorizontal: spacing.lg,
 }
 const $container: ViewStyle = {
-  paddingTop: spacing.lg + spacing.xl,
   paddingHorizontal: spacing.lg,
 }
 
