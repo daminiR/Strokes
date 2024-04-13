@@ -27,28 +27,28 @@ export const PlayerDetails: FC<PlayerDetailsProps & { isEditing: boolean, player
   return (
     <View style={styles.card}>
       <View style={styles.iconRow}>
-        {/* Like Icon */}
+        {/* Rating */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"trophy"} />
           <Text style={$iconTileLabel}>{playerDetails.sport.gameLevel}</Text>
         </View>
         <View style={styles.divider} />
-        {/* Like Icon */}
+        {/* Age */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"birthday-cake"} />
           <Text style={$iconTileLabel}>{playerDetails.age}</Text>
         </View>
         <View style={styles.divider} />
-        {/* Comment Icon */}
-        <View style={styles.iconContainer}>
-          <Icon size={24} name="venus-mars" />
-          <Text style={$iconTileLabel}>{playerDetails.gender}</Text>
-        </View>
         <View style={styles.divider} />
-        {/* Share Icon */}
+        {/* Neighborhood  */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"map-marker-alt"} />
           <Text style={$iconTileLabel}>{playerDetails.neighborhood.city}</Text>
+        </View>
+        {/* Gende */}
+        <View style={styles.iconContainer}>
+          <Icon size={24} name="venus-mars" />
+          <Text style={$iconTileLabel}>{playerDetails.gender}</Text>
         </View>
       </View>
     </View>
