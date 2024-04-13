@@ -37,6 +37,7 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
   image_set: types.array(ImageModel),
   neighborhood: LocationModel,
 });
+
 const MatchesStoreModel = types
   .model("MatchStore", {
     matchPool: types.array(PotentialMatchModel),

@@ -56,6 +56,7 @@ interface PotentialMatchPoolDocument extends Document {
   dislikes: Dislike[];
   swipesPerDay: number; // Added swipesPerDay here
   filtersPerDay: number; // Added swipesPerDay here
+  likesPerDay: number; // Added swipesPerDay here
   lastUpdated: Boolean
   potentialMatches: PotentialMatch[];
 }
@@ -113,6 +114,7 @@ export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
     ],
     swipesPerDay: { type: Number, required: true, default: 30 }, // Assuming a default of 10 swipes per day
     filtersPerDay: { type: Number, required: true, default: 5 }, // Assuming a default of 10 swipes per day
+    likesPerDay: { type: Number, required: true, default: 5 }, // Assuming a default of 10 swipes per day
   },
   { collection: "potentialMatchPools" }
 );
