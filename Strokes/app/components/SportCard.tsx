@@ -42,14 +42,6 @@ export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
                   uri: match.image_set[0].imageURL,
                 }}
               />
-              <View style={$ratingBar}>
-                <CircularPlayerRatingBar
-                  rating={Number(match.sport.gameLevel)}
-                  maxRating={7}
-                  size={100}
-                  strokeWidth={10}
-                />
-              </View>
             </View>
             <PlayerDetails
               heading={"Player Details"}
@@ -58,6 +50,7 @@ export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
                 age: String(match.age),
                 gender: match.gender,
                 neighborhood: match.neighborhood,
+                sport: match.sport
               }}
             />
             <AutoImage
