@@ -33,7 +33,7 @@ export const typeDefsTest = gql`
       currentUserId: String!
       randomize: Boolean
     ): [LikeActionResult!]!
-    removeAllDislikesTest(userId: ID!): RemoveDislikesResponse!
+    removeAllDislikesTest(userId: String!): RemoveDislikesResponse!
     removeAllLikesForUserTest(userId: String!): RemoveLikesResult!
     removeAllLikesByUser(userId: String!) : RemoveLikesResult!
   }

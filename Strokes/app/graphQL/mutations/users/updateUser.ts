@@ -1,9 +1,43 @@
 import { gql } from 'urql';
 
 const APPLY_FILTERS = gql`
-  mutation ApplyFilters($_id: String!, $preferencesHash: String!, $preferences: FilterInput!) {
-    applyFilters(_id: $_id, preferencesHash: $preferencesHash, preferences: $preferences) {
-      _id
+  mutation ApplyFilters($_id: String!, $filtersHash: String!, $filters: FilterTypeInput!) {
+    applyFilters(_id: $_id, filtersHash: $filtersHash, filters: $filters) {
+      filters {
+        age {
+          min
+          max
+        }
+        gameLevel {
+          min
+          max
+        }
+      }
+      filtersHash
+      lastUpdated
+      potentialMatches {
+        interacted
+        createdAt
+        updatedAt
+        neighborhood {
+          city
+          state
+          country
+        }
+        matchUserId
+        firstName
+        age
+        gender
+        sport {
+          sportName
+          gameLevel
+        }
+        description
+        image_set {
+          img_idx
+          imageURL
+        }
+      }
     }
   }
 `

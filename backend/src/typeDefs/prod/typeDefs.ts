@@ -145,6 +145,20 @@ type DislikeRecord {
     imageURL: String!
     filePath: String!
   }
+input FilterTypeInput {
+  age: AgeRangeInput
+  gameLevel: GameLevelInput
+}
+
+input AgeRangeInput {
+  min: Int
+  max: Int
+}
+
+input GameLevelInput {
+  min: Int
+  max: Int
+}
   type UpdateMatchQueueResponse {
   success: Boolean!
   message: String
@@ -170,9 +184,9 @@ type DislikeRecord {
     recordDislikesAndUpdateCount(_id: String!, dislikes: [String!], isFromLikes: Boolean!): User
     applyFilters(
       _id: String!
-      preferencesHash: String!
-      preferences: FilterInput!
-    ) : User
+      filtersHash: String!
+      filters: FilterTypeInput!
+    ) : FetchFilteredMatchQueueResult
     updateMatches(currentUserId: String!, potentialMatchId: String!, currentUser: PotentialMatchInput, potentialMatch: PotentialMatchInput): User
     updateProfile(
       _id: String!

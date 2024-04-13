@@ -48,10 +48,8 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
         max: gameLevel[1],
       },
     })
-
     // Assuming there's a mechanism to decrement filtersChangedPerDay in your store
     onClose() // Close the modal if the operation is successful
-    console.log("Filters applied successfully.")
   } catch (error) {
     console.error("Failed to apply filters:", error)
   }
