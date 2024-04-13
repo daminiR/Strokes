@@ -15,7 +15,7 @@ export const GET_LIKED_USER_PROFILES = gql`
     fetchLikedIds(userId: $userId, page: $page, limit: $limit) {
       matchUserId
       firstName
-      image_set {
+      imageSet {
         img_idx
         imageURL
       }

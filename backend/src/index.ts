@@ -16,6 +16,7 @@ import {resolvers as testUpload} from './resolvers/test/updateUser'
 
 import {resolvers as  addLikeResolvers} from './resolvers/prod/likes/addLike'
 import {resolvers as removeLikeResolvers} from './resolvers/prod/likes/removeLike'
+import {resolvers as queryLikedResolvers} from './resolvers/prod/likes/queryLikes'
 
 import {resolvers as  matchResolvers} from './resolvers/prod/matches/updateMatches'
 
@@ -49,6 +50,7 @@ const startServer = async () => {
       //likes collection
       addLikeResolvers,
       removeLikeResolvers,
+      queryLikedResolvers,
       // tests
       testCreateUser,
       testUpload

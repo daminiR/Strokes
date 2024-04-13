@@ -37,20 +37,25 @@ export const resolvers = {
           .map((like) => like.likerId.toString())
           .filter((id) => !matchedUserIds.includes(id));
 
+
         if (unlikedUserIds.length === 0) {
           return []; // No potential matches found
         }
 
+        console.log("likes", likes.length)
+        console.log("unliked user id", unlikedUserIds.length)
+        console.log(" matchedIds user id", matchedUserIds.length)
         // Fetch detailed user data
         const users = await User.find({
           _id: { $in: unlikedUserIds },
         })
-          .skip(skip)
-          .limit(PAGE_SIZE)
+          //.skip(skip)
+          //.limit(PAGE_SIZE)
           .select(
-            "firstName image_set age neighborhood gender sport description"
+            "firstName imageSet age neighborhood gender sport description"
           );
 
+        console.log(users.length, skip, PAGE_SIZE)
         const currentDate = new Date().toISOString();
 
         // Map over fetched users to determine which should be blurred based on LikesPerDay
