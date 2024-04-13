@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import { Header, Card, Button, ListItem, AutoImage, Screen, Text } from "../components"
 import { colors, spacing } from "../theme"
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { useStores } from "../models"
 import { observer } from 'mobx-react-lite';
 
 interface PlayerDetails {
@@ -13,6 +12,10 @@ interface PlayerDetails {
     city: string
     state: string
     country: string
+  }
+  sport: {
+    sportName: string
+    gameLevel: number
   }
 }
 interface PlayerDetailsProps {
@@ -24,6 +27,12 @@ export const PlayerDetails: FC<PlayerDetailsProps & { isEditing: boolean, player
   return (
     <View style={styles.card}>
       <View style={styles.iconRow}>
+        {/* Like Icon */}
+        <View style={styles.iconContainer}>
+          <Icon size={24} name={"trophy"} />
+          <Text style={$iconTileLabel}>{playerDetails.sport.gameLevel}</Text>
+        </View>
+        <View style={styles.divider} />
         {/* Like Icon */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"birthday-cake"} />
