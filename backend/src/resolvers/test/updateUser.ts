@@ -191,7 +191,6 @@ export const resolvers = {
               "No updates performed. The user may already have no dislikes.",
           };
         }
-
         return {
           success: true,
           message: "All dislikes have been successfully removed for the user.",

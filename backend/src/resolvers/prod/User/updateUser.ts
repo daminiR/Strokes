@@ -1,4 +1,5 @@
 import User from "../../../models/User";
+import Like from '../../../models/Likes';
 import { PotentialMatchPool } from "../../../models/PotentialMatchPool";
 import mongoose from 'mongoose';
 import _ from 'lodash'
@@ -156,15 +157,14 @@ export const resolvers = {
             success: false,
             message: "Failed to update MatchQueue: " + error.message,
           };
-        }
-         else {
+        } else {
           // Handle unexpected errors, which might not be an instance of Error
           console.error("An unexpected error occurred:", error);
           throw new Error(
             "An unexpected error occurred while updating potential match pool."
           );
         }
-    }
+      }
     },
     applyFilters: async (root, unSanitizedData, context) => {
       const {
@@ -174,85 +174,113 @@ export const resolvers = {
       } = unSanitizedData;
 
       const session = await mongoose.startSession();
-      await session.startTransaction();
-
-      let updatedPoolDoc = null; // Initialize a variable to hold the updated PotentialMatchPool document
-
       try {
+        await session.startTransaction();
+
         // Fetch the current user's PotentialMatchPool document
         const currentPool = await PotentialMatchPool.findOne({
           userId: _id,
         }).session(session);
+
         if (!currentPool) {
+          await session.abortTransaction();
           throw new Error("PotentialMatchPool not found for the user.");
         }
 
-        // Exit early if the user has no swipes left for the day
         if (currentPool.swipesPerDay <= 0) {
-          console.log("User has exhausted the daily swipes limit.");
           await session.abortTransaction();
-          return null;
+          throw new Error("User has exhausted the daily swipes limit.");
         }
 
-        // Only proceed if the provided filtersHash is different from the stored one
-        if (filtersHash !== currentPool.filtersHash) {
-          const matchCriteria = {
-            _id: { $ne: _id },
-            age: { $gte: filters.ageRange.min, $lte: filters.ageRange.max },
-            "sport.gameLevel": {
-              $gte: filters.gameLevelRange.min,
-              $lte: filters.gameLevelRange.max,
-            },
+        if (filtersHash === currentPool.filtersHash) {
+          await session.abortTransaction();
+          return {
+            ...currentPool.toObject(),
+            potentialMatches: currentPool.potentialMatches,
           };
+        }
 
-          // Find potential matches based on the new filters
-          const potentialMatches = await User.aggregate([
-            { $match: matchCriteria },
-            { $sample: { size: 30 } }, // Randomly select 30 users to be potential matches
-          ]).session(session);
+        // Fetch all liked and disliked IDs
+        const likes = await Like.find(
+          { likerId: _id },
+          "likedId"
+        ).session(session);
+        const likedUserIds = likes.map((like) => like.likedId.toString());
+        const dislikedUserIds = currentPool.dislikes.map((dislike) =>
+          dislike._id.toString()
+        );
 
-          const currentDate = new Date();
+        const excludeUserIds = [...likedUserIds, ...dislikedUserIds];
 
-          // Prepare the potentialMatches array for the PotentialMatchPool document
-          const updatedPotentialMatches = potentialMatches.map((match) => ({
-            matchUserId: match._id.toString(), // Convert ObjectId to string if necessary
-            firstName: match.firstName, // Assuming these fields are directly available from the aggregation
-            image_set: match.image_set, // This should match the ImageSet[] structure
-            age: match.age,
-            neighborhood: match.neighborhood, // Ensure this matches the Neighborhood structure
-            gender: match.gender,
-            sport: match.sport, // Ensure this matches the Sport structure
-            description: match.description, // Optional in your interface, so it's fine if it's not present in some documents
-            createdAt: currentDate, // Set to current time, assuming this is a new match being added
-            updatedAt: currentDate, // Also set to current time for the same reason
-            interacted: false, // Since these are new potential matches, interacted should initially be false
-          }));
-          // Update the PotentialMatchPool document with the new filters, filtersHash, and potential matches
-          updatedPoolDoc = await PotentialMatchPool.findOneAndUpdate(
-            { userId: _id },
-            {
-              $set: {
-                filters: filters,
-                filtersHash: filtersHash,
-                potentialMatches: updatedPotentialMatches,
-              },
-              $inc: { swipesPerDay: -1 },
+        const matchCriteria = {
+          _id: { $nin: excludeUserIds, $ne: _id },
+          age: { $gte: filters.age.min, $lte: filters.age.max },
+          "sport.gameLevel": {
+            $gte: filters.gameLevel.min,
+            $lte: filters.gameLevel.max,
+          },
+        };
+
+        // Find potential matches based on the new filters
+        const potentialMatches = await User.aggregate([
+          { $match: matchCriteria },
+          { $sample: { size: 30 } },
+        ]).session(session);
+
+        const currentDate = new Date().toISOString();
+
+        // Update the PotentialMatchPool document
+        const updatedPoolDoc = await PotentialMatchPool.findOneAndUpdate(
+          { userId: _id },
+          {
+            $set: {
+              filters: filters,
+              filtersHash: filtersHash,
+              potentialMatches: potentialMatches.map((match) => ({
+                matchUserId: match._id.toString(),
+                firstName: match.firstName,
+                image_set: match.image_set,
+                age: match.age,
+                neighborhood: match.neighborhood,
+                gender: match.gender,
+                sport: match.sport,
+                description: match.description,
+                createdAt: currentDate,
+                updatedAt: currentDate,
+                interacted: false,
+              })),
+              lastUpdated: currentDate,
             },
-            { new: true, session }
+            $inc: { filtersPerDay: -1 },
+          },
+          { new: true, session }
+        );
+
+        if (!updatedPoolDoc) {
+          await session.abortTransaction();
+          throw new Error(
+            "Failed to update the match pool document. It might not exist or the query failed."
           );
         }
 
         await session.commitTransaction();
-        return updatedPoolDoc;
+        return {
+          potentialMatches: updatedPoolDoc.potentialMatches,
+          lastUpdated: updatedPoolDoc.lastUpdated,
+          filtersHash: updatedPoolDoc.filtersHash,
+          filters: updatedPoolDoc.filters,
+          dislikes: updatedPoolDoc.dislikes,
+        };
       } catch (error) {
         await session.abortTransaction();
         console.error("Failed to apply filters:", error);
-        throw error;
+        throw new Error(
+          "Failed to apply filters due to internal server error."
+        );
       } finally {
-        await session.endSession();
+        session.endSession();
       }
     },
-
     updateProfile: async (root, unSanitizedData, context) => {
       const {
         _id,
