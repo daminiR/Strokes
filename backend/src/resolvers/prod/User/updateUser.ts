@@ -224,7 +224,7 @@ export const resolvers = {
         // Find potential matches based on the new filters
         const potentialMatches = await User.aggregate([
           { $match: matchCriteria },
-          { $sample: { size: 30 } },
+          { $sample: { size: currentPool.swipesPerDay } },
         ]).session(session);
 
         const currentDate = new Date().toISOString();
