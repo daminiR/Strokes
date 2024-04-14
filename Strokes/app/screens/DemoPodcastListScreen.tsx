@@ -41,6 +41,7 @@ import { DemoTabScreenProps } from "../navigators/DemoNavigator"
 import { colors, spacing } from "../theme"
 import { delay } from "../utils/delay"
 import { openLinkInBrowser } from "../utils/openLinkInBrowser"
+import { useFocusEffect } from '@react-navigation/native';
 
 const ICON_SIZE = 14
 
@@ -52,19 +53,39 @@ const rnrImages = [rnrImage1, rnrImage2, rnrImage3]
 export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = observer(
   function DemoPodcastListScreen(_props) {
     const { episodeStore } = useStores()
-    const { mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
+    const { likedUserStore, mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
 
     const [refreshing, setRefreshing] = React.useState(false)
     const [isLoading, setIsLoading] = React.useState(false)
 
-    // initially, kick off a background refresh without the refreshing UI
-    useEffect(() => {
-      ;(async function load() {
-        setIsLoading(true)
-        await episodeStore.fetchEpisodes()
-        setIsLoading(false)
-      })()
-    }, [episodeStore])
+    /// Fetch liked IDs whenever the screen is focused
+    useFocusEffect(
+      React.useCallback(() => {
+        let isActive = true
+        const fetchLikedIds = async () => {
+          if (isActive) {
+            try {
+              setIsLoading(true);
+              await mongoDBStore.queryLikedUserProfiles(1, 10)
+              setIsLoading(false)
+            } catch (error) {
+              console.error("Failed to fetch liked IDs on focus:", error)
+            }
+          }
+        }
+        fetchLikedIds()
+        return () => setIsLoading(false)
+      }, [mongoDBStore]),
+    )
+
+    //// initially, kick off a background refresh without the refreshing UI
+    //useEffect(() => {
+      //;(async function load() {
+        //setIsLoading(true)
+        //await episodeStore.fetchEpisodes()
+        //setIsLoading(false)
+      //})()
+    //}, [episodeStore])
 
     // simulate a longer refresh, if the refresh is too fast for UX
     async function manualRefresh() {
