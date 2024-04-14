@@ -16,7 +16,7 @@ export const resolvers = {
         const PAGE_SIZE = limit;
         const skip = (page - 1) * PAGE_SIZE;
 
-        // Fetch match pool data for the user to get LikesPerDay
+        // Fetch match pool data for the user
         const matchPool = await PotentialMatchPool.findOne({ userId: userId });
         if (!matchPool) {
           throw new Error("Match pool not found for the user.");
@@ -33,29 +33,37 @@ export const resolvers = {
             : match.user1Id.toString()
         );
 
+        // Collect IDs from dislikes array for exclusion
+        const dislikedIds = matchPool.dislikes.map((dislike) =>
+          dislike._id.toString()
+        );
+
         const unlikedUserIds = likes
           .map((like) => like.likerId.toString())
-          .filter((id) => !matchedUserIds.includes(id));
-
+          .filter(
+            (id) => !matchedUserIds.includes(id) && !dislikedIds.includes(id)
+          );
 
         if (unlikedUserIds.length === 0) {
-          return []; // No potential matches found
+          return []; // No potential matches found after exclusions
         }
 
-        console.log("likes", likes.length)
-        console.log("unliked user id", unlikedUserIds.length)
-        console.log(" matchedIds user id", matchedUserIds.length)
-        // Fetch detailed user data
+        console.log("likesID", likes.length)
+        console.log("unlikedUserIds", unlikedUserIds.length)
+        console.log("matchedUserIds", matchedUserIds.length)
+        console.log("dislikesID", dislikedIds.length)
+
+
+        // Fetch detailed user data, excluding disliked users
         const users = await User.find({
           _id: { $in: unlikedUserIds },
         })
-          //.skip(skip)
-          //.limit(PAGE_SIZE)
+          .skip(skip)
+          .limit(PAGE_SIZE)
           .select(
             "firstName imageSet age neighborhood gender sport description"
           );
 
-        console.log(users.length, skip, PAGE_SIZE)
         const currentDate = new Date().toISOString();
 
         // Map over fetched users to determine which should be blurred based on LikesPerDay
@@ -65,7 +73,7 @@ export const resolvers = {
           imageSet:
             index < matchPool.likesPerDay
               ? user.image_set
-              : "path/to/dummy/image.jpg", // Dummy image for blurred profiles
+              : "path/to/dummy/image.jpg",
           age: index < matchPool.likesPerDay ? user.age : null,
           neighborhood:
             index < matchPool.likesPerDay ? user.neighborhood : null,
@@ -78,7 +86,7 @@ export const resolvers = {
           createdAt: currentDate,
           updatedAt: currentDate,
           interacted: false,
-          isBlurred: index >= matchPool.likesPerDay, // Apply blurring for users beyond the LikesPerDay limit
+          isBlurred: index >= matchPool.likesPerDay,
         }));
       } catch (error) {
         if (error instanceof Error) {
