@@ -94,6 +94,9 @@ const en = {
     genderFemaleFieldLabel: "Female",
     genderMaleFieldLabel: "Male",
   },
+  likedByUsers: {
+    noLikedProfiles: { heading: "No Profiles Liked", content: "No Content" },
+  },
   loginScreen: {
     signIn: "Sign In",
     enterDetails:
@@ -106,14 +109,14 @@ const en = {
     hint: "Hint: you can use any email address and your favorite password :)",
   },
   Hello: {
-    title:"Hello",
+    title: "Hello",
     enterDetails: "Welcome to Strokes. Do you want to sign in or sign up?",
     signIn: "Sign In",
     signUp: "Sign Up",
   },
   UpdateProfile: {
-    title:"Update Profile",
-    tapToUpdate:"Update",
+    title: "Update Profile",
+    tapToUpdate: "Update",
     details: "Change some of your details",
     neighborhoodFieldLabel: "Neighborhood",
     descriptionFieldLabel: "Share your squash story!",
@@ -135,7 +138,7 @@ const en = {
     verificationCode: "Secret Code",
     tapToVerify: "Verify",
     tapToResendCode: "Resend Code",
-    title:"Verify Code"
+    title: "Verify Code",
   },
   signUpScreen: {
     signIn: "Sign Up",
