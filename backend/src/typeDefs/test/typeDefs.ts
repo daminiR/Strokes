@@ -29,6 +29,10 @@ export const typeDefsTest = gql`
     removeAllMatchesForUserTest(userId: String!): RemoveMatchesResult!
     updateAllSportFieldsTest: User
     updatePlayerPreferencesTest: UpdateUsersResult
+    simulateRandomLikesFromUsersTest(
+      currentUserId: String!
+      randomize: Boolean
+    ): [LikeActionResult!]!
     simulateRandomLikesTest(
       currentUserId: String!
       randomize: Boolean

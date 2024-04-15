@@ -323,6 +323,53 @@ export const resolvers = {
         }
       }
     },
+    simulateRandomLikesFromUsersTest: async (
+      _,
+      { currentUserId, randomize = true }
+    ) => {
+      try {
+        const currentUser = await User.findById(currentUserId);
+        if (!currentUser) {
+          throw new Error("User not found");
+        }
+
+        // Fetch all users excluding the current user
+        const allUsers = await User.find({ _id: { $ne: currentUserId } });
+        if (!allUsers || allUsers.length === 0) {
+          throw new Error("No other users found in the database");
+        }
+
+        const likeActionsResults: LikeActionResult[] = [];
+        const numLikes = randomize
+          ? Math.min(50, allUsers.length)
+          : allUsers.length;
+
+        for (let i = 0; i < numLikes; i++) {
+          const index = randomize
+            ? Math.floor(Math.random() * allUsers.length)
+            : i;
+          const randomUser = allUsers[index];
+
+          // Simulate a like from this random user to the current user
+          const likeActionResult = await Like.create({
+            likerId: randomUser._id,
+            likedId: currentUserId,
+          });
+
+          likeActionsResults.push({
+            likerId: randomUser._id.toString(),
+            likedId: currentUserId,
+            success: !!likeActionResult,
+          });
+        }
+
+        return likeActionsResults;
+      } catch (error) {
+        console.error("Error simulating random likes from users:", error);
+        throw new Error("Failed to simulate random likes from users.");
+      }
+    },
+
     simulateRandomLikesTest: async (_, { currentUserId, randomize = true }) => {
       try {
         const currentUser = await User.findById(currentUserId);

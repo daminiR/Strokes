@@ -65,7 +65,7 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
         const fetchLikedIds = async () => {
           if (isActive) {
             try {
-              setIsLoading(true);
+              setIsLoading(true)
               await mongoDBStore.queryLikedUserProfiles(1, 10)
               setIsLoading(false)
             } catch (error) {
@@ -80,20 +80,19 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
 
     //// initially, kick off a background refresh without the refreshing UI
     //useEffect(() => {
-      //;(async function load() {
-        //setIsLoading(true)
-        //await episodeStore.fetchEpisodes()
-        //setIsLoading(false)
-      //})()
+    //;(async function load() {
+    //setIsLoading(true)
+    //await episodeStore.fetchEpisodes()
+    //setIsLoading(false)
+    //})()
     //}, [episodeStore])
 
-    // simulate a longer refresh, if the refresh is too fast for UX
+    // on manual refresh it should relaod existsing
     async function manualRefresh() {
       setRefreshing(true)
-      await Promise.all([episodeStore.fetchEpisodes(), delay(750)])
+      await mongoDBStore.queryLikedUserProfiles(1, 10)
       setRefreshing(false)
     }
-
     return (
       <Screen
         preset="fixed"
@@ -102,8 +101,8 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
       >
         <ListView<Episode>
           contentContainerStyle={$listContentContainer}
-          data={episodeStore.episodesForList.slice()}
-          extraData={episodeStore.favorites.length + episodeStore.episodes.length}
+          data={likedUserStore.likedProfiles.slice()}
+          extraData={likedUserStore.likedProfiles.length}
           refreshing={refreshing}
           estimatedItemSize={177}
           onRefresh={manualRefresh}
@@ -111,22 +110,12 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
           ListEmptyComponent={
             isLoading ? (
               <ActivityIndicator />
-            ) : (
+            ) : likedUserStore.likedProfiles.length > 0 ? null : (
               <EmptyState
                 preset="generic"
                 style={$emptyState}
-                headingTx={
-                  episodeStore.favoritesOnly
-                    ? "demoPodcastListScreen.noFavoritesEmptyState.heading"
-                    : undefined
-                }
-                contentTx={
-                  episodeStore.favoritesOnly
-                    ? "demoPodcastListScreen.noFavoritesEmptyState.content"
-                    : undefined
-                }
-                button={episodeStore.favoritesOnly ? "" : undefined}
-                buttonOnPress={manualRefresh}
+                headingTx="likedByUsers.noLikedProfiles.heading"
+                contentTx="likedByUsers.noLikedProfiles.content"
                 imageStyle={$emptyStateImage}
                 ImageProps={{ resizeMode: "contain" }}
               />
@@ -138,10 +127,11 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
             </View>
           }
           renderItem={({ item }) => (
-            <EpisodeCard
-              episode={item}
-              isFavorite={episodeStore.hasFavorite(item)}
+            <PorfileCard
+              profile={item}
+              //isFavorite={episodeStore.hasFavorite(item)}
               onPressFavorite={() => episodeStore.toggleFavorite(item)}
+              isBlurred={item.isBlurred}
             />
           )}
         />
@@ -150,16 +140,16 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
   },
 )
 
-const EpisodeCard = observer(function EpisodeCard({
-  episode,
-  isFavorite,
+const PorfileCard = observer(function PorfileCard({
+  profile,
   onPressFavorite,
+  isBlurred
 }: {
-  episode: Episode
+  profile: any // for now
   onPressFavorite: () => void
-  isFavorite: boolean
+  isBlurred: boolean
 }) {
-  const liked = useSharedValue(isFavorite ? 1 : 0)
+  //const liked = useSharedValue(isFavorite ? 1 : 0)
 
   const imageUri = useMemo<ImageSourcePropType>(() => {
     return rnrImages[Math.floor(Math.random() * rnrImages.length)]
@@ -169,54 +159,23 @@ const EpisodeCard = observer(function EpisodeCard({
    * Android has a "longpress" accessibility action. iOS does not, so we just have to use a hint.
    * @see https://reactnative.dev/docs/accessibility#accessibilityactions
    */
-  const accessibilityHintProps = useMemo(
-    () =>
-      Platform.select<AccessibilityProps>({
-        ios: {
-          accessibilityLabel: episode.title,
-          accessibilityHint: translate("demoPodcastListScreen.accessibility.cardHint", {
-            action: isFavorite ? "unfavorite" : "favorite",
-          }),
-        },
-        android: {
-          accessibilityLabel: episode.title,
-          accessibilityActions: [
-            {
-              name: "longpress",
-              label: translate("demoPodcastListScreen.accessibility.favoriteAction"),
-            },
-          ],
-          onAccessibilityAction: ({ nativeEvent }) => {
-            if (nativeEvent.actionName === "longpress") {
-              handlePressFavorite()
-            }
-          },
-        },
-      }),
-    [episode, isFavorite],
-  )
 
-  const handlePressFavorite = () => {
-    onPressFavorite()
-    liked.value = withSpring(liked.value ? 0 : 1)
-  }
-
-  const handlePressCard = () => {
-    openLinkInBrowser(episode.enclosure.link)
-  }
+  //const handlePressCard = () => {
+    //openLinkInBrowser(episode.enclosure.link)
+  //}
 
   return (
     <Card
       style={$item}
       verticalAlignment="force-footer-bottom"
-      onPress={handlePressCard}
-      onLongPress={handlePressFavorite}
-      {...accessibilityHintProps}
+      //onPress={handlePressCard}
+      //onLongPress={handlePressFavorite}
+      //{...accessibilityHintProps}
       ContentComponent={
         <View>
           <Image
             source={{
-              uri: "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+              uri: profile.imageSet[0].imageURL,
             }}
             style={$itemThumbnail}
           />
@@ -224,9 +183,9 @@ const EpisodeCard = observer(function EpisodeCard({
             <Text
               style={$metadataText}
               size="sm"
-              accessibilityLabel={episode.datePublished.accessibilityLabel}
+              //accessibilityLabel={episode.datePublished.accessibilityLabel}
             >
-              {"Damini, 3.8 "}
+              {profile.firstName +  ", " + profile.sport.gameLevel}
             </Text>
           </View>
         </View>

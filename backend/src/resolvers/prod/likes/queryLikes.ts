@@ -61,11 +61,10 @@ export const resolvers = {
           .skip(skip)
           .limit(PAGE_SIZE)
           .select(
-            "firstName imageSet age neighborhood gender sport description"
+            "firstName image_set age neighborhood gender sport description"
           );
 
         const currentDate = new Date().toISOString();
-
         // Map over fetched users to determine which should be blurred based on LikesPerDay
         return users.map((user, index) => ({
           matchUserId: user._id.toString(),
