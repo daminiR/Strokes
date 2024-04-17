@@ -21,7 +21,7 @@ export const TempStoreModel = types
     age: types.maybeNull(types.integer), // Assuming you're providing a unique identifier when creating a user instance
     isHydrated: types.maybeNull(types.boolean),
     sport: types.maybeNull(GameLevelModel),
-    imageFiles: types.optional(types.array(types.frozen()), []),
+    imageSet: types.optional(types.array(types.frozen()), []),
     gender: types.optional(types.enumeration("Gender", ["male", "female", "other"]), "other"),
     description: types.maybeNull(types.string),
     firstName: types.maybeNull(types.string),
@@ -56,8 +56,8 @@ export const TempStoreModel = types
     setAge(age: string) {
       self.age = parseInt(age, 10);
     },
-    setImageFiles(imageFiles: SnapshotOrInstance<typeof ImageDataModel>[]) {
-      self.imageFiles = cast(imageFiles)
+    setImageSet(imageSet: SnapshotOrInstance<typeof ImageDataModel>[]) {
+      self.imageSet = cast(imageSet)
     },
     setNeighborhood(neighborhood: string) {
       self.neighborhood = neighborhood
@@ -80,7 +80,7 @@ export const TempStoreModel = types
           sportName: userStore.sport.sportName,
           gameLevel: userStore.sport.gameLevel,
         }),
-        imageFiles: userStore.imageFiles.map((imageFile) => cast(imageFile)), // Use cast for MST types
+        imageSet: userStore.imageSet.map((imageFile: any) => cast(imageFile)), // Use cast for MST types
         gender: userStore.gender,
         description: userStore.description,
         firstName: userStore.firstName,

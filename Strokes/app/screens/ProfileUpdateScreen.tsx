@@ -29,7 +29,7 @@ export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function Pro
   const i18nText = tx && translate(tx)
   const error = ""
   const handleImagesUpdate = (images: ImageData[]) => {
-  tempUserStore.setImageFiles(images) // Assuming your store has a method to update image files
+  tempUserStore.setImageSet(images) // Assuming your store has a method to update image files
 }
 const updateUserChanges = async () => {
   await mongoDBStore.updateUserInMongoDB()

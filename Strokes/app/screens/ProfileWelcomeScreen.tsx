@@ -51,7 +51,7 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
   )
 
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
-  const imageFile = userStore.imageFiles.find(file => file.img_idx === 0);
+  const imageFile = userStore.imageSet.find(file => file.img_idx === 0);
   const imageUri = imageFile ? imageFile.imageURL : undefined;
 
   return (

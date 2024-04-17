@@ -47,11 +47,11 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
             title={tempUserStore.firstName}
             safeAreaEdges={[]}
           />
-          {/* Ensure you have a valid index check for tempUserStore.imageFiles */}
-          {tempUserStore.imageFiles[0] && (
+          {/* Ensure you have a valid index check for tempUserStore.imageSet */}
+          {tempUserStore.imageSet[0] && (
             <View style={$profileImageContainer}>
-              {tempUserStore.imageFiles[0]
-                ? renderImageOrIcon(tempUserStore.imageFiles[0], 0)
+              {tempUserStore.imageSet[0]
+                ? renderImageOrIcon(tempUserStore.imageSet[0], 0)
                 : renderImageOrIcon(undefined, 0)}
             </View>
           )}
@@ -65,21 +65,21 @@ export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
               sport: tempUserStore.sport,
             }}
           />
-          {/* Ensure you have a valid index check for tempUserStore.imageFiles */}
-          {tempUserStore.imageFiles[1] && (
+          {/* Ensure you have a valid index check for tempUserStore.imageSet */}
+          {tempUserStore.imageSet[1] && (
             <View style={$profileImageContainer}>
-              {tempUserStore.imageFiles[1]
-                ? renderImageOrIcon(tempUserStore.imageFiles[1], 1)
+              {tempUserStore.imageSet[1]
+                ? renderImageOrIcon(tempUserStore.imageSet[1], 1)
                 : renderImageOrIcon(undefined, 1)}
               {/* Rating bar and other components */}
             </View>
           )}
           {/* Other components */}
           <Card heading="Description" content={tempUserStore.description} />
-          {tempUserStore.imageFiles[2] && (
+          {tempUserStore.imageSet[2] && (
             <View style={$profileImageContainer}>
-              {tempUserStore.imageFiles[2]
-                ? renderImageOrIcon(tempUserStore.imageFiles[2], 2)
+              {tempUserStore.imageSet[2]
+                ? renderImageOrIcon(tempUserStore.imageSet[2], 2)
                 : renderImageOrIcon(undefined, 2)}
               {/* Rating bar and other components */}
             </View>

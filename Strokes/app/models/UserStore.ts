@@ -23,7 +23,7 @@ export const UserStoreModel = types
     phoneNumber: types.maybeNull(types.string),
     email: types.maybeNull(types.string),
     sport: types.maybeNull(GameLevelModel),
-    imageFiles: types.optional(types.array(types.frozen()), []),
+    imageSet: types.optional(types.array(types.frozen()), []),
     gender: types.optional(types.enumeration("Gender", ["male", "female", "other"]), "other"),
     description: types.maybeNull(types.string),
     firstName: types.maybeNull(types.string),
@@ -52,14 +52,14 @@ export const UserStoreModel = types
     setAge(age: string) {
       self.age = parseInt(age, 10);
     },
-    setImageFiles(imageFiles: SnapshotOrInstance<typeof ImageDataModel>[]) {
-      self.imageFiles = cast(imageFiles)
+    setImageSet(imageSet: SnapshotOrInstance<typeof ImageDataModel>[]) {
+      self.imageSet = cast(imageSet)
     },
     setNeighborhood(neighborhood: string) {
       self.neighborhood = neighborhood
     },
     setSport(squash_level: string) {
-      self.sport = [{sportName: "squash", gameLevel: squash_level}]
+      self.sport = {sportName: "squash", gameLevel: squash_level}
     },
     setDescription(description: string) {
       self.description = description
@@ -77,7 +77,7 @@ export const UserStoreModel = types
       self.firstName = userData.firstName
       self.lastName = userData.lastName
       self.gender = userData.gender
-      self.imageFiles = cast(userData.image_set)
+      self.imageSet = cast(userData.image_set)
       self.neighborhood = userData.neighborhood
       self.description = userData.description
     },

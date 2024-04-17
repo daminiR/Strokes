@@ -61,29 +61,26 @@ export const resolvers = {
 
         const currentDate = new Date().toISOString();
 
-        // Map over fetched users to determine which should be blurred based on LikesPerDay
-        return users.map((user, index) => ({
-          matchUserId: user._id.toString(),
-          firstName: index < matchPool.likesPerDay ? user.firstName : null,
-          imageSet:
-            index < matchPool.likesPerDay
-              ? user.image_set
-              : "path/to/dummy/image.jpg",
-          age: index < matchPool.likesPerDay ? user.age : null,
-          neighborhood:
-            index < matchPool.likesPerDay ? user.neighborhood : null,
-          gender: index < matchPool.likesPerDay ? user.gender : null,
-          sport: index < matchPool.likesPerDay ? user.sport : null,
-          description:
-            index < matchPool.likesPerDay
-              ? user.description
-              : "This profile is blurred. Like more to reveal!",
-          createdAt: currentDate,
-          updatedAt: currentDate,
-          interacted: false,
-          isBlurred: index >= matchPool.likesPerDay,
-        }));
-      } catch (error) {
+        // Adjust index based on current page and limit
+        return users.map((user, index) => {
+            const globalIndex = index + skip;  // Correcting index for pagination
+            const isBlurred = globalIndex >= matchPool.likesPerDay;
+
+            return {
+                matchUserId: user._id.toString(),
+                firstName: user.firstName,
+                imageSet: user.image_set,
+                age: user.age,
+                neighborhood: user.neighborhood,
+                gender: user.gender,
+                sport: user.sport,
+                description: user.description,
+                createdAt: currentDate,
+                updatedAt: currentDate,
+                interacted: false,
+                isBlurred: isBlurred,
+            };
+        });      } catch (error) {
         if (error instanceof Error) {
           console.error("Error fetching potential matches:", error.message);
           throw new Error(

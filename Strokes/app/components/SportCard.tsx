@@ -16,7 +16,7 @@ interface Match {
     state: string
     country: string
   }
-  image_set: [
+  imageSet: [
     {
       imageURL: string
       img_idx: number
@@ -39,7 +39,7 @@ export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
               <AutoImage
                 style={$autoImage}
                 source={{
-                  uri: match.image_set[0].imageURL,
+                  uri: match.imageSet[0].imageURL,
                 }}
               />
             </View>
@@ -56,14 +56,14 @@ export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
             <AutoImage
               style={$autoImage}
               source={{
-                uri: match.image_set[1].imageURL,
+                uri: match.imageSet[1].imageURL,
               }}
             />
             <Card heading="Description" content={match.description} />
             <AutoImage
               style={$autoImage}
               source={{
-                uri: match.image_set[2].imageURL,
+                uri: match.imageSet[2].imageURL,
               }}
             />
           </View>

@@ -29,7 +29,7 @@ export const SportSwipeScreen: FC<DemoTabScreenProps<'SportSwipe'>> = observer((
           <AutoImage
             style={$autoImage}
             source={{
-              uri: userStore.imageFiles[0].imageURL,
+              uri: userStore.imageSet[0].imageURL,
             }}
           />
           <View style={$ratingBar}>
@@ -45,14 +45,14 @@ export const SportSwipeScreen: FC<DemoTabScreenProps<'SportSwipe'>> = observer((
         <AutoImage
           style={$autoImage}
           source={{
-            uri: userStore.imageFiles[1].imageURL,
+            uri: userStore.imageSet[1].imageURL,
           }}
         />
         <Card heading="Description" content={userStore.description} />
         <AutoImage
           style={$autoImage}
           source={{
-            uri: userStore.imageFiles[2].imageURL,
+            uri: userStore.imageSet[2].imageURL,
           }}
         />
       </Screen>

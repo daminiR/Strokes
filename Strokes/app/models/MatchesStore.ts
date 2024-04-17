@@ -34,7 +34,7 @@ export const PotentialMatchModel = types.model("PotentialMatchModel", {
   gender: types.maybeNull(types.string),
   sport: types.maybeNull(SportModel),
   description: types.maybeNull(types.string),
-  image_set: types.array(ImageModel),
+  imageSet: types.array(ImageModel),
   neighborhood: LocationModel,
 });
 
