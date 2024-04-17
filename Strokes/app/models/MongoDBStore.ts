@@ -124,8 +124,8 @@ const MongoDBStore = types
         )
 
         const { addLocalImages, removeUploadedImages } = processImageUpdates(
-          tempUserStore.imageFiles,
-          userStore.imageFiles,
+          tempUserStore.imageSet,
+          userStore.imageSet,
         )
         const hasImageUpdates = addLocalImages.length > 0 || removeUploadedImages.length > 0
 
@@ -144,7 +144,7 @@ const MongoDBStore = types
             _id: userStore._id,
             add_local_images: addLocalImagesRN,
             remove_uploaded_images: removeUploadedImages,
-            original_uploaded_image_set: userStore.imageFiles,
+            original_uploaded_image_set: userStore.imageSet,
             firstName: tempUserStore.firstName,
             lastName: tempUserStore.lastName,
             age: tempUserStore.age,
@@ -169,7 +169,7 @@ const MongoDBStore = types
     createUserInMongoDB: flow(function* createUser() {
       try {
         const userStore = getRootStore(self).userStore
-        const file = userStore.imageFiles
+        const file = userStore.imageSet
         rnfiles = createReactNativeFile(file)
         const response = yield client.mutate({
           mutation: graphQL.ADD_PROFILE2,

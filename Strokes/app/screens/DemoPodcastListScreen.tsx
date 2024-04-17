@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite"
-import React, { ComponentType, FC, useEffect, useMemo } from "react"
+import React, { ComponentType, FC, useEffect, useState, useMemo } from "react"
 import {
   AccessibilityProps,
   ActivityIndicator,
   Image,
-  ImageSourcePropType,
+  TouchableOpacity,
   ImageStyle,
   Platform,
   StyleSheet,
@@ -26,6 +26,7 @@ import {
   ButtonAccessoryProps,
   PlayerDetails,
   Card,
+  SportCard,
   EmptyState,
   Icon,
   ListView,
@@ -40,7 +41,6 @@ import { Episode } from "../models/Episode"
 import { DemoTabScreenProps } from "../navigators/DemoNavigator"
 import { colors, spacing } from "../theme"
 import { delay } from "../utils/delay"
-import { openLinkInBrowser } from "../utils/openLinkInBrowser"
 import { useFocusEffect } from '@react-navigation/native';
 
 const ICON_SIZE = 14
@@ -49,6 +49,17 @@ const rnrImage1 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
 const rnrImage2 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
 const rnrImage3 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
 const rnrImages = [rnrImage1, rnrImage2, rnrImage3]
+
+const MatchesCountDummy = observer(() => {
+  const { matchStore } = useStores();
+  // Use a dummy effect or variable that uses matchPool just for the sake of dependency
+  React.useEffect(() => {
+    console.log(`Updated matchPool length: ${matchStore.matchPool.length}`);
+  }, [matchStore.matchPool.length]);
+
+  return null; // Render nothing
+});
+
 
 export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = observer(
   function DemoPodcastListScreen(_props) {
@@ -60,24 +71,24 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
     const [page, setPage] = React.useState(1); // Pagination state
 
     /// Fetch liked IDs whenever the screen is focused
-    //useFocusEffect(
-      //React.useCallback(() => {
-        //let isActive = true
-        //const fetchLikedIds = async () => {
-          //if (isActive) {
-            //try {
-              //setIsLoading(true)
-              //await mongoDBStore.queryLikedUserProfiles(1, 10)
-              //setIsLoading(false)
-            //} catch (error) {
-              //console.error("Failed to fetch liked IDs on focus:", error)
-            //}
-          //}
-        //}
-        //fetchLikedIds()
-        //return () => setIsLoading(false)
-      //}, [mongoDBStore]),
-    //)
+    useFocusEffect(
+      React.useCallback(() => {
+        let isActive = true
+        const fetchLikedIds = async () => {
+          if (isActive) {
+            try {
+              setIsLoading(true)
+              await mongoDBStore.queryLikedUserProfiles(1, 10)
+              setIsLoading(false)
+            } catch (error) {
+              console.error("Failed to fetch liked IDs on focus:", error)
+            }
+          }
+        }
+        fetchLikedIds()
+        return () => setIsLoading(false)
+      }, []),
+    )
 const getMoreData = async () => {
   if (!isLoading) {
     setIsLoading(true);  // Indicate loading new data
@@ -146,7 +157,6 @@ const getMoreData = async () => {
           renderItem={({ item }) => (
             <PorfileCard
               profile={item}
-              //isFavorite={episodeStore.hasFavorite(item)}
               onPressFavorite={() => episodeStore.toggleFavorite(item)}
               isBlurred={item.isBlurred}
             />
@@ -166,48 +176,33 @@ const PorfileCard = observer(function PorfileCard({
   onPressFavorite: () => void
   isBlurred: boolean
 }) {
-  //const liked = useSharedValue(isFavorite ? 1 : 0)
+  const [showSportCard, setShowSportCard] = useState(false);
 
-  const imageUri = useMemo<ImageSourcePropType>(() => {
-    return rnrImages[Math.floor(Math.random() * rnrImages.length)]
-  }, [])
-
-  /**
-   * Android has a "longpress" accessibility action. iOS does not, so we just have to use a hint.
-   * @see https://reactnative.dev/docs/accessibility#accessibilityactions
-   */
-
-  //const handlePressCard = () => {
-    //openLinkInBrowser(episode.enclosure.link)
-  //}
+  const handlePressCard = () => {
+    setShowSportCard(!showSportCard);
+  };
 
   return (
-    <Card
-      style={$item}
-      verticalAlignment="force-footer-bottom"
-      //onPress={handlePressCard}
-      //onLongPress={handlePressFavorite}
-      //{...accessibilityHintProps}
-      ContentComponent={
-        <View>
-          <Image
-            source={{
-              uri: profile.imageSet[0].imageURL,
-            }}
-            style={$itemThumbnail}
-          />
-          <View style={$metadata}>
-            <Text
-              style={$metadataText}
-              size="sm"
-              //accessibilityLabel={episode.datePublished.accessibilityLabel}
-            >
-              {profile.firstName +  ", " + profile.sport.gameLevel}
-            </Text>
-          </View>
+    <>
+      <TouchableOpacity
+        onPress={handlePressCard}
+        style={$item} // Assuming $item is a predefined style
+      >
+        <Image
+          source={{ uri: profile.imageSet[0].imageURL }}
+          style={$itemThumbnail} // Assuming $itemThumbnail is predefined
+          blurRadius={isBlurred ? 20 : 0}
+        />
+        <View style={$metadata}>
+          {/* Assuming $metadata is predefined */}
+          <Text style={$metadataText} size="sm">
+            {/* Assuming $metadataText is predefined */}
+            {profile.firstName + ", " + profile.sport.gameLevel}
+          </Text>
         </View>
-      }
-    />
+      </TouchableOpacity>
+      {showSportCard && <SportCard match={profile} />}
+    </>
   )
 })
 

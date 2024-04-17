@@ -39,7 +39,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   const error = "";
 
   const handleImagesUpdate = (images: ImageData[]) => {
-    userStore?.setImageFiles(images);
+    userStore?.setImageSet(images);
   };
 
   const test = () => {
