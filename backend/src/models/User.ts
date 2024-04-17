@@ -38,44 +38,6 @@ var userSchema = new Schema(
       required: true,
       enum: GENDERS,
     },
-    preferencesHash: { type: String, default: "" }, // A hash or string representation of the filters used to fetch the match queue
-    preferences: {
-      type: {
-        gameLevel: {
-          type: {
-            min: {
-              type: Number,
-              required: true,
-              min: 1,
-              max: 8,
-            },
-            max: {
-              type: Number,
-              required: true,
-              min: 1,
-              max: 8,
-            },
-          },
-        },
-        age: {
-          type: {
-            min: {
-              type: Number,
-              required: true,
-              min: 18,
-              max: 90,
-            },
-            max: {
-              type: Number,
-              required: true,
-              min: 18,
-              max: 90,
-            },
-          },
-        },
-      },
-      required: true,
-    },
     sport: {
       type: {
         gameLevel: { type: Number, min: 1, max: 8 },

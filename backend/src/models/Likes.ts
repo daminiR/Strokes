@@ -26,6 +26,7 @@ const likesSchema = new Schema<LikeDocument>(
 );
 
 likesSchema.index({ likerId: 1, likedId: 1 });
+likesSchema.index({ timestamps: -1 }); // Indexing in descending order
 
 // Create the Mongoose model from the schema
 const Like = model<LikeDocument>('Like', likesSchema);

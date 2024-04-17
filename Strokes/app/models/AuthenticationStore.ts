@@ -26,6 +26,11 @@ export const AuthenticationStoreModel = types
     error: types.maybeNull(types.string),
   })
   .actions((self) => ({
+    clearUserSession: flow(function* () {
+      self.setIsAuthenticated(false)
+      yield removeStore()
+      yield AsyncStorage.clear()
+    }),
     checkCognitoUserSession() {
       const mongoDBStore = getRoot(self).mongoDBStore
       var userPool = new CognitoUserPool(poolData)
@@ -39,7 +44,7 @@ export const AuthenticationStoreModel = types
             cognitoUser.getSession(function (err, session) {
               if (err) {
                 console.error(err)
-                self.setIsAuthenticated(false)
+                self.clearUserSession()
                 return
               }
               if (session.isValid()) {
@@ -48,14 +53,12 @@ export const AuthenticationStoreModel = types
                 mongoDBStore.shouldQuery()
               } else {
                 console.log("Session is invalid")
-                self.setIsAuthenticated(false)
-                self.signOut()
+                self.clearUserSession()
               }
             })
           } else {
             console.log("No current Cognito user")
-            self.setIsAuthenticated(false)
-            self.signOut()
+            self.clearUserSession()
           }
         }
       })
@@ -255,17 +258,15 @@ export const AuthenticationStoreModel = types
           Pool: userPool,
         }
         const cognitoUser = new CognitoUser(userData)
-        yield new Promise( (resolve, reject) => {
+        yield new Promise((resolve, reject) => {
           cognitoUser.authenticateUser(authDetails, {
             onSuccess: async (result) => {
               console.log(result)
-              const userSub = result.idToken.payload.sub;
+              const userSub = result.idToken.payload.sub
               userStore.setID(userSub)
               await mongoDBStore.queryUserFromMongoDB(userSub)
+              await mongoDBStore.queryPotentialMatches()
               self.setIsAuthenticated(true)
-              // mongodb hydrate userstore hydrate
-              //self.setUser(cognitoUser)
-              //self.setError(null)
               resolve(result)
             },
             onFailure: (err) => {
@@ -324,7 +325,7 @@ export const AuthenticationStoreModel = types
         }
       } else {
         console.log("No user is currently signed in.")
-              self.setIsAuthenticated(false)
+        self.setIsAuthenticated(false)
         // Optionally, handle the case when no user is signed in (e.g., redirect to sign-in page)
       }
     }),
@@ -337,9 +338,9 @@ export const AuthenticationStoreModel = types
       self.error = error
     },
   }))
-  .actions(self => ({
+  .actions((self) => ({
     afterCreate() {
-      self.checkCognitoUserSession();
+      self.checkCognitoUserSession()
     },
   }))
 
