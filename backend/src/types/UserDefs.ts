@@ -123,8 +123,6 @@ export const UserType = `
     deleted: DeletedType
     phoneNumber: String
     email: String
-    preferences: FilterType!
-    preferencesHash: String!
     filtersChangesPerDay: Int!
   `
 

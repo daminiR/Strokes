@@ -35,6 +35,11 @@ export const LikedUserStore = types
     likedProfiles: types.array(LikedUserType),
   })
   .actions((self) => ({
+    appendLikedProfiles(newProfiles: any) {
+      console.log("testing likes before", self.likedProfiles)
+      self.likedProfiles.push(...newProfiles)
+      console.log("testing likes after", self.likedProfiles)
+    },
     addProfile(profile: any) {
       self.likedProfiles.push(profile)
     },

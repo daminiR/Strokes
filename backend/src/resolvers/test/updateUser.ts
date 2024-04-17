@@ -341,7 +341,7 @@ export const resolvers = {
 
         const likeActionsResults: LikeActionResult[] = [];
         const numLikes = randomize
-          ? Math.min(50, allUsers.length)
+          ? Math.min(100, allUsers.length)
           : allUsers.length;
 
         for (let i = 0; i < numLikes; i++) {

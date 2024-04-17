@@ -22,49 +22,45 @@ export const resolvers = {
           throw new Error("Match pool not found for the user.");
         }
 
-        const likes = await Like.find({ likedId: userId });
+        // Fetch likes sorted by timestamps in descending order
+        const likes = await Like.find({ likedId: userId })
+          .sort({ timestamps: -1 }) // Sorting by timestamps
+          .skip(skip)
+          .limit(PAGE_SIZE);
+
+        // Filter out disliked and matched user IDs
         const matches = await Match.find({
           $or: [{ user1Id: userId }, { user2Id: userId }],
         });
-
         const matchedUserIds = matches.map((match) =>
           match.user1Id.toString() === userId
             ? match.user2Id.toString()
             : match.user1Id.toString()
         );
-
-        // Collect IDs from dislikes array for exclusion
         const dislikedIds = matchPool.dislikes.map((dislike) =>
           dislike._id.toString()
         );
 
-        const unlikedUserIds = likes
+        const validLikedUserIds = likes
           .map((like) => like.likerId.toString())
           .filter(
             (id) => !matchedUserIds.includes(id) && !dislikedIds.includes(id)
           );
 
-        if (unlikedUserIds.length === 0) {
-          return []; // No potential matches found after exclusions
+        if (validLikedUserIds.length === 0) {
+          return []; // No valid likes after exclusions
         }
-
-        console.log("likesID", likes.length)
-        console.log("unlikedUserIds", unlikedUserIds.length)
-        console.log("matchedUserIds", matchedUserIds.length)
-        console.log("dislikesID", dislikedIds.length)
-
+        console.log("len of validLies", likes.length)
 
         // Fetch detailed user data, excluding disliked users
         const users = await User.find({
-          _id: { $in: unlikedUserIds },
-        })
-          .skip(skip)
-          .limit(PAGE_SIZE)
-          .select(
-            "firstName image_set age neighborhood gender sport description"
-          );
+          _id: { $in: validLikedUserIds },
+        }).select(
+          "firstName image_set age neighborhood gender sport description"
+        );
 
         const currentDate = new Date().toISOString();
+
         // Map over fetched users to determine which should be blurred based on LikesPerDay
         return users.map((user, index) => ({
           matchUserId: user._id.toString(),

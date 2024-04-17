@@ -38,7 +38,6 @@ export const resolvers = {
           console.log("Updated user with filtered matches", updatedUser);
           return updatedUser;
         }
-
         return userDocument;
       } catch (error) {
         // Check if error is an instance of Error
