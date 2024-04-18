@@ -52,7 +52,7 @@ export const PotentialMatchUserType = `
     sport: SportNode!
     description: String
     neighborhood: LocationType!
-    image_set: [Data!]!
+    imageSet: [Data!]!
     createdAt: String,
     updatedAt: String
     interacted: Boolean!
@@ -71,7 +71,7 @@ export const LikedByUserType = `
     sport: SportNode!
     description: String
     neighborhood: LocationType!
-    image_set: [Data!]!
+    imageSet: [Data!]!
 `
 export const UserStatsType = `
     _id: ID!
@@ -87,7 +87,7 @@ export const LikedByUserInputType = `
     gender: String!
     sport: SportNodeInput
     description: String
-    image_set: [DataInput!]!
+    imageSet: [DataInput!]!
     neighborhood: LocationInput!
 `
 export const userExistT = `
@@ -101,7 +101,7 @@ export const PotentialMatchUserInputType = `
     gender: String!
     sport: SportNodeInput
     description: String
-    image_set: [DataInput!]!
+    imageSet: [DataInput!]!
     neighborhood: LocationInput!
 `
 export const UserType = `
@@ -113,7 +113,7 @@ export const UserType = `
     sport: SportNode!
     neighborhood: LocationType!
     description: String
-    image_set: [Data!]!
+    imageSet: [Data!]!
     blocked_me : [PotentialMatch!]
     i_blocked : [PotentialMatch!]
     lastFetchedFromTrigger: String
@@ -136,7 +136,7 @@ export const UserInputType = `
     neighborhood: LocationInput!
     description: String
     filtersChangesPerDay: Int!
-    image_set: [DataInput!]!
+    imageSet: [DataInput!]!
     deleted: DeletedInput
     blocked_me : [String!]
     i_blocked : [String!]

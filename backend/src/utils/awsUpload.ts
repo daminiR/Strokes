@@ -97,11 +97,11 @@ async function createAWSUpload(imageSet, uniqueId) {
   }
 }
 
-const deleteAllUserImages = async (image_set) => {
+const deleteAllUserImages = async (imageSet) => {
   // remove from gc AND mongdb
   await new Promise<void>((resolve, reject) => {
     try {
-      image_set.map(async (imageObj) => {
+      imageSet.map(async (imageObj) => {
         console.log("imageObj", imageObj.filePath)
       });
       resolve();
@@ -164,17 +164,17 @@ const deleteAWSObjects = async({ Bucket, keys }) => {
 }
 const deleteFilesFromAWS = async (
   files_to_del,
-  original_uploaded_image_set,
+  original_uploaded_imageSet,
   add_local_images_length
 ) => {
   if (
-    original_uploaded_image_set.length -
+    original_uploaded_imageSet.length -
       files_to_del.length +
       add_local_images_length >=
     1
   ) {
     const img_idx_del = files_to_del.map((imgObj) => imgObj.img_idx);
-    const filtered_array = original_uploaded_image_set.filter(
+    const filtered_array = original_uploaded_imageSet.filter(
       (imgObj) => !img_idx_del.includes(imgObj.img_idx)
     );
     await deleteAWSObjects({
@@ -183,7 +183,7 @@ const deleteFilesFromAWS = async (
     });
     return filtered_array;
   } else {
-    return original_uploaded_image_set;
+    return original_uploaded_imageSet;
   }
 };
 const manageImages = async (
@@ -192,15 +192,14 @@ const manageImages = async (
   originalImages,
   _id
 ) => {
-  const removed_image_set = await deleteFilesFromAWS(
+  const removed_imageSet = await deleteFilesFromAWS(
     removeUploadedImages,
     originalImages,
     addLocalImages.length
   );
-  const data_set = await createAWSUpload(addLocalImages, _id);
-  const final_image_set = removed_image_set.concat(data_set);
-  console.log("final", final_image_set)
-  return final_image_set;
+  const dataSet = await createAWSUpload(addLocalImages, _id);
+  const final_imageSet = removed_imageSet.concat(dataSet);
+  return final_imageSet;
 };
 
   export {manageImages, deleteAllUserImages, deleteFilesFromAWS, createAWSUpload, deleteImagesFromS3}

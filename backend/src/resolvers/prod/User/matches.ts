@@ -86,7 +86,7 @@ export const resolvers = {
           .map((match) => ({
             matchUserId: match.matchUserId,
             firstName: match.firstName,
-            image_set: match.image_set,
+            imageSet: match.imageSet,
             age: match.age,
             neighborhood: match.neighborhood,
             gender: match.gender,
@@ -96,7 +96,6 @@ export const resolvers = {
             description: match.description,
             interacted: match.interacted,
           }));
-        console.log(potentialMatches.length)
         return {
           potentialMatches:  potentialMatches,
           lastUpdated:  new Date(),

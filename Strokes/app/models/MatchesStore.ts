@@ -75,16 +75,15 @@ const MatchesStoreModel = types
       }
     }),
     likeAction: flow(function* (likedId) {
-      console.log(likedId)
       const mongoDBStore = getRootStore(self).mongoDBStore
       const userStore = getRootStore(self).userStore
+      const likedUserStore = getRootStore(self).likedUserStore
       let attemptCount = 0
       let success = false
 
       while (!success && attemptCount < 3) {
         try {
           success = yield mongoDBStore.recordLike(likedId)
-
           // Always update the interaction status regardless of like success
           const matchData = yield mongoDBStore.updateMatchQueueInteracted(
             userStore._id,
@@ -106,9 +105,10 @@ const MatchesStoreModel = types
               // Record the match in the matches collection
               yield mongoDBStore.createMatch(likedId)
               // Optionally, update UI or state to reflect the new match
+              // remove from likedSet if any
               Alert.alert("Congratulations! You have a new match.")
+              likedUserStore.removeLikedUser(likedId)
             }
-
             // Exit the loop if like is successfully recorded
             break
           } else {

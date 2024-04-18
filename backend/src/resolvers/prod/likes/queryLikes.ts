@@ -50,13 +50,12 @@ export const resolvers = {
         if (validLikedUserIds.length === 0) {
           return []; // No valid likes after exclusions
         }
-        console.log("len of validLies", likes.length)
 
         // Fetch detailed user data, excluding disliked users
         const users = await User.find({
           _id: { $in: validLikedUserIds },
         }).select(
-          "firstName image_set age neighborhood gender sport description"
+          "firstName imageSet age neighborhood gender sport description"
         );
 
         const currentDate = new Date().toISOString();
@@ -69,7 +68,7 @@ export const resolvers = {
             return {
                 matchUserId: user._id.toString(),
                 firstName: user.firstName,
-                imageSet: user.image_set,
+                imageSet: user.imageSet,
                 age: user.age,
                 neighborhood: user.neighborhood,
                 gender: user.gender,

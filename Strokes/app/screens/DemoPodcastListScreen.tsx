@@ -1,39 +1,24 @@
 import { observer } from "mobx-react-lite"
 import React, { ComponentType, FC, useEffect, useState, useMemo } from "react"
 import {
-  AccessibilityProps,
   ActivityIndicator,
   Image,
   TouchableOpacity,
   ImageStyle,
-  Platform,
-  StyleSheet,
   TextStyle,
   View,
   ViewStyle,
   Dimensions,
 } from "react-native"
 import { type ContentStyle } from "@shopify/flash-list"
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated"
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
-  Button,
-  ButtonAccessoryProps,
-  PlayerDetails,
-  Card,
-  SportCard,
   EmptyState,
-  Icon,
   ListView,
   Screen,
   Text,
-  Toggle,
-  CircularPlayerRatingBar
+  Button,
+  LikedByUserModal,
 } from "../components"
 import { isRTL, translate } from "../i18n"
 import { useStores } from "../models"
@@ -67,6 +52,7 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = 
     const { likedUserStore, mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
 
     const [refreshing, setRefreshing] = React.useState(false)
+    const [isSwiping, setIsSwiping] = useState(false);
     const [isLoading, setIsLoading] = React.useState(false)
     const [page, setPage] = React.useState(1); // Pagination state
 
@@ -157,11 +143,11 @@ const getMoreData = async () => {
           renderItem={({ item }) => (
             <PorfileCard
               profile={item}
-              onPressFavorite={() => episodeStore.toggleFavorite(item)}
               isBlurred={item.isBlurred}
             />
           )}
         />
+
       </Screen>
     )
   },
@@ -170,18 +156,21 @@ const getMoreData = async () => {
 const PorfileCard = observer(function PorfileCard({
   profile,
   onPressFavorite,
-  isBlurred
+  isBlurred,
+  isSwiping,
+  handleSwipeLeft,
+  handleSwipeRight
 }: {
   profile: any // for now
-  onPressFavorite: () => void
   isBlurred: boolean
 }) {
-  const [showSportCard, setShowSportCard] = useState(false);
-
+  const [showSportCard, setShowSportCard] = useState(false)
+  const handleClose = () => {
+    setShowSportCard(!showSportCard)
+  }
   const handlePressCard = () => {
-    setShowSportCard(!showSportCard);
-  };
-
+    setShowSportCard(!showSportCard)
+  }
   return (
     <>
       <TouchableOpacity
@@ -201,7 +190,7 @@ const PorfileCard = observer(function PorfileCard({
           </Text>
         </View>
       </TouchableOpacity>
-      {showSportCard && <SportCard match={profile} />}
+      <LikedByUserModal profile={profile} showSportCard={showSportCard} handleClose={handleClose} />
     </>
   )
 })
@@ -210,6 +199,41 @@ const PorfileCard = observer(function PorfileCard({
 const $screenContentContainer: ViewStyle = {
   flex: 1,
 }
+  const $iconStyle: ViewStyle = {
+  marginTop: 10, // Adjust this value to lower the icon by the desired amount
+};
+const $rightFAB: ViewStyle = {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 8, // Shadow for Android
+    shadowColor: '#000', // Shadow for iOS
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: 2,
+  }
+const $leftFAB: ViewStyle = {
+    position: 'absolute',
+    margin: 16,
+    left: 0,
+    bottom: 0,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 8, // Shadow for Android
+    shadowColor: '#000', // Shadow for iOS
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: 2,
+  }
 
 const $listContentContainer: ContentStyle = {
   paddingHorizontal: spacing.md, // Adjust if necessary to align with the card's horizontal margin

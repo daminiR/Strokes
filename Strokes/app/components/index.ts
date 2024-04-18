@@ -1,5 +1,6 @@
 export * from "./AutoImage"
 export * from "./FilterModel"
+export * from "./LikedByUserModal"
 export * from "./SportCard"
 export * from "./SBItem"
 export * from "./UpdateProfileCard"

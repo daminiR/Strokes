@@ -32,7 +32,7 @@ export const resolvers = {
           gender: doc?.gender,
           sport: doc?.sport,
           description: doc?.description,
-          image_set: doc?.image_set,
+          imageSet: doc?.imageSet,
           neighborhood: doc?.neighborhood,
         };
         const update = { $addToSet: { likedByUSers: likedByUser } };
@@ -53,7 +53,7 @@ export const resolvers = {
           { new: true }
         );
         const filter = { _id: likes };
-        //const profileImage = _.find(doc?.image_set, (imgObj) => {
+        //const profileImage = _.find(doc?.imageSet, (imgObj) => {
         //imgObj.img_idx == 0;
         //});
         const likedByUser = {
@@ -63,7 +63,7 @@ export const resolvers = {
           gender: doc?.gender,
           sport: doc?.sport,
           description: doc?.description,
-          image_set: doc?.image_set,
+          imageSet: doc?.imageSet,
           neighborhood: doc?.neighborhood,
         };
         const update = { $addToSet: { likedByUSers: likedByUser } };

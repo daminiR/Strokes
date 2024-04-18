@@ -32,7 +32,7 @@ export const UPDATE_MATCH_QUEUE_INTERACTED_MUTATION = gql`
             gameLevel
           }
           description
-          image_set {
+          imageSet {
             img_idx
             imageURL
           }

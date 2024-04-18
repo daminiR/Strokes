@@ -6,7 +6,7 @@ const ADD_PROFILE2 = gql`
     $first_name: String!
     $last_name: String!
     $gender: String!
-    $image_set: [FileUploadInput!]!
+    $imageSet: [FileUploadInput!]!
     $sport: SquashNodeInput!
     $age: Int!
     $description: String!
@@ -23,7 +23,7 @@ const ADD_PROFILE2 = gql`
       sport: $sport
       location: $location
       last_name: $last_name
-      image_set: $image_set
+      imageSet: $imageSet
       description: $description
       phoneNumber: $phoneNumber
       email: $email

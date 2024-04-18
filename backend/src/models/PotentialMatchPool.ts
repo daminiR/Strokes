@@ -20,7 +20,7 @@ interface Sport {
 interface PotentialMatch {
   matchUserId: string;
   firstName: string;
-  image_set: ImageSet[];
+  imageSet: ImageSet[];
   age: number;
   neighborhood: Neighborhood;
   gender: string;
@@ -103,7 +103,7 @@ export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
         createdAt: { type: Date, default: Date.now },
         updatedAt: { type: Date, default: Date.now },
         interacted: { type: Boolean, default: false },
-        image_set: [
+        imageSet: [
           {
             img_idx: { type: Number, required: true },
             imageURL: { type: String, required: true },

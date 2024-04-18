@@ -211,7 +211,7 @@ type DislikeRecord {
       sport: SportNodeInput!
       neighborhood: LocationInput!
       description: String!
-      image_set: [FileUpload!]
+      imageSet: [FileUpload!]
       matches : [PotentialMatchInput!]
       blocked_me : [PotentialMatchInput!]
       i_blocked : [PotentialMatchInput!]
@@ -234,7 +234,7 @@ type DislikeRecord {
       sport: SportNodeInput!
       neighborhood: LocationInput!
       description: String!
-      image_set: [DataInput!]!
+      imageSet: [DataInput!]!
       matches : [PotentialMatchInput!]
       blocked_me : [PotentialMatchInput!]
       i_blocked : [PotentialMatchInput!]

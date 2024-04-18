@@ -53,7 +53,7 @@ var userSchema = new Schema(
       type: String,
       maxlength: 300,
     },
-    image_set: {
+    imageSet: {
       type: [
         {
           img_idx: { type: Number },

@@ -261,7 +261,7 @@ export const resolvers = {
           {
             $project: {
               firstName: 1,
-              image_set: 1,
+              imageSet: 1,
               age: 1,
               neighborhood: 1,
               gender: 1,
@@ -278,7 +278,7 @@ export const resolvers = {
               potentialMatches: newPotentialMatches.map((match) => ({
                 matchUserId: match._id,
                 firstName: match.firstName,
-                image_set: match.image_set,
+                imageSet: match.imageSet,
                 age: match.age,
                 neighborhood: match.neighborhood,
                 gender: match.gender,

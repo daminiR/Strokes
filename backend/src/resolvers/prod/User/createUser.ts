@@ -19,7 +19,7 @@ export const resolvers = {
     registerNewPlayer: async (root, unSanitizedData, context) => {
       const {
         _id,
-        image_set,
+        imageSet,
         firstName,
         lastName,
         gender,
@@ -36,7 +36,7 @@ export const resolvers = {
       let potentialMatchPoolDoc;
 
       try {
-        data_set = await createAWSUpload(image_set, _id);
+        data_set = await createAWSUpload(imageSet, _id);
       } catch (error) {
         const uploadError =
           error instanceof Error
@@ -78,7 +78,7 @@ export const resolvers = {
           potentialMatches: potentialMatches.map((match) => ({
             matchUserId: match.matchUserId, // Adjust as necessary
             firstName: match.firstName, // Assuming these fields are directly available from the aggregation
-            image_set: match.image_set, // This should match the ImageSet[] structure
+            imageSet: match.imageSet, // This should match the ImageSet[] structure
             age: match.age,
             neighborhood: match.neighborhood, // Ensure this matches the Neighborhood structure
             gender: match.gender,
@@ -97,7 +97,7 @@ export const resolvers = {
         // Attempt to create User document
         userDoc = await User.create({
           _id: _id,
-          image_set: data_set,
+          imageSet: data_set,
           firstName: firstName,
           lastName: lastName,
           gender: gender,

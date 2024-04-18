@@ -33,7 +33,7 @@ const APPLY_FILTERS = gql`
           gameLevel
         }
         description
-        image_set {
+        imageSet {
           img_idx
           imageURL
         }
@@ -49,7 +49,7 @@ const UPDATE_USER_PROFILE = gql`
     $gender: String!
     $add_local_images: [FileUploadInput!]!
     $remove_uploaded_images: [DataInput]
-    $original_uploaded_image_set: [DataInput!]!
+    $original_uploaded_imageSet: [DataInput!]!
     $sport: SquashNodeInput!
     $neighborhood: LocationInput!
     $age: Int!
@@ -65,7 +65,7 @@ const UPDATE_USER_PROFILE = gql`
       lastName: $lastName
       addLocalImages: $add_local_images
       removeUploadedImages: $remove_uploaded_images
-      originalImages: $original_uploaded_image_set
+      originalImages: $original_uploaded_imageSet
       description: $description
     ) {
       _id
@@ -83,7 +83,7 @@ const UPDATE_USER_PROFILE = gql`
         gameLevel
       }
       description
-      image_set {
+      imageSet {
         img_idx
         imageURL
         filePath
@@ -106,7 +106,7 @@ const UPDATE_DISLIKES = gql`
         gameLevel
       }
       description
-      image_set {
+      imageSet {
         img_idx
         imageURL
         filePath
