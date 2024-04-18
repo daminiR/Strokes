@@ -69,7 +69,6 @@ export const resolvers = {
       { currentUserId, matchUserId, isLiked }
     ) => {
       try {
-        // Fetch the current state of the PotentialMatchPool
         const currentPool = await PotentialMatchPool.findOne({
           userId: currentUserId,
         });
@@ -78,46 +77,62 @@ export const resolvers = {
           throw new Error("No match pool found for this user.");
         }
 
-        // Check if matchUserId is already in the dislikes
-        if (
-          currentPool.dislikes &&
-          currentPool.dislikes.some((dislike) => dislike._id === matchUserId)
-        ) {
-          // Set interacted to true for the disliked user before throwing error
-          await PotentialMatchPool.updateOne(
-            {
-              userId: currentUserId,
-              "potentialMatches.matchUserId": matchUserId,
-            },
-            { $set: { "potentialMatches.$[elem].interacted": true } },
-            { arrayFilters: [{ "elem.matchUserId": matchUserId }] }
-          );
-
-          throw new Error("This user has already been disliked.");
-        }
-
-        // Check if matchUserId is in the potentialMatches
         const matchExists = currentPool.potentialMatches.some(
           (match) => match.matchUserId === matchUserId
         );
 
-        let updateOperations = {
-          $set: { "potentialMatches.$[elem].interacted": true },
-          $inc: { swipesPerDay: -1 }, // Decrement swipes regardless of like or dislike
-        };
+        // Early update for dislikes if user is not liked and not in potentialMatches
+        if (!isLiked && !matchExists) {
+          await PotentialMatchPool.updateOne(
+            { userId: currentUserId },
+            {
+              $push: {
+                dislikes: {
+                  _id: matchUserId,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+              },
+            }
+          );
 
-        if (!isLiked && matchExists) {
-          updateOperations["$push"] = {
-            dislikes: {
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              _id: matchUserId,
+          return {
+            success: true,
+            message:
+              "User added to dislikes successfully, no match in potential matches to update.",
+            data: {
+              potentialMatches: currentPool.potentialMatches.filter(
+                (match) => !match.interacted
+              ),
+              dislikes: [
+                ...currentPool.dislikes,
+                {
+                  _id: matchUserId,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+              ],
             },
           };
         }
 
         if (matchExists) {
-          await PotentialMatchPool.updateOne(
+          let updateOperations = {
+            $set: { "potentialMatches.$[elem].interacted": true },
+            $inc: { swipesPerDay: -1 },
+          };
+
+          if (!isLiked) {
+            updateOperations["$push"] = {
+              dislikes: {
+                _id: matchUserId,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+              },
+            };
+          }
+
+          const updateResult = await PotentialMatchPool.updateOne(
             {
               userId: currentUserId,
               "potentialMatches.matchUserId": matchUserId,
@@ -125,34 +140,41 @@ export const resolvers = {
             updateOperations,
             { arrayFilters: [{ "elem.matchUserId": matchUserId }] }
           );
-        }
 
-        // Fetch the updated details or current details if no update was made
-        const updatedUser = await PotentialMatchPool.findOne({
-          userId: currentUserId,
-        });
+          const updatedUser = await PotentialMatchPool.findOne({
+            userId: currentUserId,
+          });
 
-        if (!updatedUser) {
+          if (!updatedUser) {
+            return {
+              success: false,
+              message: "Failed to fetch updated user details.",
+            };
+          }
+
           return {
-            success: false,
-            message: "Failed to fetch updated user details.",
+            success: true,
+            message: "MatchQueue and swipesPerDay updated successfully",
+            data: {
+              potentialMatches: updatedUser.potentialMatches.filter(
+                (match) => !match.interacted
+              ),
+              dislikes: updatedUser.dislikes,
+            },
+          };
+        } else {
+          // Handle case where matchUserId is not found and isLiked is true
+          return {
+            success: true,
+            message: "No update needed, user not found in potential matches",
+            data: {
+              potentialMatches: currentPool.potentialMatches.filter(
+                (match) => !match.interacted
+              ),
+              dislikes: currentPool.dislikes,
+            },
           };
         }
-
-        const uninteractedMatches = updatedUser.potentialMatches.filter(
-          (match) => !match.interacted
-        );
-
-        return {
-          success: true,
-          message: matchExists
-            ? "MatchQueue and swipesPerDay updated successfully"
-            : "No update needed, user not found in potential matches",
-          data: {
-            potentialMatches: uninteractedMatches, // Only potential matches that haven't been interacted with
-            dislikes: updatedUser.dislikes,
-          },
-        };
       } catch (error) {
         console.error(error);
         if (error instanceof Error) {
@@ -161,7 +183,6 @@ export const resolvers = {
             message: "Failed to update MatchQueue: " + error.message,
           };
         } else {
-          console.error("An unexpected error occurred:", error);
           throw new Error(
             "An unexpected error occurred while updating potential match pool."
           );

@@ -50,6 +50,7 @@ const MatchesStoreModel = types
       try {
         const userStore = getRootStore(self).userStore
         const mongoDBStore = getRootStore(self).mongoDBStore
+        const likedUserStore = getRootStore(self).likedUserStore
         // Update the function call with the correct argument name for clarity
         const matchData = yield mongoDBStore.updateMatchQueueInteracted(
           userStore._id,
@@ -59,6 +60,7 @@ const MatchesStoreModel = types
         if (matchData.success) {
           runInAction(() => {
             self.matchPool = matchData.data.potentialMatches
+            likedUserStore.removeLikedUser(dislikedId)
           })
         } else {
           console.error("Failed to update match queue:", matchData.message)
