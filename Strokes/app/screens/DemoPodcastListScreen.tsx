@@ -11,7 +11,6 @@ import {
   Dimensions,
 } from "react-native"
 import { type ContentStyle } from "@shopify/flash-list"
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
   EmptyState,
   ListView,
@@ -104,8 +103,6 @@ const getMoreData = async () => {
       setIsLoading(false)
       setRefreshing(false)
     }
-
-
     return (
       <Screen
         preset="fixed"
