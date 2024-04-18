@@ -77,7 +77,7 @@ export const UserStoreModel = types
       self.firstName = userData.firstName
       self.lastName = userData.lastName
       self.gender = userData.gender
-      self.imageSet = cast(userData.image_set)
+      self.imageSet = cast(userData.imageSet)
       self.neighborhood = userData.neighborhood
       self.description = userData.description
     },

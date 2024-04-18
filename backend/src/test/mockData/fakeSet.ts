@@ -32,7 +32,7 @@ interface User {
   sport: Sport
   neighborhood: Neighborhood;
   description: string;
-  image_set: ImageSet[];
+  imageSet: ImageSet[];
   phoneNumber: string;
   email: string;
 }
@@ -58,7 +58,7 @@ function generateUser(): User {
       country: "US",
     },
     description: "hi i play squash too!",
-    image_set: [
+    imageSet: [
       { img_idx: 1, imageURL: image1, filePath: image1 },
       { img_idx: 2, imageURL: image2, filePath: image2 },
       { img_idx: 3, imageURL: image3, filePath: image3 },
@@ -96,14 +96,14 @@ users.forEach((row: any) => {
     country: row.neighborhood.country,
     description: row.description,
     img_idx1: 1,
-    imageURL1: row.image_set[0].imageURL,
-    filePath1: row.image_set[0].filePath,
+    imageURL1: row.imageSet[0].imageURL,
+    filePath1: row.imageSet[0].filePath,
     img_idx2: 2,
-    imageURL2: row.image_set[1].imageURL,
-    filePath2: row.image_set[1].filePath,
+    imageURL2: row.imageSet[1].imageURL,
+    filePath2: row.imageSet[1].filePath,
     img_idx3: 3,
-    imageURL3: row.image_set[2].imageURL,
-    filePath3: row.image_set[2].filePath,
+    imageURL3: row.imageSet[2].imageURL,
+    filePath3: row.imageSet[2].filePath,
     phoneNumber: row.phoneNumber,
     email: row.email,
       });

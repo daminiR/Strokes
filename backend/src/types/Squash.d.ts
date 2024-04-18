@@ -47,7 +47,7 @@ export interface PotentialMatchType {
     gender: string
     sport: Sport,
     description: string
-    image_set: ImageSetT[]
+    imageSet: ImageSetT[]
 }
 export interface MatchQueueType {
     _id: string
@@ -73,7 +73,7 @@ export interface UserDocument extends Document {
   sport: Sport
   neighborhood: LocationT
   description: [string]
-  image_set: ImageSetT[]
+  imageSet: ImageSetT[]
   matches : PotentialMatchT
   blocked_me : PotentialMatchT
   i_blocked : PotentialMatchT

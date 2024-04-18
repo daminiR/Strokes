@@ -48,7 +48,7 @@ const GET_POTENTIAL_MATCHES = gql`
           gameLevel
         }
         description
-        image_set {
+        imageSet {
           img_idx
           imageURL
         }
@@ -82,7 +82,7 @@ const READ_SQUASH = gql`
       description
       phoneNumber
       email
-      image_set {
+      imageSet {
         img_idx
         imageURL
         filePath

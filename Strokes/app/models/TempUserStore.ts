@@ -102,7 +102,7 @@ export const TempStoreModel = types
       //self.firstName = userData.firstName
       //self.lastName = userData.lastName
       //self.gender = userData.gender
-      //self.imageFiles = cast(userData.image_set)
+      //self.imageFiles = cast(userData.imageSet)
       //self.neighborhood = userData.neighborhood
       //self.description = userData.description
     },

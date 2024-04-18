@@ -96,68 +96,71 @@ export const resolvers = {
           throw new Error("This user has already been disliked.");
         }
 
-        // Prepare update operations
+        // Check if matchUserId is in the potentialMatches
+        const matchExists = currentPool.potentialMatches.some(
+          (match) => match.matchUserId === matchUserId
+        );
+
         let updateOperations = {
           $set: { "potentialMatches.$[elem].interacted": true },
           $inc: { swipesPerDay: -1 }, // Decrement swipes regardless of like or dislike
         };
 
-        // If it's a dislike, update the dislikes array
-        if (!isLiked) {
+        if (!isLiked && matchExists) {
           updateOperations["$push"] = {
             dislikes: {
               createdAt: new Date(),
               updatedAt: new Date(),
-              _id: matchUserId, // Assuming _id should be the ID of the disliked user
+              _id: matchUserId,
             },
           };
         }
 
-        // Perform a single update operation
-        const updateResult = await PotentialMatchPool.updateOne(
-          {
-            userId: currentUserId,
-            "potentialMatches.matchUserId": matchUserId,
-          },
-          updateOperations,
-          { arrayFilters: [{ "elem.matchUserId": matchUserId }] }
-        );
+        if (matchExists) {
+          await PotentialMatchPool.updateOne(
+            {
+              userId: currentUserId,
+              "potentialMatches.matchUserId": matchUserId,
+            },
+            updateOperations,
+            { arrayFilters: [{ "elem.matchUserId": matchUserId }] }
+          );
+        }
 
-        // After updating, fetch the updated details
-        if (updateResult.matchedCount > 0 && updateResult.modifiedCount > 0) {
-          const updatedUser = await PotentialMatchPool.findOne({
-            userId: currentUserId,
-          });
-          if (updatedUser) {
-            const uninteractedMatches = updatedUser.potentialMatches.filter(
-              (match) => !match.interacted
-            );
-            return {
-              success: true,
-              message: "MatchQueue and swipesPerDay updated successfully",
-              data: {
-                potentialMatches: uninteractedMatches, // Only potential matches that haven't been interacted with
-                dislikes: updatedUser.dislikes,
-              },
-            };
-          }
-        } else {
+        // Fetch the updated details or current details if no update was made
+        const updatedUser = await PotentialMatchPool.findOne({
+          userId: currentUserId,
+        });
+
+        if (!updatedUser) {
           return {
             success: false,
-            message:
-              "Failed to update the interacted status or decrement swipes",
+            message: "Failed to fetch updated user details.",
           };
         }
+
+        const uninteractedMatches = updatedUser.potentialMatches.filter(
+          (match) => !match.interacted
+        );
+
+        return {
+          success: true,
+          message: matchExists
+            ? "MatchQueue and swipesPerDay updated successfully"
+            : "No update needed, user not found in potential matches",
+          data: {
+            potentialMatches: uninteractedMatches, // Only potential matches that haven't been interacted with
+            dislikes: updatedUser.dislikes,
+          },
+        };
       } catch (error) {
         console.error(error);
-        // Check if error is an instance of Error
         if (error instanceof Error) {
           return {
             success: false,
             message: "Failed to update MatchQueue: " + error.message,
           };
         } else {
-          // Handle unexpected errors, which might not be an instance of Error
           console.error("An unexpected error occurred:", error);
           throw new Error(
             "An unexpected error occurred while updating potential match pool."
@@ -200,10 +203,9 @@ export const resolvers = {
         }
 
         // Fetch all liked and disliked IDs
-        const likes = await Like.find(
-          { likerId: _id },
-          "likedId"
-        ).session(session);
+        const likes = await Like.find({ likerId: _id }, "likedId").session(
+          session
+        );
         const likedUserIds = likes.map((like) => like.likedId.toString());
         const dislikedUserIds = currentPool.dislikes.map((dislike) =>
           dislike._id.toString()
@@ -238,7 +240,7 @@ export const resolvers = {
               potentialMatches: potentialMatches.map((match) => ({
                 matchUserId: match._id.toString(),
                 firstName: match.firstName,
-                image_set: match.image_set,
+                imageSet: match.imageSet,
                 age: match.age,
                 neighborhood: match.neighborhood,
                 gender: match.gender,
@@ -302,7 +304,7 @@ export const resolvers = {
         if (!currentSquashProfile) {
           throw new Error("User profile not found.");
         }
-        const final_image_set = await manageImages(
+        const final_imageSet = await manageImages(
           addLocalImages,
           removeUploadedImages,
           originalImages,
@@ -319,7 +321,7 @@ export const resolvers = {
             sport,
             neighborhood,
             description,
-            image_set: final_image_set,
+            imageSet: final_imageSet,
             // Include other fields as necessary
           },
           { new: true, session }

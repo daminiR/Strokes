@@ -144,7 +144,7 @@ const MongoDBStore = types
             _id: userStore._id,
             add_local_images: addLocalImagesRN,
             remove_uploaded_images: removeUploadedImages,
-            original_uploaded_image_set: userStore.imageSet,
+            original_uploaded_imageSet: userStore.imageSet,
             firstName: tempUserStore.firstName,
             lastName: tempUserStore.lastName,
             age: tempUserStore.age,
@@ -177,7 +177,7 @@ const MongoDBStore = types
             phoneNumber: userStore.phoneNumber,
             email: userStore.email,
             _id: userStore._id,
-            image_set: rnfiles,
+            imageSet: rnfiles,
             firstName: userStore.firstName,
             lastName: userStore.lastName,
             age: 33,
@@ -318,7 +318,8 @@ const MongoDBStore = types
         })
         // Assuming your GraphQL API returns a success field in the response
         const cleanedResponse = cleanGraphQLResponse(result.data.updateMatchQueueInteracted)
-        if (result.data.updateMatchQueueInteracted.success) {
+        console.log("cleaned respo", cleanedResponse)
+        if (cleanedResponse.success) {
           console.log("Successfully updated matchQueue interacted status")
           return cleanedResponse
         } else {

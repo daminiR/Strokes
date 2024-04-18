@@ -39,7 +39,7 @@
               <elementProp name="query" elementType="HTTPArgument" enabled="true">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.name">query</stringProp>
-                <stringProp name="Argument.value">query Squash($id: String!) { squash(id: $id) { _id first_name last_name age gender sports { sport game_level } country description image_set { img_idx imageURL filePath } } }</stringProp>
+                <stringProp name="Argument.value">query Squash($id: String!) { squash(id: $id) { _id first_name last_name age gender sports { sport game_level } country description imageSet { img_idx imageURL filePath } } }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
               </elementProp>
@@ -79,7 +79,7 @@
       }
       country
       description
-      image_set {
+      imageSet {
         img_idx
         imageURL
         filePath
@@ -127,7 +127,7 @@
                 <elementProp name="query" elementType="HTTPArgument" enabled="true">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.name">query</stringProp>
-                  <stringProp name="Argument.value">query QueryProssibleMatches ($_id: String!){ queryProssibleMatches (_id: $_id ){ _id first_name last_name age gender sports { sport game_level } country description image_set { img_idx imageURL } } }</stringProp>
+                  <stringProp name="Argument.value">query QueryProssibleMatches ($_id: String!){ queryProssibleMatches (_id: $_id ){ _id first_name last_name age gender sports { sport game_level } country description imageSet { img_idx imageURL } } }</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -167,7 +167,7 @@
       }
       country
       description
-      image_set {
+      imageSet {
         img_idx
         imageURL
       }
@@ -581,9 +581,9 @@ vars.putObject(&quot;newSport&quot;, array)
   &quot;gender&quot;: &quot;${genderUser}&quot;,
   &quot;age&quot;: ${age2},
   &quot;sports&quot;:&quot;${sports}&quot;,
-  &quot;image_set&quot;:&quot;${image_set}&quot;,
+  &quot;imageSet&quot;:&quot;${imageSet}&quot;,
   &quot;description&quot;:&quot;${description}&quot;
-},&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){\n\t_id\n}\t\n}&quot;}</stringProp>
+},&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $imageSet:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, imageSet: $imageSet){\n\t_id\n}\t\n}&quot;}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -600,10 +600,10 @@ vars.putObject(&quot;newSport&quot;, array)
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
             <stringProp name="GraphQLHTTPSampler.operationName">CreateSquashTestSamples</stringProp>
-            <stringProp name="GraphQLHTTPSampler.query">mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){
-createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){
+            <stringProp name="GraphQLHTTPSampler.query">mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $imageSet:[ImageData!]!){
+createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, imageSet: $imageSet){
 	_id
-}	
+}
 }
 </stringProp>
             <stringProp name="GraphQLHTTPSampler.variables">{
@@ -613,7 +613,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
   &quot;gender&quot;: &quot;${genderUser}&quot;,
   &quot;age&quot;: ${age2},
   &quot;sports&quot;:&quot;${sports}&quot;,
-  &quot;image_set&quot;:&quot;${image_set}&quot;,
+  &quot;imageSet&quot;:&quot;${imageSet}&quot;,
   &quot;description&quot;:&quot;${description}&quot;
 }</stringProp>
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -816,9 +816,9 @@ vars.putObject(&quot;newSport&quot;, array)
   &quot;gender&quot;: &quot;${genderUser}&quot;,
   &quot;age&quot;: ${age2},
   &quot;sports&quot;:&quot;${sports}&quot;,
-  &quot;image_set&quot;:&quot;${image_set}&quot;,
+  &quot;imageSet&quot;:&quot;${imageSet}&quot;,
   &quot;description&quot;:&quot;${description}&quot;
-},&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){\n\t_id\n}\t\n}&quot;}</stringProp>
+},&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $imageSet:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, imageSet: $imageSet){\n\t_id\n}\t\n}&quot;}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -835,10 +835,10 @@ vars.putObject(&quot;newSport&quot;, array)
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
             <stringProp name="GraphQLHTTPSampler.operationName">CreateSquashTestSamples</stringProp>
-            <stringProp name="GraphQLHTTPSampler.query">mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){
-createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){
+            <stringProp name="GraphQLHTTPSampler.query">mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $imageSet:[ImageData!]!){
+createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, imageSet: $imageSet){
 	_id
-}	
+}
 }
 </stringProp>
             <stringProp name="GraphQLHTTPSampler.variables">{
@@ -848,7 +848,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
   &quot;gender&quot;: &quot;${genderUser}&quot;,
   &quot;age&quot;: ${age2},
   &quot;sports&quot;:&quot;${sports}&quot;,
-  &quot;image_set&quot;:&quot;${image_set}&quot;,
+  &quot;imageSet&quot;:&quot;${imageSet}&quot;,
   &quot;description&quot;:&quot;${description}&quot;
 }</stringProp>
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -1013,7 +1013,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
                 <elementProp name="" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.value">{&#xd;
-  &quot;query&quot;: &quot;mutation RegisterNewPlayerTest($_id: String!, $firstName: String!, $lastName: String!, $gender: String!, $age: Int!, $sport: SportNodeInput!, $description: String!, $image_set: [DataInput!]!, $email: String!, $neighborhood: LocationInput!, $preferences: FilterInput!) { registerNewPlayerTest(_id: $_id, firstName: $firstName, lastName: $lastName, gender: $gender, age: $age, sport: $sport, email: $email, neighborhood: $neighborhood, description: $description, image_set: $image_set, preferences: $preferences) { _id } }&quot;,&#xd;
+  &quot;query&quot;: &quot;mutation RegisterNewPlayerTest($_id: String!, $firstName: String!, $lastName: String!, $gender: String!, $age: Int!, $sport: SportNodeInput!, $description: String!, $imageSet: [DataInput!]!, $email: String!, $neighborhood: LocationInput!, $preferences: FilterInput!) { registerNewPlayerTest(_id: $_id, firstName: $firstName, lastName: $lastName, gender: $gender, age: $age, sport: $sport, email: $email, neighborhood: $neighborhood, description: $description, imageSet: $imageSet, preferences: $preferences) { _id } }&quot;,&#xd;
   &quot;variables&quot;: {&#xd;
     &quot;_id&quot;: &quot;${_id}&quot;,&#xd;
     &quot;firstName&quot;: &quot;${firstName}&quot;,&#xd;
@@ -1024,7 +1024,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
       &quot;sportName&quot;: &quot;${sport}&quot;,&#xd;
       &quot;gameLevel&quot;: ${game_level}&#xd;
     },&#xd;
-    &quot;image_set&quot;: [&#xd;
+    &quot;imageSet&quot;: [&#xd;
       {&#xd;
         &quot;img_idx&quot;: ${img_idx1},&#xd;
         &quot;imageURL&quot;: &quot;${imageURL1}&quot;,&#xd;
@@ -1476,7 +1476,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
             <boolProp name="recycle">true</boolProp>
             <stringProp name="shareMode">shareMode.all</stringProp>
             <boolProp name="stopThread">false</boolProp>
-            <stringProp name="variableNames"> _id,first_name,last_name,genderUser,age,sports,image_set,description,email,location</stringProp>
+            <stringProp name="variableNames"> _id,first_name,last_name,genderUser,age,sports,imageSet,description,email,location</stringProp>
           </CSVDataSet>
           <hashTree/>
           <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="JSR223 PreProcessor" enabled="false">
@@ -1546,9 +1546,9 @@ vars.putObject(&quot;newSport&quot;, array)
   &quot;gender&quot;: &quot;${genderUser}&quot;,
   &quot;age&quot;: ${age2},
   &quot;sports&quot;:&quot;${sports}&quot;,
-  &quot;image_set&quot;:&quot;${image_set}&quot;,
+  &quot;imageSet&quot;:&quot;${imageSet}&quot;,
   &quot;description&quot;:&quot;${description}&quot;
-},&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){\n\t_id\n}\t\n}&quot;}</stringProp>
+},&quot;query&quot;:&quot;mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $imageSet:[ImageData!]!){\ncreateSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, imageSet: $imageSet){\n\t_id\n}\t\n}&quot;}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -1565,10 +1565,10 @@ vars.putObject(&quot;newSport&quot;, array)
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
             <stringProp name="GraphQLHTTPSampler.operationName">CreateSquashTestSamples</stringProp>
-            <stringProp name="GraphQLHTTPSampler.query">mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $image_set:[ImageData!]!){
-createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, image_set: $image_set){
+            <stringProp name="GraphQLHTTPSampler.query">mutation CreateSquashTestSamples($_id: String!, $first_name: String!, $last_name: String!, $gender: String!, $age: Int!, $sports:[SquashNodeInput!]!, $country: String, $description: String!, $imageSet:[ImageData!]!){
+createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_name, gender: $gender, age:$age, sports:$sports, country: $country, description: $description, imageSet: $imageSet){
 	_id
-}	
+}
 }
 </stringProp>
             <stringProp name="GraphQLHTTPSampler.variables">{
@@ -1578,7 +1578,7 @@ createSquashTestSamples(_id: $_id, first_name: $first_name, last_name: $last_nam
   &quot;gender&quot;: &quot;${genderUser}&quot;,
   &quot;age&quot;: ${age2},
   &quot;sports&quot;:&quot;${sports}&quot;,
-  &quot;image_set&quot;:&quot;${image_set}&quot;,
+  &quot;imageSet&quot;:&quot;${imageSet}&quot;,
   &quot;description&quot;:&quot;${description}&quot;
 }</stringProp>
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>

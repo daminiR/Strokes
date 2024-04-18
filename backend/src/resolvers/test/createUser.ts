@@ -30,7 +30,7 @@ export const resolvers = {
     registerNewPlayerTest: async (root, unSanitizedData, context) => {
       const {
         _id,
-        image_set,
+        imageSet,
         firstName,
         lastName,
         gender,
@@ -49,7 +49,7 @@ export const resolvers = {
       }
       const doc = await User.create({
         _id: _id,
-        image_set: image_set,
+        imageSet: imageSet,
         firstName: firstName,
         lastName: lastName,
         gender: gender,

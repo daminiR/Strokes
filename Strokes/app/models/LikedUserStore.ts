@@ -35,6 +35,24 @@ export const LikedUserStore = types
     likedProfiles: types.array(LikedUserType),
   })
   .actions((self) => ({
+    removeLikedUser(matchUserId: any) {
+      const index = self.likedProfiles.findIndex((user) => user.matchUserId === matchUserId)
+
+      if (index === -1) {
+        // User not found, return an error message
+        return {
+          success: false,
+          message: "User not found in liked profiles.",
+        }
+      }
+
+      // User found, remove the user from the array
+      self.likedProfiles.splice(index, 1)
+      return {
+        success: true,
+        message: "User successfully removed from liked profiles.",
+      }
+    },
     appendLikedProfiles(newProfiles: any) {
       self.likedProfiles.push(...newProfiles)
     },

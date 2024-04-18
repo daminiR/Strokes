@@ -9,14 +9,14 @@ export const resolvers = {
     deleteImage: async (parents, unSanitizedData, context, info) => {
       const { _id, img_idx } = sanitize(unSanitizedData);
       const filter = { _id: _id };
-      const update = { $pull: { image_set: { img_idx: img_idx } } };
+      const update = { $pull: { imageSet: { img_idx: img_idx } } };
       const squash_doc = await User.findOneAndUpdate(filter, update, {
         new: false,
       });
-      let file_to_del = squash_doc!.image_set.find(
+      let file_to_del = squash_doc!.imageSet.find(
         (image_info) => image_info.img_idx === img_idx
       )!.filePath;
-      return squash_doc!.image_set;
+      return squash_doc!.imageSet;
     },
   },
 };

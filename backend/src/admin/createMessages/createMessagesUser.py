@@ -5,7 +5,7 @@ import json
 # import pandas as pd
 
   # sports: [{game_level: number, sport: string}]
-  # image_set: [{img_idx: number, imageURL: string, filePath: string}]
+  # imageSet: [{img_idx: number, imageURL: string, filePath: string}]
 letters = string.ascii_lowercase
 _id1 = "wLP3M9NMuVb0HZ6YgRflMlZZtZs1"
 _id2= "ajxydxqqodmnnflqrszduslasqvq"

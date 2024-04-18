@@ -32,7 +32,7 @@
   //gender: string; // User's gender
   //sport: Sport; // Details about the sport the user plays, including level and name
   //description: string; // A short description or bio of the user
-  //image_set: ImageSetT[]; // Array of images related to the user
+  //imageSet: ImageSetT[]; // Array of images related to the user
   //neighborhood: LocationType; // Information about the user's neighborhood
 //}
 
@@ -52,7 +52,7 @@
     //})
       //.limit(30)
       //.select(
-        //"firstName lastName age gender sport description image_set neighborhood"
+        //"firstName lastName age gender sport description imageSet neighborhood"
       //)
       //.lean() // This ensures you get plain JavaScript objects instead of Mongoose Documents.
       //.exec();
@@ -68,7 +68,7 @@
       //description: Array.isArray(user.description)
         //? user.description.join(" ")
         //: user.description, // Correctly handle the description field
-      //image_set: user.image_set,
+      //imageSet: user.imageSet,
       //neighborhood: user.neighborhood,
     //}));
   //} catch (error) {
