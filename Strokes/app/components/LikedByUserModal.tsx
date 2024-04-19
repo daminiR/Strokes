@@ -9,7 +9,6 @@ export const LikedByUserModal = ({ profile, showSportCard, handleClose }) => {
   const { likedUserStore, mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
   const [isSwiping, setIsSwiping] = useState(false);
   const handleSwipeAction = async (actionType) => {
-    console.log("likedid", profile.matchUserId)
     if (!isSwiping) {
       setIsSwiping(true)
       // Perform the swipe action first for better user experience

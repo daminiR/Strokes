@@ -80,6 +80,7 @@ const getMoreData = async () => {
 
     const nextPage = page + 1;  // Calculate the next page number
     const itemsPerPage = 10;  // Define items per page
+    console.log(nextPage, itemsPerPage)
 
     try {
       const newProfiles = await mongoDBStore.queryLikedUserProfiles(nextPage, itemsPerPage);
