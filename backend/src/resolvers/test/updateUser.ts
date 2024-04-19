@@ -323,34 +323,40 @@ export const resolvers = {
         }
       }
     },
-    simulateRandomLikesFromUsersTest: async (
-      _,
-      { currentUserId, randomize = true }
-    ) => {
+    async simulateRandomLikesFromUsersTest(
+      _: any,
+      {
+        currentUserId,
+        randomize = true,
+      }: { currentUserId: string; randomize: boolean }
+    ): Promise<LikeActionResult[]> {
       try {
         const currentUser = await User.findById(currentUserId);
         if (!currentUser) {
           throw new Error("User not found");
         }
 
-        // Fetch all users excluding the current user
         const allUsers = await User.find({ _id: { $ne: currentUserId } });
-        if (!allUsers || allUsers.length === 0) {
+        if (!allUsers.length) {
           throw new Error("No other users found in the database");
         }
 
-        const likeActionsResults: LikeActionResult[] = [];
+        // Shuffle all users if randomization is requested
+        if (randomize) {
+          for (let i = allUsers.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [allUsers[i], allUsers[j]] = [allUsers[j], allUsers[i]];
+          }
+        }
+
         const numLikes = randomize
-          ? Math.min(100, allUsers.length)
+          ? Math.min(300, allUsers.length)
           : allUsers.length;
+        const likeActionsResults: LikeActionResult[] = [];
 
         for (let i = 0; i < numLikes; i++) {
-          const index = randomize
-            ? Math.floor(Math.random() * allUsers.length)
-            : i;
-          const randomUser = allUsers[index];
+          const randomUser = allUsers[i]; // Use directly shuffled array
 
-          // Simulate a like from this random user to the current user
           const likeActionResult = await Like.create({
             likerId: randomUser._id,
             likedId: currentUserId,
@@ -369,7 +375,6 @@ export const resolvers = {
         throw new Error("Failed to simulate random likes from users.");
       }
     },
-
     simulateRandomLikesTest: async (_, { currentUserId, randomize = true }) => {
       try {
         const currentUser = await User.findById(currentUserId);

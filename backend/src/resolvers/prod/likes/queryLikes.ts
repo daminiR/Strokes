@@ -11,24 +11,22 @@ interface QueryArgs {
 
 export const resolvers = {
   Query: {
-    fetchLikedIds: async (_, { userId, page, limit }) => {
+    fetchLikedIds: async (
+      _: any,
+      { userId, page, limit }: { userId: string; page: number; limit: number }
+    ) => {
       try {
-        const PAGE_SIZE = limit;
-        const skip = (page - 1) * PAGE_SIZE;
+        const currentUser = await User.findById(userId);
+        if (!currentUser) {
+          throw new Error("User not found");
+        }
 
-        // Fetch match pool data for the user
         const matchPool = await PotentialMatchPool.findOne({ userId: userId });
         if (!matchPool) {
           throw new Error("Match pool not found for the user.");
         }
 
-        // Fetch likes sorted by timestamps in descending order
-        const likes = await Like.find({ likedId: userId })
-          .sort({ timestamps: -1 }) // Sorting by timestamps
-          .skip(skip)
-          .limit(PAGE_SIZE);
-
-        // Filter out disliked and matched user IDs
+        const allLikes = await Like.find({ likedId: userId });
         const matches = await Match.find({
           $or: [{ user1Id: userId }, { user2Id: userId }],
         });
@@ -41,17 +39,25 @@ export const resolvers = {
           dislike._id.toString()
         );
 
-        const validLikedUserIds = likes
-          .map((like) => like.likerId.toString())
-          .filter(
-            (id) => !matchedUserIds.includes(id) && !dislikedIds.includes(id)
-          );
+        const validLikes = allLikes.filter(
+          (like) =>
+            !matchedUserIds.includes(like.likerId.toString()) &&
+            !dislikedIds.includes(like.likerId.toString())
+        );
 
-        if (validLikedUserIds.length === 0) {
-          return []; // No valid likes after exclusions
+        if (validLikes.length === 0) {
+          return []; // Return early if no valid likes to avoid unnecessary processing
         }
 
-        // Fetch detailed user data, excluding disliked users
+        validLikes.sort(
+          (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+        );
+
+        const pagedLikes = validLikes.slice((page - 1) * limit, page * limit);
+
+        const validLikedUserIds = pagedLikes.map((like) =>
+          like.likerId.toString()
+        );
         const users = await User.find({
           _id: { $in: validLikedUserIds },
         }).select(
@@ -59,34 +65,28 @@ export const resolvers = {
         );
 
         const currentDate = new Date().toISOString();
-
-        // Adjust index based on current page and limit
-        return users.map((user, index) => {
-            const globalIndex = index + skip;  // Correcting index for pagination
-            const isBlurred = globalIndex >= matchPool.likesPerDay;
-
-            return {
-                matchUserId: user._id.toString(),
-                firstName: user.firstName,
-                imageSet: user.imageSet,
-                age: user.age,
-                neighborhood: user.neighborhood,
-                gender: user.gender,
-                sport: user.sport,
-                description: user.description,
-                createdAt: currentDate,
-                updatedAt: currentDate,
-                interacted: false,
-                isBlurred: isBlurred,
-            };
-        });      } catch (error) {
+        return users.map((user, index) => ({
+          matchUserId: user._id.toString(),
+          firstName: user.firstName,
+          imageSet: user.imageSet,
+          age: user.age,
+          neighborhood: user.neighborhood,
+          gender: user.gender,
+          sport: user.sport,
+          description: user.description,
+          createdAt: currentDate,
+          updatedAt: currentDate,
+          interacted: false,
+          isBlurred: (page - 1) * limit + index >= matchPool.likesPerDay,
+        }));
+      } catch (error) {
+        console.error("Error fetching potential matches:", error);
+        // Safeguard with instanceof to properly check error type
         if (error instanceof Error) {
-          console.error("Error fetching potential matches:", error.message);
           throw new Error(
             `Failed to fetch potential matches due to: ${error.message}`
           );
         } else {
-          console.error("An unexpected error occurred", error);
           throw new Error(
             "An unexpected error occurred while fetching potential matches."
           );

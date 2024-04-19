@@ -4,6 +4,8 @@ import { Schema, model } from 'mongoose';
 interface LikeDocument {
   likerId: string;
   likedId: string;
+  createdAt: Date;  // Ensuring TypeScript knows about the automatically added timestamp
+  updatedAt: Date;  // Same for updatedAt
 }
 
 // Likes Schema definition
