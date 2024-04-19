@@ -164,7 +164,11 @@ const en = {
     tapToSignIn: "Tap to sign up!",
     hint: "Hint: you can use any email address and your favorite password :)",
   },
-  demoNavigator: {
+  navigator: {
+    chat: "Chat",
+    profile: "Profile",
+    swipe: "Swipe",
+    likes: "Likes",
     componentsTab: "Components",
     debugTab: "Debug",
     communityTab: "Community",

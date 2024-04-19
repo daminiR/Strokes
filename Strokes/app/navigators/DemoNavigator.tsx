@@ -5,16 +5,19 @@ import { TextStyle, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Icon } from "../components"
 import { translate } from "../i18n"
-import { FaceCardScreen, SportSwipeScreen, DemoCommunityScreen, DemoShowroomScreen, DemoDebugScreen } from "../screens"
+import { FaceCardScreen, DemoShowroomScreen, ChatScreen, DemoDebugScreen } from "../screens"
 import { DemoPodcastListScreen } from "../screens/DemoPodcastListScreen"
 import { colors, spacing, typography } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
-import {ProfileStack} from "./ProfileNavigator"
+import { ProfileStack } from "./ProfileNavigator"
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
 
 export type DemoTabParamList = {
   SportSwipe: undefined
   FaceCard: undefined
-  DemoShowroom: { queryIndex?: string; itemIndex?: string }
+  Chat: undefined
   DemoDebug: undefined
   DemoPodcastList: undefined
   Profile: undefined
@@ -58,19 +61,19 @@ export function DemoNavigator() {
         name="Profile"
         component={ProfileStack}
         options={{
-          tabBarLabel: translate("demoNavigator.componentsTab"),
+          tabBarLabel: translate("navigator.profile"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused ? colors.tint : undefined} size={30} />
+            <Icon icon="community" color={focused ? colors.tint : undefined} size={30} />
           ),
         }}
       />
       <Tab.Screen
-        name="DemoShowroom"
-        component={DemoShowroomScreen}
+        name="Chat"
+        component={ChatScreen}
         options={{
-          tabBarLabel: translate("demoNavigator.componentsTab"),
+          tabBarLabel: translate("navigator.chat"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused ? colors.tint : undefined} size={30} />
+            <MaterialCommunityIcons name="chat-processing-outline" color={focused ? colors.tint : undefined} size={30} />
           ),
         }}
       />
@@ -78,9 +81,9 @@ export function DemoNavigator() {
         name="FaceCard"
         component={FaceCardScreen}
         options={{
-          tabBarLabel: translate("demoNavigator.communityTab"),
+          tabBarLabel: translate("navigator.swipe"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="community" color={focused ? colors.tint : undefined} size={30} />
+            <MaterialCommunityIcons name="tennis" color={focused ? colors.tint : undefined} size={30} />
           ),
         }}
       />
@@ -88,10 +91,10 @@ export function DemoNavigator() {
         name="DemoPodcastList"
         component={DemoPodcastListScreen}
         options={{
-          tabBarAccessibilityLabel: translate("demoNavigator.podcastListTab"),
-          tabBarLabel: translate("demoNavigator.podcastListTab"),
+          tabBarAccessibilityLabel: translate("navigator.likes"),
+          tabBarLabel: translate("navigator.likes"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="podcast" color={focused ? colors.tint : undefined} size={30} />
+            <Icon icon="heart" color={focused ? colors.tint : undefined} size={30} />
           ),
         }}
       />
@@ -99,7 +102,7 @@ export function DemoNavigator() {
         name="DemoDebug"
         component={DemoDebugScreen}
         options={{
-          tabBarLabel: translate("demoNavigator.debugTab"),
+          tabBarLabel: translate("navigator.debugTab"),
           tabBarIcon: ({ focused }) => (
             <Icon icon="debug" color={focused ? colors.tint : undefined} size={30} />
           ),
