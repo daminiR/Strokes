@@ -24,6 +24,7 @@ export const LikedByUserModal = ({ profile, showSportCard, handleClose }) => {
         console.error("Failed to update match store:", error)
       } finally {
         // Reset swiping status after the action completes or fails
+        handleClose()
         setTimeout(() => {
           setIsSwiping(false)
         }, 25) // Adjust based on your swipe animation duration
@@ -84,6 +85,7 @@ const modalStyle: ViewStyle = {
   justifyContent: "center",
   backgroundColor: "rgba(0,0,0,0.5)",
 }
+
 const $closeStyle = {
   position: "absolute",
   zIndex: 999,
