@@ -96,6 +96,7 @@ const en = {
   },
   likedByUsers: {
     noLikedProfiles: { heading: "No Profiles Liked", content: "No Content" },
+    close: "Close"
   },
   loginScreen: {
     signIn: "Sign In",

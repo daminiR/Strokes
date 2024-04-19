@@ -133,8 +133,8 @@ const $leftFAB: ViewStyle = {
   }
 
 const $scrollViewContainer: ViewStyle = {
-  //backgroundColor: "rgba(0,0,0,1)",
   backgroundColor: colors.background,
+  margin: 6
 }
 const $screenContentContainer: ViewStyle = {
   paddingVertical: spacing.xxl,

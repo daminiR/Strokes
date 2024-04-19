@@ -243,9 +243,9 @@ const $heading: ViewStyle = {
   marginBottom: spacing.md,
 }
 
-const screenWidth = Dimensions.get('window').width; // Import Dimensions from 'react-native'
-const cardMargin = spacing.md;
-const cardWidth = (screenWidth - (3 * cardMargin)) / 2; // For two columns, considering margin as spacing
+ const screenWidth = Dimensions.get('window').width; // Import Dimensions from 'react-native'
+export const cardMargin = spacing.md;
+export const cardWidth = (screenWidth - (3 * cardMargin)) / 2; // For two columns, considering margin as spacing
 const $item: ViewStyle = {
   // Remove padding as the content now directly touches the card's edges
   padding: 0,
