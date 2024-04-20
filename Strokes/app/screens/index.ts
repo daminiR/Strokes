@@ -1,5 +1,5 @@
 export * from "./WelcomeScreen"
-export * from "./ChatScreen"
+export * from "./ChatScreen/ChatScreen"
 export * from "./UpdateSingleField"
 export * from "./FadeCardScreen"
 export * from "./SettingsScreen"
