@@ -12,8 +12,6 @@ import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
 import { ProfileStack } from "./ProfileNavigator"
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-
-
 export type DemoTabParamList = {
   SportSwipe: undefined
   FaceCard: undefined
