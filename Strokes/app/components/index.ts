@@ -1,4 +1,5 @@
 export * from "./AutoImage"
+export * from "./ChatComponents/"
 export * from "./FilterModel"
 export * from "./LikedByUserModal"
 export * from "./SportCard"
