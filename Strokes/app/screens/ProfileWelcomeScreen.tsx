@@ -122,6 +122,7 @@ const $container: ViewStyle = {
   alignItems: 'center', // Center content horizontally
   backgroundColor: colors.background,
 };
+
 const $topContainer: ViewStyle = {
   flexShrink: 1,
   flexGrow: 1,

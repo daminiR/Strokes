@@ -23,7 +23,7 @@ interface ProfilePreviewScreen extends ProfileStackScreenProps<"ProfilePreview">
 
 export const ProfilePreviewScreen: FC<ProfilePreviewScreen> = observer(
   function ProfilePreviewScreen(_props) {
-    const { tempUserStore, authenticationStore } = useStores()
+    const { tempUserStore } = useStores()
     // Utility function to get the correct image URI
     const getImageUri = (imageObj) => {
       return imageObj?.imageURL || imageObj?.uri

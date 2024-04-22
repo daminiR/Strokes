@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite"
+import { navigate, goBack} from "../../navigators"
 import React, { ComponentType, FC, useEffect, useState, useMemo } from "react"
 import {
   ActivityIndicator,
@@ -18,13 +19,13 @@ import {
   Text,
   Button,
   LikedByUserModal,
-} from "../components"
-import { isRTL, translate } from "../i18n"
-import { useStores } from "../models"
-import { Episode } from "../models/Episode"
-import { DemoTabScreenProps } from "../navigators/DemoNavigator"
-import { colors, spacing } from "../theme"
-import { delay } from "../utils/delay"
+} from "../../components"
+import { isRTL, translate } from "../../i18n"
+import { useStores } from "../../models"
+import { Episode } from "../../models/Episode"
+import { DemoTabScreenProps } from "../../navigators/DemoNavigator"
+import { colors, typography, spacing } from "../../theme"
+import { delay } from "../../utils/delay"
 import { useFocusEffect } from '@react-navigation/native';
 
 const ICON_SIZE = 14
@@ -34,19 +35,8 @@ const rnrImage2 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
 const rnrImage3 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
 const rnrImages = [rnrImage1, rnrImage2, rnrImage3]
 
-const MatchesCountDummy = observer(() => {
-  const { matchStore } = useStores();
-  // Use a dummy effect or variable that uses matchPool just for the sake of dependency
-  React.useEffect(() => {
-    console.log(`Updated matchPool length: ${matchStore.matchPool.length}`);
-  }, [matchStore.matchPool.length]);
-
-  return null; // Render nothing
-});
-
-
-export const DemoPodcastListScreen: FC<DemoTabScreenProps<"DemoPodcastList">> = observer(
-  function DemoPodcastListScreen(_props) {
+export const ChatListScreen = observer(
+  function ChatListScreen(_props) {
     const { episodeStore } = useStores()
     const { likedUserStore, mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
 
@@ -118,7 +108,7 @@ const getMoreData = async () => {
           onEndReached={getMoreData}
           refreshing={refreshing}
           estimatedItemSize={177}
-          numColumns={2}
+          numColumns={1}
           ListEmptyComponent={
             isLoading ? (
               <ActivityIndicator />
@@ -135,13 +125,14 @@ const getMoreData = async () => {
           }
           ListHeaderComponent={
             <View style={$heading}>
-              <Text preset="heading" tx="likedByUsers.title" />
+              <Text preset="heading" tx="chatScreenList.title" />
             </View>
           }
           renderItem={({ item }) => (
-            <PorfileCard
+            <ProfileCard
               profile={item}
-              isBlurred={item.isBlurred}
+              isMessageRead={false}
+              lastMessage={"hello"}
             />
           )}
         />
@@ -151,88 +142,93 @@ const getMoreData = async () => {
   },
 )
 
-const PorfileCard = observer(function PorfileCard({
+interface ProfileCardProps {
+  profile: any;
+  lastMessage: string;
+  isMessageRead: boolean;
+}
+
+
+const ProfileCard = observer(function ProfileCard({
   profile,
-  onPressFavorite,
-  isBlurred,
-  isSwiping,
-  handleSwipeLeft,
-  handleSwipeRight
-}: {
-  profile: any // for now
-  isBlurred: boolean
-}) {
-  const [showSportCard, setShowSportCard] = useState(false)
-  const handleClose = () => {
-    setShowSportCard(!showSportCard)
-  }
+  lastMessage,
+  isMessageRead,
+}: ProfileCardProps) {
   const handlePressCard = () => {
-    setShowSportCard(!showSportCard)
+    navigate("ChatTopNavigator")
   }
+
   return (
     <>
-      <TouchableOpacity
-        onPress={handlePressCard}
-        style={$item} // Assuming $item is a predefined style
-      >
+      <TouchableOpacity onPress={handlePressCard} style={$item} activeOpacity={0.9}>
         <Image
           source={{ uri: profile.imageSet[0].imageURL }}
-          style={$itemThumbnail} // Assuming $itemThumbnail is predefined
-          blurRadius={isBlurred ? 20 : 0}
+          style={$thumbnail}
         />
         <View style={$metadata}>
-          {/* Assuming $metadata is predefined */}
-          <Text style={$metadataText} size="sm">
-            {/* Assuming $metadataText is predefined */}
-            {profile.firstName + ", " + profile.sport.gameLevel}
+          <Text style={$metadataName}>{profile.firstName}</Text>
+          <Text
+            style={isMessageRead ? $metadataLastMessage : $metadataLastMessageBold}
+          >
+            {lastMessage}
           </Text>
         </View>
       </TouchableOpacity>
-      <LikedByUserModal profile={profile} showSportCard={showSportCard} handleClose={handleClose} />
     </>
   )
-})
+});
+
+// Updated styles
+const $item: ViewStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#F0F0F0',
+  paddingVertical: 12,
+  //paddingHorizontal: 16,
+  borderBottomWidth: 1,
+  borderBottomColor: '#DDD',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 1 },
+  shadowOpacity: 0.1,
+  shadowRadius: 1,
+  elevation: 1,
+};
+
+const $thumbnail: ImageStyle = {
+  width: 50,
+  height: 50,
+  borderRadius: 25,
+  marginRight: 15,
+  borderWidth: 1,
+  borderColor: colors.border,
+};
+
+const $metadata: ViewStyle = {
+  flex: 1,
+};
+
+const $metadataName: TextStyle = {
+  fontSize: 16,
+  fontWeight: "500",
+  color: colors.text,
+};
+
+const $metadataLastMessage: TextStyle = {
+  fontSize: 14,
+  color: colors.textdim,
+};
+
+const $metadataLastMessageBold: TextStyle = {
+  fontSize: 14,
+  color: colors.textdim,
+  fontWeight: 'bold',
+};
+
 
 // #region Styles
 const $screenContentContainer: ViewStyle = {
   flex: 1,
 }
-  const $iconStyle: ViewStyle = {
-  marginTop: 10, // Adjust this value to lower the icon by the desired amount
-};
-const $rightFAB: ViewStyle = {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 8, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 2,
-  }
-const $leftFAB: ViewStyle = {
-    position: 'absolute',
-    margin: 16,
-    left: 0,
-    bottom: 0,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 8, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 2,
-  }
-
 const $listContentContainer: ContentStyle = {
   paddingHorizontal: spacing.md, // Adjust if necessary to align with the card's horizontal margin
   paddingTop: spacing.lg + spacing.xl,
@@ -243,60 +239,11 @@ const $heading: ViewStyle = {
   marginBottom: spacing.md,
 }
 
- const screenWidth = Dimensions.get('window').width; // Import Dimensions from 'react-native'
+const screenWidth = Dimensions.get("window").width // Import Dimensions from 'react-native'
 export const cardMargin = spacing.md;
 export const cardWidth = (screenWidth - (3 * cardMargin)) / 2; // For two columns, considering margin as spacing
-const $item: ViewStyle = {
-  // Remove padding as the content now directly touches the card's edges
-  padding: 0,
-  // Apply a bottom margin to each card for vertical spacing
-  marginBottom: spacing.md,
-  // Apply horizontal margins to create space between cards in a grid or list layout
-  marginHorizontal: spacing.md / 2,
-  // Set a specific height for the card, adjust based on your content needs
-  height: 200, // Example height, adjust this value as necessary
-  // Consider the width if you're using a grid layout (for 2 columns, as an example, you might want to adjust this)
-  width: cardWidth,
-  borderRadius: 10, // Maintain the card's border radius for visual consistency
-};
-const $itemThumbnail: ImageStyle = {
-  width: '100%', // Make the image full width of the card
-  height: '100%', // Adjust the height as needed or keep dynamic
-  borderRadius: 10, // Optional: Adjust or remove if you want sharp corners
-};
 
-const $toggle: ViewStyle = {
-  marginTop: spacing.md,
-}
 
-const $labelStyle: TextStyle = {
-  textAlign: "left",
-}
-
-const $iconContainer: ViewStyle = {
-  height: ICON_SIZE,
-  width: ICON_SIZE,
-  flexDirection: "row",
-  marginEnd: spacing.sm,
-}
-
-const $metadata: TextStyle = {
-  // Assuming this style is for the container of the metadata
-  position: 'absolute', // Position absolutely within the card, if overlaying text on image
-  bottom: 0, // Align to the bottom of the card
-  left: 0,
-  width: '100%', // Full width
-  backgroundColor: 'rgba(0, 0, 0, 0.8)', // Optional: Add a semi-transparent overlay for better readability
-  paddingHorizontal: spacing.sm, // Inner spacing
-  paddingVertical: spacing.xs,
-  borderBottomLeftRadius: 10, // Match the card's border radius
-  borderBottomRightRadius: 10,
-};
-
-const $metadataText: TextStyle = {
-  color: '#FFFFFF', // Ensure text color contrasts with the overlay/background
-  // No need for marginBottom if this is the only text
-};
 const $emptyState: ViewStyle = {
   marginTop: spacing.xxl,
 }
