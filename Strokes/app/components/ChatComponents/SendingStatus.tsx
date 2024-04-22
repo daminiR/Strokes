@@ -58,7 +58,6 @@ export const SendingStatus = ({channel, message}: Props) => {
       }
     }
   }
-
   return null;
 };
 

@@ -5,11 +5,18 @@ import { TextStyle, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Icon } from "../components"
 import { translate } from "../i18n"
-import { FaceCardScreen, DemoShowroomScreen, ChatScreen, DemoDebugScreen } from "../screens"
+import {
+  FaceCardScreen,
+  DemoShowroomScreen,
+  ChatListScreen,
+  ChatScreen,
+  DemoDebugScreen,
+} from "../screens"
 import { DemoPodcastListScreen } from "../screens/DemoPodcastListScreen"
 import { colors, spacing, typography } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
 import { ProfileStack } from "./ProfileNavigator"
+import { ChatStack } from "./ChatNavigator"
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export type DemoTabParamList = {
@@ -67,7 +74,7 @@ export function DemoNavigator() {
       />
       <Tab.Screen
         name="Chat"
-        component={ChatScreen}
+        component={ChatStack}
         options={{
           tabBarLabel: translate("navigator.chat"),
           tabBarIcon: ({ focused }) => (

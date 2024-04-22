@@ -94,7 +94,11 @@ const en = {
     genderFemaleFieldLabel: "Female",
     genderMaleFieldLabel: "Male",
   },
+  chatScreenList: {
+    title: "Chats",
+  },
   likedByUsers: {
+    title: "We like you",
     noLikedProfiles: { heading: "No Profiles Liked", content: "No Content" },
     close: "Close"
   },

@@ -1,4 +1,5 @@
 import { types, flow, Instance } from 'mobx-state-tree';
+import {CollectionEventSource} from '@sendbird/chat';
 import { GroupChannelHandler, MessageCollectionInitPolicy} from '@sendbird/chat/groupChannel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SendbirdChat from "@sendbird/chat"
@@ -44,53 +45,55 @@ export const ChatStore = types
       self.sdk.groupChannel
         .getChannel(channelUrl)
         .then((channel) => {
-          const collection =  channel.createMessageCollection()
+          const collection = channel.createMessageCollection()
           collection.setMessageCollectionHandler({
-            onChannelDeleted: () => {
-              console.log("Channel deleted")
-            },
-            onChannelUpdated: (channel) => {
-              //self.setChannel(channel)
+            onChannelDeleted: () => {},
+            onChannelUpdated: (_, channel) => {
+              setState((prev) => (prev ? { ...prev, channel } : prev))
             },
             onMessagesUpdated: (context, channel, messages) => {
               // Implement necessary updates or callbacks
+              rerender()
             },
             onMessagesAdded: (context, channel, messages) => {
               // Implement necessary updates or callbacks
+              rerender()
+              if (
+                [
+                  CollectionEventSource.SYNC_MESSAGE_FILL,
+                  CollectionEventSource.EVENT_MESSAGE_RECEIVED,
+                ].includes(context.source)
+              ) {
+                channel.markAsRead()
+              }
             },
             onMessagesDeleted: (context, channel, messages) => {
               // Implement necessary updates or callbacks
+              self.initializeCollection(channelUrl, setState, rerender)
             },
             onHugeGapDetected: () => {
               // Optionally re-initialize or handle accordingly
             },
           })
-      collection
-        .initialize(MessageCollectionInitPolicy.CACHE_AND_REPLACE_BY_API)
-        .onCacheResult((err: any, messages: any) => {
-          console.log("vals", messages, err)
-          if (messages?.length && messages.length > 0) {
-            console.log("GroupChannelScreen:", "onCacheResult", messages.length)
+          collection
+            .initialize(MessageCollectionInitPolicy.CACHE_AND_REPLACE_BY_API)
+            .onCacheResult((err: any, messages: any) => {
+              if (messages?.length && messages.length > 0) {
+                console.log("GroupChannelScreen:", "onCacheResult", messages.length)
+                rerender()
+              }
+              setState({ channel, collection })
+            })
+            .onApiResult((err: any, messages: any) => {
+              if (messages?.length && messages.length > 0) {
+                console.log("GroupChannelScreen:", "onApiResult", messages.length)
 
-            rerender()
-          }
-          console.log("debug m state", channel. collection)
-          setState({ channel, collection })
-        })
-        .onApiResult((err: any, messages: any) => {
-          if (messages?.length && messages.length > 0) {
-            console.log("GroupChannelScreen:", "onApiResult", messages.length)
+                rerender()
+              }
+              setState({ channel, collection })
+            })
 
-            rerender()
-          }
-          setState({ channel, collection })
-          console.log("so we make it here", channel. collection)
-        })
-
-      channel.markAsRead()
-
-
-
+          channel.markAsRead()
         })
         .catch((err: any) => console.log(err))
       //console.log("here", channel)
