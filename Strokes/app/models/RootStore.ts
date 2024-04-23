@@ -6,6 +6,7 @@ import { EpisodeStoreModel } from "./EpisodeStore"
 import MatchesStoreModel from "./MatchesStore"
 import MongoDBStore from "./MongoDBStore"
 import { LikedUserStore } from "./LikedUserStore"
+import { MatchedProfilesStore } from "./MatchedProfilesStore"
 import { ChatStore } from "./ChatStore"
 
 /**
@@ -19,6 +20,7 @@ export const RootStoreModel = types.model("RootStore").props({
   episodeStore: types.optional(EpisodeStoreModel, {}),
   matchStore: types.optional(MatchesStoreModel, {}),
   likedUserStore: types.optional(LikedUserStore, {}),
+  matchedProfileStore: types.optional(MatchedProfilesStore, {}),
   chatStore: types.optional(ChatStore, {}),
 })
 

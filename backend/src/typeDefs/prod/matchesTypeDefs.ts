@@ -9,9 +9,20 @@ export const matchesTypeDefs = gql`
     user2Id: String!
     createdAt: String
   }
+  type MatchedUsers {
+    _id: String!
+    firstName: String
+    imageSet: [Data!]
+    age: Int
+    neighborhood: LocationType
+    gender: String
+    sport: SportNode
+    description: String
+    createdAt: String
+  }
 
   extend type Query {
-    fetchMatchesForUser(userId: String!): [Match!]!
+    fetchMatchesForUser(userId: String!, page: Int!, limit: Int!): [MatchedUsers!]!
     fetchMatchById(matchId: ID!): Match
     checkForMutualLike(
       currentUserId: String!

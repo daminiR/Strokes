@@ -1,26 +1,51 @@
 import Match from '../../../models/Match';
+import User from '../../../models/User';
 
 export const resolvers = {
   Query: {
-    async fetchMatchesForUser(_, { userId }) {
+    async fetchMatchesForUser(_, { userId, page, limit }) {
       try {
-        // Fetch matches where the provided userId is either user1Id or user2Id
+        // Calculate the number of documents to skip
+        const skip = (page - 1) * limit;
+
+        // Fetch matches where the provided userId is either user1Id or user2Id with pagination
         const matches = await Match.find({
-          $or: [{ user1Id: userId }, { user2Id: userId }]
+          $or: [{ user1Id: userId }, { user2Id: userId }],
+        })
+          .skip(skip)
+          .limit(limit);
+
+        // Extract matched user IDs from the matches
+        const matchedUserIds = matches.map((match) =>
+          match.user1Id === userId ? match.user2Id : match.user1Id
+        );
+
+        // If no matches are found, return an empty array early
+        if (matchedUserIds.length === 0) {
+          return [];
+        }
+
+        // Fetch user details for each matched user ID
+        const matchedUsers = await User.find({
+          _id: { $in: matchedUserIds },
         });
-        return matches;
+
+        // Extract and return the desired fields from user profiles
+        const userProfiles = matchedUsers.map((user) => ({
+          _id: user._id,
+          firstName: user.firstName,
+          imageSet: user.imageSet,
+          age: user.age,
+          neighborhood: user.neighborhood,
+          gender: user.gender,
+          sport: user.sport,
+          description: user.description,
+        }));
+
+        return userProfiles;
       } catch (error) {
         console.error(error);
         throw new Error("Failed to fetch matches.");
-      }
-    },
-    async fetchMatchById(_, { matchId }) {
-      try {
-        const match = await Match.findById(matchId);
-        return match;
-      } catch (error) {
-        console.error(error);
-        throw new Error("Failed to fetch match.");
       }
     },
   },
