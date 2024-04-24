@@ -1,8 +1,9 @@
-import React from "react"
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, ScrollView, ImageStyle, TextStyle, ViewStyle } from "react-native"
 import { CircularPlayerRatingBar, PlayerDetails, Header, Card, AutoImage } from "../components"
 import { observer } from 'mobx-react-lite';
 import { colors, spacing } from '../theme';
+import { ErrorDetails } from 'app/screens/ErrorScreen/ErrorDetails'
 
 interface Match {
   _id: string
@@ -30,6 +31,18 @@ interface SportCardProps {
 }
 
 export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
+  const [error, setError] = useState<Error | null>(null);
+   useEffect(() => {
+    if (!match || !match.firstName || !match.age || !match.gender || !match.description ||
+        !match.sport || !match.neighborhood || !match.imageSet.length) {
+          setError(new Error("Missing required match details"))
+        }
+  }, [match]);
+
+  if (error) {
+    return <ErrorDetails error={error} errorInfo={null} onReset={() => setError(null)} />;
+  }
+
     return (
       <ScrollView style={$scrollViewContainer}>
         <TouchableOpacity activeOpacity={1}>

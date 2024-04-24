@@ -1,4 +1,4 @@
-import { types, flow, Instance } from 'mobx-state-tree';
+import { types, flow, Instance, cast} from 'mobx-state-tree';
 import {CollectionEventSource} from '@sendbird/chat';
 import { GroupChannelHandler, MessageCollectionInitPolicy} from '@sendbird/chat/groupChannel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -44,7 +44,7 @@ const CurrentChatModel = types.model("CurrentChatModel", {
   gender: types.maybeNull(types.string),
   sport: types.maybeNull(SportModel),
   description: types.maybeNull(types.string),
-  imageSet: types.array(ImageModel),
+  imageSet: types.optional(types.array(ImageModel), []),
   neighborhood: LocationModel,
 });
 
@@ -63,6 +63,7 @@ export const ChatStore = types
       self.channel = channel
     },
     setChatProfile(profile: any) {
+      console.log("profs", profile.imageSet)
       self.currentChatProfile = {
         matchedUserId: profile.matchedUserId || null,
         firstName: profile.firstName || null,
@@ -73,7 +74,12 @@ export const ChatStore = types
           gameLevel: profile.sport.gameLevel,
         }), // Make sure to handle nested models correctly,
         description: profile.description || null,
-        imageSet: profile.imageSet || [], // Assuming ImageModel can handle an empty array
+        imageSet: profile.imageSet.map((img: any) =>
+          ImageModel.create({
+            img_idx: img.img_idx,
+            imageURL: img.imageURL,
+          }),
+        ),
         neighborhood: LocationModel.create({
           city: profile.neighborhood.city,
           state: profile.neighborhood.state,
