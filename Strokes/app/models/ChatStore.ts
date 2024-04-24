@@ -5,6 +5,27 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SendbirdChat from "@sendbird/chat"
 import { GroupChannelModule, MessageCollection, GroupChannel } from "@sendbird/chat/groupChannel"
 
+export const LocationModel = types.model("LocationModel", {
+  city: types.maybeNull(types.string),
+  state: types.maybeNull(types.string),
+  country: types.maybeNull(types.string),
+})
+export const SportModel = types.model("SportModel", {
+  sportName: types.maybeNull(types.string),
+  gameLevel: types.maybeNull(types.number),
+})
+export const ImageModel = types.model("ImageModel", {
+  img_idx: types.maybeNull(types.number),
+  imageURL: types.maybeNull(types.string),
+});
+const Range = types.model("RangeModel", {
+  min: types.maybeNull(types.number),
+  max: types.maybeNull(types.number),
+});
+export const PreferencesModel = types.model("PreferencesModel", {
+  age: types.maybeNull(Range),
+  gameLevel: types.maybeNull(Range),
+});
 const APP_ID = process.env.REACT_APP_SENDBIRD_APP_ID
 // Define User Model
 const ChannelModel = types.model({
@@ -16,6 +37,16 @@ const UserModel = types.model({
   nickname: types.string,
   accessToken: types.maybeNull(types.string),
 });
+const CurrentChatModel = types.model("CurrentChatModel", {
+  matchedUserId: types.maybeNull(types.string),
+  firstName: types.maybeNull(types.string),
+  age: types.maybeNull(types.number),
+  gender: types.maybeNull(types.string),
+  sport: types.maybeNull(SportModel),
+  description: types.maybeNull(types.string),
+  imageSet: types.array(ImageModel),
+  neighborhood: LocationModel,
+});
 
 // Define the ChatStore
 export const ChatStore = types
@@ -25,21 +56,41 @@ export const ChatStore = types
     sdk: types.maybe(types.frozen()), // Store the SDK instance once initialized
     channel: types.optional(types.frozen(), {}),
     collection: types.optional(types.frozen(), {}),
+    currentChatProfile: types.maybe(CurrentChatModel),
   })
   .actions((self) => ({
     setChannel(channel: GroupChannel) {
       self.channel = channel
     },
+    setChatProfile(profile: any) {
+      self.currentChatProfile = {
+        matchedUserId: profile.matchedUserId || null,
+        firstName: profile.firstName || null,
+        age: profile.age || null,
+        gender: profile.gender || null,
+        sport: SportModel.create({
+          sportName: profile.sport.sportName,
+          gameLevel: profile.sport.gameLevel,
+        }), // Make sure to handle nested models correctly,
+        description: profile.description || null,
+        imageSet: profile.imageSet || [], // Assuming ImageModel can handle an empty array
+        neighborhood: LocationModel.create({
+          city: profile.neighborhood.city,
+          state: profile.neighborhood.state,
+          country: profile.neighborhood.country,
+        }), // Provide a default model if null
+      }
+    },
     setCollection(collection: MessageCollection) {
       self.collection = collection
     },
     resetChannelAndCollection: () => {
-    if (self.collection) {
-      self.collection.dispose(); // Dispose of the collection properly.
-    }
-    self.collection = {} // Reset the channel and collection to initial state.
-    self.channel = {}; // Reset the channel and collection to initial state.
-  },
+      if (self.collection) {
+        self.collection.dispose() // Dispose of the collection properly.
+      }
+      self.collection = {} // Reset the channel and collection to initial state.
+      self.channel = {} // Reset the channel and collection to initial state.
+    },
     initializeCollection: flow(function* (channelUrl: string, setState: any, rerender: any) {
       //if (!self.sdk) return
       self.sdk.groupChannel
@@ -97,7 +148,6 @@ export const ChatStore = types
         })
         .catch((err: any) => console.log(err))
       //console.log("here", channel)
-
     }),
     initializeSDK: flow(function* () {
       //if (!self.sdk) {
