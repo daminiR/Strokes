@@ -155,7 +155,9 @@ const ProfileCard = observer(function ProfileCard({
   lastMessage,
   isMessageRead,
 }: ProfileCardProps) {
+  const { chatStore } = useStores()
   const handlePressCard = () => {
+    chatStore.setChatProfile(profile)
     navigate("ChatTopNavigator")
   }
 

@@ -1,5 +1,5 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import {ChatScreen, ProfilePreviewScreen} from "app/screens"
+import {ChatScreen, ChatPreviewScreen} from "app/screens"
 import { navigate, goBack} from "../navigators"
 
 const ChatTopTab = createMaterialTopTabNavigator();
@@ -21,13 +21,13 @@ export function ChatTopTabNavigator() {
       }}
     >
       <ChatTopTab.Screen
-        name="ProfileUpdate"
+        name="Chat"
         component={ChatScreen}
         options={{ tabBarLabel: 'Update' }}
       />
       <ChatTopTab.Screen
-        name="ProfilePreview"
-        component={ChatScreen}
+        name="ChatProfilePreview"
+        component={ChatPreviewScreen}
         options={{ tabBarLabel: 'Preview' }}
       />
     </ChatTopTab.Navigator>
