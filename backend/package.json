@@ -25,6 +25,8 @@
     "mongo-sanitize": "^1.1.0",
     "mongoose": "^6.1.4",
     "nodemon": "^2.0.12",
+    "sendbird": "^3.1.33",
+    "sendbird-platform-sdk": "^0.0.16",
     "sendbird-platform-sdk-typescript": "https://github.com/sendbird/sendbird-platform-sdk-typescript.git",
     "serverless": "^3.19.0",
     "typescript": "^4.1.3",
