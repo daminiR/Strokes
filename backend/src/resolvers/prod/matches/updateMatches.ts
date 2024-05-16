@@ -1,6 +1,6 @@
 import Match from '../../../models/Match';
 import User from '../../../models/User';
-//import SendBirdPlatformSdk from 'sendbird-platform-sdk';
+import { GroupChannel } from 'sendbird-platform-sdk-typescript';
 import { groupChannelApi} from './../../../services/sendbirdService';
 
 
@@ -62,22 +62,12 @@ export const resolvers = {
           is_distinct: true,
         };
 
-      //const channel = await new Promise<SendBirdPlatformSdk.GroupChannel>(
-  //(resolve, reject) => {
-    //groupChannelApiInstance.gcCreateChannel(
-      //apiToken,
-      //createChannelData,
-      //(error, data) => {
-        //if (error) {
-          //reject(error);
-          //return;
-        //}
-        //resolve(data);
-      //}
-    //);
-  //}
-//);
-    // Now create a match document with the new channel URL
+        const channel: GroupChannel =
+          await groupChannelApi.createChannel(
+            apiToken,
+            createChannelData
+          );
+        // Now create a match document with the new channel URL
         const newMatch = await Match.create({
           user1Id,
           user2Id,
