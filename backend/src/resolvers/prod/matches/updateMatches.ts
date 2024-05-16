@@ -1,5 +1,8 @@
 import Match from '../../../models/Match';
 import User from '../../../models/User';
+//import SendBirdPlatformSdk from 'sendbird-platform-sdk';
+import { groupChannelApi} from './../../../services/sendbirdService';
+
 
 export const resolvers = {
   Query: {
@@ -52,7 +55,48 @@ export const resolvers = {
   Mutation: {
     async createMatch(_, { user1Id, user2Id }) {
       try {
-        const newMatch = await Match.create({ user1Id, user2Id });
+        // Create a group channel with the two users
+        const createChannelData = {
+          name: `${user1Id}-${user2Id} Chat`,
+          user_ids: [user1Id, user2Id],
+          is_distinct: true,
+        };
+
+      //const channel = await new Promise<SendBirdPlatformSdk.GroupChannel>(
+  //(resolve, reject) => {
+    //groupChannelApiInstance.gcCreateChannel(
+      //apiToken,
+      //createChannelData,
+      //(error, data) => {
+        //if (error) {
+          //reject(error);
+          //return;
+        //}
+        //resolve(data);
+      //}
+    //);
+  //}
+//);
+    // Now create a match document with the new channel URL
+        const newMatch = await Match.create({
+          user1Id,
+          user2Id,
+          channelUrl: channel.url,
+          channelType: "private",
+          channelStatus: "active",
+          user1LastMessagePreview: "",
+          user1LastMessageTimestamp: new Date(),
+          user1UnreadMessageCount: 0,
+          user2LastMessagePreview: "",
+          user2LastMessageTimestamp: new Date(),
+          user2UnreadMessageCount: 0,
+          channelCreationDate: new Date(),
+          channelExpiryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+          readReceiptsStatus: false,
+          reportedBy: null,
+          blockedBy: null,
+        });
+
         return {
           success: true,
           message: "Match created successfully.",
