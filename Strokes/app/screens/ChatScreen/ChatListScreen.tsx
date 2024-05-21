@@ -121,8 +121,6 @@ const getMoreData = async () => {
           renderItem={({ item }) => (
             <ProfileCard
               profile={item}
-              isMessageRead={false}
-              lastMessage={"hello"}
             />
           )}
         />
@@ -134,15 +132,11 @@ const getMoreData = async () => {
 
 interface ProfileCardProps {
   profile: any;
-  lastMessage: string;
-  isMessageRead: boolean;
 }
 
 
 const ProfileCard = observer(function ProfileCard({
   profile,
-  lastMessage,
-  isMessageRead,
 }: ProfileCardProps) {
   const { chatStore } = useStores()
   const handlePressCard = () => {
@@ -160,9 +154,9 @@ const ProfileCard = observer(function ProfileCard({
         <View style={$metadata}>
           <Text style={$metadataName}>{profile.firstName}</Text>
           <Text
-            style={isMessageRead ? $metadataLastMessage : $metadataLastMessageBold}
+            style={profile.chat.readReceiptsStatus ? $metadataLastMessage : $metadataLastMessageBold}
           >
-            {lastMessage}
+            {profile.chat.lastMessagePreview}
           </Text>
         </View>
       </TouchableOpacity>
