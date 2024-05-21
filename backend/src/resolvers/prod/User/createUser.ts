@@ -1,18 +1,15 @@
 import User from '../../../models/User';
 import { PotentialMatchPool } from "../../../models/PotentialMatchPool";
+import { Sendbird } from 'sendbird-platform-sdk';
 import { resolvers as PotentialMatchPoolResolvers } from "../potentialMatchPools/updatePotentialMatchPool";
 import { SHA256 } from 'crypto-js';
+import { apiToken, userAPI} from './../../../services/sendbirdService';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
 import {
   createAWSUpload,
   deleteImagesFromS3
 } from "../../../utils/awsUpload";
-import {
-  SWIPIES_PER_DAY_LIMIT,
-  LIKES_PER_DAY_LIMIT,
-  SPORT_CHANGES_PER_DAY,
-} from "../../../constants";
 
 export const resolvers = {
   Mutation: {
@@ -115,6 +112,21 @@ export const resolvers = {
           "Error creating User document or PotentialMatchPool document:",
           error
         );
+         try {
+           let body:Sendbird.UserApiCreateUserTokenRequest = {
+             user_id: _id,
+             nickname: `${firstName} ${lastName}`,
+             profile_url: imageSet[0]?.url || "",
+           }
+           await userAPI.createUser(body)
+
+           console.log("Sendbird user created successfully");
+         } catch (sendbirdError: any) {
+           console.error("Error creating Sendbird user:", sendbirdError);
+           throw new Error(
+             "Failed to create Sendbird user: " + sendbirdError.message
+           );
+         }
 
         // Rollback: Attempt to delete the PotentialMatchPool document if User creation fails
         if (userDoc == null && potentialMatchPoolDoc != null) {

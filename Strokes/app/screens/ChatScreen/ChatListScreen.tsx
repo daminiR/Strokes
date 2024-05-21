@@ -23,24 +23,13 @@ import {
 import { isRTL, translate } from "../../i18n"
 import { useStores } from "../../models"
 import { Episode } from "../../models/Episode"
-import { DemoTabScreenProps } from "../../navigators/DemoNavigator"
 import { colors, typography, spacing } from "../../theme"
-import { delay } from "../../utils/delay"
 import { useFocusEffect } from '@react-navigation/native';
-
-const ICON_SIZE = 14
-
-const rnrImage1 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-const rnrImage2 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-const rnrImage3 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-const rnrImages = [rnrImage1, rnrImage2, rnrImage3]
 
 export const ChatListScreen = observer(
   function ChatListScreen(_props) {
     const { episodeStore } = useStores()
     const { matchedProfileStore, mongoDBStore } = useStores()
-    console.log("matchedProfileStore", matchedProfileStore)
-
     const [refreshing, setRefreshing] = React.useState(false)
     const [isSwiping, setIsSwiping] = useState(false);
     const [isLoading, setIsLoading] = React.useState(false)

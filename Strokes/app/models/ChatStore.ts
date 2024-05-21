@@ -54,16 +54,25 @@ export const ChatStore = types
     currentUser: types.maybe(UserModel),
     isConnected: types.optional(types.boolean, false),
     sdk: types.maybe(types.frozen()), // Store the SDK instance once initialized
-    channel: types.optional(types.frozen(), {}),
+    channelUrl: types.optional(types.frozen(), {}),
     collection: types.optional(types.frozen(), {}),
     currentChatProfile: types.maybe(CurrentChatModel),
+    channelType: types.maybeNull(types.string),
+    channelStatus: types.maybeNull(types.string),
+    lastMessagePreview: types.maybeNull(types.string),
+    lastMessageTimestamp: types.maybeNull(types.string),
+    unreadMessageCount: types.maybeNull(types.number),
+    channelCreationDate: types.maybeNull(types.string),
+    channelExpiryDate: types.maybeNull(types.string),
+    readReceiptsStatus: types.maybeNull(types.boolean),
+    reportedBy: types.maybeNull(types.string),
+    blockedBy: types.maybeNull(types.string),
   })
   .actions((self) => ({
     setChannel(channel: GroupChannel) {
-      self.channel = channel
+      self.channelUrl = channel
     },
     setChatProfile(profile: any) {
-      console.log("profs", profile.imageSet)
       self.currentChatProfile = {
         matchedUserId: profile.matchedUserId || null,
         firstName: profile.firstName || null,
@@ -72,7 +81,7 @@ export const ChatStore = types
         sport: SportModel.create({
           sportName: profile.sport.sportName,
           gameLevel: profile.sport.gameLevel,
-        }), // Make sure to handle nested models correctly,
+        }), // Handle nested models correctly
         description: profile.description || null,
         imageSet: profile.imageSet.map((img: any) =>
           ImageModel.create({
@@ -86,6 +95,19 @@ export const ChatStore = types
           country: profile.neighborhood.country,
         }), // Provide a default model if null
       }
+
+      // Set chat details
+      self.channelUrl = profile.chat.channelUrl || null
+      self.channelType = profile.chat.channelType || null
+      self.channelStatus = profile.chat.channelStatus || null
+      self.lastMessagePreview = profile.chat.lastMessagePreview || null
+      self.lastMessageTimestamp = profile.chat.lastMessageTimestamp || null
+      self.unreadMessageCount = profile.chat.unreadMessageCount || null
+      self.channelCreationDate = profile.chat.channelCreationDate || null
+      self.channelExpiryDate = profile.chat.channelExpiryDate || null
+      self.readReceiptsStatus = profile.chat.readReceiptsStatus || null
+      self.reportedBy = profile.chat.reportedBy || null
+      self.blockedBy = profile.chat.blockedBy || null
     },
     setCollection(collection: MessageCollection) {
       self.collection = collection
@@ -95,7 +117,7 @@ export const ChatStore = types
         self.collection.dispose() // Dispose of the collection properly.
       }
       self.collection = {} // Reset the channel and collection to initial state.
-      self.channel = {} // Reset the channel and collection to initial state.
+      self.channelUrl = {} // Reset the channel and collection to initial state.
     },
     initializeCollection: flow(function* (channelUrl: string, setState: any, rerender: any) {
       //if (!self.sdk) return
