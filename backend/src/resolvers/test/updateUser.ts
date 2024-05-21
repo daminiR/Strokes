@@ -4,6 +4,8 @@ import Match from '../../models/Match';
 import { PotentialMatchPool } from "../../models/PotentialMatchPool";
 import _ from 'lodash'
 import { SHA256 } from 'crypto-js';
+import { apiToken, userAPI, groupChannelApi} from './../../services/sendbirdService';
+import { Sendbird } from 'sendbird-platform-sdk';
 
 interface LikeActionResult {
   likerId: string;
@@ -59,20 +61,87 @@ export const resolvers = {
           "Completed updating filtersHash in PotentialMatchPool for all users.",
       };
     },
-    removeAllMatchesForUserTest: async (_, { userId }) => {
+    removeAllMatchesForUserTest: async (_: any, { userId }) => {
       try {
         // Remove all matches where the user is either user1Id or user2Id
         const removedMatches = await Match.deleteMany({
           $or: [{ user1Id: userId }, { user2Id: userId }],
         });
 
+        // Remove corresponding Sendbird group channels
+        const data = await groupChannelApi.gcListChannels(
+          apiToken,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          userId
+        );
+        //console.log("API called successfully. Returned data: " + data);
+
+        if (data.channels) {
+          for (const channel of data.channels) {
+            try {
+              const deleteBody: Sendbird.GroupChannelApiGcDeleteChannelByUrlRequest =
+                {
+                  apiToken: apiToken,
+                  channelUrl: channel.channelUrl,
+                };
+              if (channel.channelUrl) {
+                await groupChannelApi.gcDeleteChannelByUrl(
+                  apiToken,
+                  channel.channelUrl
+                );
+              }
+            } catch (deleteError) {
+              console.error(
+                `Error deleting Sendbird group channel ${channel}:`,
+                deleteError
+              );
+            }
+          }
+        }
         // Construct a result summary
         const result = {
           removedMatchesCount: removedMatches.deletedCount,
           success: true,
           message: `Removed ${removedMatches.deletedCount} matches.`,
         };
-
         return result;
       } catch (error) {
         console.error("Error removing matches for user:", error);
@@ -212,7 +281,6 @@ export const resolvers = {
         }
       }
     },
-
     updatePotentialMatchesTest: async (_, { currentUserId }) => {
       try {
         // Fetch the current user
@@ -270,6 +338,24 @@ export const resolvers = {
             },
           },
         ]);
+        // Create Sendbird users for the new potential matches
+        for (const match of newPotentialMatches) {
+          const sendbirdUserData: Sendbird.UserApiCreateUserRequest = {
+            userId: match._id.toString(),
+            nickname: match.firstName,
+            profileUrl: match.imageSet[0]?.url || "",
+          };
+
+          try {
+            await userAPI.createUser(apiToken, sendbirdUserData);
+            console.log(`Sendbird user created for ${match.firstName}`);
+          } catch (sendbirdError) {
+            console.error(
+              `Error creating Sendbird user for ${match.firstName}:`,
+              sendbirdError
+            );
+          }
+        }
         // Update the PotentialMatchPool document with new matches
         await PotentialMatchPool.updateOne(
           { userId: currentUserId },
@@ -350,7 +436,7 @@ export const resolvers = {
         }
 
         const numLikes = randomize
-          ? Math.min(300, allUsers.length)
+          ? Math.min(40, allUsers.length)
           : allUsers.length;
         const likeActionsResults: LikeActionResult[] = [];
 
@@ -361,6 +447,22 @@ export const resolvers = {
             likerId: randomUser._id,
             likedId: currentUserId,
           });
+          // Create Sendbird user
+          const sendbirdUserData: Sendbird.UserApiCreateUserRequest = {
+            userId: randomUser._id.toString(),
+            nickname: randomUser.firstName,
+            profileUrl: randomUser.imageSet[0]?.imageURL || "",
+          };
+
+          try {
+            await userAPI.createUser(apiToken, sendbirdUserData);
+            console.log(`Sendbird user created for ${randomUser.firstName}`);
+          } catch (sendbirdError) {
+            console.error(
+              `Error creating Sendbird user for ${randomUser.firstName}:`,
+              sendbirdError
+            );
+          }
 
           likeActionsResults.push({
             likerId: randomUser._id.toString(),
@@ -412,6 +514,22 @@ export const resolvers = {
             likerId: randomMatch.matchUserId,
             likedId: currentUserId,
           });
+          // Create Sendbird user
+          const sendbirdUserData: Sendbird.UserApiCreateUserRequest = {
+            userId: randomMatch.matchUserId.toString(),
+            nickname: randomMatch.firstName,
+            profileUrl: randomMatch.imageSet[0]?.imageURL || "",
+          };
+
+          try {
+            await userAPI.createUser(apiToken, sendbirdUserData);
+            console.log(`Sendbird user created for ${randomMatch.firstName}`);
+          } catch (sendbirdError) {
+            console.error(
+              `Error creating Sendbird user for ${randomMatch.firstName}:`,
+              sendbirdError
+            );
+          }
 
           likeActionsResults.push({
             likerId: randomMatch.matchUserId,

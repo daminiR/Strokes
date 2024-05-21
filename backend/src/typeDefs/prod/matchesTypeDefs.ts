@@ -9,6 +9,20 @@ export const matchesTypeDefs = gql`
     user2Id: String!
     createdAt: String
   }
+  type ChatData {
+    channelUrl: String
+    channelType: String
+    channelStatus: String
+    lastMessagePreview: String
+    lastMessageTimestamp: String
+    unreadMessageCount: Int
+    channelCreationDate: String
+    channelExpiryDate: String
+    readReceiptsStatus: Boolean
+    reportedBy: String
+    blockedBy: String
+  }
+
   type MatchedUsers {
     _id: String!
     firstName: String
@@ -19,10 +33,14 @@ export const matchesTypeDefs = gql`
     sport: SportNode
     description: String
     createdAt: String
+    chat: ChatData
   }
-
   extend type Query {
-    fetchMatchesForUser(userId: String!, page: Int!, limit: Int!): [MatchedUsers!]!
+    fetchMatchesForUser(
+      userId: String!
+      page: Int!
+      limit: Int!
+    ): [MatchedUsers!]!
     fetchMatchById(matchId: ID!): Match
     checkForMutualLike(
       currentUserId: String!

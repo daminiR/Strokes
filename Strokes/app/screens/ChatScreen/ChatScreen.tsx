@@ -37,9 +37,7 @@ export const ChatScreen = observer(() => {
   }
 
   useEffect(() => {
-    initializeCollection(
-      "sendbird_group_channel_342944236_db05af2a16d48389e611089d92a2dcdb87add252",
-    )
+    initializeCollection(chatStore.channelUrl)
   }, [])
 
   useEffect(() => {
@@ -48,7 +46,6 @@ export const ChatScreen = observer(() => {
     }
   }, [state?.collection])
 
-  console.log("debug m state", state)
   if (!state) return <ActivityIndicator style={StyleSheet.absoluteFill} size={"large"} />
 
   const keyExtractor = (item: BaseMessage) =>

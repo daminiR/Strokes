@@ -22,9 +22,23 @@ export const FETCH_MATCHES_FOR_USER_QUERY = gql`
       }
       description
       createdAt
+      chat {
+        channelUrl
+        channelType
+        channelStatus
+        lastMessagePreview
+        lastMessageTimestamp
+        unreadMessageCount
+        channelCreationDate
+        channelExpiryDate
+        readReceiptsStatus
+        reportedBy
+        blockedBy
+      }
     }
   }
 `
+
 export const FETCH_MATCH_BY_ID_QUERY = gql`
   query FetchMatchById($matchId: ID!) {
     fetchMatchById(matchId: $matchId) {

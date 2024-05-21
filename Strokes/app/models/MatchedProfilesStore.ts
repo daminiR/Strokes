@@ -26,6 +26,20 @@ export const PreferencesModel = types.model("PreferencesModel", {
   gameLevel: types.maybeNull(Range),
 });
 
+export const ChatModel = types.model("ChatModel", {
+  channelUrl: types.maybeNull(types.string),
+  channelType: types.maybeNull(types.string),
+  channelStatus: types.maybeNull(types.string),
+  lastMessagePreview: types.maybeNull(types.string),
+  lastMessageTimestamp: types.maybeNull(types.string),
+  unreadMessageCount: types.maybeNull(types.number),
+  channelCreationDate: types.maybeNull(types.string),
+  channelExpiryDate: types.maybeNull(types.string),
+  readReceiptsStatus: types.maybeNull(types.boolean),
+  reportedBy: types.maybeNull(types.string),
+  blockedBy: types.maybeNull(types.string),
+});
+
 export const MatchedUserModel = types.model("MatchedUserModel", {
   matchedUserId: types.maybeNull(types.string),
   firstName: types.maybeNull(types.string),
@@ -35,6 +49,7 @@ export const MatchedUserModel = types.model("MatchedUserModel", {
   description: types.maybeNull(types.string),
   imageSet: types.array(ImageModel),
   neighborhood: LocationModel,
+  chat: types.maybeNull(ChatModel),
 });
 
 export const MatchedProfilesStore = types
