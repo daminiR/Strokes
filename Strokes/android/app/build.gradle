@@ -1,6 +1,9 @@
-apply plugin: "com.android.application"
-apply plugin: "org.jetbrains.kotlin.android"
-apply plugin: "com.facebook.react"
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services' // Notice: No version or apply false is set here as it’s at app level.
+    id "com.facebook.react"
+}
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
@@ -145,6 +148,11 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+     // The Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:33.0.0')
+
+    // Firebase Messaging for push notifications
+    implementation 'com.google.firebase:firebase-messaging'
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";

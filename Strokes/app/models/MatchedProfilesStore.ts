@@ -57,6 +57,9 @@ export const MatchedProfilesStore = types
     matchedProfiles: types.array(MatchedUserModel),
   })
   .actions((self) => ({
+    findByChannelId(channelId) {
+      return self.matchedProfiles.find((user) => user.chat.channelUrl === channelId)
+    },
     appendMatchedProfiles(newProfiles: any) {
       self.matchedProfiles.push(...newProfiles)
     },

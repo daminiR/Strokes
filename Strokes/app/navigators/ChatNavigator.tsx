@@ -1,5 +1,9 @@
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
+import { platformServices } from "../services/api/sendbird"
+import { SendbirdChatProvider } from "@sendbird/uikit-react-native"
 import { createStackNavigator } from '@react-navigation/stack';
 import {
   DarkTheme,
@@ -30,15 +34,21 @@ export type ProfileStackScreenProps<T extends keyof ProfileStackParamList> = Nat
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>()
 
+const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
+const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 export function ChatStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}
-      initialRouteName={"ChatList"}
+    <SendbirdUIKitContainer
+      appId={process.env.REACT_APP_SENDBIRD_APP_ID}
+      chatOptions={{ localCacheStorage: AsyncStorage }}
+      platformServices={platformServices}
     >
-      <Stack.Screen name="ChatTopNavigator" component={ChatTopTabNavigator} />
-      <Stack.Screen name="ChatList" component={Screens.ChatListScreen} />
-      {/* Add more screens as needed */}
-    </Stack.Navigator>
-  );
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"ChatList"}>
+        <Stack.Screen name="ChatTopNavigator" component={ChatTopTabNavigator} />
+        <Stack.Screen name="ChatList" component={Screens.ChatListScreen} />
+        {/* Add more screens as needed */}
+      </Stack.Navigator>
+    </SendbirdUIKitContainer>
+  )
 }
 
