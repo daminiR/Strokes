@@ -37,6 +37,19 @@ const UserModel = types.model({
   nickname: types.string,
   accessToken: types.maybeNull(types.string),
 });
+export const ChatModel = types.model("ChatModel", {
+  channelUrl: types.maybeNull(types.string),
+  channelType: types.maybeNull(types.string),
+  channelStatus: types.maybeNull(types.string),
+  lastMessagePreview: types.maybeNull(types.string),
+  lastMessageTimestamp: types.maybeNull(types.string),
+  unreadMessageCount: types.maybeNull(types.number),
+  channelCreationDate: types.maybeNull(types.string),
+  channelExpiryDate: types.maybeNull(types.string),
+  readReceiptsStatus: types.maybeNull(types.boolean),
+  reportedBy: types.maybeNull(types.string),
+  blockedBy: types.maybeNull(types.string),
+});
 const CurrentChatModel = types.model("CurrentChatModel", {
   matchedUserId: types.maybeNull(types.string),
   firstName: types.maybeNull(types.string),
@@ -46,6 +59,7 @@ const CurrentChatModel = types.model("CurrentChatModel", {
   description: types.maybeNull(types.string),
   imageSet: types.optional(types.array(ImageModel), []),
   neighborhood: LocationModel,
+  chat: types.optional(ChatModel, {}),
 });
 
 // Define the ChatStore
@@ -185,7 +199,7 @@ export const ChatStore = types
           modules: [new GroupChannelModule()],
           useAsyncStorageStore: AsyncStorage,
           localCacheEnabled: true,
-        })
+      })
         resolve(sdk)
       })
       self.sdk = yield sdkPromise

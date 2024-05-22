@@ -1,10 +1,28 @@
 import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
+import {PermissionsAndroid, Platform } from 'react-native';
+import messaging from '@react-native-firebase/messaging'
 import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserStoreModel } from "./UserStore"
 import { getRootStore } from "./helpers/getRootStore"
 import { removeStore } from "./helpers/removeRootStore"
 
+const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
+const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
+
+async function requestUserPermission() {
+  const authorizationStatus = await messaging().requestPermission();
+  return authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+         authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL;
+}
+
+if (Platform.OS === 'ios') {
+  requestUserPermission().then(hasPermission => {
+    if (hasPermission) {
+      // Continue with getting the token and registering it...
+    }
+  });
+}
 const FileType = types.model("FileType", {
   uri: types.string,
   type: types.optional(types.string, "image/jpeg"), // Default to 'image/jpeg'
@@ -30,6 +48,57 @@ export const AuthenticationStoreModel = types
       self.setIsAuthenticated(false)
       yield removeStore()
       yield AsyncStorage.clear()
+    }),
+    registerDeviceToken: flow(function* () {
+      const chatStore = getRoot(self).chatStore // Ensure you have access to the Sendbird instance
+      //TODO and then logout
+      yield chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
+
+      // Request permission for notifications, crucial for iOS
+      const requestPermission = flow(function* () {
+        const authStatus = yield messaging().requestPermission()
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL
+        return enabled
+      })
+
+      try {
+        let token
+        if (Platform.OS === "ios") {
+          const hasPermission = yield requestPermission()
+          if (hasPermission) {
+            token = yield messaging().getAPNSToken()
+            if (token) {
+              console.log("Token to be registered:", token)
+              yield chatStore.sdk.registerAPNSPushTokenForCurrentUser(token)
+              console.log("APNS token registered successfully")
+            } else {
+              console.error("Failed to get APNS token")
+            }
+          } else {
+            console.error("Notification permission is not granted")
+          }
+        } else {
+          // Assuming Android by default
+          token = yield messaging().getToken()
+          if (token) {
+            console.log("Token to be registered:", token)
+            yield chatStore.sdk.registerFCMPushTokenForCurrentUser(token)
+            console.log("FCM token registered successfully")
+          } else {
+            console.error("Failed to get FCM token")
+          }
+        }
+
+        // Handle token refresh
+        messaging().onTokenRefresh((newToken) => {
+          registerDeviceToken(newToken) // Call this function recursively to update the token
+        })
+      } catch (error) {
+        console.error("Error during push token registration:", error)
+        throw error // Optionally, handle this error more gracefully
+      }
     }),
     checkCognitoUserSession() {
       const mongoDBStore = getRoot(self).mongoDBStore
@@ -68,6 +137,7 @@ export const AuthenticationStoreModel = types
     },
     signUp: flow(function* () {
       const userStore = getRoot(self).userStore
+      const chatStore = getRoot(self).chatStore
 
       try {
         const attributeList = [
@@ -118,6 +188,11 @@ export const AuthenticationStoreModel = types
                 }
               } else {
                 userStore.setID(result?.userSub)
+                if (signUpResult.userConfirmed) {
+                  await chatStore.initializeSDK()
+                  await self.registerDeviceToken() // Adjust parameters as needed
+                  console.log("User signed up and registered for push notifications")
+                }
                 resolve({ userConfirmed: true, result })
               }
             },
@@ -247,6 +322,7 @@ export const AuthenticationStoreModel = types
     signIn: flow(function* signIn() {
       const userStore = getRoot(self).userStore
       const mongoDBStore = getRoot(self).mongoDBStore
+      const chatStore = getRoot(self).chatStore
       try {
         const authData = {
           Username: userStore.phoneNumber,
@@ -266,7 +342,14 @@ export const AuthenticationStoreModel = types
               userStore.setID(userSub)
               await mongoDBStore.queryUserFromMongoDB(userSub)
               await mongoDBStore.queryPotentialMatches()
+              await chatStore.initializeSDK()
               self.setIsAuthenticated(true)
+              try {
+                await self.registerDeviceToken() // Adjust parameters as needed
+                console.log("Registered for push notifications")
+              } catch (pnError) {
+                console.error("Push notification registration failed:", pnError)
+              }
               resolve(result)
             },
             onFailure: (err) => {

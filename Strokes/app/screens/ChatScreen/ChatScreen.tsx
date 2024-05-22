@@ -103,41 +103,6 @@ export const ChatScreen = observer(() => {
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
-//const useHeaderButtons = (channel?: GroupChannel) => {
-  //const {navigation} = useAppNavigation();
-
-  //useLayoutEffect(() => {
-    //if (channel) {
-      //const onPressInvite = () => navigation.navigate(Routes.GroupChannelInvite, {channelUrl: channel.url});
-      //const onPressLeave = async () => {
-        //try {
-          //await channel.leave();
-          //console.info('leave channel, go back');
-          //navigation.goBack();
-        //} catch {
-          //console.info('leave channel failure');
-        //}
-      //};
-
-      //navigation.setOptions({
-        //headerRight: () => {
-          //return (
-            //<View style={styles.headerButtonContainer}>
-              //<TouchableOpacity onPress={onPressInvite}>
-                //<Icon icon={'members'} size={20} />
-              //</TouchableOpacity>
-              //<View style={styles.headerButtonSeparator} />
-              //<TouchableOpacity onPress={onPressLeave}>
-                //<Icon icon={'leave'} size={20} />
-              //</TouchableOpacity>
-            //</View>
-          //);
-        //},
-      //});
-    //}
-  //}, [channel]);
-//};
-
 const styles = StyleSheet.create({
   container: {
     padding: 12,
