@@ -17,6 +17,12 @@ import { useStores } from "../../models"
 
 export const INPUT_MAX_HEIGHT = 80;
 const KEYBOARD_AVOID_BEHAVIOR = Platform.select({ios: 'padding' as const, default: undefined});
+// Constants
+  const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0; // Adjust if you have a different status bar height
+  const NAVIGATION_BAR_HEIGHT = 44; // Typical navigation bar height, adjust if your app differs
+  //const CONNECTION_STATE_HEIGHT = 24; // Example additional component height above the keyboard-avoiding view
+
+  // Calculate the total offset needed
 export const SendInput = ({channel}: {channel: GroupChannel}) => {
   const handlerId = useId()
   const { chatStore } = useStores()
@@ -26,6 +32,9 @@ export const SendInput = ({channel}: {channel: GroupChannel}) => {
 
   const height = useHeaderHeight();
   const {bottom} = useSafeAreaInsets();
+  //const keyboardVerticalOffset =
+    //Platform.OS === "ios" ? STATUS_BAR_HEIGHT + NAVIGATION_BAR_HEIGHT + CONNECTION_STATE_HEIGHT : 0
+   const keyboardVerticalOffset = NAVIGATION_BAR_HEIGHT + STATUS_BAR_HEIGHT;
 
   useEffect(() => {
     const handler = new GroupChannelHandler({
@@ -73,15 +82,25 @@ export const SendInput = ({channel}: {channel: GroupChannel}) => {
 
 
   return (
-    <KeyboardAvoidingView keyboardVerticalOffset={-bottom + height + CONNECTION_STATE_HEIGHT} behavior={KEYBOARD_AVOID_BEHAVIOR}>
+    <KeyboardAvoidingView
+      style={{ flexShrink: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"} // 'padding' on iOS, 'height' on Android
+      keyboardVerticalOffset={keyboardVerticalOffset}
+    >
       {isTyping && <TypingIndicator channel={channel} />}
       <View style={styles.inputContainer}>
-        <TextInput multiline placeholder={'Enter message'} value={text} onChangeText={onChangeText} style={styles.input} />
+        <TextInput
+          multiline
+          placeholder={"Enter message"}
+          value={text}
+          onChangeText={onChangeText}
+          style={styles.input}
+        />
         <SendButton visible={text.trim().length > 0} onPress={onPressSend} />
       </View>
-      <View style={{height: bottom}} />
+      <View style={{ height: bottom }} />
     </KeyboardAvoidingView>
-  );
+  )
 };
 
 const TypingIndicator = ({channel}: {channel: GroupChannel}) => {
