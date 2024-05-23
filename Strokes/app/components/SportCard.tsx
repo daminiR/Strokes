@@ -38,11 +38,9 @@ export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
           setError(new Error("Missing required match details"))
         }
   }, [match]);
-
   if (error) {
     return <ErrorDetails error={error} errorInfo={null} onReset={() => setError(null)} />;
   }
-
     return (
       <ScrollView style={$scrollViewContainer}>
         <TouchableOpacity activeOpacity={1}>

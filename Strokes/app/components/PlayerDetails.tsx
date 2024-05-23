@@ -33,22 +33,16 @@ export const PlayerDetails: FC<PlayerDetailsProps & { isEditing: boolean, player
           <Text style={$iconTileLabel}>{playerDetails.sport.gameLevel}</Text>
         </View>
         <View style={styles.divider} />
-        {/* Age */}
-        <View style={styles.iconContainer}>
-          <Icon size={24} name={"birthday-cake"} />
-          <Text style={$iconTileLabel}>{playerDetails.age}</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.divider} />
         {/* Neighborhood  */}
         <View style={styles.iconContainer}>
           <Icon size={24} name={"map-marker-alt"} />
           <Text style={$iconTileLabel}>{playerDetails.neighborhood.city}</Text>
         </View>
-        {/* Gende */}
+        <View style={styles.divider} />
+        {/* Age */}
         <View style={styles.iconContainer}>
-          <Icon size={24} name="venus-mars" />
-          <Text style={$iconTileLabel}>{playerDetails.gender}</Text>
+          <Icon size={24} name={"birthday-cake"} />
+          <Text style={$iconTileLabel}>{playerDetails.age}</Text>
         </View>
       </View>
     </View>

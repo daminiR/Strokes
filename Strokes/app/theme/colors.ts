@@ -1,37 +1,37 @@
-// TODO: write documentation for colors and palette in own markdown file and add links from here
+// todo: write documentation for colors and palette in own markdown file and add links from here
 
-const palette = {
-  neutral100: "#FFFFFF",
-  neutral200: "#F4F2F1",
-  neutral300: "#D7CEC9",
-  neutral400: "#B6ACA6",
-  neutral500: "#978F8A",
-  neutral600: "#564E4A",
-  neutral700: "#3C3836",
+export const palette = {
+  neutral100: "#ffffff",
+  neutral200: "#f4f2f1",
+  neutral300: "#d7cec9",
+  neutral400: "#b6aca6",
+  neutral500: "#978f8a",
+  neutral600: "#564e4a",
+  neutral700: "#3c3836",
   neutral800: "#191015",
   neutral900: "#000000",
 
-  primary100: "#F4E0D9",
-  primary200: "#E8C1B4",
-  primary300: "#DDA28E",
-  primary400: "#D28468",
-  primary500: "#C76542",
-  primary600: "#A54F31",
+  primary100: "#f4e0d9",
+  primary200: "#e8c1b4",
+  primary300: "#dda28e",
+  primary400: "#d28468",
+  primary500: "#c76542",
+  primary600: "#a54f31",
 
-  secondary100: "#DCDDE9",
-  secondary200: "#BCC0D6",
-  secondary300: "#9196B9",
+  secondary100: "#dcdde9",
+  secondary200: "#bcc0d6",
+  secondary300: "#9196b9",
   secondary400: "#626894",
-  secondary500: "#41476E",
+  secondary500: "#41476e",
 
-  accent100: "#FFEED4",
-  accent200: "#FFE1B2",
-  accent300: "#FDD495",
-  accent400: "#FBC878",
-  accent500: "#FFBB50",
+  accent100: "#ffeed4",
+  accent200: "#ffe1b2",
+  accent300: "#fdd495",
+  accent400: "#fbc878",
+  accent500: "#ffbb50",
 
-  angry100: "#F2D6CD",
-  angry500: "#C03403",
+  angry100: "#f2d6cd",
+  angry500: "#c03403",
 
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
@@ -39,46 +39,46 @@ const palette = {
 
 export const colors = {
   /**
-   * The palette is available to use, but prefer using the name.
-   * This is only included for rare, one-off cases. Try to use
+   * the palette is available to use, but prefer using the name.
+   * this is only included for rare, one-off cases. try to use
    * semantic names as much as possible.
    */
   palette,
   /**
-   * A helper for making something see-thru.
+   * a helper for making something see-thru.
    */
   transparent: "rgba(0, 0, 0, 0)",
   /**
-   * The default text color in many components.
+   * the default text color in many components.
    */
   text: palette.neutral800,
   /**
-   * Secondary text information.
+   * secondary text information.
    */
-  textDim: palette.neutral600,
+  textdim: palette.neutral600,
   /**
-   * The default color of the screen background.
+   * the default color of the screen background.
    */
   background: palette.neutral200,
   /**
-   * The default border color.
+   * the default border color.
    */
   border: palette.neutral400,
   /**
-   * The main tinting color.
+   * the main tinting color.
    */
   tint: palette.primary500,
   /**
-   * A subtle color used for lines.
+   * a subtle color used for lines.
    */
   separator: palette.neutral300,
   /**
-   * Error messages.
+   * error messages.
    */
   error: palette.angry500,
   /**
-   * Error Background.
+   * error background.
    *
    */
-  errorBackground: palette.angry100,
+  errorbackground: palette.angry100,
 }

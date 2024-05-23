@@ -104,7 +104,7 @@ const updateUserChanges = async () => {
     <Screen
       preset="auto"
       contentContainerStyle={$screenContentContainer}
-      safeAreaEdges={["top", "bottom"]}
+      safeAreaEdges={[ "bottom"]}
     >
       <Header
       onLeftPress={() => goBack()}
@@ -146,7 +146,8 @@ const $listContentContainer: ContentStyle = {
 }
 
 const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.xxl,
+  //paddingVertical: spacing.xxl,
+  marginTop: 0,
   paddingHorizontal: spacing.lg,
 }
 
