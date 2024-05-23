@@ -49,6 +49,34 @@ export const AuthenticationStoreModel = types
       yield removeStore()
       yield AsyncStorage.clear()
     }),
+     unregisterPushNotifications: flow(function* () {
+      const chatStore = getRoot(self).chatStore // Ensure you have access to the Sendbird instance
+  try {
+
+    // Ensure we have a current user and a valid connection before attempting to unregister
+    if (chatStore.isConnected && chatStore.sdk.currentUser) {
+      const pushToken = yield AsyncStorage.getItem('pushToken');
+      if (pushToken) {
+        yield chatStore.sdk.unregisterPushToken(pushToken, function(response: any, error: any) {
+          if (error) {
+            console.error("Failed to deregister push token:", error);
+            throw error;  // Optional: throw to handle errors in the caller function
+          } else {
+            console.log("Push token deregistered successfully.");
+          }
+        });
+        // Remove the token from storage after successful deregistration
+        yield AsyncStorage.removeItem('pushToken');
+      }
+    } else {
+      console.log("Not connected to SendBird or no current user.");
+    }
+  } catch (error) {
+    console.error("Error during push token deregistration:", error);
+    throw error;  // Rethrow if needed for additional error handling
+  }
+}),
+
     registerDeviceToken: flow(function* () {
       const chatStore = getRoot(self).chatStore // Ensure you have access to the Sendbird instance
       //TODO and then logout
@@ -391,15 +419,18 @@ export const AuthenticationStoreModel = types
         self.setError(error.message || "Error initiating forgot password")
       }
     }),
-
     signOut: flow(function* signOut() {
       const cognitoUser = userPool.getCurrentUser()
+      const chatStore = getRoot(self).chatStore // Ensure you
       if (cognitoUser != null) {
         try {
           cognitoUser.signOut()
           self.setIsAuthenticated(false)
           // Optional: Clear any user data from your application state
           // Perform any additional cleanup or redirection as needed
+          // remove push notification if logged out as well
+          yield self.unregisterPushNotifications()
+          yield chatStore.disconnect()
           yield removeStore()
           yield AsyncStorage.clear()
         } catch (error) {

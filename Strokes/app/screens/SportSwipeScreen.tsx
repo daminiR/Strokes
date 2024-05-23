@@ -23,7 +23,7 @@ export const SportSwipeScreen: FC<DemoTabScreenProps<'SportSwipe'>> = observer((
   const { userStore, authenticationStore } = useStores()
   return (
     <View style={$containerWithFAB}>
-      <Screen preset="auto" contentContainerStyle={$container} safeAreaEdges={["top", "bottom"]}>
+      <Screen preset="auto" contentContainerStyle={$container} safeAreaEdges={["bottom"]}>
         <Header title="Damini" leftIcon="menu" rightIcon="settings" safeAreaEdges={[]} />
         <View style={$profileImageContainer}>
           <AutoImage
