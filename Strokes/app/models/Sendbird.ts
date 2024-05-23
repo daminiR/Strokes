@@ -24,6 +24,19 @@ const ChatStore = types.model({
   isConnected: types.optional(types.boolean, false)
 })
 .actions(self => ({
+  disconnect: flow(function* () {
+    try {
+      yield sb.disconnect(() => {
+        console.log('Disconnected from SendBird.');
+        self.currentUser = null;
+        self.isConnected = false;
+        // Additional cleanup if necessary
+      });
+    } catch (error) {
+      console.error('Disconnection failed:', error);
+      throw error;
+    }
+  })
   connect: flow(function* (userId, accessToken) {
     const sb = new SendBird({appId: 'YOUR_APP_ID'});
     try {

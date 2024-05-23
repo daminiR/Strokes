@@ -22,7 +22,7 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
     <Screen
       preset="auto"
       contentContainerStyle={$screenContentContainer}
-      safeAreaEdges={["top", "bottom"]}
+      safeAreaEdges={["bottom"]}
     >
       <View style={{ flex: 1 }}>
         <Carousel

@@ -103,7 +103,7 @@ const onSwiped = (cardIndex: number) => {
   }
 }
   return (
-    <Screen preset="auto" style={$screenContentContainer} safeAreaEdges={["top"]}>
+    <Screen preset="auto" style={$screenContentContainer}>
       <FilterModal
         onApplyFilters={onApplyFilters}
         isVisible={isVisible}
