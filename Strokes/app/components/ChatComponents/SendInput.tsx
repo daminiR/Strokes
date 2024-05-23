@@ -126,9 +126,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
+    borderWidth: 0.5,
+    borderColor: '#000', // You can change this to any color you prefer
     flex: 1,
     maxHeight: INPUT_MAX_HEIGHT,
-    borderRadius: 4,
+    borderRadius: 5,
   },
   attachmentsButton: {
     marginRight: 8,

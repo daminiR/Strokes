@@ -24,7 +24,6 @@ interface ChatCardProp extends AppStackScreenProps<"ChartCardProps"> {}
 export const ChatPreviewScreen: FC<ChatCardProp> = observer(function ChatPreviewScreen(_props: any) {
   const { chatStore } = useStores();
   const profile = chatStore.currentChatProfile;
-  console.log("prof", profile)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -39,7 +38,7 @@ export const ChatPreviewScreen: FC<ChatCardProp> = observer(function ChatPreview
   );
 
   return (
-    <Screen preset="auto" style={$screenContentContainer} safeAreaEdges={["top"]}>
+    <Screen preset="auto" style={$screenContentContainer} >
       {profile && <SportCard match={profile} />}
     </Screen>
   );

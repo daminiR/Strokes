@@ -4,6 +4,17 @@ import { Linking } from "react-native"
 import {UserMessage} from '@sendbird/chat/message';
 import {GroupChannel} from '@sendbird/chat/groupChannel';
 import { isMyMessage } from "@sendbird/uikit-utils"
+import {
+  ActivityIndicator,
+  Image,
+  TouchableOpacity,
+  ImageStyle,
+  TextStyle,
+  StyleSheet,
+  View,
+  ViewStyle,
+  Dimensions,
+} from "react-native"
 import { SendingStatus } from ".."
 import { useStores } from '../../models';
 
@@ -13,7 +24,6 @@ interface UserMessageViewProps {
   message: UserMessage;
 }
 
-//export const UserMessageView: React.FC<UserMessageViewProps> = ({ channel, message }) => {
 export const UserMessageView = ({message, channel}: UserMessageViewProps) => {
 
   const { chatStore } = useStores()
@@ -35,16 +45,26 @@ export const UserMessageView = ({message, channel}: UserMessageViewProps) => {
     groupedWithPrev: false,
     onPressURL: (url: string) => (url.startsWith('http://') ? Linking.openURL(url) : Linking.openURL(`https://${url}`)),
     sendingStatus: isMyMessage(message, sdk.currentUser?.userId) ? <SendingStatus channel={channel} message={message} /> : null,
+    containerStyle: isOutgoing ? styles.outgoingMessage : styles.incomingMessage,
   } as const;
-
 
   // Conditional rendering based on the presence of Open Graph data
   if (message.ogMetaData) {
     // Ensure the OpenGraphUser component is correctly typed
-    return <GroupChannelMessage.OpenGraphUser {...props} />;
+    return <GroupChannelMessage.OpenGraphUser {...props} />
   } else {
     return <GroupChannelMessage.User {...props} />;
   }
 };
-
-
+const styles = StyleSheet.create({
+  outgoingMessage: {
+    backgroundColor: '#ADD8E6', // Light blue color
+    padding: 10,
+    borderRadius: 8,
+  },
+  incomingMessage: {
+    backgroundColor: '#E0E0E0', // Grey color for incoming messages (optional)
+    padding: 10,
+    borderRadius: 8,
+  },
+});
