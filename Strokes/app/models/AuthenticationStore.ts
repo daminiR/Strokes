@@ -128,8 +128,9 @@ export const AuthenticationStoreModel = types
         throw error // Optionally, handle this error more gracefully
       }
     }),
-    checkCognitoUserSession() {
+    checkCognitoUserSession: flow(function* () {
       const mongoDBStore = getRoot(self).mongoDBStore
+      const chatStore = getRoot(self).chatStore
       var userPool = new CognitoUserPool(poolData)
       userPool.storage.sync(function (err, result) {
         if (err) {
@@ -138,7 +139,7 @@ export const AuthenticationStoreModel = types
         } else if (result === "SUCCESS") {
           var cognitoUser = userPool.getCurrentUser()
           if (cognitoUser != null) {
-            cognitoUser.getSession(function (err, session) {
+            cognitoUser.getSession( async (err, session) => {
               if (err) {
                 console.error(err)
                 self.clearUserSession()
@@ -147,7 +148,10 @@ export const AuthenticationStoreModel = types
               if (session.isValid()) {
                 console.log("User is signed in")
                 self.setIsAuthenticated(true)
+                await chatStore.initializeSDK()
+                await chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
                 mongoDBStore.shouldQuery()
+
               } else {
                 console.log("Session is invalid")
                 self.clearUserSession()
@@ -159,7 +163,7 @@ export const AuthenticationStoreModel = types
           }
         }
       })
-    },
+    }),
     setIsAuthenticated(isAuthenticated: Boolean) {
       self.isAuthenticated = isAuthenticated
     },
@@ -218,6 +222,7 @@ export const AuthenticationStoreModel = types
                 userStore.setID(result?.userSub)
                 if (signUpResult.userConfirmed) {
                   await chatStore.initializeSDK()
+                  await chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
                   await self.registerDeviceToken() // Adjust parameters as needed
                   console.log("User signed up and registered for push notifications")
                 }

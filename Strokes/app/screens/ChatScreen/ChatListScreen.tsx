@@ -55,32 +55,6 @@ const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 export const ChatListScreen = observer(() => {
   const { chatStore, matchedProfileStore} = useStores()
 
-  const [isInitialized, setIsInitialized] = useState(false)
-
-  const initializeSDK = async () => {
-    try {
-      await chatStore.initializeSDK()
-      await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
-      setIsInitialized(true)
-    } catch (error) {
-      console.error("Sendbird initialization error:", error)
-    }
-  }
-  useFocusEffect(
-    useCallback(() => {
-      initializeSDK()
-
-      return () => {
-        //sb.disconnect(() => {
-          //console.log("Sendbird disconnected")
-        //})
-      }
-    }, []),
-  )
-
-  if (!isInitialized) {
-    return <ActivityIndicator size="large" />
-  }
   return (
     <Screen
       preset="fixed"
