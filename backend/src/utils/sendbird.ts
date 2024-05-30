@@ -1,30 +1,36 @@
 import axios from 'axios'
 import 'dotenv/config'
 
-export const createGroupChannel = (userId1, userId2) => {
-  const sb_token = process.env.SB_TOKEN as any
-  const sb_app_id = process.env.SB_APP_ID as any
-  const url = `https://api-${sb_app_id}.sendbird.com/v3/group_channels`;
-  const form = {
-    user_ids: [userId1, userId2],
-    is_distinct: true,
-    //strict: true,
-  };
-  return new Promise((resolve, reject) => {
-    axios
-      .post(url, form, {
-        headers: {
-          "Content-Type": "application/json, charset=utf8",
-          "Api-Token": sb_token,
-        },
-      })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        reject();
-      });
-  });
+const createGroupChannel = async (userId1: string, userId2: string): Promise<any> => {
+   const sb_token = process.env.SB_TOKEN as string;
+    const sb_app_id = process.env.SB_APP_ID as string;
+    const url = `https://api-${sb_app_id}.sendbird.com/v3/group_channels`;
+
+    const form = JSON.stringify({
+        user_ids: [userId1, userId2],
+        is_distinct: true
+    });
+
+    const headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        "Api-Token": sb_token,
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: form
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error ? data.error.message : "Failed to create group channel");
+        }
+        return data;
+    } catch (error) {
+        console.error("Error creating group channel:", error.message);
+        throw error;
+    }
 };
 export const getMatchedUserToken = (matchedUserId) => {
   const sb_token = process.env.SB_TOKEN as any

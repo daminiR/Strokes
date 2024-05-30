@@ -37,6 +37,7 @@ const userPool = new CognitoUserPool(poolData);
  //Define the AuthStore model
 export const AuthenticationStoreModel = types
   .model("AuthenticationStoreModel", {
+    isSDKConnected: types.maybeNull(types.boolean),
     user: types.maybeNull(UserStoreModel),
     isLoading: types.maybeNull(types.boolean),
     isAuthenticated: types.maybeNull(types.boolean),
@@ -44,38 +45,49 @@ export const AuthenticationStoreModel = types
     error: types.maybeNull(types.string),
   })
   .actions((self) => ({
+    setLoading(loading: boolean) {
+      self.isLoading = loading
+    },
     clearUserSession: flow(function* () {
       self.setIsAuthenticated(false)
       yield removeStore()
       yield AsyncStorage.clear()
     }),
-     unregisterPushNotifications: flow(function* () {
+    setSDKConnected(isConnected: boolean) {
+      self.isSDKConnected = isConnected;
+    },
+    setIsAuthenticated(isAuthenticated: boolean) {
+      self.isAuthenticated = isAuthenticated
+    },
+    unregisterPushNotifications: flow(function* () {
       const chatStore = getRoot(self).chatStore // Ensure you have access to the Sendbird instance
-  try {
-
-    // Ensure we have a current user and a valid connection before attempting to unregister
-    if (chatStore.isConnected && chatStore.sdk.currentUser) {
-      const pushToken = yield AsyncStorage.getItem('pushToken');
-      if (pushToken) {
-        yield chatStore.sdk.unregisterPushToken(pushToken, function(response: any, error: any) {
-          if (error) {
-            console.error("Failed to deregister push token:", error);
-            throw error;  // Optional: throw to handle errors in the caller function
-          } else {
-            console.log("Push token deregistered successfully.");
+      try {
+        // Ensure we have a current user and a valid connection before attempting to unregister
+        if (chatStore.isConnected && chatStore.sdk.currentUser) {
+          const pushToken = yield AsyncStorage.getItem("pushToken")
+          if (pushToken) {
+            yield chatStore.sdk.unregisterPushToken(
+              pushToken,
+              function (response: any, error: any) {
+                if (error) {
+                  console.error("Failed to deregister push token:", error)
+                  throw error // Optional: throw to handle errors in the caller function
+                } else {
+                  console.log("Push token deregistered successfully.")
+                }
+              },
+            )
+            // Remove the token from storage after successful deregistration
+            yield AsyncStorage.removeItem("pushToken")
           }
-        });
-        // Remove the token from storage after successful deregistration
-        yield AsyncStorage.removeItem('pushToken');
+        } else {
+          console.log("Not connected to SendBird or no current user.")
+        }
+      } catch (error) {
+        console.error("Error during push token deregistration:", error)
+        throw error // Rethrow if needed for additional error handling
       }
-    } else {
-      console.log("Not connected to SendBird or no current user.");
-    }
-  } catch (error) {
-    console.error("Error during push token deregistration:", error);
-    throw error;  // Rethrow if needed for additional error handling
-  }
-}),
+    }),
 
     registerDeviceToken: flow(function* () {
       const chatStore = getRoot(self).chatStore // Ensure you have access to the Sendbird instance
@@ -129,40 +141,47 @@ export const AuthenticationStoreModel = types
       }
     }),
     checkCognitoUserSession: flow(function* () {
-      const mongoDBStore = getRoot(self).mongoDBStore
-      const chatStore = getRoot(self).chatStore
-      var userPool = new CognitoUserPool(poolData)
-      userPool.storage.sync(function (err, result) {
-        if (err) {
-          console.error("Error syncing storage:", err)
-          self.setIsAuthenticated(false)
-        } else if (result === "SUCCESS") {
-          var cognitoUser = userPool.getCurrentUser()
-          if (cognitoUser != null) {
-            cognitoUser.getSession( async (err, session) => {
-              if (err) {
-                console.error(err)
-                self.clearUserSession()
-                return
-              }
-              if (session.isValid()) {
-                console.log("User is signed in")
-                self.setIsAuthenticated(true)
-                await chatStore.initializeSDK()
-                await chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
-                mongoDBStore.shouldQuery()
-
-              } else {
-                console.log("Session is invalid")
-                self.clearUserSession()
-              }
-            })
-          } else {
-            console.log("No current Cognito user")
-            self.clearUserSession()
+      self.setLoading(true);
+      //self.setSDKConnected(false);
+      try {
+        const mongoDBStore = getRoot(self).mongoDBStore;
+        const chatStore = getRoot(self).chatStore;
+        var userPool = new CognitoUserPool(poolData);
+        userPool.storage.sync(function (err, result) {
+          if (err) {
+            console.error("Error syncing storage:", err)
+            self.setIsAuthenticated(false)
+          } else if (result === "SUCCESS") {
+            var cognitoUser = userPool.getCurrentUser();
+            if (cognitoUser != null) {
+              cognitoUser.getSession(async (err, session) => {
+                if (err) {
+                  console.error(err);
+                  self.clearUserSession();
+                  return;
+                }
+                if (session.isValid()) {
+                  console.log("User is signed in");
+                  self.setIsAuthenticated(true);
+                  //await chatStore.initializeSDK()
+                  //await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
+                  //self.setSDKConnected(true);
+                  console.log("User connected to SendBird");
+                  mongoDBStore.shouldQuery();
+                } else {
+                  console.log("Session is invalid");
+                  self.clearUserSession();
+                }
+              });
+            } else {
+              console.log("No current Cognito user");
+              self.clearUserSession();
+            }
           }
-        }
-      })
+        });
+      } finally {
+        self.setLoading(false);
+      }
     }),
     setIsAuthenticated(isAuthenticated: Boolean) {
       self.isAuthenticated = isAuthenticated
@@ -376,6 +395,8 @@ export const AuthenticationStoreModel = types
               await mongoDBStore.queryUserFromMongoDB(userSub)
               await mongoDBStore.queryPotentialMatches()
               await chatStore.initializeSDK()
+              await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
+              console.log("i need to know what wrong???", chatStore.sdk)
               self.setIsAuthenticated(true)
               try {
                 await self.registerDeviceToken() // Adjust parameters as needed

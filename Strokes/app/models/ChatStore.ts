@@ -110,7 +110,7 @@ export const ChatStore = types
         }), // Provide a default model if null
       }
 
-      // Set chat details
+      // Set chat detail
       self.channelUrl = profile.chat.channelUrl || null
       self.channelType = profile.chat.channelType || null
       self.channelStatus = profile.chat.channelStatus || null
@@ -202,10 +202,14 @@ export const ChatStore = types
       })
         resolve(sdk)
       })
-      self.sdk = yield sdkPromise
+      const sdk = yield sdkPromise
+      self.setSDK(sdk);
       console.log("SDK Initialized:", self.sdk)
       //}
     }),
+    setSDK(sdk: any) {
+        self.sdk = sdk;
+    },
     connect: flow(function* (userId: string, nickname: string, accessToken: string) {
       try {
         const user = yield self.sdk.connect(userId, accessToken)
