@@ -1,8 +1,4 @@
 import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
-import { Alert } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { getRootStore } from './helpers/getRootStore';
-import { makeAutoObservable, runInAction } from 'mobx';
 
 export const LocationModel = types.model("LocationModel", {
   city: types.maybeNull(types.string),

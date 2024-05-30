@@ -101,6 +101,7 @@
     "react-native-image-picker": "^7.1.2",
     "react-native-lightbox-v2": "^0.9.0",
     "react-native-linear-gradient": "^2.8.3",
+    "react-native-mmkv": "^2.12.2",
     "react-native-pager-view": "^6.2.3",
     "react-native-permissions": "^4.1.5",
     "react-native-reanimated": "~3.6.0",
@@ -115,6 +116,7 @@
     "react-native-video": "^6.0.0",
     "react-native-web": "~0.19.6",
     "rn-fetch-blob": "^0.12.0",
+    "sendbird-uikit": "^2.7.2",
     "urql": "^4.0.6"
   },
   "devDependencies": {

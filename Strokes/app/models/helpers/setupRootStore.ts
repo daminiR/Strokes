@@ -1,5 +1,5 @@
 /**
- * This file is where we do "rehydration" of your RootStore from AsyncStorage.
+ * This file is where we do "rehydration" of your RootStore from MMKV.
  * This lets you persist your state between app launches.
  *
  * Navigation state persistence is handled in navigationUtilities.tsx.
@@ -26,7 +26,7 @@ export async function setupRootStore(rootStore: RootStore) {
   let restoredState: RootStoreSnapshot | undefined | null
 
   try {
-    // load the last known state from AsyncStorage
+    // load the last known state from MMKV
     restoredState = ((await storage.load(ROOT_STATE_STORAGE_KEY)) ?? {}) as RootStoreSnapshot
     applySnapshot(rootStore, restoredState)
   } catch (e) {
@@ -39,7 +39,7 @@ export async function setupRootStore(rootStore: RootStore) {
   // stop tracking state changes if we've already setup
   if (_disposer) _disposer()
 
-  // track changes & save to AsyncStorage
+  // track changes & save to MMKV
   _disposer = onSnapshot(rootStore, (snapshot) => storage.save(ROOT_STATE_STORAGE_KEY, snapshot))
 
   const unsubscribe = () => {

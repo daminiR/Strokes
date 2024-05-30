@@ -1,5 +1,5 @@
 import React from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MMKVAdapter } from 'app/utils/storage/mmkdvAdapter';
 import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { platformServices } from "../services/api/sendbird"
@@ -40,7 +40,7 @@ export function ChatStack() {
   return (
     <SendbirdUIKitContainer
       appId={process.env.REACT_APP_SENDBIRD_APP_ID}
-      chatOptions={{ localCacheStorage: AsyncStorage }}
+      chatOptions={{ localCacheStorage: MMKVAdapter }}
       platformServices={platformServices}
     >
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"ChatList"}>
