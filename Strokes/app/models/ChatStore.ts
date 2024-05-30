@@ -1,7 +1,7 @@
 import { types, flow, Instance, cast} from 'mobx-state-tree';
 import {CollectionEventSource} from '@sendbird/chat';
 import { GroupChannelHandler, MessageCollectionInitPolicy} from '@sendbird/chat/groupChannel';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MMKVAdapter } from 'app/utils/storage/mmkdvAdapter';
 import SendbirdChat from "@sendbird/chat"
 import { GroupChannelModule, MessageCollection, GroupChannel } from "@sendbird/chat/groupChannel"
 
@@ -193,17 +193,14 @@ export const ChatStore = types
     }),
     initializeSDK: flow(function* () {
       //if (!self.sdk) {
-      const sdkPromise = new Promise((resolve) => {
-        const sdk = SendbirdChat.init({
-          appId: APP_ID,
-          modules: [new GroupChannelModule()],
-          useAsyncStorageStore: AsyncStorage,
-          localCacheEnabled: true,
+      const sdk = SendbirdChat.init({
+        appId: APP_ID,
+        modules: [new GroupChannelModule()],
+        useAsyncStorageStore: MMKVAdapter,
+        localCacheEnabled: true,
       })
-        resolve(sdk)
-      })
-      const sdk = yield sdkPromise
-      self.setSDK(sdk);
+      //const sdk = yield sdkPromise
+      self.setSDK(sdk)
       console.log("SDK Initialized:", self.sdk)
       //}
     }),

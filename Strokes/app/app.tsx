@@ -70,7 +70,6 @@ interface AppProps {
  * @param {AppProps} props - The props for the `App` component.
  * @returns {JSX.Element} The rendered `App` component.
  */
-import { AsyncStorage } from "@react-native-async-storage/async-storage";
 function App(props: AppProps) {
   const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState)
   const { hideSplashScreen } = props
@@ -84,7 +83,7 @@ function App(props: AppProps) {
   const { authenticationStore } = useStores()
 
   const logCurrentState = async () => {
-    const currentState = await AsyncStorage.getItem(ROOT_STATE_STORAGE_KEY)
+    const currentState = await storage.getString(ROOT_STATE_STORAGE_KEY)
     console.log("Current State:", currentState)
   }
   useEffect(() => {

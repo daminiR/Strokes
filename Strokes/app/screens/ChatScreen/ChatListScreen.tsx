@@ -14,6 +14,7 @@ import {
   Dimensions,
 } from "react-native"
 import { GroupChannelPreview } from "@sendbird/uikit-react-native-foundation"
+import { SendBirdProvider, ChannelList } from 'sendbird-uikit';
 import {
   LoadingActivity,
   EmptyState,
@@ -45,7 +46,7 @@ const CustomHeaderComponent = () => {
 const CustomHeaderComponent2 = () => {
   return LoadingActivity // This ensures that no header is rendered
 }
-  const GroupChannelListFragment = createGroupChannelListFragment({
+const GroupChannelListFragment = createGroupChannelListFragment({
     StatusLoading: () => <LoadingActivity message="Loading..."/>,
     Header: CustomHeaderComponent,
     //List:  ListCompenent
@@ -61,9 +62,10 @@ export const ChatListScreen: FC<ChatListScreen> = observer(function ChatListScre
   const [isInitialized, setIsInitialized] = useState(false)
   const initializeSDK = async () => {
     try {
-      //await chatStore.initializeSDK()
+      await chatStore.initializeSDK()
       await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
       setIsInitialized(true)
+      console.log("Sendbird initializated:")
     } catch (error) {
       console.error("Sendbird initialization error:", error)
     }

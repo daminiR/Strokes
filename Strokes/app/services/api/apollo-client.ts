@@ -10,7 +10,6 @@ const uploadLink = createUploadLink({
 // Simulate retrieving the idToken from storage or state management
 const getIdToken = async () => {
   // Retrieve and return the idToken
-  // Example: return await AsyncStorage.getItem('idToken');
   return 'your_id_token_here'; // Replace with actual token retrieval logic
 };
 

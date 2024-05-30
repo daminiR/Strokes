@@ -2,7 +2,7 @@ import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} 
 import {PermissionsAndroid, Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging'
 import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MMKV } from 'react-native-mmkv';
 import { UserStoreModel } from "./UserStore"
 import { getRootStore } from "./helpers/getRootStore"
 import { removeStore } from "./helpers/removeRootStore"
@@ -51,7 +51,7 @@ export const AuthenticationStoreModel = types
     clearUserSession: flow(function* () {
       self.setIsAuthenticated(false)
       yield removeStore()
-      yield AsyncStorage.clear()
+      yield MMKV.clearAll()
     }),
     setSDKConnected(isConnected: boolean) {
       self.isSDKConnected = isConnected;
@@ -64,7 +64,7 @@ export const AuthenticationStoreModel = types
       try {
         // Ensure we have a current user and a valid connection before attempting to unregister
         if (chatStore.isConnected && chatStore.sdk.currentUser) {
-          const pushToken = yield AsyncStorage.getItem("pushToken")
+          const pushToken = yield MMKV.getString("pushToken")
           if (pushToken) {
             yield chatStore.sdk.unregisterPushToken(
               pushToken,
@@ -78,7 +78,7 @@ export const AuthenticationStoreModel = types
               },
             )
             // Remove the token from storage after successful deregistration
-            yield AsyncStorage.removeItem("pushToken")
+            yield MMKV.delete("pushToken")
           }
         } else {
           console.log("Not connected to SendBird or no current user.")
@@ -351,7 +351,6 @@ export const AuthenticationStoreModel = types
         console.log("Confirmation successful:", confirmationResult)
 
         // If confirmation is successful, proceed with MongoDB user creation
-        const mongoResult = yield mongoDBStore.createUserInMongoDB(userStore.userData) // Ensure you're passing the correct data
         // set authentication to true
         self.setIsAuthenticated(true)
         return mongoResult // Return MongoDB result or confirmation result as needed
@@ -395,7 +394,7 @@ export const AuthenticationStoreModel = types
               await mongoDBStore.queryUserFromMongoDB(userSub)
               await mongoDBStore.queryPotentialMatches()
               await chatStore.initializeSDK()
-              await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
+              //await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
               console.log("i need to know what wrong???", chatStore.sdk)
               self.setIsAuthenticated(true)
               try {
@@ -458,7 +457,7 @@ export const AuthenticationStoreModel = types
           yield self.unregisterPushNotifications()
           yield chatStore.disconnect()
           yield removeStore()
-          yield AsyncStorage.clear()
+          yield MMKV.clearAll()
         } catch (error) {
           console.error("An error occurred during sign out:", error)
           // Handle the sign-out error (e.g., display a notification to the user)

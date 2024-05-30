@@ -5,7 +5,7 @@
  */
 import { Platform, NativeModules } from "react-native"
 
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { MMKVAdapter } from "app/utils/storage/mmkdvAdapter"
 import { ArgType } from "reactotron-core-client"
 import { mst } from "reactotron-mst"
 
@@ -28,7 +28,7 @@ const reactotron = Reactotron.configure({
 )
 
 if (Platform.OS !== "web") {
-  reactotron.setAsyncStorageHandler?.(AsyncStorage)
+  reactotron.setAsyncStorageHandler?.(MMKVAdapter)
   reactotron.useReactNative({
     networking: {
       ignoreUrls: /symbolicate/,
