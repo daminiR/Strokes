@@ -38,17 +38,11 @@ const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
 const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 export function ChatStack() {
   return (
-    <SendbirdUIKitContainer
-      appId={process.env.REACT_APP_SENDBIRD_APP_ID}
-      chatOptions={{ localCacheStorage: MMKVAdapter }}
-      platformServices={platformServices}
-    >
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"ChatList"}>
         <Stack.Screen name="ChatTopNavigator" component={ChatTopTabNavigator} />
-        <Stack.Screen name="ChatList" component={Screens.ChatListScreen} />
+        <Stack.Screen name="ChatList" component={Screens.ChatListScreen2} />
         {/* Add more screens as needed */}
       </Stack.Navigator>
-    </SendbirdUIKitContainer>
   )
 }
 

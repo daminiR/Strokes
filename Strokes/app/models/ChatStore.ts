@@ -200,7 +200,8 @@ export const ChatStore = types
         localCacheEnabled: true,
       })
       //const sdk = yield sdkPromise
-      self.setSDK(sdk)
+      self.sdk = sdk
+      //self.setSDK(sdk)
       console.log("SDK Initialized:", self.sdk)
       //}
     }),

@@ -20,6 +20,9 @@ import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, {useState, useEffect} from "react"
+import { platformServices } from "./services/api/sendbird"
+import { MMKVAdapter } from 'app/utils/storage/mmkdvAdapter';
+import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import * as Linking from "expo-linking"
 import { AppState, AppStateStatus} from 'react-native';
@@ -36,7 +39,6 @@ import { ViewStyle, View, StyleSheet, ActivityIndicator } from "react-native"
 import client from './services/api/apollo-client';
 import { Provider } from "urql"
 import { LoadingActivity } from "./components"
-import { colors } from "../../theme"
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
@@ -138,6 +140,11 @@ function App(props: AppProps) {
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Provider value={client}>
+    <SendbirdUIKitContainer
+      appId={process.env.REACT_APP_SENDBIRD_APP_ID}
+      chatOptions={{ localCacheStorage: MMKVAdapter }}
+      platformServices={platformServices}
+    >
           <BottomSheetModalProvider>
             <ErrorBoundary catchErrors={Config.catchErrors}>
               <GestureHandlerRootView style={$container}>
@@ -149,6 +156,7 @@ function App(props: AppProps) {
               </GestureHandlerRootView>
             </ErrorBoundary>
           </BottomSheetModalProvider>
+    </SendbirdUIKitContainer>
         </Provider>
       </GestureHandlerRootView>
     </SafeAreaProvider>

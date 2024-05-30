@@ -83,40 +83,33 @@ export const ChatListScreen: FC<ChatListScreen> = observer(function ChatListScre
       <View style={styles.heading}>
         <Text preset="heading" tx="chatScreenList.title" />
       </View>
-      {isInitialized ? (
-        <GroupChannelListFragment
-          onPressChannel={(channel) => {
-            const matchedUser = matchedProfileStore.findByChannelId(channel.url)
-            chatStore.setChatProfile(matchedUser)
-            navigate("ChatTopNavigator")
-          }}
-          renderGroupChannelPreview={({ channel, onPress }) => {
-            const matchedUser = matchedProfileStore.findByChannelId(channel.url)
-            if (!matchedUser) {
-              // Optionally return null or a placeholder if no user is matched
-              return null
-            }
-            const lastMessage = channel.lastMessage.message
-            const lastMessageTime = formatTimestamp(channel.lastMessage.createdAt)
-            return (
-              <TouchableOpacity onPress={onPress}>
-                <GroupChannelPreview
-                  title={matchedUser.firstName || "Unknown User"}
-                  titleCaption={lastMessageTime || "Unavailable"}
-                  coverUrl={matchedUser.imageSet[0]?.imageURL || "default_profile_image.png"}
-                  body={lastMessage || "No description available"}
-                  badgeCount={channel.unreadMessageCount}
-                />
-              </TouchableOpacity>
-            )
-          }}
-        />
-      ) : (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
-          <Text>Loading...</Text>
-        </View>
-      )}
+      <GroupChannelListFragment
+        onPressChannel={(channel) => {
+          const matchedUser = matchedProfileStore.findByChannelId(channel.url)
+          chatStore.setChatProfile(matchedUser)
+          navigate("ChatTopNavigator")
+        }}
+        renderGroupChannelPreview={({ channel, onPress }) => {
+          const matchedUser = matchedProfileStore.findByChannelId(channel.url)
+          if (!matchedUser) {
+            // Optionally return null or a placeholder if no user is matched
+            return null
+          }
+          const lastMessage = channel.lastMessage.message
+          const lastMessageTime = formatTimestamp(channel.lastMessage.createdAt)
+          return (
+            <TouchableOpacity onPress={onPress}>
+              <GroupChannelPreview
+                title={matchedUser.firstName || "Unknown User"}
+                titleCaption={lastMessageTime || "Unavailable"}
+                coverUrl={matchedUser.imageSet[0]?.imageURL || "default_profile_image.png"}
+                body={lastMessage || "No description available"}
+                badgeCount={channel.unreadMessageCount}
+              />
+            </TouchableOpacity>
+          )
+        }}
+      />
     </Screen>
   )
 })

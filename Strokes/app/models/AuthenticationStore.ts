@@ -163,8 +163,8 @@ export const AuthenticationStoreModel = types
                 if (session.isValid()) {
                   console.log("User is signed in");
                   self.setIsAuthenticated(true);
-                  //await chatStore.initializeSDK()
-                  //await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
+                  await chatStore.initializeSDK()
+                  await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
                   //self.setSDKConnected(true);
                   console.log("User connected to SendBird");
                   mongoDBStore.shouldQuery();
