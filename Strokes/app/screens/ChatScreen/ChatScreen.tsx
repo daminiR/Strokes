@@ -11,10 +11,9 @@ import {
   AdminMessageView,
   SendInput,
   INPUT_MAX_HEIGHT,
+  LoadingActivity,
 } from "../../components"
-import {Icon} from '@sendbird/uikit-react-native-foundation';
 import {isSendableMessage} from '../../utils/senbird';
-import {CollectionEventSource} from '@sendbird/chat';
 import {useForceUpdate} from '@sendbird/uikit-utils';
 import { useStores } from "../../models"
 import { observer } from "mobx-react-lite"
@@ -27,7 +26,7 @@ const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 
 const windowDimensions = Dimensions.get('window');
 export const ChatScreen = observer(() => {
-  const [backgroundPosition, setBackgroundPosition] = useState(new Animated.ValueXY({ x: 0, y: 0 }))
+  const [backgroundPosition, setBackgroundPosition] = useState(new Animated.ValueXY({ x: 0, y: 0 }));
   const handlerId = useId()
   const { chatStore } = useStores()
   const { sdk } = chatStore
@@ -35,18 +34,22 @@ export const ChatScreen = observer(() => {
   const [state, setState] = useState<{ channel: GroupChannel; collection: MessageCollection }>()
 
   useEffect(() => {
-    const subscription = accelerometer.subscribe(({ x, y }) => {
-      // Using Animated for smooth transitions
-      Animated.spring(backgroundPosition, {
-        toValue: { x: x * 10, y: y * 10 }, // Multiplied by 10 for noticeable but smooth effect
-        useNativeDriver: true,
-      }).start()
-    })
-    return () => subscription.unsubscribe()
-  }, [])
+  const subscription = accelerometer.subscribe(({ x, y }) => {
+    // Using Animated for smooth transitions
+    Animated.spring(backgroundPosition, {
+      toValue: { x: x * 10, y: y * 10 }, // Multiplied by 10 for noticeable but smooth effect
+      useNativeDriver: true
+    }).start();
+  });
+   return () => subscription.unsubscribe();
+}, []);
+
+
 
   const initializeCollection = async (channelUrl: string) => {
     try {
+      await chatStore.initializeSDK()
+      await chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
       await chatStore.initializeCollection(channelUrl, setState, rerender)
     } catch {}
   }
@@ -61,7 +64,7 @@ export const ChatScreen = observer(() => {
     }
   }, [state?.collection])
 
-  if (!state) return <ActivityIndicator style={StyleSheet.absoluteFill} size={"large"} />
+  if (!state) return <LoadingActivity/>
 
   const keyExtractor = (item: BaseMessage) =>
     isSendableMessage(item) && item.reqId ? item.reqId : String(item.messageId)

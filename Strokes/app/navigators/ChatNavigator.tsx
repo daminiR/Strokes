@@ -16,7 +16,7 @@ import {ChatTopTabNavigator} from './ChatTopTabNavigator'
 import * as Screens from "app/screens"
 // Import other screens as needed
 
-export type ProfileStackParamList = {
+export type ChatListStackParamList = {
   ChatList: undefined
   ChatTopNavigator: undefined
 }
@@ -27,12 +27,12 @@ export type ProfileStackParamList = {
  */
 const exitRoutes = Config.exitRoutes
 
-export type ProfileStackScreenProps<T extends keyof ProfileStackParamList> = NativeStackScreenProps<
-  ProfileStackParamList,
+export type ChatListStackScreenProps<T extends keyof ChatListStackParamList> = NativeStackScreenProps<
+  ChatListStackParamList,
   T
 >
 
-const Stack = createNativeStackNavigator<ProfileStackParamList>()
+const Stack = createNativeStackNavigator<ChatListStackParamList>()
 
 const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
 const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"

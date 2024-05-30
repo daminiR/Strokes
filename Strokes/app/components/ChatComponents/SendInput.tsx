@@ -9,9 +9,7 @@ import {
   useUIKitTheme,
 } from "@sendbird/uikit-react-native-foundation"
 import React, {useEffect, useId, useState} from 'react';
-import * as ImagePicker from 'react-native-image-picker';
 import {Alert, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {CONNECTION_STATE_HEIGHT} from './ConnectionStateView';
 import {setNextLayoutAnimation} from '../../utils/senbird';
 import { useStores } from "../../models"
 

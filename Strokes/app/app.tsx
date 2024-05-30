@@ -19,10 +19,10 @@ if (__DEV__) {
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
-import React, {useEffect} from "react"
+import React, {useState, useEffect} from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import * as Linking from "expo-linking"
-import { ApolloProvider } from '@apollo/client';
+import { AppState, AppStateStatus} from 'react-native';
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary"
@@ -31,10 +31,12 @@ import { customFontsToLoad } from "./theme"
 import Config from "./config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
-import { ViewStyle } from "react-native"
+import { useStores } from "./models"
+import { ViewStyle, View, StyleSheet, ActivityIndicator } from "react-native"
 import client from './services/api/apollo-client';
-import urql from './services/api/urql';
-import { Provider } from 'urql';
+import { Provider } from "urql"
+import { LoadingActivity } from "./components"
+import { colors } from "../../theme"
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
@@ -70,6 +72,7 @@ interface AppProps {
  */
 import { AsyncStorage } from "@react-native-async-storage/async-storage";
 function App(props: AppProps) {
+  const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState)
   const { hideSplashScreen } = props
   const {
     initialNavigationState,
@@ -78,11 +81,27 @@ function App(props: AppProps) {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   const [areFontsLoaded] = useFonts(customFontsToLoad)
+  const { authenticationStore } = useStores()
 
   const logCurrentState = async () => {
     const currentState = await AsyncStorage.getItem(ROOT_STATE_STORAGE_KEY)
     console.log("Current State:", currentState)
   }
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: string) => {
+      if (appState === "active" && nextAppState.match(/inactive|background/)) {
+        console.log("App has gone to the background. Disconnecting...")
+        // Add your disconnect logic here
+      }
+      setAppState(nextAppState)
+    }
+
+    const subscription = AppState.addEventListener("change", handleAppStateChange)
+
+    return () => {
+      subscription.remove()
+    }
+  }, [appState])
   useEffect(() => {
     logCurrentState()
   }, [])
@@ -103,7 +122,12 @@ function App(props: AppProps) {
   // In iOS: application:didFinishLaunchingWithOptions:
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
-  if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded) return null
+  // Conditionally render loading screen until everything is ready
+  if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded ) {
+    return (
+      <LoadingActivity/>
+    )
+  }
 
   const linking = {
     prefixes: [prefix],
@@ -134,6 +158,13 @@ function App(props: AppProps) {
 
 export default App
 
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 const $container: ViewStyle = {
   flex: 1,
 }
