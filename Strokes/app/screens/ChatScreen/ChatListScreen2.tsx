@@ -1,93 +1,137 @@
-import {ActivityIndicator, FlatList, Image, Platform, Pressable, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {FlatList, Image, Platform, Pressable, StyleSheet, TouchableOpacity, View} from 'react-native';
+import { navigate, goBack} from "../../navigators"
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {getGroupChannelLastMessage, getGroupChannelTitle, useForceUpdate} from '@sendbird/uikit-utils';
-import {GroupChannelPreview, Icon, Placeholder, Text, useUIKitTheme} from '@sendbird/uikit-react-native-foundation';
+import {GroupChannelPreview, Icon, Placeholder, useUIKitTheme} from '@sendbird/uikit-react-native-foundation';
+import { Screen, LoadingActivity, Text} from 'app/components';
 import dayjs from 'dayjs';
 import {GroupChannel, GroupChannelCollection, GroupChannelListOrder} from '@sendbird/chat/groupChannel';
+import { observer } from "mobx-react-lite"
 import { useStores } from "../../models"
 
-export const ChatListScreen2 = () => {
+export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const { authenticationStore, chatStore, matchedProfileStore } = useStores()
   const sdk = chatStore.sdk
-  //const {navigation} = useAppNavigation<Routes.GroupChannelList>();
+  const isSDKConnected = authenticationStore.isSDKConnected
 
-  const rerender = useForceUpdate();
-  const [collection, setCollection] = useState<GroupChannelCollection>();
-
-  //useHeaderButtons();
+  const [collection, setCollection] = useState<GroupChannelCollection>()
+  const [isLoading, setIsLoading] = useState(true) // Initially set to true
 
   useEffect(() => {
+    if (!isSDKConnected || !sdk) {
+      setIsLoading(false) // If not connected or no SDK, stop loading
+      return
+    }
+
     const collection = sdk.groupChannel.createGroupChannelCollection({
       order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
       limit: 10,
-    });
+    })
 
-    const logAndUpdate = (type: string) => {
-      //logger.info('GroupChannelListScreen:', type);
-      rerender();
-    };
+    const updateState = () => {
+      setIsLoading(false) // Set loading to false when data is fetched or updated
+    }
 
-    // Because the collection has a list of channels, just re-render without any additional processing.
     collection.setGroupChannelCollectionHandler({
-      onChannelsAdded: () => logAndUpdate('onChannelsAdded'),
-      onChannelsUpdated: () => logAndUpdate('onChannelsUpdated'),
-      onChannelsDeleted: () => logAndUpdate('onChannelsRemoved'),
-    });
+      onChannelsAdded: updateState,
+      onChannelsUpdated: updateState,
+      onChannelsDeleted: updateState,
+    })
 
-    setCollection(collection);
-    collection.loadMore().then(rerender);
+    setCollection(collection)
+    collection
+      .loadMore()
+      .then(updateState)
+      .catch(() => setIsLoading(false))
 
     return () => {
-      collection.dispose();
-    };
-  }, []);
-
-  if (!collection) return <ActivityIndicator style={StyleSheet.absoluteFill} />;
-
-  const keyExtractor = (item: GroupChannel) => item.url;
-  const renderItem = ({item}: {item: GroupChannel}) => {
-    const onPressChannel = () => {
-      //navigation.navigate(Routes.GroupChannel, { channelUrl: item.url })
+      collection.dispose()
     }
+  }, [sdk, isSDKConnected])
+
+  const keyExtractor = (item: GroupChannel) => item.url
+  const renderItem = ({ item }: { item: GroupChannel }) => {
+    const onPressChannel = () => {
+      const matchedUser = matchedProfileStore.findByChannelId(item.url)
+      chatStore.setChatProfile(matchedUser)
+      navigate("ChatTopNavigator")
+    }
+
+    // Fetch the matched user profile based on the channel ID
+    const matchedUser = matchedProfileStore.findByChannelId(item.url)
+
+    // Determine the title to be used in the preview
+    const title = matchedUser
+      ? matchedUser.firstName || "Unknown User"
+      : getGroupChannelTitle(sdk.currentUser!.userId, item)
+
+    // Determine the cover image URL to be used in the preview
+    const coverUrl =
+      matchedUser && matchedUser.imageSet && matchedUser.imageSet.length > 0
+        ? matchedUser.imageSet[0].imageURL
+        : item.coverUrl || "https://static.sendbird.com/sample/cover/cover_11.jpg" // Fallback to default cover image
+
+    // Determine the last message and its timestamp
+    const lastMessage = item.lastMessage ? item.lastMessage.message : "No description available"
+    const lastMessageTime = item.lastMessage
+      ? dayjs(item.lastMessage.createdAt).format("YYYY-MM-DD")
+      : "Unavailable"
+
     return (
-      <Pressable onPress={onPressChannel}>
+      <TouchableOpacity onPress={onPressChannel}>
         <GroupChannelPreview
-          title={getGroupChannelTitle(sdk.currentUser!.userId, item)}
+          title={title}
           badgeCount={item.unreadMessageCount}
           body={getGroupChannelLastMessage(item)}
           bodyIcon={item.lastMessage?.isFileMessage() ? "file-document" : undefined}
-          coverUrl={item.coverUrl || "https://static.sendbird.com/sample/cover/cover_11.jpg"}
+          coverUrl={coverUrl}
           titleCaption={dayjs(item.createdAt).format("YYYY-MM-DD")}
           frozen={item.isFrozen}
           notificationOff={item.myPushTriggerOption === "off"}
         />
-      </Pressable>
+      </TouchableOpacity>
     )
-  };
-  const onLoadMoreChannel = async () => {
-    if (collection?.hasMore) {
-      await collection.loadMore();
-      rerender();
-    }
-  };
+  }
+  if (isLoading) {
+    return <LoadingActivity />
+  }
+
   const listEmptyComponent = (
     <View style={styles.listEmptyComponent}>
-      <Placeholder icon={'channels'} message={'No channels'} />
+      <Placeholder icon={"channels"} message={"No channels"} />
     </View>
-  );
-  return (
-    <FlatList
-      data={collection.channels}
-      keyExtractor={keyExtractor}
-      renderItem={renderItem}
-      onEndReached={onLoadMoreChannel}
-      contentContainerStyle={styles.container}
-      ListEmptyComponent={listEmptyComponent}
-    />
-  );
-};
+  )
 
-//const useHeaderButtons = () => {
+  return (
+    <Screen
+      preset="fixed"
+      safeAreaEdges={["top"]}
+      contentContainerStyle={styles.screenContentContainer}
+    >
+      <View style={styles.heading}>
+        <Text preset="heading" tx="chatScreenList.title" />
+      </View>
+      <FlatList
+        data={collection?.channels || []}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        onEndReached={
+          isLoading
+            ? null
+            : async () => {
+                if (collection?.hasMore) {
+                  setIsLoading(true)
+                  await collection.loadMore()
+                  setIsLoading(false)
+                }
+              }
+        }
+        contentContainerStyle={styles.container}
+        ListEmptyComponent={listEmptyComponent}
+      />
+    </Screen>
+  )
+})//const useHeaderButtons = () => {
   //const {colors} = useUIKitTheme();
   //const {sdk, setUser} = useRootContext();
   //const {navigation} = useAppNavigation<Routes.GroupChannelList>();
@@ -168,6 +212,19 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  screenContentContainer: {
+    flex: 1,
+  },
+  heading: {
+    marginBottom: 16,
+    paddingHorizontal: 16,
+    paddingTop: 32,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
