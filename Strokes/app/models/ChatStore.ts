@@ -2,6 +2,7 @@ import { types, flow, Instance, cast} from 'mobx-state-tree';
 import {CollectionEventSource} from '@sendbird/chat';
 import { GroupChannelHandler, MessageCollectionInitPolicy} from '@sendbird/chat/groupChannel';
 import { MMKVAdapter } from 'app/utils/storage/mmkdvAdapter';
+import storage from 'app/utils/storage/mmkvStorage';
 import SendbirdChat from "@sendbird/chat"
 import { GroupChannelModule, MessageCollection, GroupChannel } from "@sendbird/chat/groupChannel"
 
@@ -196,7 +197,7 @@ export const ChatStore = types
       const sdk = SendbirdChat.init({
         appId: APP_ID,
         modules: [new GroupChannelModule()],
-        useAsyncStorageStore: MMKVAdapter,
+        useMMKVStorageStore: storage,
         localCacheEnabled: true,
       })
       //const sdk = yield sdkPromise
@@ -206,7 +207,7 @@ export const ChatStore = types
       //}
     }),
     setSDK(sdk: any) {
-        self.sdk = sdk;
+      self.sdk = sdk
     },
     connect: flow(function* (userId: string, nickname: string, accessToken: string) {
       try {
@@ -224,14 +225,22 @@ export const ChatStore = types
       }
     }),
     disconnect: flow(function* () {
+      const authStore = getRoot(self).authenticationStore // Ensure you
+      if (!self.sdk) {
+        console.error("SDK not initialized")
+        return // Optionally, you might handle this situation more gracefully
+      }
       try {
         yield self.sdk.disconnect()
-        self.currentUser = undefined
-        self.isConnected = false
         console.log("User disconnected")
       } catch (error) {
         console.error("Disconnect failed:", error)
-        throw error
+        throw error // Rethrowing the error is optional and should be based on how you handle errors upstream
+      } finally {
+        // Always reset user and connection status regardless of try/catch result
+        self.currentUser = undefined
+        self.isConnected = false
+        authStore.isSDKConnected = false
       }
     }),
   }))

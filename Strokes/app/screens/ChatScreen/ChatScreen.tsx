@@ -45,7 +45,6 @@ export const ChatScreen = observer(() => {
 }, []);
 
 
-
   const initializeCollection = async (channelUrl: string) => {
     try {
       await chatStore.initializeSDK()

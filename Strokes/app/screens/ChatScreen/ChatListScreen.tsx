@@ -14,7 +14,6 @@ import {
   Dimensions,
 } from "react-native"
 import { GroupChannelPreview } from "@sendbird/uikit-react-native-foundation"
-import { SendBirdProvider, ChannelList } from 'sendbird-uikit';
 import {
   LoadingActivity,
   EmptyState,

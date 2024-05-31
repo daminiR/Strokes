@@ -1,5 +1,5 @@
 import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
-import { MMKV } from 'react-native-mmkv';
+import storage from 'app/utils/storage/mmkvStorage';
 import { Alert } from 'react-native';
 import { getRootStore } from './helpers/getRootStore';
 import { makeAutoObservable, runInAction } from 'mobx';
@@ -166,7 +166,7 @@ const MatchesStoreModel = types
     }),
     loadStoredMatches: flow(function* () {
       try {
-        const storedMatches = yield MMKV.getstring("matches")
+        const storedMatches = yield storage.getString("matches")
         if (storedMatches) {
           const matches = JSON.parse(storedMatches)
           self.setMatchPool(matches)
