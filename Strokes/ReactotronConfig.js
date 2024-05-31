@@ -1,12 +1,12 @@
 import Reactotron from 'reactotron-react-native';
-import { MMKV } from 'react-native-mmkv';
+import storage from 'app/utils/storage/mmkvStorage';
 
 // Custom AsyncStorage Handler for MMKV to work with Reactotron
 const MMKVStorageHandler = {
-  setItem: (key, value) => MMKV.set(key, value),
-  getItem: (key) => Promise.resolve(MMKV.getString(key)),
+  setItem: (key, value) => storage.set(key, value),
+  getItem: (key) => Promise.resolve(storage.getString(key)),
   removeItem: (key) => {
-    MMKV.delete(key);
+    storage.delete(key);
     return Promise.resolve();
   }
 };

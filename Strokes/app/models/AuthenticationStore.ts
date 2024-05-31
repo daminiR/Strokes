@@ -2,10 +2,10 @@ import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} 
 import {PermissionsAndroid, Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging'
 import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
-import { MMKV } from 'react-native-mmkv';
 import { UserStoreModel } from "./UserStore"
 import { getRootStore } from "./helpers/getRootStore"
 import { removeStore } from "./helpers/removeRootStore"
+import storage from 'app/utils/storage/mmkvStorage';
 
 const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
 const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
@@ -37,7 +37,7 @@ const userPool = new CognitoUserPool(poolData);
  //Define the AuthStore model
 export const AuthenticationStoreModel = types
   .model("AuthenticationStoreModel", {
-    isSDKConnected: types.maybeNull(types.boolean),
+    isSDKConnected: types.optional(types.boolean, false),
     user: types.maybeNull(UserStoreModel),
     isLoading: types.maybeNull(types.boolean),
     isAuthenticated: types.maybeNull(types.boolean),
@@ -51,7 +51,7 @@ export const AuthenticationStoreModel = types
     clearUserSession: flow(function* () {
       self.setIsAuthenticated(false)
       yield removeStore()
-      yield MMKV.clearAll()
+      yield storage.clearAll()
     }),
     setSDKConnected(isConnected: boolean) {
       self.isSDKConnected = isConnected;
@@ -64,7 +64,7 @@ export const AuthenticationStoreModel = types
       try {
         // Ensure we have a current user and a valid connection before attempting to unregister
         if (chatStore.isConnected && chatStore.sdk.currentUser) {
-          const pushToken = yield MMKV.getString("pushToken")
+          const pushToken = yield storage.getString("pushToken")
           if (pushToken) {
             yield chatStore.sdk.unregisterPushToken(
               pushToken,
@@ -78,7 +78,7 @@ export const AuthenticationStoreModel = types
               },
             )
             // Remove the token from storage after successful deregistration
-            yield MMKV.delete("pushToken")
+            yield storage.delete("pushToken")
           }
         } else {
           console.log("Not connected to SendBird or no current user.")
@@ -142,7 +142,7 @@ export const AuthenticationStoreModel = types
     }),
     checkCognitoUserSession: flow(function* () {
       self.setLoading(true);
-      //self.setSDKConnected(false);
+      self.setSDKConnected(false);
       try {
         const mongoDBStore = getRoot(self).mongoDBStore;
         const chatStore = getRoot(self).chatStore;
@@ -165,9 +165,9 @@ export const AuthenticationStoreModel = types
                   self.setIsAuthenticated(true);
                   await chatStore.initializeSDK()
                   await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
-                  self.setSDKConnected(true);
                   console.log("User connected to SendBird");
                   mongoDBStore.shouldQuery();
+                  self.setSDKConnected(true);
                 } else {
                   console.log("Session is invalid");
                   self.clearUserSession();
@@ -242,6 +242,7 @@ export const AuthenticationStoreModel = types
                 if (signUpResult.userConfirmed) {
                   await chatStore.initializeSDK()
                   await chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
+                  self.setSDKConnected(true);
                   await self.registerDeviceToken() // Adjust parameters as needed
                   console.log("User signed up and registered for push notifications")
                 }
@@ -394,7 +395,8 @@ export const AuthenticationStoreModel = types
               await mongoDBStore.queryUserFromMongoDB(userSub)
               await mongoDBStore.queryPotentialMatches()
               await chatStore.initializeSDK()
-              //await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
+              await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
+              self.setSDKConnected(true);
               console.log("i need to know what wrong???", chatStore.sdk)
               self.setIsAuthenticated(true)
               try {
@@ -457,7 +459,7 @@ export const AuthenticationStoreModel = types
           yield self.unregisterPushNotifications()
           yield chatStore.disconnect()
           yield removeStore()
-          yield MMKV.clearAll()
+          yield storage.clearAll()
         } catch (error) {
           console.error("An error occurred during sign out:", error)
           // Handle the sign-out error (e.g., display a notification to the user)

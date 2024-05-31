@@ -82,7 +82,7 @@ function App(props: AppProps) {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   const [areFontsLoaded] = useFonts(customFontsToLoad)
-  const { authenticationStore } = useStores()
+  const { chatStore, authenticationStore } = useStores()
 
   const logCurrentState = async () => {
     const currentState = await storage.getString(ROOT_STATE_STORAGE_KEY)
@@ -92,6 +92,7 @@ function App(props: AppProps) {
     const handleAppStateChange = (nextAppState: string) => {
       if (appState === "active" && nextAppState.match(/inactive|background/)) {
         console.log("App has gone to the background. Disconnecting...")
+        chatStore.disconnect()
         // Add your disconnect logic here
       }
       setAppState(nextAppState)
@@ -140,23 +141,26 @@ function App(props: AppProps) {
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <Provider value={client}>
-    <SendbirdUIKitContainer
-      appId={process.env.REACT_APP_SENDBIRD_APP_ID}
-      chatOptions={{ localCacheStorage: MMKVAdapter }}
-      platformServices={platformServices}
-    >
-          <BottomSheetModalProvider>
-            <ErrorBoundary catchErrors={Config.catchErrors}>
-              <GestureHandlerRootView style={$container}>
-                <AppNavigator
-                  linking={linking}
-                  initialState={initialNavigationState}
-                  onStateChange={onNavigationStateChange}
-                />
-              </GestureHandlerRootView>
-            </ErrorBoundary>
-          </BottomSheetModalProvider>
-    </SendbirdUIKitContainer>
+          <SendbirdUIKitContainer
+            appId={process.env.REACT_APP_SENDBIRD_APP_ID}
+            chatOptions={{ localCacheStorage: MMKVAdapter }}
+            platformServices={platformServices}
+            userProfile={{
+              onCreateChannel: () => {}, // No-op function
+            }}
+          >
+            <BottomSheetModalProvider>
+              <ErrorBoundary catchErrors={Config.catchErrors}>
+                <GestureHandlerRootView style={$container}>
+                  <AppNavigator
+                    linking={linking}
+                    initialState={initialNavigationState}
+                    onStateChange={onNavigationStateChange}
+                  />
+                </GestureHandlerRootView>
+              </ErrorBoundary>
+            </BottomSheetModalProvider>
+          </SendbirdUIKitContainer>
         </Provider>
       </GestureHandlerRootView>
     </SafeAreaProvider>

@@ -1,22 +1,33 @@
 import {FlatList, Image, Platform, Pressable, StyleSheet, TouchableOpacity, View} from 'react-native';
 import { navigate, goBack} from "../../navigators"
-import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {getGroupChannelLastMessage, getGroupChannelTitle, useForceUpdate} from '@sendbird/uikit-utils';
-import {GroupChannelPreview, Icon, Placeholder, useUIKitTheme} from '@sendbird/uikit-react-native-foundation';
+import React, { useEffect, useLayoutEffect, useState } from "react"
+import {
+  getGroupChannelLastMessage,
+  getGroupChannelTitle,
+  useForceUpdate,
+} from "@sendbird/uikit-utils"
+import {
+  GroupChannelPreview,
+  Placeholder,
+} from "@sendbird/uikit-react-native-foundation"
 import { Screen, LoadingActivity, Text} from 'app/components';
-import dayjs from 'dayjs';
-import {GroupChannel, GroupChannelCollection, GroupChannelListOrder} from '@sendbird/chat/groupChannel';
+import dayjs from "dayjs"
+import {
+  GroupChannel,
+  GroupChannelCollection,
+  GroupChannelListOrder,
+} from "@sendbird/chat/groupChannel"
 import { observer } from "mobx-react-lite"
 import { useStores } from "../../models"
 
 export const ChatListScreen2 = observer(function ChatListScreen(_props) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { authenticationStore, chatStore, matchedProfileStore } = useStores()
   const sdk = chatStore.sdk
   const isSDKConnected = authenticationStore.isSDKConnected
 
   const [collection, setCollection] = useState<GroupChannelCollection>()
   const [isLoading, setIsLoading] = useState(true) // Initially set to true
-
   useEffect(() => {
     if (!isSDKConnected || !sdk) {
       setIsLoading(false) // If not connected or no SDK, stop loading
@@ -48,6 +59,24 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
       collection.dispose()
     }
   }, [sdk, isSDKConnected])
+  const handleRefresh = async () => {
+  if (!collection || !sdk) {
+    console.log("SDK or collection not available.");
+    return;
+  }
+
+  setIsRefreshing(true);  // Show the refresh indicator
+
+  try {
+    // You may want to reload your collection here or perform any refresh logic
+    await collection.loadMore();  // Assuming loadMore refreshes your collection
+  } catch (error) {
+    console.error("Failed to refresh the group channel collection:", error);
+  } finally {
+    setIsRefreshing(false);  // Hide the refresh indicator
+  }
+};
+
 
   const keyExtractor = (item: GroupChannel) => item.url
   const renderItem = ({ item }: { item: GroupChannel }) => {
@@ -128,6 +157,8 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
         }
         contentContainerStyle={styles.container}
         ListEmptyComponent={listEmptyComponent}
+        onRefresh={handleRefresh} // Add the handler for pull-to-refresh
+        refreshing={isRefreshing} // The state that controls the visibility of the refresh indicator
       />
     </Screen>
   )

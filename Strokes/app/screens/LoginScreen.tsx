@@ -1,12 +1,12 @@
 import { observer } from "mobx-react-lite"
 import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
-import { MMKV } from "react-native-mmkv"
 import { TextInput, TextStyle, ViewStyle } from "react-native"
 import { Header, Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
 import { navigate, goBack} from "../navigators"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
+import storage from "app/utils/storage/mmkvStorage"
 const ROOT_STATE_STORAGE_KEY = "root-v1";
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
@@ -36,7 +36,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     authenticationStore.signIn()
   }
 const logCurrentState = async () => {
-  const currentState = await MMKV.getstring(ROOT_STATE_STORAGE_KEY);
+  const currentState =  storage.getString(ROOT_STATE_STORAGE_KEY);
   console.log('Current State:', currentState);
 };
 useEffect(() => {
