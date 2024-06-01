@@ -1,5 +1,6 @@
 import {FlatList, Image, Platform, Pressable, StyleSheet, TouchableOpacity, View} from 'react-native';
 import { navigate, goBack} from "../../navigators"
+import { Reactotron } from './../../devtools/ReactotronClient';
 import React, { useEffect, useLayoutEffect, useState } from "react"
 import {
   getGroupChannelLastMessage,
@@ -24,6 +25,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const { authenticationStore, chatStore, matchedProfileStore } = useStores()
   const sdk = chatStore.sdk
   const isSDKConnected = authenticationStore.isSDKConnected
+  console.log("whats going on")
 
   const [collection, setCollection] = useState<GroupChannelCollection>()
   const [isLoading, setIsLoading] = useState(true) // Initially set to true
