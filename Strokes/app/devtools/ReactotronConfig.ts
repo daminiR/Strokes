@@ -26,13 +26,29 @@ const reactotron = Reactotron.configure({
     filter: (event) => /postProcessSnapshot|@APPLY_SNAPSHOT/.test(event.name) === false,
   }),
 )
+// Capturing the original console.log
+const nativeLog = console.log;
+
+// Override console.log
+console.log = (...args) => {
+  nativeLog.apply(console, args); // Continue to log to native console
+
+  Reactotron.display({
+    name: 'CONSOLE.LOG',
+    important: true,
+    value: args,
+    preview: args.length > 1 ? JSON.stringify(args) : args[0]
+  });
+}
 
 if (Platform.OS !== "web") {
   reactotron.setAsyncStorageHandler?.(MMKVAdapter)
   reactotron.useReactNative({
+    asyncStorage: false,
     networking: {
       ignoreUrls: /symbolicate/,
     },
+    overlay: false,
   })
 }
 
