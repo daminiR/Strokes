@@ -22,6 +22,7 @@ import { useFonts } from "expo-font"
 import React, {useState, useEffect} from "react"
 import { platformServices } from "./services/api/sendbird"
 import { MMKVAdapter } from 'app/utils/storage/mmkdvAdapter';
+import { navigate} from "./navigators"
 import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import * as Linking from "expo-linking"
@@ -90,11 +91,16 @@ function App(props: AppProps) {
   }
   useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
-      if (appState === "active" && nextAppState.match(/inactive|background/)) {
-        console.log("App has gone to the background. Disconnecting...")
-        chatStore.disconnect()
-        // Add your disconnect logic here
-      }
+       if (appState !== "active" && nextAppState === "active") {
+         console.log("App is coming to the foreground. Navigating to the start screen...")
+         //navigate("Profile") // Adjust screen as necessary
+        navigate("FaceCard")
+       } else if (appState === "active" && nextAppState.match(/inactive|background/)) {
+         console.log("App has gone to the background. Disconnecting...")
+          chatStore.disconnect()
+          navigate("FaceCard")
+         // Add your disconnect logic here
+       }
       setAppState(nextAppState)
     }
 
