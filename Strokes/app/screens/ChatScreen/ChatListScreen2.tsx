@@ -4,7 +4,6 @@ import React, { useEffect, useLayoutEffect, useState } from "react"
 import {
   getGroupChannelLastMessage,
   getGroupChannelTitle,
-  useForceUpdate,
 } from "@sendbird/uikit-utils"
 import {
   GroupChannelPreview,
