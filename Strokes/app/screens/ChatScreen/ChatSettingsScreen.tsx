@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import { type ContentStyle } from "@shopify/flash-list"
 import { navigate, goBack} from "../../navigators"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useState, useCallback} from "react"
 import { Linking, TextStyle, ViewStyle } from "react-native"
 import { useStores } from "../../models"
 import settingsMethods from '../../config/settingsMethods';
@@ -13,15 +13,20 @@ import { ChatListStackScreenProps } from "../../navigators"
 
 interface ChatSettingsScreen extends ChatListStackScreenProps<"ChatSettings"> {}
 export const ChatSettingsScreen: FC<ChatSettingsScreen> = observer(function ChatSettingsScreen(_props) {
-  const { mongoDBStore, userStore, authenticationStore, chatStore} = useStores()
+  const { mongoDBStore, userStore, authenticationStore, chatStore } = useStores()
   const {
     authenticationStore: { logout },
   } = useStores()
   const [isVisible, setIsVisible] = useState(false)
   const [currentReportObj, setReportObj] = useState(null)
+  const onDone = () => {
+    navigate("ChatList")
+  }
   const onClose = () => {
     setIsVisible(false)
   }
+  const [, updateState] = useState({});
+  const forceUpdate = useCallback(() => updateState({}), [])
   useHeader(
     {
       leftIcon: "back",
@@ -32,17 +37,18 @@ export const ChatSettingsScreen: FC<ChatSettingsScreen> = observer(function Chat
   const handlePress = (item: any) => {
     if (item.label === "unmatch_player") {
       // Call the unmatchPlayer function, assuming it's defined elsewhere in your context
-      mongoDBStore.unmatchPlayer(chatStore.currentChatProfile.matchId) // You need to define this function or ensure it's imported if defined elsewhere
-    } else if (item.hasMoreOptions) {
-      navigate("ChatReport")
-    } else {
+      mongoDBStore.unmatchPlayer(chatStore.currentChatProfile.matchId, forceUpdate)
       setReportObj({
         quickMessage: item.quickMessage,
         title: item.title,
         label: item.label,
       })
       setIsVisible(true)
+    } else if (item.hasMoreOptions) {
+      navigate("ChatReport")
     }
+
+      //setIsVisible(true)
   }
   const [modalState, setModalState] = useState({ isVisible: false, mode: "" })
   // Add more settings items as needed
@@ -57,6 +63,7 @@ export const ChatSettingsScreen: FC<ChatSettingsScreen> = observer(function Chat
         isVisible={isVisible}
         onClose={onClose}
         quickMessage={currentReportObj ? currentReportObj.quickMessage : ""}
+        onDone={onDone}
       />
       <ListView
         contentContainerStyle={$listContentContainer}
@@ -64,7 +71,7 @@ export const ChatSettingsScreen: FC<ChatSettingsScreen> = observer(function Chat
         estimatedItemSize={55}
         renderItem={({ item }) => (
           <ListItem
-            text={item.label}
+            text={item.title}
             style={$listItem}
             topSeparator={true}
             bottomSeparator={true}
