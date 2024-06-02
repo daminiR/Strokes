@@ -57,7 +57,7 @@ const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 interface ChatListScreen extends ChatListStackScreenProps<"ChatList"> {}
 
 export const ChatListScreen: FC<ChatListScreen> = observer(function ChatListScreen(_props) {
-  const { authenticationStore, chatStore, matchedProfileStore } = useStores()
+  const { matchedStore, authenticationStore, chatStore, matchedProfileStore } = useStores()
   const [isInitialized, setIsInitialized] = useState(false)
   const initializeSDK = async () => {
     try {

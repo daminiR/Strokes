@@ -1,4 +1,5 @@
 import {FlatList, Image, Platform, Pressable, StyleSheet, TouchableOpacity, View} from 'react-native';
+import { reaction } from 'mobx';
 import { navigate, goBack} from "../../navigators"
 import { Reactotron } from './../../devtools/ReactotronClient';
 import React, { useEffect, useLayoutEffect, useState } from "react"
@@ -21,8 +22,8 @@ import { observer } from "mobx-react-lite"
 import { useStores } from "../../models"
 
 export const ChatListScreen2 = observer(function ChatListScreen(_props) {
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const { authenticationStore, chatStore, matchedProfileStore } = useStores()
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const { matchedProfilStore, authenticationStore, chatStore, matchedProfileStore } = useStores()
   const sdk = chatStore.sdk
   const isSDKConnected = authenticationStore.isSDKConnected
   const [collection, setCollection] = useState<GroupChannelCollection>()
@@ -59,24 +60,46 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     }
   }, [sdk, isSDKConnected])
   const handleRefresh = async () => {
-  if (!collection || !sdk) {
-    console.log("SDK or collection not available.");
-    return;
+    if (!collection || !sdk) {
+      console.log("SDK or collection not available.")
+      return
+    }
+    setIsRefreshing(true) // Show the refresh indicator
+    try {
+      // You may want to reload your collection here or perform any refresh logic
+      await collection.loadMore() // Assuming loadMore refreshes your collection
+    } catch (error) {
+      console.error("Failed to refresh the group channel collection:", error)
+    } finally {
+      setIsRefreshing(false) // Hide the refresh indicator
+    }
   }
 
-  setIsRefreshing(true);  // Show the refresh indicator
+  useEffect(() => {
+    // Define the async function within useEffect
+    const refreshData = async () => {
+      console.log("Number of matched profiles changed, running refresh logic")
+      setIsRefreshing(true)
+      try {
+        await handleRefresh()
+      } catch (error) {
+        console.error("Error during refresh:", error)
+      } finally {
+        setIsRefreshing(false) // Ensure you set this to false after refresh
+      }
+    }
 
-  try {
-    // You may want to reload your collection here or perform any refresh logic
-    await collection.loadMore();  // Assuming loadMore refreshes your collection
-  } catch (error) {
-    console.error("Failed to refresh the group channel collection:", error);
-  } finally {
-    setIsRefreshing(false);  // Hide the refresh indicator
-  }
-};
+    // Setup reaction
+    const disposer = reaction(
+      () => matchedProfileStore.matchedProfiles.length, // React only to changes in the length of the array
+      refreshData, // Call the async function defined above
+    )
 
-
+    // Cleanup function to dispose of the reaction when the component unmounts
+    return () => {
+      disposer()
+    }
+  }, [matchedProfileStore]) // Dependencies should include anything external used in the effect
   const keyExtractor = (item: GroupChannel) => item.url
   const renderItem = ({ item }: { item: GroupChannel }) => {
     const onPressChannel = (): any => {

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import { type ContentStyle } from "@shopify/flash-list"
-import { navigate, goBack} from "../../navigators"
-import React, { FC, useEffect, useState } from "react"
+import { navigate, goBack } from "../../navigators"
+import React, { FC, useState, useCallback } from "react"
 import { Linking, TextStyle, ViewStyle } from "react-native"
 import { useStores } from "../../models"
 import { colors, spacing } from "../../theme"
@@ -21,7 +21,12 @@ export const ChatReportScreen: FC<ChatReportScreen> = observer(function ChatSett
   } = useStores()
   const currentChatProfile = chatStore.currentChatProfile;
   const [isVisible, setIsVisible] = useState(false)
+  const [, updateState] = useState({});
+  const forceUpdate = useCallback(() => updateState({}), [])
   const [currentReportObj, setReportObj] = useState(null)
+  const onDone = () => {
+    navigate("ChatList")
+  }
   const onClose = () => {
     setIsVisible(false)
   }
@@ -45,6 +50,8 @@ leftIcon: "back",
       .then((response: any) => {
         if (response.success) {
           console.log("Report created successfully:", response.message)
+          mongoDBStore.unmatchPlayer(currentChatProfile.matchId, forceUpdate)
+          // You need to define this function or ensure it's imported if defined elsew
           setReportObj({
             quickMessage: item.quickMessage,
             title: item.title,
@@ -65,6 +72,7 @@ return (
       isVisible={isVisible}
       onClose={onClose}
       quickMessage={currentReportObj ? currentReportObj.quickMessage : ""}
+      onDone={onDone}
     />
     <ListView
       contentContainerStyle={$listContentContainer}

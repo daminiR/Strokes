@@ -47,7 +47,7 @@ export const MatchedUserModel = types.model("MatchedUserModel", {
   imageSet: types.array(ImageModel),
   neighborhood: LocationModel,
   chat: types.maybeNull(ChatModel),
-});
+})
 
 export const MatchedProfilesStore = types
   .model("MatchProfiles", {
@@ -56,6 +56,11 @@ export const MatchedProfilesStore = types
   .actions((self) => ({
     findByChannelId(channelId) {
       return self.matchedProfiles.find((user) => user.chat.channelUrl === channelId)
+    },
+    removeMatchedProfile(matchId: String) {
+      self.matchedProfiles.replace(
+        self.matchedProfiles.filter((profile) => profile.matchId !== matchId),
+      )
     },
     appendMatchedProfiles(newProfiles: any[]) {
       const transformedProfiles = newProfiles.map((profile) => {

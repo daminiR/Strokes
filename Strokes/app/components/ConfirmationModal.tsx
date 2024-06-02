@@ -4,7 +4,7 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { colors, spacing, typography } from '../theme'; // Import your theme settings
 import { Button, Text} from '../components'; // Assuming you have a custom Button component
 
-export const ConfirmationModal = ({ isVisible, onClose, quickMessage}) => {
+export const ConfirmationModal = ({ isVisible, onClose, quickMessage, onDone}) => {
   return (
     <Modal visible={isVisible} animationType="slide" transparent={true}>
       <View style={styles.centeredView}>
@@ -17,7 +17,7 @@ export const ConfirmationModal = ({ isVisible, onClose, quickMessage}) => {
           <View style={styles.buttonContainer}>
             <Button
               text="Done"
-              onPress={() => onClose()}
+              onPress={() => onDone()}
               style={styles.applyButton}
               preset="reversed"
             />

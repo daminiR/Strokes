@@ -1,4 +1,5 @@
 import { types, flow } from 'mobx-state-tree';
+import { navigate } from "../navigators"
 import client from '../services/api/apollo-client';
 import { getRootStore } from './helpers/getRootStore';
 import {ReactNativeFile} from 'apollo-upload-client'
@@ -104,59 +105,60 @@ const MongoDBStore = types
     // Define any state properties you may need
   })
   .actions((self) => ({
-    unmatchPlayer: flow(function* (matchId) {
-    try {
-      const result = yield client.mutate({
-        mutation: graphQL.REMOVE_MATCH_MUTATION,
-        variables: {
-          matchId: matchId,
+    unmatchPlayer: flow(function* (matchId, forceUpdate) {
+      const matchStore = getRootStore(self).matchedProfileStore
+      try {
+        const result = yield client.mutate({
+          mutation: graphQL.REMOVE_MATCH_MUTATION,
+          variables: {
+            matchId: matchId,
+          },
+        })
+        const { success, message } = result.data.removeMatch
+        if (success) {
+          console.log("Player unmatched successfully:", message)
+          matchStore.removeMatchedProfile(matchId)
+          //navigate("ChatList")
+          // Handle any additional state updates if necessary
+        } else {
+          console.error("Failed to unmatch player:", message)
         }
-      });
-      console.log("resultsm", result)
-
-      const { success, message } = result.data.removeMatch;
-      if (success) {
-        console.log("Player unmatched successfully:", message);
-        // Handle any additional state updates if necessary
-      } else {
-        console.error("Failed to unmatch player:", message);
+        return { success, message }
+      } catch (error) {
+        console.error("Error unmatching player:", error)
+        return { success: false, message: "Error executing unmatch operation." }
       }
-      return { success, message };
-    } catch (error) {
-      console.error("Error unmatching player:", error);
-      return { success: false, message: "Error executing unmatch operation." };
-    }
-  }),
-createReport: flow(function* createReport(reportData) {
-    try {
-      const response = yield client.mutate({
-        mutation: graphQL.CREATE_REPORT_MUTATION,
-        variables: {
-          reporterId: reportData.reporterId,
-          reportedUserId: reportData.reportedUserId,
-          reportType: reportData.reportType,
-          description: reportData.description,
-        },
-      })
+    }),
+    createReport: flow(function* createReport(reportData) {
+      try {
+        const response = yield client.mutate({
+          mutation: graphQL.CREATE_REPORT_MUTATION,
+          variables: {
+            reporterId: reportData.reporterId,
+            reportedUserId: reportData.reportedUserId,
+            reportType: reportData.reportType,
+            description: reportData.description,
+          },
+        })
 
-      // Assuming response.data.createReport.success exists based on typical GraphQL responses
-      if (response.data.createReport.success) {
-        console.log("Report created successfully:", response.data.createReport.message)
-        return { success: true, message: "Report created successfully." }
-      } else {
-        console.log("Failed to create report:", response.data.createReport.message)
-        return {
-          success: false,
-          message:
-            response.data.createReport.message || "Failed to create report for unknown reasons.",
+        // Assuming response.data.createReport.success exists based on typical GraphQL responses
+        if (response.data.createReport.success) {
+          console.log("Report created successfully:", response.data.createReport.message)
+          return { success: true, message: "Report created successfully." }
+        } else {
+          console.log("Failed to create report:", response.data.createReport.message)
+          return {
+            success: false,
+            message:
+              response.data.createReport.message || "Failed to create report for unknown reasons.",
+          }
         }
+      } catch (error) {
+        console.error("Failed to create report:", error)
+        return { success: false, message: "Error creating report." }
       }
-    } catch (error) {
-      console.error("Failed to create report:", error)
-      return { success: false, message: "Error creating report." }
-    }
-  }),
-  updateUserInMongoDB: flow(function* updateUser() {
+    }),
+    updateUserInMongoDB: flow(function* updateUser() {
       try {
         const tempUserStore = getRootStore(self).tempUserStore
         const userStore = getRootStore(self).userStore
