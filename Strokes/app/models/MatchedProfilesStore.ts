@@ -37,6 +37,7 @@ export const ChatModel = types.model("ChatModel", {
 });
 
 export const MatchedUserModel = types.model("MatchedUserModel", {
+  matchId: types.maybeNull(types.string),
   matchedUserId: types.maybeNull(types.string),
   firstName: types.maybeNull(types.string),
   age: types.maybeNull(types.number),
@@ -56,10 +57,28 @@ export const MatchedProfilesStore = types
     findByChannelId(channelId) {
       return self.matchedProfiles.find((user) => user.chat.channelUrl === channelId)
     },
-    appendMatchedProfiles(newProfiles: any) {
-      self.matchedProfiles.push(...newProfiles)
+    appendMatchedProfiles(newProfiles: any[]) {
+      const transformedProfiles = newProfiles.map((profile) => {
+        // Create a new object with all properties of the profile except _id
+        const { _id, ...otherProps } = profile
+        return {
+          ...otherProps,
+          matchedUserId: _id, // Assign _id value to matchUserId
+        }
+      })
+
+      self.matchedProfiles.push(...transformedProfiles) // Append transformed profiles
     },
-    setProfiles(profiles: any) {
-      self.matchedProfiles.replace(profiles)
+    setProfiles(newProfiles: any[]) {
+      const transformedProfiles = newProfiles.map((profile) => {
+        // Destructure the profile to separate _id and the rest of the properties
+        const { _id, ...otherProps } = profile
+        return {
+          ...otherProps,
+          matchedUserId: _id, // Assign _id value to matchUserId
+        }
+      })
+
+      self.matchedProfiles.replace(transformedProfiles) // Replace the entire array with transformed profiles
     },
   }))

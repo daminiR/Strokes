@@ -37,7 +37,7 @@ const UserModel = types.model({
   userId: types.identifier,
   nickname: types.string,
   accessToken: types.maybeNull(types.string),
-});
+})
 export const ChatModel = types.model("ChatModel", {
   channelUrl: types.maybeNull(types.string),
   channelType: types.maybeNull(types.string),
@@ -50,8 +50,10 @@ export const ChatModel = types.model("ChatModel", {
   readReceiptsStatus: types.maybeNull(types.boolean),
   reportedBy: types.maybeNull(types.string),
   blockedBy: types.maybeNull(types.string),
-});
+})
+
 const CurrentChatModel = types.model("CurrentChatModel", {
+  matchId: types.maybeNull(types.string),
   matchedUserId: types.maybeNull(types.string),
   firstName: types.maybeNull(types.string),
   age: types.maybeNull(types.number),
@@ -89,6 +91,7 @@ export const ChatStore = types
     },
     setChatProfile(profile: any) {
       self.currentChatProfile = {
+        matchId: profile.matchId,
         matchedUserId: profile.matchedUserId || null,
         firstName: profile.firstName || null,
         age: profile.age || null,

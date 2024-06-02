@@ -15,6 +15,7 @@ import {resolvers as testCreateUser} from './resolvers/test/createUser'
 import {resolvers as testUpload} from './resolvers/test/updateUser'
 
 import {resolvers as  addLikeResolvers} from './resolvers/prod/likes/addLike'
+import {resolvers as  createReportResolvers} from './resolvers/prod/reports/createReport'
 import {resolvers as removeLikeResolvers} from './resolvers/prod/likes/removeLike'
 import {resolvers as queryLikedResolvers} from './resolvers/prod/likes/queryLikes'
 
@@ -26,6 +27,7 @@ import {graphqlUploadExpress} from 'graphql-upload'
 import { typeDefs } from './typeDefs/prod/typeDefs';
 import { typeDefsTest } from './typeDefs/test/typeDefs'
 import { likesTypeDefs } from './typeDefs/prod/likesTypeDefs'
+import { reportTypeDefs } from './typeDefs/prod/reportsTypeDefs'
 import { matchesTypeDefs } from "./typeDefs/prod/matchesTypeDefs";
 import { potentialMatchPoolTypeDefs } from "./typeDefs/prod/matchPoolTypeDefs";
 import { createServer } from 'http';
@@ -51,13 +53,15 @@ const startServer = async () => {
       addLikeResolvers,
       removeLikeResolvers,
       queryLikedResolvers,
+      // report users
+      createReportResolvers,
       // tests
       testCreateUser,
       testUpload
     ]
   );
   const schema = makeExecutableSchema({
-    typeDefs: [typeDefs, typeDefsTest, likesTypeDefs, matchesTypeDefs, potentialMatchPoolTypeDefs],
+    typeDefs: [typeDefs, typeDefsTest, likesTypeDefs, reportTypeDefs, matchesTypeDefs, potentialMatchPoolTypeDefs],
     resolvers: resolvers2,
   });
   const server = new ApolloServer({

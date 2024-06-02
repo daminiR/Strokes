@@ -13,13 +13,10 @@ import { ChatListStackScreenProps } from "../../navigators"
 
 interface ChatSettingsScreen extends ChatListStackScreenProps<"ChatSettings"> {}
 export const ChatSettingsScreen: FC<ChatSettingsScreen> = observer(function ChatSettingsScreen(_props) {
-  const { userStore, authenticationStore } = useStores()
+  const { mongoDBStore, userStore, authenticationStore, chatStore} = useStores()
   const {
     authenticationStore: { logout },
   } = useStores()
-  const openURL = (url) => {
-    Linking.openURL(url).catch((err) => Alert.alert("Cannot open URL", err.message))
-  };
   const [isVisible, setIsVisible] = useState(false)
   const [currentReportObj, setReportObj] = useState(null)
   const onClose = () => {
@@ -33,7 +30,10 @@ export const ChatSettingsScreen: FC<ChatSettingsScreen> = observer(function Chat
     [goBack],
   )
   const handlePress = (item: any) => {
-    if (item.hasMoreOptions) {
+    if (item.label === "unmatch_player") {
+      // Call the unmatchPlayer function, assuming it's defined elsewhere in your context
+      mongoDBStore.unmatchPlayer(chatStore.currentChatProfile.matchId) // You need to define this function or ensure it's imported if defined elsewhere
+    } else if (item.hasMoreOptions) {
       navigate("ChatReport")
     } else {
       setReportObj({
@@ -41,11 +41,11 @@ export const ChatSettingsScreen: FC<ChatSettingsScreen> = observer(function Chat
         title: item.title,
         label: item.label,
       })
+      setIsVisible(true)
     }
-    setIsVisible(true)
   }
-  const [modalState, setModalState] = useState({ isVisible: false, mode: '' });
-    // Add more settings items as needed
+  const [modalState, setModalState] = useState({ isVisible: false, mode: "" })
+  // Add more settings items as needed
 
   return (
     <Screen
@@ -63,14 +63,15 @@ export const ChatSettingsScreen: FC<ChatSettingsScreen> = observer(function Chat
         data={settingsMethods}
         estimatedItemSize={55}
         renderItem={({ item }) => (
-            <ListItem
-              text={item.label}
-              style={$listItem}
-              topSeparator={true}
-              bottomSeparator={true}
-              rightIcon={item.hasMoreOptions ? "caretRight" : null} // Conditionally set the right icon
+          <ListItem
+            text={item.label}
+            style={$listItem}
+            topSeparator={true}
+            bottomSeparator={true}
+            rightIcon={"caretRight"} // Conditionally set the right icon
+            rightIconColor={item.hasMoreOptions ? colors.text : colors.background}
             onPress={() => handlePress(item)}
-            />
+          />
         )}
       />
     </Screen>

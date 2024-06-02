@@ -104,27 +104,59 @@ const MongoDBStore = types
     // Define any state properties you may need
   })
   .actions((self) => ({
-        createReport: flow(function* (reportData) {
-      try {
-        const response = yield client.mutate({
-          mutation: graphQL.CREATE_REPORT_MUTATION,
-          variables: {
-            reporterId: reportData.reporterId,
-            reportedUserId: reportData.reportedUserId,
-            reportedContentId: reportData.reportedContentId,
-            reportType: reportData.reportType,
-            description: reportData.description,
-            status: 'pending' // Default status when creating a new report
-          },
-        });
-        // Handle the response as needed, perhaps logging or processing the result
-        return { success: true, message: "Report created successfully." };
-      } catch (error) {
-        console.error("Failed to create report:", error);
-        return { success: false, message: "Error creating report." };
+    unmatchPlayer: flow(function* (matchId) {
+    try {
+      const result = yield client.mutate({
+        mutation: graphQL.REMOVE_MATCH_MUTATION,
+        variables: {
+          matchId: matchId,
+        }
+      });
+      console.log("resultsm", result)
+
+      const { success, message } = result.data.removeMatch;
+      if (success) {
+        console.log("Player unmatched successfully:", message);
+        // Handle any additional state updates if necessary
+      } else {
+        console.error("Failed to unmatch player:", message);
       }
-    }),
-    updateUserInMongoDB: flow(function* updateUser() {
+      return { success, message };
+    } catch (error) {
+      console.error("Error unmatching player:", error);
+      return { success: false, message: "Error executing unmatch operation." };
+    }
+  }),
+createReport: flow(function* createReport(reportData) {
+    try {
+      const response = yield client.mutate({
+        mutation: graphQL.CREATE_REPORT_MUTATION,
+        variables: {
+          reporterId: reportData.reporterId,
+          reportedUserId: reportData.reportedUserId,
+          reportType: reportData.reportType,
+          description: reportData.description,
+        },
+      })
+
+      // Assuming response.data.createReport.success exists based on typical GraphQL responses
+      if (response.data.createReport.success) {
+        console.log("Report created successfully:", response.data.createReport.message)
+        return { success: true, message: "Report created successfully." }
+      } else {
+        console.log("Failed to create report:", response.data.createReport.message)
+        return {
+          success: false,
+          message:
+            response.data.createReport.message || "Failed to create report for unknown reasons.",
+        }
+      }
+    } catch (error) {
+      console.error("Failed to create report:", error)
+      return { success: false, message: "Error creating report." }
+    }
+  }),
+  updateUserInMongoDB: flow(function* updateUser() {
       try {
         const tempUserStore = getRootStore(self).tempUserStore
         const userStore = getRootStore(self).userStore
@@ -215,7 +247,7 @@ const MongoDBStore = types
       }
     }),
     createMatch: flow(function* createMatch(user2Id) {
-      const user1Id  = getRootStore(self).userStore._id
+      const user1Id = getRootStore(self).userStore._id
       return client
         .mutate({
           mutation: graphQL.CREATE_MATCH_MUTATION,
@@ -299,17 +331,17 @@ const MongoDBStore = types
       const matchStore = getRootStore(self).matchStore
       const newFiltersHash = hashObject(filters) // Ensure hashObject function is correctly implemented
 
-        try {
-          const potentialMatchesResponse = yield self.applyFilters(filters, newFiltersHash)
-          matchStore.setInit(potentialMatchesResponse)
-        } catch (error) {
-          console.error("Failed to query potential matches:", error)
-        }
+      try {
+        const potentialMatchesResponse = yield self.applyFilters(filters, newFiltersHash)
+        matchStore.setInit(potentialMatchesResponse)
+      } catch (error) {
+        console.error("Failed to query potential matches:", error)
+      }
     }),
     shouldQuery: flow(function* () {
       const matchStore = getRootStore(self).matchStore
-      const likedUserStore = getRootStore(self).likedUserStore;  // Assuming there's a store for liked profiles
-      const matchedProfileStore = getRootStore(self).matchedProfileStore;  // Assuming there's a store for liked profiles
+      const likedUserStore = getRootStore(self).likedUserStore // Assuming there's a store for liked profiles
+      const matchedProfileStore = getRootStore(self).matchedProfileStore // Assuming there's a store for liked profiles
       const stringTimestamp = matchStore.lastFetched
       const dateObject = new Date(parseInt(stringTimestamp, 10))
       const timeElapsed = Date.now() - dateObject.getTime()
@@ -320,8 +352,8 @@ const MongoDBStore = types
       yield self.queryPotentialMatches()
       const likedProfilesData = yield self.queryLikedUserProfiles(1, 10)
       const matchedUserData = yield self.queryMatchedUserProfiles(1, 16)
-      likedUserStore.setProfiles(likedProfilesData);  // Set or update the liked profiles in the store
-      matchedProfileStore.setProfiles(matchedUserData);  // Set or update the liked profiles in the store
+      likedUserStore.setProfiles(likedProfilesData) // Set or update the liked profiles in the store
+      matchedProfileStore.setProfiles(matchedUserData) // Set or update the liked profiles in the store
       //}
     }),
     // Function to update the interacted status in matchQueue
@@ -334,7 +366,7 @@ const MongoDBStore = types
         const result = yield client.mutate({
           mutation: graphQL.UPDATE_MATCH_QUEUE_INTERACTED_MUTATION,
           variables: {
-           currentUserId:  currentUserId,
+            currentUserId: currentUserId,
             matchUserId: matchUserId,
             isLiked: isLiked,
           },
@@ -354,43 +386,43 @@ const MongoDBStore = types
       }
     }),
     queryMatchedUserProfiles: flow(function* updateMatchedUserProfiles(page, limit) {
-        const userId = getRootStore(self).userStore._id// Assuming this is how you access userStore
-        try {
-            const response = yield client.query({
-                query: graphQL.FETCH_MATCHES_FOR_USER_QUERY,
-                variables: {
-                    userId: userId,
-                    page: page,
-                    limit: limit
-                },
-                fetchPolicy: "network-only",  // Ensures fresh data on every call
-            });
-            const matchedProfileData = cleanGraphQLResponse(response.data.fetchMatchesForUser) // Assuming response is structured correctly
-            return matchedProfileData;  // Return data for further processing if necessary
-        } catch (error) {
-            console.error("Error querying liked user profiles:", error);
-            throw error;
-        }
+      const userId = getRootStore(self).userStore._id // Assuming this is how you access userStore
+      try {
+        const response = yield client.query({
+          query: graphQL.FETCH_MATCHES_FOR_USER_QUERY,
+          variables: {
+            userId: userId,
+            page: page,
+            limit: limit,
+          },
+          fetchPolicy: "network-only", // Ensures fresh data on every call
+        })
+        const matchedProfileData = cleanGraphQLResponse(response.data.fetchMatchesForUser) // Assuming response is structured correctly
+        return matchedProfileData // Return data for further processing if necessary
+      } catch (error) {
+        console.error("Error querying liked user profiles:", error)
+        throw error
+      }
     }),
     queryLikedUserProfiles: flow(function* updateMatchQueueInteracted(page, limit) {
-        const userId = getRootStore(self).userStore._id// Assuming this is how you access userStore
-        const likedUserStore = getRootStore(self).likedUserStore;  // Assuming there's a store for liked profiles
-        try {
-            const response = yield client.query({
-                query: graphQL.GET_LIKED_USER_PROFILES,
-                variables: {
-                    userId: userId,
-                    page: page,
-                    limit: limit
-                },
-                fetchPolicy: "network-only",  // Ensures fresh data on every call
-            });
-            const likedProfilesData = cleanGraphQLResponse(response.data.fetchLikedIds) // Assuming response is structured correctly
-            return likedProfilesData;  // Return data for further processing if necessary
-        } catch (error) {
-            console.error("Error querying liked user profiles:", error);
-            throw error;
-        }
+      const userId = getRootStore(self).userStore._id // Assuming this is how you access userStore
+      const likedUserStore = getRootStore(self).likedUserStore // Assuming there's a store for liked profiles
+      try {
+        const response = yield client.query({
+          query: graphQL.GET_LIKED_USER_PROFILES,
+          variables: {
+            userId: userId,
+            page: page,
+            limit: limit,
+          },
+          fetchPolicy: "network-only", // Ensures fresh data on every call
+        })
+        const likedProfilesData = cleanGraphQLResponse(response.data.fetchLikedIds) // Assuming response is structured correctly
+        return likedProfilesData // Return data for further processing if necessary
+      } catch (error) {
+        console.error("Error querying liked user profiles:", error)
+        throw error
+      }
     }),
     queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore
@@ -440,4 +472,4 @@ const MongoDBStore = types
     // Add more actions for interacting with MongoDB via GraphQL as needed
   }))
 
-export default MongoDBStore;
+export default MongoDBStore

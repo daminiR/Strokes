@@ -4,7 +4,6 @@ import { Schema, model } from 'mongoose';
 interface ReportDocument {
   reporterId: string; // User ID of the person who filed the report
   reportedUserId?: string; // User ID of the person being reported, if applicable
-  reportedContentId?: string; // ID of the content being reported, if applicable
   reportType: string; // Type of report (e.g., scam, spam, harassment)
   description: string; // Description or reason for the report
   status: "pending" | "reviewed" | "resolved"; // Current status of the report
@@ -23,11 +22,6 @@ const reportSchema = new Schema<ReportDocument>(
       type: String,
       index: true,
     },
-    reportedContentId: {
-      type: String,
-      index: true,
-    },
-
     reportType: {
       type: String,
       required: true,

@@ -5,7 +5,6 @@ export const reportTypeDefs = gql`
     id: ID!
     reporterId: String!
     reportedUserId: String
-    reportedContentId: String
     reportType: String!
     description: String!
     status: String!
@@ -34,7 +33,6 @@ export const reportTypeDefs = gql`
     createReport(
       reporterId: String!,
       reportedUserId: String,
-      reportedContentId: String,
       reportType: String!,
       description: String!
     ): ReportResponse

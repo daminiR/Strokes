@@ -24,6 +24,7 @@
     "moment": "^2.29.1",
     "mongo-sanitize": "^1.1.0",
     "mongoose": "^6.1.4",
+    "node-fetch": "^3.3.2",
     "nodemon": "^2.0.12",
     "sendbird": "^3.1.33",
     "sendbird-platform-sdk": "^0.0.16",
