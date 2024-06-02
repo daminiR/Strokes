@@ -25,8 +25,6 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const { authenticationStore, chatStore, matchedProfileStore } = useStores()
   const sdk = chatStore.sdk
   const isSDKConnected = authenticationStore.isSDKConnected
-  console.log("whats going on")
-
   const [collection, setCollection] = useState<GroupChannelCollection>()
   const [isLoading, setIsLoading] = useState(true) // Initially set to true
   useEffect(() => {
@@ -81,7 +79,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
 
   const keyExtractor = (item: GroupChannel) => item.url
   const renderItem = ({ item }: { item: GroupChannel }) => {
-    const onPressChannel = () => {
+    const onPressChannel = (): any => {
       const matchedUser = matchedProfileStore.findByChannelId(item.url)
       chatStore.setChatProfile(matchedUser)
       navigate("ChatTopNavigator")
@@ -163,7 +161,8 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
       />
     </Screen>
   )
-})//const useHeaderButtons = () => {
+})
+//const useHeaderButtons = () => {
   //const {colors} = useUIKitTheme();
   //const {sdk, setUser} = useRootContext();
   //const {navigation} = useAppNavigation<Routes.GroupChannelList>();

@@ -12,7 +12,7 @@ const MMKVStorageHandler = {
 };
 
 Reactotron.setAsyncStorageHandler(MMKVStorageHandler)
-  .configure({ host: '192.168.1.16' }) // controls connection & communication settings
+  .configure({ host: '192.168.1.14' }) // controls connection & communication settings
   .useReactNative() // add all built-in react native plugins
   .connect(); // let's connect!
 

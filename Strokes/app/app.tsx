@@ -94,10 +94,11 @@ function App(props: AppProps) {
        if (appState !== "active" && nextAppState === "active") {
          console.log("App is coming to the foreground. Navigating to the start screen...")
          //navigate("Profile") // Adjust screen as necessary
-        navigate("FaceCard")
+          navigate("FaceCard")
        } else if (appState === "active" && nextAppState.match(/inactive|background/)) {
          console.log("App has gone to the background. Disconnecting...")
           chatStore.disconnect()
+          authenticationStore.setSDKConnected(false)
           navigate("FaceCard")
          // Add your disconnect logic here
        }
