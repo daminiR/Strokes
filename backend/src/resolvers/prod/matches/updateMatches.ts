@@ -7,6 +7,9 @@ import {
 import {
   hideChannel,
 } from "./../../../utils/sendbird";
+import {
+  hideSendbirdChannel,
+} from "./../../../utils/sendBirdv2";
 
 
 // Create the userExists function using Sendbird SDK
@@ -228,7 +231,7 @@ export const resolvers = {
 
         // Optionally handle the channel operations
         // For example, if you have an API to manage channel statuses:
-        await hideChannel(match.channelUrl);
+        await hideSendbirdChannel(match.channelUrl);
 
         return {
           success: true,
