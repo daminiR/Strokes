@@ -1,5 +1,4 @@
-import { types, IType, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
-import { getRootStore } from './helpers/getRootStore';
+import { types } from "mobx-state-tree"
 
 export const ImageModel = types.model("ImageModel", {
   img_idx: types.maybeNull(types.number),

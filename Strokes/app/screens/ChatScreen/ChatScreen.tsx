@@ -47,8 +47,6 @@ export const ChatScreen = observer(() => {
 
   const initializeCollection = async (channelUrl: string) => {
     try {
-      await chatStore.initializeSDK()
-      await chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
       await chatStore.initializeCollection(channelUrl, setState, rerender)
     } catch {}
   }

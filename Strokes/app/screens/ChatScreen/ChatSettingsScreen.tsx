@@ -1,14 +1,12 @@
 import { observer } from "mobx-react-lite"
 import { type ContentStyle } from "@shopify/flash-list"
 import { navigate, goBack} from "../../navigators"
-import { translate } from "../../i18n"
 import React, { FC, useEffect, useState } from "react"
 import { Linking, TextStyle, ViewStyle } from "react-native"
 import { useStores } from "../../models"
 import settingsMethods from '../../config/settingsMethods';
 import { colors, spacing } from "../../theme"
 import { useHeader } from "../../utils/useHeader"
-import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle"
 import { ConfirmationModal, ListItem, ListView, Button, Screen } from "../../components"
 import { ChatListStackScreenProps } from "../../navigators"
 

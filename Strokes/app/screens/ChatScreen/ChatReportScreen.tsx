@@ -10,16 +10,17 @@ import { ListItem, ConfirmationModal, ListView, Button, Screen } from "../../com
 import { ChatListStackScreenProps } from "../../navigators"
 import reportMethods from '../../config/reportMethods';
 
-
 interface ChatReportScreen extends ChatListStackScreenProps<"ChatReport"> {}
+
 export const ChatReportScreen: FC<ChatReportScreen> = observer(function ChatSettingsScreen(_props) {
   const { userStore, authenticationStore } = useStores()
   const {
+    chatStore,
+    mongoDBStore,
     authenticationStore: { logout },
   } = useStores()
-  const openURL = (url) => {
-    Linking.openURL(url).catch((err) => Alert.alert("Cannot open URL", err.message))
-  };
+  console.log("chatsss", chatStore)
+  const currentChatProfile = chatStore.currentChatProfile;
   const [isVisible, setIsVisible] = useState(false)
   const [currentReportObj, setReportObj] = useState(null)
   const onClose = () => {
@@ -27,21 +28,40 @@ export const ChatReportScreen: FC<ChatReportScreen> = observer(function ChatSett
   }
   useHeader(
     {
-      leftIcon: "back",
+leftIcon: "back",
       onLeftPress: goBack,
     },
     [goBack],
   )
-  const [modalState, setModalState] = useState({ isVisible: false, mode: "" })
   const handlePress = (item: any) => {
-    setReportObj({
-      quickMessage: item.quickMessage,
-      title: item.title,
-      label: item.label,
-    })
-    setIsVisible(true)
+    const reportData = {
+      reporterId: authenticationStore.user._id, // This should come from your user context or a similar source
+      reportedUserId: currentChatProfile.matchedUserId, // Assuming `userId` is the ID of the reported user
+      reportedContentId: item.contentId, // Assuming `contentId` is the ID of the specific content being reported
+      reportType: item.label, // Type of the report
+      description: item.quickMessage, // Detailed description of the report
+      status: "pending", // Default status, assumed to be handled on the backend too
+    }
+    mongoDBStore
+      .createReport(reportData)
+      .then((response: any) => {
+        if (response.data.createReport.success) {
+          console.log("Report created successfully:", response.data.createReport.message)
+          setReportObj({
+            quickMessage: item.quickMessage,
+            title: item.title,
+            label: item.label,
+          })
+          setIsVisible(true)
+        } else {
+          alert(`Failed to create report: ${response.data.createReport.message}`)
+        }
+      })
+      .catch((error: any) => {
+        alert(`Error creating report: ${error.message}`)
+      })
   }
-  return (
+return (
     <Screen preset="auto" safeAreaEdges={["top", "bottom"]}>
       <ConfirmationModal
         isVisible={isVisible}
