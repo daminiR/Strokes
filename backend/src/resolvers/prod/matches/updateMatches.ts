@@ -1,8 +1,5 @@
 import Match from '../../../models/Match';
-import User from '../../../models/User';
-import { GroupChannel} from 'sendbird';
 import { apiToken, userAPI, groupChannelApi} from './../../../services/sendbirdService';
-import { GcCreateChannelData } from "sendbird-platform-sdk-typescript";
 
 
 // Create the userExists function using Sendbird SDK

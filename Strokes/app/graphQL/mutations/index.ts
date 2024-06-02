@@ -1,8 +1,4 @@
-export * from "./users/createUser"
-export * from "./users/deleteUser"
-export * from "./users/updateUser"
-
-export * from "./likes/addLike"
-export * from "./likes/removeLike"
-
-export * from "./matches/updateMatches"
+export * from "./users"
+export * from "./likes"
+export * from "./matches"
+export * from "./reports"

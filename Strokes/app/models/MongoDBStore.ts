@@ -104,6 +104,26 @@ const MongoDBStore = types
     // Define any state properties you may need
   })
   .actions((self) => ({
+        createReport: flow(function* (reportData) {
+      try {
+        const response = yield client.mutate({
+          mutation: graphQL.CREATE_REPORT_MUTATION,
+          variables: {
+            reporterId: reportData.reporterId,
+            reportedUserId: reportData.reportedUserId,
+            reportedContentId: reportData.reportedContentId,
+            reportType: reportData.reportType,
+            description: reportData.description,
+            status: 'pending' // Default status when creating a new report
+          },
+        });
+        // Handle the response as needed, perhaps logging or processing the result
+        return { success: true, message: "Report created successfully." };
+      } catch (error) {
+        console.error("Failed to create report:", error);
+        return { success: false, message: "Error creating report." };
+      }
+    }),
     updateUserInMongoDB: flow(function* updateUser() {
       try {
         const tempUserStore = getRootStore(self).tempUserStore

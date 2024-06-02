@@ -1,7 +1,7 @@
 import axios from 'axios'
 import 'dotenv/config'
 
-const createGroupChannel = async (userId1: string, userId2: string): Promise<any> => {
+export const createGroupChannel = async (userId1: string, userId2: string): Promise<any> => {
    const sb_token = process.env.SB_TOKEN as string;
     const sb_app_id = process.env.SB_APP_ID as string;
     const url = `https://api-${sb_app_id}.sendbird.com/v3/group_channels`;
@@ -27,7 +27,7 @@ const createGroupChannel = async (userId1: string, userId2: string): Promise<any
             throw new Error(data.error ? data.error.message : "Failed to create group channel");
         }
         return data;
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error creating group channel:", error.message);
         throw error;
     }
