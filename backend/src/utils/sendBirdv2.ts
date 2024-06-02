@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'; // Import fetch if you're in Node.js
+//import {fetch} from 'node-fetch'; // Import fetch if you're in Node.js
 
 /**
  * Hides a group channel in Sendbird.
@@ -11,14 +11,14 @@ import fetch from 'node-fetch'; // Import fetch if you're in Node.js
 const apiToken = process.env.SB_TOKEN as string; // Your SendBird API token
 const appId = process.env.SENDBIRD_APP_ID as string; // Your SendBird App ID
 
-async function hideSendbirdChannel(appId, channelUrl, apiToken, userId) {
+export const hideSendbirdChannel = async (channelUrl) => {
     const url = `https://api-${appId}.sendbird.com/v3/group_channels/${channelUrl}/hide`;
     const headers = {
         "Content-Type": "application/json",
         "Api-Token": apiToken
     };
     const body = JSON.stringify({
-        user_id: userId,  // Necessary if the API requires identifying the user making the change
+        user_id: {},  // Necessary if the API requires identifying the user making the change
         should_hide_all: true  // Set to true to hide the channel for all members
     });
 
