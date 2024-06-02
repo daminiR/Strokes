@@ -19,7 +19,6 @@ export const ChatReportScreen: FC<ChatReportScreen> = observer(function ChatSett
     mongoDBStore,
     authenticationStore: { logout },
   } = useStores()
-  console.log("chatsss", chatStore)
   const currentChatProfile = chatStore.currentChatProfile;
   const [isVisible, setIsVisible] = useState(false)
   const [currentReportObj, setReportObj] = useState(null)

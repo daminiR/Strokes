@@ -81,6 +81,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const renderItem = ({ item }: { item: GroupChannel }) => {
     const onPressChannel = (): any => {
       const matchedUser = matchedProfileStore.findByChannelId(item.url)
+      console.log("matchedUser id", matchedUser)
       chatStore.setChatProfile(matchedUser)
       navigate("ChatTopNavigator")
     }
