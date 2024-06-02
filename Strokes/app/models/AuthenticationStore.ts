@@ -1,7 +1,13 @@
 import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
 import {PermissionsAndroid, Platform } from 'react-native';
 import messaging from '@react-native-firebase/messaging'
-import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
+import {
+  CognitoUser,
+  CognitoUserAttribute,
+  AuthenticationDetails,
+  CognitoUserPool,
+} from "amazon-cognito-identity-js"
+import { resetChatStackToChatList, resetToInitialState } from "./../navigators"
 import { UserStoreModel } from "./UserStore"
 import { getRootStore } from "./helpers/getRootStore"
 import { removeStore } from "./helpers/removeRootStore"
@@ -165,7 +171,9 @@ export const AuthenticationStoreModel = types
                   self.setIsAuthenticated(true);
                   await chatStore.initializeSDK()
                   await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
-                  console.log("User connected to SendBird");
+                  console.log("User connected to SendBird")
+                  resetToInitialState()
+                  resetChatStackToChatList()
                   mongoDBStore.shouldQuery();
                   self.setSDKConnected(true);
                 } else {

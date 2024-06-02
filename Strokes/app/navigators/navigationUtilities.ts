@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react"
+import { CommonActions } from '@react-navigation/native';
 import { BackHandler, Platform } from "react-native"
 import {
   NavigationState,
@@ -186,7 +187,38 @@ export function goBack() {
     navigationRef.goBack()
   }
 }
+export function resetToInitialState() {
+  const initialRouteState = {
+    index: 0,
+    routes: [{ name: 'FaceCard' }],
+  };
 
+  if (navigationRef.isReady()) {
+    navigationRef.resetRoot(initialRouteState);
+  }
+}
+/**
+ * Reset the ChatStack to the initial ChatList screen.
+ */
+export function resetChatStackToChatList() {
+  if (navigationRef.isReady()) {
+    navigationRef.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Chat', // The name of the tab containing the ChatStack, if it's within a Tab.Navigator
+            state: {
+              // This is the nested navigator state
+              routes: [{ name: 'ChatList' }],
+              index: 0,
+            },
+          },
+        ],
+      })
+    );
+  }
+}
 /**
  * resetRoot will reset the root navigation state to the given params.
  * @param {Parameters<typeof navigationRef.resetRoot>[0]} state - The state to reset the root to.
