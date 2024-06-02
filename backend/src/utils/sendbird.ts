@@ -1,5 +1,10 @@
 import axios from 'axios'
 import 'dotenv/config'
+import {
+  apiToken,
+  userAPI,
+  groupChannelApi,
+} from "./../services/sendbirdService";
 
 export const createGroupChannel = async (userId1: string, userId2: string): Promise<any> => {
    const sb_token = process.env.SB_TOKEN as string;
@@ -59,12 +64,13 @@ export const sendAdminMatchMessages = (
   apns_matched_user_token
 ) => {
   // only matches user gets notification, not the user matching. Only on message needed
-  const sb_token = process.env.SB_TOKEN as any
-  const sb_app_id = process.env.SB_APP_ID as any
+  const sb_token = process.env.SB_TOKEN as any;
+  const sb_app_id = process.env.SB_APP_ID as any;
   const url = `https://api-${sb_app_id}.sendbird.com/v3/group_channels`;
   const request = {
     message_type: "MESG",
-    message: "This chat will close in 14 days. Make sure you comply with terms of use while using the app.",
+    message:
+      "This chat will close in 14 days. Make sure you comply with terms of use while using the app.",
     send_push: true,
     push_message_template: {
       title: `you just matched with ${current_user_name}!`,
@@ -87,6 +93,29 @@ export const sendAdminMatchMessages = (
         reject();
       });
   });
+};
+
+
+
+export const hideChannel = async (channelUrl) => {
+  let body = {
+    channelUrl: channelUrl,
+    //gcHideOrArchiveChannelData: {
+      //channelUrl: channelUrl,
+      ////userId: userId,
+      //allowAutoUnhide: true,
+      //shouldHideAll: true,
+      //hidePreviousMessages: true,
+    //},
+  };
+  try {
+    const data = await groupChannelApi.gcHideOrArchiveChannel(apiToken, channelUrl);
+    console.log("Channel hidden successfully:", data);
+    return data;
+  } catch (error) {
+    console.error("Failed to hide channel:", error);
+    throw error;
+  }
 };
 export const createUserSendbird = (userId1, first_name, issue_access_token) => {
   const sb_token = process.env.SB_TOKEN as any

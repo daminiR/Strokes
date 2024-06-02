@@ -1,5 +1,12 @@
-import Match from '../../../models/Match';
-import { apiToken, userAPI, groupChannelApi} from './../../../services/sendbirdService';
+import Match from "../../../models/Match";
+import {
+  apiToken,
+  userAPI,
+  groupChannelApi,
+} from "./../../../services/sendbirdService";
+import {
+  hideChannel,
+} from "./../../../utils/sendbird";
 
 
 // Create the userExists function using Sendbird SDK
@@ -99,6 +106,7 @@ export const resolvers = {
 
         // Transform the results to match the required format
         const userProfiles = matches.map((match) => ({
+          matchId: match._id,
           _id: match.matchedUser._id,
           firstName: match.matchedUser.firstName,
           imageSet: match.matchedUser.imageSet,
@@ -203,25 +211,38 @@ export const resolvers = {
     },
     async removeMatch(_, { matchId }) {
       try {
-        const deletedMatch = await Match.findByIdAndDelete(matchId);
-        if (!deletedMatch) {
+        // Connect to your data source and find the match
+        const match = await Match.findById(matchId);
+        if (!match) {
           return {
             success: false,
             message: "Match not found.",
-            match: null,
+            channelUrl: null,
+            channelStatus: null,
           };
         }
+
+        // Update match to archive
+        match.channelStatus = "archived";
+        await match.save();
+
+        // Optionally handle the channel operations
+        // For example, if you have an API to manage channel statuses:
+        await hideChannel(match.channelUrl);
+
         return {
           success: true,
-          message: "Match removed successfully.",
-          match: deletedMatch,
+          message: "Match archived successfully.",
+          channelUrl: match.channelUrl,
+          channelStatus: match.channelStatus,
         };
       } catch (error) {
-        console.error(error);
+        console.error("Error archiving match:", error);
         return {
           success: false,
-          message: "Failed to remove match.",
-          match: null,
+          message: "Failed to archive the match.",
+          channelUrl: null,
+          channelStatus: null,
         };
       }
     },

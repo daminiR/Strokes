@@ -3,6 +3,7 @@ import { gql } from 'urql';
 export const FETCH_MATCHES_FOR_USER_QUERY = gql`
   query FetchMatchesForUser($userId: String!, $page: Int!, $limit: Int!) {
     fetchMatchesForUser(userId: $userId, page: $page, limit: $limit) {
+      matchId,
       _id
       firstName
       imageSet {

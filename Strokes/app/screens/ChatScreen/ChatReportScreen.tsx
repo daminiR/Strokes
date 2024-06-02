@@ -34,9 +34,8 @@ leftIcon: "back",
   )
   const handlePress = (item: any) => {
     const reportData = {
-      reporterId: authenticationStore.user._id, // This should come from your user context or a similar source
+      reporterId: userStore._id, // This should come from your user context or a similar source
       reportedUserId: currentChatProfile.matchedUserId, // Assuming `userId` is the ID of the reported user
-      reportedContentId: item.contentId, // Assuming `contentId` is the ID of the specific content being reported
       reportType: item.label, // Type of the report
       description: item.quickMessage, // Detailed description of the report
       status: "pending", // Default status, assumed to be handled on the backend too
@@ -44,8 +43,8 @@ leftIcon: "back",
     mongoDBStore
       .createReport(reportData)
       .then((response: any) => {
-        if (response.data.createReport.success) {
-          console.log("Report created successfully:", response.data.createReport.message)
+        if (response.success) {
+          console.log("Report created successfully:", response.message)
           setReportObj({
             quickMessage: item.quickMessage,
             title: item.title,
@@ -53,7 +52,7 @@ leftIcon: "back",
           })
           setIsVisible(true)
         } else {
-          alert(`Failed to create report: ${response.data.createReport.message}`)
+          alert(`Failed to create report: ${response.message}`)
         }
       })
       .catch((error: any) => {
@@ -61,29 +60,30 @@ leftIcon: "back",
       })
   }
 return (
-    <Screen preset="auto" safeAreaEdges={["top", "bottom"]}>
-      <ConfirmationModal
-        isVisible={isVisible}
-        onClose={onClose}
-        quickMessage={currentReportObj ? currentReportObj.quickMessage : ""}
-      />
-      <ListView
-        contentContainerStyle={$listContentContainer}
-        data={reportMethods}
-        estimatedItemSize={55}
-        renderItem={({ item }) => (
-          <ListItem
-            text={item.title}
-            style={$listItem}
-            topSeparator={true}
-            bottomSeparator={true}
-            rightIcon={item.hasMoreOptions ? "caretRight" : null}
-            onPress={() => handlePress(item)}
-          />
-        )}
-      />
-    </Screen>
-  )
+  <Screen preset="auto" safeAreaEdges={["top", "bottom"]}>
+    <ConfirmationModal
+      isVisible={isVisible}
+      onClose={onClose}
+      quickMessage={currentReportObj ? currentReportObj.quickMessage : ""}
+    />
+    <ListView
+      contentContainerStyle={$listContentContainer}
+      data={reportMethods}
+      estimatedItemSize={55}
+      renderItem={({ item }) => (
+        <ListItem
+          text={item.title}
+          style={$listItem}
+          topSeparator={true}
+          bottomSeparator={true}
+          rightIcon={"caretRight"}
+          rightIconColor={item.hasMoreOptions ? colors.background : colors.background}
+          onPress={() => handlePress(item)}
+        />
+      )}
+    />
+  </Screen>
+)
 })
 
 const $listContentContainer: ContentStyle = {

@@ -1,14 +1,16 @@
 
 const chatSettingMethods = [
-    {
-      hasMoreOptions: true,
-      label: "Report Player",
-      iconName: "privacy",
-    },
-    {
-      hasMoreOptions: false,
-      quickMessage: "Player has been unmatched",
-      label: "Unmatch Player",
-      title: "unmatch_player",
-}]
+  {
+    hasMoreOptions: true,
+    quickMessage: "",
+    title: "Report Player",
+    label: "report_player",
+  },
+  {
+    hasMoreOptions: false,
+    quickMessage: "Player has been unmatched",
+    title: "Unmatch Player",
+    label: "unmatch_player",
+  },
+]
 export default chatSettingMethods

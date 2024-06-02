@@ -24,6 +24,7 @@ export const matchesTypeDefs = gql`
   }
 
   type MatchedUsers {
+    matchId: String!
     _id: String!
     firstName: String
     imageSet: [Data!]
@@ -49,8 +50,14 @@ export const matchesTypeDefs = gql`
   }
 
   extend type Mutation {
-    createMatch(user1Id: String!, user2Id: String!): MatchResponse
-    removeMatch(matchId: ID!): MatchResponse
+    createMatch(user1Id: String!, user2Id: String!): RemoveMatchResponse
+    removeMatch(matchId: ID!): RemoveMatchResponse
+  }
+  type RemoveMatchResponse {
+    success: Boolean!
+    message: String!
+    channelUrl: String
+    channelStatus: String
   }
 
   type MatchResponse {

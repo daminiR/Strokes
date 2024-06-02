@@ -1,5 +1,6 @@
 import { gql } from 'urql';
 
+
 export const UPDATE_MATCH_QUEUE_INTERACTED_MUTATION = gql`
   mutation UpdateMatchQueueInteracted(
     $currentUserId: String!
@@ -55,11 +56,14 @@ export const CREATE_MATCH_MUTATION = gql`
     }
   }
 `;
+
 export const REMOVE_MATCH_MUTATION = gql`
   mutation RemoveMatch($matchId: ID!) {
     removeMatch(matchId: $matchId) {
       success
       message
+      channelUrl
+      channelStatus
     }
   }
 `;

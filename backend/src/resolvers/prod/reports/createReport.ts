@@ -2,13 +2,12 @@ import Report from '../../../models/reports';
 
 export const resolvers = {
   Mutation: {
-    async createReport(_, { reporterId, reportedUserId, reportedContentId, reportType, description }) {
+    async createReport(_, { reporterId, reportedUserId, reportType, description }) {
       try {
         // Create the report directly using the Report model
         const newReport = await Report.create({
           reporterId,
           reportedUserId,
-          reportedContentId,
           reportType,
           description,
           status: 'pending' // Default status when creating a new report

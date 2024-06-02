@@ -173,7 +173,7 @@ export const AuthenticationStoreModel = types
                   await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
                   console.log("User connected to SendBird")
                   resetToInitialState()
-                  resetChatStackToChatList()
+                  //resetChatStackToChatList()
                   mongoDBStore.shouldQuery();
                   self.setSDKConnected(true);
                 } else {
