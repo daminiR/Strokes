@@ -11,14 +11,15 @@ export function ChatTopTabNavigator() {
   useHeader(
     {
       leftIcon: "back",
+      rightIcon: "more",
       onLeftPress: () => goBack(),
+      onRightPress: () => navigate("ChatSettings"),
     },
     [],
   )
   return (
     <ChatTopTab.Navigator
       screenOptions={{
-        //tabBarActiveTintColor: "#e91e63",
         tabBarActiveTintColor: colors.text,
         tabBarInactiveTintColor: colors.text,
         tabBarLabelStyle: $tabBarLabel,

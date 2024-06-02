@@ -19,6 +19,8 @@ import * as Screens from "app/screens"
 export type ChatListStackParamList = {
   ChatList: undefined
   ChatTopNavigator: undefined
+  ChatSettings: undefined
+  ChatReport: undefined
 }
 
 /**
@@ -41,6 +43,8 @@ export function ChatStack() {
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"ChatList"}>
         <Stack.Screen name="ChatTopNavigator" component={ChatTopTabNavigator} />
         <Stack.Screen name="ChatList" component={Screens.ChatListScreen2} />
+        <Stack.Screen name="ChatSettings" component={Screens.ChatSettingsScreen} />
+        <Stack.Screen name="ChatReport" component={Screens.ChatReportScreen} />
         {/* Add more screens as needed */}
       </Stack.Navigator>
   )

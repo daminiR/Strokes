@@ -1,63 +1,23 @@
 import React, { useState } from 'react';
-import { View, Modal, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { colors, spacing, typography } from '../theme'; // Import your theme settings
-import { Button } from '../components'; // Assuming you have a custom Button component
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Button, Text} from '../components'; // Assuming you have a custom Button component
 
-export const FilterModal = ({ isVisible, onClose, onApplyFilters, filters}) => {
-  const [age, setAge] = useState([filters.age.min, filters.age.max]);
-  const [gameLevel, setGameLevel] = useState([filters.gameLevel.min, filters.gameLevel.max]);
-
+export const ConfirmationModal = ({ isVisible, onClose, quickMessage}) => {
   return (
     <Modal visible={isVisible} animationType="slide" transparent={true}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <TouchableOpacity style={styles.closeIconContainer} onPress={onClose}>
-            <Icon name="close" size={35} color={colors.text} />
-          </TouchableOpacity>
-          <View style={styles.ageRangeContainer}>
-            <Text style={styles.ageRangeText}>
-              Age Range: {age[0]} - {age[1]}
+          <View style={styles.messageContainer}>
+            <Text preset="subheading">
+              {quickMessage}
             </Text>
           </View>
-          <MultiSlider
-            values={[age[0], age[1]]}
-            sliderLength={280}
-            onValuesChange={setAge}
-            min={18}
-            max={60}
-            step={1}
-            allowOverlap={false}
-            snapped={true}
-            selectedStyle={{ backgroundColor: colors.palette.neutral600 }}
-            unselectedStyle={{ backgroundColor: colors.palette.neutral300 }}
-            containerStyle={{ marginVertical: spacing.sm }}
-            markerStyle={styles.marker}
-          />
-          <View style={styles.ageRangeContainer}>
-            <Text style={styles.ageRangeText}>
-              Game Level Range: {gameLevel[0]} - {gameLevel[1]}
-            </Text>
-          </View>
-          <MultiSlider
-            values={[gameLevel[0], gameLevel[1]]}
-            sliderLength={280}
-            onValuesChange={setGameLevel}
-            min={1}
-            max={7}
-            step={1}
-            allowOverlap={false}
-            snapped={true}
-            selectedStyle={{ backgroundColor: colors.palette.neutral600 }}
-            unselectedStyle={{ backgroundColor: colors.palette.neutral300 }}
-            containerStyle={{ marginVertical: spacing.sm }}
-            markerStyle={styles.marker}
-          />
           <View style={styles.buttonContainer}>
             <Button
-              text="Apply"
-              onPress={() => onApplyFilters(age, gameLevel)}
+              text="Done"
+              onPress={() => onClose()}
               style={styles.applyButton}
               preset="reversed"
             />
@@ -72,6 +32,14 @@ const styles = StyleSheet.create({
   ageRangeContainer: {
     alignItems: "center",
     marginBottom: spacing.xs, // Adjust according to your spacing theme
+  },
+  messageContainer: {
+    marginBottom: 15
+  },
+  messageText: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: colors.text
   },
   closeIconContainer: {
     position: "absolute",
