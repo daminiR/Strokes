@@ -37,7 +37,7 @@ export const ChatSettingsScreen: FC<ChatSettingsScreen> = observer(function Chat
   const handlePress = (item: any) => {
     if (item.label === "unmatch_player") {
       // Call the unmatchPlayer function, assuming it's defined elsewhere in your context
-      mongoDBStore.unmatchPlayer(chatStore.currentChatProfile.matchId, forceUpdate)
+      mongoDBStore.unmatchPlayer(chatStore.currentChatProfile.matchId, "unmatched")
       setReportObj({
         quickMessage: item.quickMessage,
         title: item.title,

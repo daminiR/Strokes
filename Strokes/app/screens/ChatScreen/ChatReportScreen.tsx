@@ -50,7 +50,7 @@ leftIcon: "back",
       .then((response: any) => {
         if (response.success) {
           console.log("Report created successfully:", response.message)
-          mongoDBStore.unmatchPlayer(currentChatProfile.matchId, forceUpdate)
+          mongoDBStore.unmatchPlayer(currentChatProfile.matchId, "reported")
           // You need to define this function or ensure it's imported if defined elsew
           setReportObj({
             quickMessage: item.quickMessage,

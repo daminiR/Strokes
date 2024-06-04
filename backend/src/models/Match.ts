@@ -6,7 +6,7 @@ interface MatchDocument {
   user2Id: string;
   channelUrl: string;
   channelType: "private" | "group" | "supergroup";
-  channelStatus: "active" | "archived" | "deleted";
+  channelStatus: "active" | "archived" | "deleted" | "reported";
   user1LastMessagePreview: string;
   user1LastMessageTimestamp: Date;
   user1UnreadMessageCount: number;
@@ -44,7 +44,7 @@ const matchSchema = new Schema<MatchDocument>(
     channelStatus: {
       type: String,
       required: true,
-      enum: ["active", "archived", "deleted"],
+      enum: ["active", "archived", "deleted", "reported"],
     },
     // User-specific fields for user1
     user1LastMessagePreview: {

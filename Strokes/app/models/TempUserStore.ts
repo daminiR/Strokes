@@ -20,6 +20,7 @@ export const TempStoreModel = types
   .model("UserStoreModel", {
     age: types.maybeNull(types.integer), // Assuming you're providing a unique identifier when creating a user instance
     isHydrated: types.maybeNull(types.boolean),
+    photosAppIsActive: types.optional(types.boolean, false),
     sport: types.maybeNull(GameLevelModel),
     imageSet: types.optional(types.array(types.frozen()), []),
     gender: types.optional(types.enumeration("Gender", ["male", "female", "other"]), "other"),
@@ -29,14 +30,18 @@ export const TempStoreModel = types
     neighborhood: types.maybeNull(NeighborhoodModel),
   })
   .actions((self) => ({
+    openPhotosApp() {
+      self.photosAppIsActive = true
+      // Logic to open the photos app goes here
+    },
+    closePhotosApp() {
+      self.photosAppIsActive = false
+    },
     setIsHydrated(isHydrated) {
       self.isHydrated = isHydrated
     },
-    setEmail(email: string) {
-      self.email = email
-    },
     setSport(squash_level: string) {
-      self.sport = [{sportName: "squash", gameLevel: squash_level}]
+      self.sport = [{ sportName: "squash", gameLevel: squash_level }]
     },
     setPhoneNumber(phoneNumber: string) {
       self.phoneNumber = phoneNumber
@@ -54,7 +59,7 @@ export const TempStoreModel = types
       self.gender = gender
     },
     setAge(age: string) {
-      self.age = parseInt(age, 10);
+      self.age = parseInt(age, 10)
     },
     setImageSet(imageSet: SnapshotOrInstance<typeof ImageDataModel>[]) {
       self.imageSet = cast(imageSet)

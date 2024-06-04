@@ -105,13 +105,16 @@ const MongoDBStore = types
     // Define any state properties you may need
   })
   .actions((self) => ({
-    unmatchPlayer: flow(function* (matchId, forceUpdate) {
+    unmatchPlayer: flow(function* (matchId, reason) {
       const matchStore = getRootStore(self).matchedProfileStore
+      const userStore = getRootStore(self).userStore
       try {
         const result = yield client.mutate({
           mutation: graphQL.REMOVE_MATCH_MUTATION,
           variables: {
             matchId: matchId,
+            userId: userStore._id,
+            reason: reason
           },
         })
         const { success, message } = result.data.removeMatch

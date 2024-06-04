@@ -58,12 +58,12 @@ export const CREATE_MATCH_MUTATION = gql`
 `;
 
 export const REMOVE_MATCH_MUTATION = gql`
-  mutation RemoveMatch($matchId: ID!) {
-    removeMatch(matchId: $matchId) {
+  mutation RemoveMatch($matchId: ID!, $reason: String!, $userId: ID!) {
+    removeMatch(matchId: $matchId, reason: $reason, userId: $userId) {
       success
       message
       channelUrl
       channelStatus
     }
   }
-`;
+`

@@ -83,7 +83,8 @@ function App(props: AppProps) {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   const [areFontsLoaded] = useFonts(customFontsToLoad)
-  const { chatStore, authenticationStore } = useStores()
+  const { chatStore, tempUserStore, authenticationStore } = useStores()
+  const { photosAppIsActive } = tempUserStore
 
   const logCurrentState = async () => {
     const currentState = await storage.getString(ROOT_STATE_STORAGE_KEY)
@@ -91,19 +92,21 @@ function App(props: AppProps) {
   }
   useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
-       if (appState !== "active" && nextAppState === "active") {
+      if (!photosAppIsActive) {
+        if (appState !== "active" && nextAppState === "active") {
           console.log("App is coming to the foreground. Navigating to the start screen...")
           resetToInitialState()
           resetChatStackToChatList()
           navigate("FaceCard")
-       } else if (appState === "active" && nextAppState.match(/inactive|background/)) {
-         console.log("App has gone to the background. Disconnecting...")
+        } else if (appState === "active" && nextAppState.match(/inactive|background/)) {
+          console.log("App has gone to the background. Disconnecting...")
           chatStore.disconnect()
           authenticationStore.setSDKConnected(false)
           navigate("FaceCard")
-         // Add your disconnect logic here
-       }
-      setAppState(nextAppState)
+          // Add your disconnect logic here
+        }
+        setAppState(nextAppState)
+      }
     }
 
     const subscription = AppState.addEventListener("change", handleAppStateChange)

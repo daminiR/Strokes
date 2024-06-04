@@ -44,6 +44,7 @@ export const resolvers = {
           {
             $match: {
               $or: [{ user1Id: userId }, { user2Id: userId }],
+              channelStatus: "active",
             },
           },
           {
@@ -212,42 +213,49 @@ export const resolvers = {
         };
       }
     },
-    async removeMatch(_, { matchId }) {
-      try {
-        // Connect to your data source and find the match
-        const match = await Match.findById(matchId);
-        if (!match) {
-          return {
-            success: false,
-            message: "Match not found.",
-            channelUrl: null,
-            channelStatus: null,
-          };
-        }
+  async removeMatch(_, { matchId, reason, userId }: { matchId: string; reason: string; userId: string }) {
+  try {
+    // Connect to your data source and find the match
+    const match = await Match.findById(matchId);
+    if (!match) {
+      return {
+        success: false,
+        message: "Match not found.",
+        channelUrl: null,
+        channelStatus: null,
+      };
+    }
 
-        // Update match to archive
-        match.channelStatus = "archived";
-        await match.save();
+    // Update match based on the reason provided
+    if (reason === 'reported') {
+      match.channelStatus = "reported"; // Set the channel status to reported
+      match.reportedBy = userId; // Set the reportedBy field to the userId of the reporter
+    } else if (reason === 'unmatched'){
+      match.channelStatus = "archived"; // Default to archiving the match for other reasons
+      match.reportedBy = ""; // Clear the reportedBy field unless it's a report case
+    }
 
-        // Optionally handle the channel operations
-        // For example, if you have an API to manage channel statuses:
-        await hideSendbirdChannel(match.channelUrl);
+    await match.save();
 
-        return {
-          success: true,
-          message: "Match archived successfully.",
-          channelUrl: match.channelUrl,
-          channelStatus: match.channelStatus,
-        };
-      } catch (error) {
-        console.error("Error archiving match:", error);
-        return {
-          success: false,
-          message: "Failed to archive the match.",
-          channelUrl: null,
-          channelStatus: null,
-        };
-      }
-    },
+    // Optionally handle the channel operations
+    // For example, if you have an API to manage channel statuses:
+    await hideSendbirdChannel(match.channelUrl);
+
+    return {
+      success: true,
+      message: "Match status updated successfully.",
+      channelUrl: match.channelUrl,
+      channelStatus: match.channelStatus,
+    };
+  } catch (error) {
+    console.error("Error updating match status:", error);
+    return {
+      success: false,
+      message: "Failed to update the match status.",
+      channelUrl: null,
+      channelStatus: null,
+    };
+  }
+},
   },
 };
