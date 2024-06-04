@@ -37,6 +37,7 @@ export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate
   const handleChoosePhoto = async (index: number) => {
     const options = { noData: true, includeBase64: true }
     try {
+      tempUserStore.openPhotosApp()
       const response = await launchImageLibrary()
       if (response.assets && response.assets[0].uri) {
         const updatedImages = images.map((img, imgIndex) =>
@@ -44,9 +45,11 @@ export const ImagePickerWall: React.FC<ImagePickerWallProps> = ({ onImagesUpdate
         )
         setImages(updatedImages)
         onImagesUpdate(updatedImages)
+        tempUserStore.closePhotosApp()
       }
     } catch (error) {
       console.log("Error picking image: ", error)
+      tempUserStore.closePhotosApp()
     }
   }
   const handleDeletePhoto = (indexToDelete: number) => {
