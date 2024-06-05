@@ -1,8 +1,9 @@
 import { types, flow, Instance, cast} from 'mobx-state-tree';
 import {CollectionEventSource} from '@sendbird/chat';
 import { GroupChannelHandler, MessageCollectionInitPolicy} from '@sendbird/chat/groupChannel';
-import { MMKVAdapter } from 'app/utils/storage/mmkdvAdapter';
+import {withSetPropAction} from "./helpers/withSetPropAction"
 import storage from 'app/utils/storage/mmkvStorage';
+import { getRootStore} from "./helpers/getRootStore"
 import SendbirdChat from "@sendbird/chat"
 import { GroupChannelModule, MessageCollection, GroupChannel } from "@sendbird/chat/groupChannel"
 
@@ -85,6 +86,7 @@ export const ChatStore = types
     reportedBy: types.maybeNull(types.string),
     blockedBy: types.maybeNull(types.string),
   })
+ .actions(withSetPropAction)
   .actions((self) => ({
     setChannel(channel: GroupChannel) {
       self.channelUrl = channel
@@ -228,7 +230,7 @@ export const ChatStore = types
       }
     }),
     disconnect: flow(function* () {
-      const authStore = getRoot(self).authenticationStore // Ensure you
+      const authStore = getRootStore(self).authenticationStore
       if (!self.sdk) {
         console.error("SDK not initialized")
         return // Optionally, you might handle this situation more gracefully
@@ -243,7 +245,7 @@ export const ChatStore = types
         // Always reset user and connection status regardless of try/catch result
         self.currentUser = undefined
         self.isConnected = false
-        authStore.isSDKConnected = false
+        authStore.setProp("isSDKConnected", false)
       }
     }),
   }))

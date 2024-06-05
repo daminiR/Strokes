@@ -1,5 +1,4 @@
 import { applySnapshot, types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
-import { CognitoUser, CognitoUserAttribute, AuthenticationDetails, CognitoUserPool } from 'amazon-cognito-identity-js';
 import { getRootStore } from './helpers/getRootStore';
 
 const ImageDataModel = types.model({
