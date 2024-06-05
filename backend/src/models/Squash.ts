@@ -28,10 +28,6 @@ var userSchema = new Schema(
       minlength: 3,
       maxlength: 30,
     },
-    visableLikePerDay: {
-      type: Number,
-      required: true,
-    },
     sportChangesPerDay: {
       type: Number,
       required: true,

@@ -72,7 +72,6 @@ type DislikeRecord {
 }
   type FetchFilteredMatchQueueResult {
   potentialMatches: [PotentialMatch!]
-  lastUpdated: String
   filtersHash: String
   filters: Filter
   dislikes: [DislikeRecord]
@@ -209,21 +208,12 @@ type DislikeRecord {
       age: Int!
       gender: String!
       sport: SportNodeInput!
-      neighborhood: LocationInput!
       description: String!
-      imageSet: [FileUpload!]
-      matches : [PotentialMatchInput!]
-      blocked_me : [PotentialMatchInput!]
-      i_blocked : [PotentialMatchInput!]
-      likes : [String!]
-      dislikes : [String!]
-      likedByUSers: [String!]
+      imageSet: [FileUploadInput!]
       phoneNumber: String
       email: String
-      newUserToken: String
-      matchQueue: [MatchQueueInput!]
-      preferences: FilterInput!
     ): User!
+
     registerNewPlayerTest(
       _id: String!
       firstName: String!

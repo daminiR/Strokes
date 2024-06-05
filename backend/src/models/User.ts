@@ -23,10 +23,6 @@ var userSchema = new Schema(
       minlength: 3,
       maxlength: 30,
     },
-    visableLikePerDay: {
-      type: Number,
-      required: true,
-    },
     age: {
       type: Number,
       required: true,
@@ -89,12 +85,6 @@ var userSchema = new Schema(
         "Please fill a valid email address",
       ],
     },
-    dislikes: {
-      type: [String],
-      required: false,
-    },
-    i_blocked: [PotentialMatchSchema],
-    blocked_me: [PotentialMatchSchema],
     deleted: {
       type: <DeleteT>{},
       required: false,

@@ -60,16 +60,14 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
-  const {
-    authenticationStore: { isAuthenticated },
-  } = useStores()
+  const { authenticationStore } = useStores()
 
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={isAuthenticated ? "Welcome" : "Hello"}
+      initialRouteName={authenticationStore.isAuthenticated ? "Welcome" : "Hello"}
     >
-      {isAuthenticated ? (
+      {authenticationStore.isAuthenticated ? (
         <>
           <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
           <Stack.Screen name="Demo" component={DemoNavigator} />

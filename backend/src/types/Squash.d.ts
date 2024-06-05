@@ -75,20 +75,11 @@ export interface UserDocument extends Document {
   description: [string]
   imageSet: ImageSetT[]
   matches : PotentialMatchT
-  blocked_me : PotentialMatchT
-  i_blocked : PotentialMatchT
-  likes : PotentialMatchT
-  dislikes : PotentialMatchT
   deleted : DeleteT
   active : Boolean
   blockedByAdmin : Boolean
   phoneNumber : String
   email : String
-  swipesPerDay : number
-  lastFetchedFromTrigger : string
-  visableLikePerDay : number
-  sportChangesPerDay : number
   matchQueue: MatchQueueT
-  filtersChangesPerDay: numer!
 }
 

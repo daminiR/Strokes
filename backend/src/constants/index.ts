@@ -120,5 +120,5 @@ export const STATES = [
 ];
 export const COUNTRY = ["US"];
 export const SPORTS = [
-  "Squash",
+  "squash",
 ]

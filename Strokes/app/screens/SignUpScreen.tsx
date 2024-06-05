@@ -12,56 +12,60 @@ import { colors, spacing } from "../theme"
 interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
 
 export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScreen(_props) {
-    const authPasswordInput = useRef<TextInput>(null);
-  const [signUpError, setSignUpError] = useState<string | null>(null);
-  const { userStore, authenticationStore } = useStores();
-
+  const authPasswordInput = useRef<TextInput>(null)
+  const [signUpError, setSignUpError] = useState<string | null>(null)
+  const { userStore, authenticationStore } = useStores()
   // Safeguard against null userStore in useEffect cleanup
   useEffect(() => {
-    return () => userStore?.reset();
-  }, [userStore]);
+    return () => userStore?.reset()
+  }, [userStore])
 
-  const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [attemptsCount, setAttemptsCount] = useState(0);
+  const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [attemptsCount, setAttemptsCount] = useState(0)
 
   // Adjusted to use optional chaining and nullish coalescing
-  const [selectedTeam, setSelectedTeam] = useState<string[]>(userStore?.neighborhood?.city ? [userStore.neighborhood.city] : []);
+  const [selectedTeam, setSelectedTeam] = useState<string[]>(
+    userStore?.neighborhood?.city ? [userStore.neighborhood.city] : [],
+  )
 
   useEffect(() => {
     if (userStore?.neighborhood?.city) {
-      setSelectedTeam([userStore.neighborhood.city]);
+      setSelectedTeam([userStore.neighborhood.city])
     }
-  }, [userStore?.neighborhood?.city]);
+  }, [userStore?.neighborhood?.city])
 
-  const tx = "Genders.gender";
-  const i18nText = tx && translate(tx);
-  const error = "";
+  const tx = "Genders.gender"
+  const i18nText = tx && translate(tx)
+  const error = ""
 
   const handleImagesUpdate = (images: ImageData[]) => {
-    userStore?.setImageSet(images);
-  };
+    userStore?.setImageSet(images)
+  }
 
   const test = () => {
-    authenticationStore.setIsAuthenticated(true);
-  };
+    authenticationStore.setIsAuthenticated(true)
+  }
 
   const login = () => {
-    authenticationStore.signUp().then((result) => {
-      navigate("VerificationSignUp");
-    }).catch((error: any) => {
-      if (error && error.code === "UserNotConfirmedException") {
-        navigate("VerificationSignUp");
-      }
-      if (error && error.code === "UsernameExistsException") {
-        setSignUpError(error.message || "An unknown error occurred during the sign-up process.");
-      }
-    });
-  };
+    authenticationStore
+      .signUp()
+      .then((result) => {
+        navigate("VerificationSignUp")
+      })
+      .catch((error: any) => {
+        if (error && error.code === "UserNotConfirmedException") {
+          navigate("VerificationSignUp")
+        }
+        if (error && error.code === "UsernameExistsException") {
+          setSignUpError(error.message || "An unknown error occurred during the sign-up process.")
+        }
+      })
+  }
 
   const setGender = (gender: string) => {
-    userStore?.setGender(gender);
-  };
+    userStore?.setGender(gender)
+  }
 
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
     () =>
@@ -221,7 +225,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         tx="signUpScreen.tapToSignIn"
         style={$tapButton}
         preset="reversed"
-        onPress={test}
+        onPress={login}
       />
     </Screen>
   )

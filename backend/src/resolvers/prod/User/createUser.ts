@@ -1,6 +1,7 @@
 import User from '../../../models/User';
 import { PotentialMatchPool } from "../../../models/PotentialMatchPool";
 import { Sendbird } from 'sendbird-platform-sdk';
+import {createSendbirdUser} from '../../../utils/sendBirdv2'
 import { resolvers as PotentialMatchPoolResolvers } from "../potentialMatchPools/updatePotentialMatchPool";
 import { SHA256 } from 'crypto-js';
 import { apiToken, userAPI} from './../../../services/sendbirdService';
@@ -22,7 +23,7 @@ export const resolvers = {
         gender,
         age,
         sport,
-        neighborhood,
+        //neighborhood,
         description,
         phonenumber,
         email,
@@ -99,7 +100,8 @@ export const resolvers = {
           lastName: lastName,
           gender: gender,
           age: age,
-          neighborhood: neighborhood,
+          neighborhood: {"city": "boston", "state": "MA", "country": "US"},
+          //neighborhood: neighborhood,
           sport: sport,
           description: description,
           phoneNumber: phonenumber,
@@ -113,14 +115,15 @@ export const resolvers = {
           error
         );
          try {
-           let body:Sendbird.UserApiCreateUserTokenRequest = {
-             user_id: _id,
-             nickname: `${firstName} ${lastName}`,
-             profile_url: imageSet[0]?.url || "",
-           }
-           await userAPI.createUser(body)
+           await createSendbirdUser(_id, firstName, imageSet[0]?.url);
+           //let body:Sendbird.UserApiCreateUserTokenRequest = {
+             //user_id: _id,
+             //nickname: `${firstName} ${lastName}`,
+             //profile_url: imageSet[0]?.url || "",
+           //}
+           //await userAPI.createUser(body)
 
-           console.log("Sendbird user created successfully");
+           //console.log("Sendbird user created successfully");
          } catch (sendbirdError: any) {
            console.error("Error creating Sendbird user:", sendbirdError);
            throw new Error(
@@ -129,34 +132,34 @@ export const resolvers = {
          }
 
         // Rollback: Attempt to delete the PotentialMatchPool document if User creation fails
-        if (userDoc == null && potentialMatchPoolDoc != null) {
-          try {
-            await PotentialMatchPool.findByIdAndDelete(
-              potentialMatchPoolDoc._id
-            );
-            console.log("Rolled back PotentialMatchPool document creation.");
-          } catch (rollbackError) {
-            console.error(
-              "Rollback failed for PotentialMatchPool document:",
-              rollbackError
-            );
-            throw new Error(
-              "Failed to rollback PotentialMatchPool document creation."
-            );
-          }
-        }
+        //if (userDoc == null && potentialMatchPoolDoc != null) {
+          //try {
+            //await PotentialMatchPool.findByIdAndDelete(
+              //potentialMatchPoolDoc._id
+            //);
+            //console.log("Rolled back PotentialMatchPool document creation.");
+          //} catch (rollbackError) {
+            //console.error(
+              //"Rollback failed for PotentialMatchPool document:",
+              //rollbackError
+            //);
+            //throw new Error(
+              //"Failed to rollback PotentialMatchPool document creation."
+            //);
+          //}
+        //}
 
         // Attempt to delete images from AWS S3 if document creation fails
-        try {
-          await deleteImagesFromS3(data_set);
-          console.log(
-            "Deletion of images completed after failed document creation."
-          );
-        } catch (deletionError) {
-          console.error("Deletion failed:", deletionError);
-        }
+        //try {
+          //await deleteImagesFromS3(data_set);
+          //console.log(
+            //"Deletion of images completed after failed document creation."
+          //);
+        //} catch (deletionError) {
+          //console.error("Deletion failed:", deletionError);
+        //}
 
-        throw new Error("Failed to complete registration process.");
+        //throw new Error("Failed to complete registration process.");
       }
 
       // Return both the user document and the PotentialMatchPool document in the response

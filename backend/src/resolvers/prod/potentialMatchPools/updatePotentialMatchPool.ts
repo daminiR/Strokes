@@ -60,7 +60,6 @@ export const resolvers = {
             filters: filters,
             filtersHash: filtersHash,
             potentialMatches: potentialMatchPoolData,
-            lastUpdated: currentDate,
           },
         },
         { upsert: true, new: true } // Ensure document is created if it doesn't exist
