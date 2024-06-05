@@ -1,6 +1,3 @@
-if (__DEV__) {
-  import("./ReactotronConfig").then(() => console.log("Reactotron Configured"));
-}
 import "@expo/metro-runtime"
 import React from "react"
 import * as SplashScreen from "expo-splash-screen"

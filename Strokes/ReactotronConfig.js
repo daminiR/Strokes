@@ -1,18 +1,36 @@
+// ReactotronConfig.js
 import Reactotron from 'reactotron-react-native';
-import storage from 'app/utils/storage/mmkvStorage';
+import storage from './app/utils/storage/mmkvStorage';
+
+// Initialize MMKV
+//const storage = new MMKV();
 
 // Custom AsyncStorage Handler for MMKV to work with Reactotron
 const MMKVStorageHandler = {
-  setItem: (key, value) => storage.set(key, value),
-  getItem: (key) => Promise.resolve(storage.getString(key)),
+  setItem: (key, value) => {
+    try {
+      storage.set(key, value);
+    } catch (error) {
+      console.error(`Error setting ${key} in MMKV: `, error);
+    }
+  },
+  getItem: (key) => {
+    try {
+      const value = storage.getString(key);
+      return Promise.resolve(value);
+    } catch (error) {
+      console.error(`Error getting ${key} from MMKV: `, error);
+      return Promise.resolve(null);
+    }
+  },
   removeItem: (key) => {
-    storage.delete(key);
-    return Promise.resolve();
+    try {
+      storage.delete(key);
+      return Promise.resolve();
+    } catch (error) {
+      console.error(`Error removing ${key} from MMKV: `, error);
+      return Promise.resolve();
+    }
   }
 };
-
-Reactotron.setAsyncStorageHandler(MMKVStorageHandler)
-  .configure({ host: '192.168.1.14' }) // controls connection & communication settings
-  .useReactNative() // add all built-in react native plugins
-  .connect(); // let's connect!
 
