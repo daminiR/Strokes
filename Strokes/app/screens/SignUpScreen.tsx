@@ -1,5 +1,4 @@
 import { observer } from "mobx-react-lite"
-import Config from 'react-native-config';
 import { navigate, goBack} from "../navigators"
 import React, {useEffect, useRef, useState, useMemo} from "react"
 import { isRTL, translate, TxKeyPath } from "../i18n"
