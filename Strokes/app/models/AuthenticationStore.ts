@@ -53,8 +53,9 @@ const TokenType = types.model("TokenType", {
 })
 const userPool = new CognitoUserPool(poolData)
 //Define the AuthStore model
-export const AuthenticationStoreModel = types.model("AuthenticationStoreModel")
-.props({
+export const AuthenticationStoreModel = types
+  .model("AuthenticationStoreModel")
+  .props({
     tokens: types.maybeNull(TokenType),
     isSDKConnected: types.optional(types.boolean, false),
     isLoading: types.maybeNull(types.boolean),
@@ -62,10 +63,13 @@ export const AuthenticationStoreModel = types.model("AuthenticationStoreModel")
     verificationPhoneCode: types.maybeNull(types.string),
     error: types.maybeNull(types.string),
   })
- .actions(withSetPropAction)
- .actions((self) => {
-    type SelfType = typeof self;
-    const syncUserPoolStorage =  flow(function* (userPool) {
+  .actions(withSetPropAction)
+  .actions((self) => {
+    type SelfType = typeof self
+    const setVerificationPhoneCode = (code: number) => {
+      self.verificationPhoneCode = code
+    }
+    const syncUserPoolStorage = flow(function* (userPool) {
       return new Promise((resolve, reject) => {
         userPool.storage.sync((err: any, result: any) => {
           if (err) {
@@ -352,7 +356,7 @@ export const AuthenticationStoreModel = types.model("AuthenticationStoreModel")
         console.log("call result: " + result)
       })
     })
-    const confirmRegistration =  flow(function* () {
+    const confirmRegistration = flow(function* () {
       const userStore = getRootStore(self).userStore
       const mongoDBStore = getRootStore(self).mongoDBStore
       const cognitoUser = new CognitoUser({
@@ -361,6 +365,7 @@ export const AuthenticationStoreModel = types.model("AuthenticationStoreModel")
       })
 
       try {
+        console.log(self.verificationPhoneCode)
         const confirmationResult = yield new Promise((resolve, reject) => {
           cognitoUser.confirmRegistration(self.verificationPhoneCode, true, (err, result) => {
             if (err) {
@@ -468,9 +473,9 @@ export const AuthenticationStoreModel = types.model("AuthenticationStoreModel")
         yield storage.clearAll()
 
         //yield new Promise((resolve) => {
-          //storage.clearAll(() => {
-            //resolve()
-          //})
+        //storage.clearAll(() => {
+        //resolve()
+        //})
         //})
       } catch (error) {
         console.error("An error occurred during cleanup actions:", error)
@@ -508,26 +513,27 @@ export const AuthenticationStoreModel = types.model("AuthenticationStoreModel")
         self.setProp("isLoading", false)
       }
     })
- return {
-   syncUserPoolStorage,
-   setUserSession,
-   checkUserSession,
-   handlePostAuthenticationActions,
-   clearUserSession,
-   unregisterPushNotifications,
-   registerDeviceToken,
-   checkCognitoUserSession,
-   signUp,
-   authenticateUser,
-   sendConfirmationCode,
-   confirmRegistration,
-   signIn,
-   forgotPassword,
-   cleanupActions,
-   cognitoUserSignOut,
-   signOut,
- }
- })
+    return {
+      syncUserPoolStorage,
+      setUserSession,
+      checkUserSession,
+      handlePostAuthenticationActions,
+      clearUserSession,
+      unregisterPushNotifications,
+      registerDeviceToken,
+      checkCognitoUserSession,
+      signUp,
+      authenticateUser,
+      sendConfirmationCode,
+      confirmRegistration,
+      signIn,
+      forgotPassword,
+      cleanupActions,
+      cognitoUserSignOut,
+      setVerificationPhoneCode,
+      signOut,
+    }
+  })
   .actions((self) => ({
     afterCreate() {
       self.checkCognitoUserSession()

@@ -24,6 +24,7 @@ export const VerificationSignUpScreen: FC<VerificationSignUpScreenProps> = obser
     .confirmRegistration()
     .then(() => {
       // Handle successful verification, e.g., navigate to the next screen
+      navigate("WelcomeScreen")
     })
     .catch((error) => {
       // Now, error contains the message thrown from confirmRegistration
@@ -62,7 +63,7 @@ export const VerificationSignUpScreen: FC<VerificationSignUpScreenProps> = obser
         onChangeText={authenticationStore.setVerificationPhoneCode}
         containerStyle={$textField}
         autoCapitalize="none"
-        autoComplete="one-time-code"
+        autoComplete="tel-device"
         autoCorrect={false}
         keyboardType="number-pad"
         labelTx="VerificationSignUpScreen.verificationCode"
