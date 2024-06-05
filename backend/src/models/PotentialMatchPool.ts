@@ -57,14 +57,12 @@ interface PotentialMatchPoolDocument extends Document {
   swipesPerDay: number; // Added swipesPerDay here
   filtersPerDay: number; // Added swipesPerDay here
   likesPerDay: number; // Added swipesPerDay here
-  lastUpdated: Boolean
   potentialMatches: PotentialMatch[];
 }
 export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
   {
     userId: { type: String, required: true },
     filtersHash: { type: String, required: true },
-    lastUpdated: { type: String, required: true },
     dislikes: [
       // Define dislikes as an array
       {
@@ -116,7 +114,7 @@ export const PotentialMatchSchema = new Schema<PotentialMatchPoolDocument>(
     filtersPerDay: { type: Number, required: true, default: 5 }, // Assuming a default of 10 swipes per day
     likesPerDay: { type: Number, required: true, default: 5 }, // Assuming a default of 10 swipes per day
   },
-  { collection: "potentialMatchPools" }
+  { collection: "potentialMatchPools", timestamps: true }
 );
 
 // Add an index for the userId field

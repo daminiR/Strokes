@@ -241,8 +241,7 @@ const MongoDBStore = types
             gender: userStore.gender,
             sport: userStore.sport,
             description: userStore.description,
-            neighborhood: userStore.neighborhood,
-            //newUserToken: token,
+            //neighborhood: userStore.neighborhood,
           },
         })
         // Handle success or update state as needed

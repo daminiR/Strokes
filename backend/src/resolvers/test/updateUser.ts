@@ -374,7 +374,7 @@ export const resolvers = {
                 updatedAt: new Date(),
                 interacted: false,
               })),
-              lastUpdated: new Date(),
+              //lastUpdated: new Date(),
               swipesPerDay: 30,
             },
           },

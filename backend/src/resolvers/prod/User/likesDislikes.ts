@@ -4,11 +4,11 @@ import sanitize from 'mongo-sanitize'
 
 export const resolvers = {
   Query: {
-    retrieveSwipeLimits: async (parents, unSanitizedId, context, info) => {
-      const _id = sanitize(unSanitizedId);
-      const userData = await User.findById(_id);
-      return userData ? userData.swipesPerDay : 0;
-    },
+    //retrieveSwipeLimits: async (parents, unSanitizedId, context, info) => {
+      //const _id = sanitize(unSanitizedId);
+      //const userData = await User.findById(_id);
+      //return userData ? userData.swipesPerDay : 0;
+    //},
   },
   Mutation: {
     recordLikesAndUpdateCount: async (parents, unSanitizedData, context, info) => {

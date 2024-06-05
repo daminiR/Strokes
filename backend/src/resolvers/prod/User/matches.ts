@@ -77,7 +77,6 @@ export const resolvers = {
         if (matchPoolDoc.swipesPerDay <= 0) {
           return {
             potentialMatches: [],
-            lastUpdated: matchPoolDoc.lastUpdated,
             filters: matchPoolDoc.filters,
             filtersHash: matchPoolDoc.filtersHash,
             dislikes: matchPoolDoc.dislikes,
@@ -102,7 +101,6 @@ export const resolvers = {
           }));
         return {
           potentialMatches:  potentialMatches,
-          lastUpdated:  new Date(),
           filters:  matchPoolDoc.filters,
           filtersHash:  matchPoolDoc.filtersHash,
           dislikes: matchPoolDoc.dislikes

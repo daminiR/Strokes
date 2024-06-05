@@ -271,7 +271,7 @@ export const resolvers = {
                 updatedAt: currentDate,
                 interacted: false,
               })),
-              lastUpdated: currentDate,
+              //lastUpdated: currentDate,
             },
             $inc: { filtersPerDay: -1 },
           },
@@ -288,7 +288,7 @@ export const resolvers = {
         await session.commitTransaction();
         return {
           potentialMatches: updatedPoolDoc.potentialMatches,
-          lastUpdated: updatedPoolDoc.lastUpdated,
+          //lastUpdated: updatedPoolDoc.lastUpdated,
           filtersHash: updatedPoolDoc.filtersHash,
           filters: updatedPoolDoc.filters,
           dislikes: updatedPoolDoc.dislikes,

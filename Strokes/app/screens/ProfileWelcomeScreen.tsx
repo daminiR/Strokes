@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import { navigate, goBack} from "../navigators"
-import React, { FC, useEffect} from "react"
+import React, { FC, useState, useEffect} from "react"
+import { autorun } from 'mobx';
 import { Image, TouchableOpacity, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { isRTL } from "../i18n"
@@ -33,6 +34,16 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
     userStore,
     authenticationStore: { logout },
   } = useStores()
+  const [imageUri, setImageUri] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const disposer = autorun(() => {
+      const imageFile = userStore.imageSet.find((file) => file.img_idx === 0)
+      setImageUri(imageFile ? imageFile.imageURL : undefined)
+    })
+    // Cleanup function to dispose of the autorun when the component unmounts
+    return () => disposer()
+  }, [userStore]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -49,10 +60,13 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
     },
     [logout],
   )
+  //useEffect(() => {
+    //const imageFile = userStore.imageSet.find((file) => file.img_idx === 0)
+    //const imageUri = imageFile ? imageFile.imageURL : undefined
+    //// Return the cleanup function
+  //}, [])
 
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
-  const imageFile = userStore.imageSet.find(file => file.img_idx === 0);
-  const imageUri = imageFile ? imageFile.imageURL : undefined;
 
   return (
     <Screen
@@ -123,39 +137,3 @@ const $container: ViewStyle = {
   backgroundColor: colors.background,
 };
 
-const $topContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 1,
-  flexBasis: "57%",
-  justifyContent: "center",
-  paddingHorizontal: spacing.lg,
-}
-
-const $bottomContainer: ViewStyle = {
-  flexShrink: 1,
-  flexGrow: 0,
-  flexBasis: "43%",
-  backgroundColor: colors.palette.neutral100,
-  borderTopLeftRadius: 16,
-  borderTopRightRadius: 16,
-  paddingHorizontal: spacing.lg,
-  justifyContent: "space-around",
-}
-const $welcomeLogo: ImageStyle = {
-  height: 88,
-  width: "100%",
-  marginBottom: spacing.xxl,
-}
-
-const $welcomeFace: ImageStyle = {
-  height: 169,
-  width: 269,
-  position: "absolute",
-  bottom: -47,
-  right: -80,
-  transform: [{ scaleX: isRTL ? -1 : 1 }],
-}
-
-const $welcomeHeading: TextStyle = {
-  marginBottom: spacing.md,
-}

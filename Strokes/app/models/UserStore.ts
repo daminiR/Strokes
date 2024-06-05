@@ -58,8 +58,8 @@ export const UserStoreModel = types
     setNeighborhood(neighborhood: string) {
       self.neighborhood = neighborhood
     },
-    setSport(squash_level: string) {
-      self.sport = {sportName: "squash", gameLevel: squash_level}
+    setSport(squash_level: number) {
+      self.sport = {sportName: "squash", gameLevel: Number(squash_level)}
     },
     setDescription(description: string) {
       self.description = description

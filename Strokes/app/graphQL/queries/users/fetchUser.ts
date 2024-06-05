@@ -29,7 +29,6 @@ const GET_POTENTIAL_MATCHES = gql`
         }
       }
       filtersHash
-      lastUpdated
       potentialMatches {
         interacted
         createdAt
@@ -78,7 +77,6 @@ const READ_SQUASH = gql`
         state
         country
       }
-      visableLikePerDay
       description
       phoneNumber
       email
@@ -87,8 +85,6 @@ const READ_SQUASH = gql`
         imageURL
         filePath
       }
-      lastFetchedFromTrigger
-      dislikes
     }
   }
 `

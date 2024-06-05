@@ -19,6 +19,7 @@ if (__DEV__) {
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
+import { observer } from "mobx-react-lite"
 import React, {useState, useEffect} from "react"
 import { platformServices } from "./services/api/sendbird"
 import { MMKVAdapter } from "app/utils/storage/mmkdvAdapter"
@@ -73,7 +74,7 @@ interface AppProps {
  * @param {AppProps} props - The props for the `App` component.
  * @returns {JSX.Element} The rendered `App` component.
  */
-function App(props: AppProps) {
+  const App: React.FC<AppProps> = observer((props) => {
   const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState)
   const { hideSplashScreen } = props
   const {
@@ -83,8 +84,7 @@ function App(props: AppProps) {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   const [areFontsLoaded] = useFonts(customFontsToLoad)
-  const { chatStore, tempUserStore, authenticationStore } = useStores()
-  const { photosAppIsActive } = tempUserStore
+  const { chatStore, userStore, tempUserStore, authenticationStore } = useStores()
 
   const logCurrentState = async () => {
     const currentState = await storage.getString(ROOT_STATE_STORAGE_KEY)
@@ -92,11 +92,13 @@ function App(props: AppProps) {
   }
   useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
-      if (!photosAppIsActive) {
+      console.log("photo", tempUserStore.photosAppIsActive, authenticationStore.isAuthenticated)
+      if (!tempUserStore.photosAppIsActive && authenticationStore.isAuthenticated) {
         if (appState !== "active" && nextAppState === "active") {
           console.log("App is coming to the foreground. Navigating to the start screen...")
           resetToInitialState()
           resetChatStackToChatList()
+          // TODO when signout this navigate logis different, but not important right now
           navigate("FaceCard")
         } else if (appState === "active" && nextAppState.match(/inactive|background/)) {
           console.log("App has gone to the background. Disconnecting...")
@@ -176,7 +178,7 @@ function App(props: AppProps) {
       </GestureHandlerRootView>
     </SafeAreaProvider>
   )
-}
+})
 
 export default App
 

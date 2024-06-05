@@ -54,7 +54,6 @@ const updateUserChanges = async () => {
 };
 
 
-
   const profileDetails =[
   {
     label: "Squash Level",

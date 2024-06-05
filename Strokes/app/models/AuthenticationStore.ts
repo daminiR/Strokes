@@ -46,7 +46,7 @@ export const AuthenticationStoreModel = types
     isSDKConnected: types.optional(types.boolean, false),
     user: types.maybeNull(UserStoreModel),
     isLoading: types.maybeNull(types.boolean),
-    isAuthenticated: types.maybeNull(types.boolean),
+    isAuthenticated: types.optional(types.boolean, false),
     verificationPhoneCode: types.maybeNull(types.string),
     error: types.maybeNull(types.string),
   })
@@ -60,7 +60,7 @@ export const AuthenticationStoreModel = types
       yield storage.clearAll()
     }),
     setSDKConnected(isConnected: boolean) {
-      self.isSDKConnected = isConnected;
+      self.isSDKConnected = isConnected
     },
     setIsAuthenticated(isAuthenticated: boolean) {
       self.isAuthenticated = isAuthenticated
@@ -146,49 +146,74 @@ export const AuthenticationStoreModel = types
         throw error // Optionally, handle this error more gracefully
       }
     }),
-    checkCognitoUserSession: flow(function* () {
-      self.setLoading(true);
-      self.setSDKConnected(false);
+    configureMongoDBAfterSignup: flow(function* () {
+      const mongoDBStore = getRoot(self).mongoDBStore
+      const userStore = getRoot(self).userStore
+      const chatStore = getRoot(self).chatStore
+      self.setLoading(true)
+      self.setSDKConnected(false)
       try {
-        const mongoDBStore = getRoot(self).mongoDBStore;
-        const chatStore = getRoot(self).chatStore;
-        var userPool = new CognitoUserPool(poolData);
+        self.setIsAuthenticated(true)
+        yield mongoDBStore.queryUserFromMongoDB(userStore._id)
+        yield mongoDBStore.queryPotentialMatches()
+        yield chatStore.initializeSDK()
+        yield chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
+        console.log("User connected to SendBird")
+        resetToInitialState()
+        //resetChatStackToChatList()
+        mongoDBStore.shouldQuery()
+      } catch (error: any) {
+        console.error("Error during the signUp process:", error)
+        throw error
+        self.setLoading(false)
+      } finally {
+        self.setLoading(false)
+      }
+      self.setSDKConnected(true)
+    }),
+    checkCognitoUserSession: flow(function* () {
+      self.setLoading(true)
+      self.setSDKConnected(false)
+      try {
+        const mongoDBStore = getRoot(self).mongoDBStore
+        const chatStore = getRoot(self).chatStore
+        var userPool = new CognitoUserPool(poolData)
         userPool.storage.sync(function (err, result) {
           if (err) {
             console.error("Error syncing storage:", err)
             self.setIsAuthenticated(false)
           } else if (result === "SUCCESS") {
-            var cognitoUser = userPool.getCurrentUser();
+            var cognitoUser = userPool.getCurrentUser()
             if (cognitoUser != null) {
               cognitoUser.getSession(async (err, session) => {
                 if (err) {
-                  console.error(err);
-                  self.clearUserSession();
-                  return;
+                  console.error(err)
+                  self.clearUserSession()
+                  return
                 }
                 if (session.isValid()) {
-                  console.log("User is signed in");
-                  self.setIsAuthenticated(true);
+                  console.log("User is signed in")
+                  self.setIsAuthenticated(true)
                   await chatStore.initializeSDK()
                   await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
                   console.log("User connected to SendBird")
                   resetToInitialState()
                   //resetChatStackToChatList()
-                  mongoDBStore.shouldQuery();
-                  self.setSDKConnected(true);
+                  mongoDBStore.shouldQuery()
+                  self.setSDKConnected(true)
                 } else {
-                  console.log("Session is invalid");
-                  self.clearUserSession();
+                  console.log("Session is invalid")
+                  self.clearUserSession()
                 }
-              });
+              })
             } else {
-              console.log("No current Cognito user");
-              self.clearUserSession();
+              console.log("No current Cognito user")
+              self.clearUserSession()
             }
           }
-        });
+        })
       } finally {
-        self.setLoading(false);
+        self.setLoading(false)
       }
     }),
     setIsAuthenticated(isAuthenticated: Boolean) {
@@ -232,8 +257,8 @@ export const AuthenticationStoreModel = types
                           reject(userDataErr)
                         } else {
                           const isConfirmed = userData.UserStatus === "CONFIRMED"
-                          reject(err)
-                          //resolve({ userConfirmed: isConfirmed, userData })
+                          //reject(err)
+                          resolve({ userConfirmed: isConfirmed, userData })
                         }
                       })
                     },
@@ -247,12 +272,14 @@ export const AuthenticationStoreModel = types
                 }
               } else {
                 userStore.setID(result?.userSub)
+
                 if (signUpResult.userConfirmed) {
+                  await self.registerDeviceToken() // Adjust parameters as needed
                   await chatStore.initializeSDK()
                   await chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
-                  self.setSDKConnected(true);
-                  await self.registerDeviceToken() // Adjust parameters as needed
+                  self.setSDKConnected(true)
                   console.log("User signed up and registered for push notifications")
+                  console.log("tesing full pipeline")
                 }
                 resolve({ userConfirmed: true, result })
               }
@@ -338,13 +365,11 @@ export const AuthenticationStoreModel = types
     confirmRegistration: flow(function* () {
       const userStore = getRoot(self).userStore
       const mongoDBStore = getRoot(self).mongoDBStore
-
       var userData = {
         Username: userStore.phoneNumber,
         Pool: userPool, // Ensure userPool is defined and accessible
       }
       var cognitoUser = new CognitoUser(userData)
-
       try {
         const confirmationResult = yield new Promise((resolve, reject) => {
           cognitoUser.confirmRegistration(self.verificationPhoneCode, true, (err, result) => {
@@ -356,13 +381,13 @@ export const AuthenticationStoreModel = types
           })
         })
         console.log("usersub", cognitoUser)
-
         console.log("Confirmation successful:", confirmationResult)
 
         // If confirmation is successful, proceed with MongoDB user creation
-        // set authentication to true
-        self.setIsAuthenticated(true)
-        return mongoResult // Return MongoDB result or confirmation result as needed
+        mongoDBStore.createUserInMongoDB()
+        self.configureMongoDBAfterSignup()
+
+        return
       } catch (error) {
         console.error(
           "An error occurred during the confirmation or MongoDB user creation process:",
@@ -378,7 +403,6 @@ export const AuthenticationStoreModel = types
     setAuthEmail(value: string) {
       //self.user?.email = value.replace(/ /g, "")
     },
-
     signIn: flow(function* signIn() {
       const userStore = getRoot(self).userStore
       const mongoDBStore = getRoot(self).mongoDBStore
@@ -404,7 +428,7 @@ export const AuthenticationStoreModel = types
               await mongoDBStore.queryPotentialMatches()
               await chatStore.initializeSDK()
               await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
-              self.setSDKConnected(true);
+              self.setSDKConnected(true)
               console.log("i need to know what wrong???", chatStore.sdk)
               self.setIsAuthenticated(true)
               try {
