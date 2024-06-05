@@ -69,7 +69,7 @@ export const UserStoreModel = types
     },
     setFromMongoDb(userData){
       const matchStore = getRootStore(self).matchStore
-      matchStore.setInit(userData)
+      //matchStore.setInit(userData)
       self.email = userData.email
       self.age = userData.age
       self.phoneNumber = userData.phoneNumber

@@ -9,7 +9,7 @@ const GameLevelModel = types.model({
   gameLevel: types.maybeNull(types.number),
   sportName: types.maybeNull(types.string),
 })
-const NeighborhoodModel = types.model({
+export const NeighborhoodModel = types.model({
   city: types.maybeNull(types.string),
   state: types.maybeNull(types.string),
   country: types.maybeNull(types.string),
@@ -39,8 +39,8 @@ export const TempStoreModel = types
     setIsHydrated(isHydrated) {
       self.isHydrated = isHydrated
     },
-    setSport(squash_level: string) {
-      self.sport = [{ sportName: "squash", gameLevel: squash_level }]
+    setSport(squash_level: number) {
+      self.sport = {sportName: "squash", gameLevel: Number(squash_level)}
     },
     setPhoneNumber(phoneNumber: string) {
       self.phoneNumber = phoneNumber
@@ -63,9 +63,16 @@ export const TempStoreModel = types
     setImageSet(imageSet: SnapshotOrInstance<typeof ImageDataModel>[]) {
       self.imageSet = cast(imageSet)
     },
-    setNeighborhood(neighborhood: string) {
-      self.neighborhood = neighborhood
+    setNeighborhood(neighborhood: SnapshotOrInstance<typeof NeighborhoodModel>) {
+      self.neighborhood = cast(neighborhood);
     },
+    //setNeighborhood(obj: any) {
+      //self.neighborhood = NeighborhoodModel.create({
+        //city: obj.city,
+        //state: obj.state,
+        //country: obj.country,
+      //})
+    //},
     setDescription(description: string) {
       self.description = description
     },
@@ -97,18 +104,6 @@ export const TempStoreModel = types
         // Any additional fields you wish to hydrate...
       }
       applySnapshot(self, newSnapshot)
-    },
-    setFromMongoDb(userData) {
-      //self.email = userData.email
-      //self.age = userData.age
-      //self.phoneNumber = userData.phoneNumber
-      //self.sport = userData.sports
-      //self.firstName = userData.firstName
-      //self.lastName = userData.lastName
-      //self.gender = userData.gender
-      //self.imageFiles = cast(userData.imageSet)
-      //self.neighborhood = userData.neighborhood
-      //self.description = userData.description
     },
     reset() {
       //self._id = ""

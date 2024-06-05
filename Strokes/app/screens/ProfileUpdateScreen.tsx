@@ -97,8 +97,7 @@ const updateUserChanges = async () => {
     iconName: "person",
     case: "age",
   }]
-
-
+  console.log(tempUserStore.neighborhood.city)
   return (
     <Screen
       preset="auto"
@@ -125,7 +124,6 @@ const updateUserChanges = async () => {
             style={$listItem}
             topSeparator={true}
             rightIcon={"caretRight"}
-
             onPress={() =>
               navigate("SingleUpdate", {
             field: `${item.case}`,

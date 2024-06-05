@@ -82,7 +82,6 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
   const [selectedTeam, setSelectedTeam] = useState<string[]>([])
   const [tempGender, setTempGender] = useState(tempUserStore.gender);
   useEffect(() => {
-    // Assuming neighborhoods is an array of strings
     if (tempUserStore.neighborhood) {
       setSelectedTeam([tempUserStore.neighborhood["city"]])
     }
@@ -113,6 +112,13 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
   const updateStore = () => {
     if (fieldToUpdate === "gender") {
       tempUserStore.setGender(tempGender)
+    } else if (fieldToUpdate === "neighborhoods") {
+      const updateMethod = tempUserStore[fieldConfigs[fieldToUpdate].method]
+      updateMethod({
+        city: selectedTeam[0],
+        state: "MA",
+        country: "US",
+      })
     } else {
       // For the generic text field case, assuming config.method is a function name like "setName"
       const updateMethod = tempUserStore[fieldConfigs[fieldToUpdate].method]
@@ -131,10 +137,25 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
       titleTx: fieldConfigs[fieldToUpdate].labelTx,
       titleMode: "center",
       leftIcon: "back",
-      onLeftPress: goBack,
+      onLeftPress: () => {
+        resetValue()
+        goBack()
+      },
     },
     [goBack],
   )
+  // Add this function to reset the value
+const resetValue = () => {
+  if (fieldToUpdate === "neighborhoods") {
+    tempUserStore.setNeighborhood({
+      city: userStore.neighborhood.city,
+      state: userStore.neighborhood.state,
+      country: userStore.neighborhood.country,
+    });
+  } else {
+    // Add other fields reset logic if needed
+  }
+}
   const renderField = () => {
     const config = fieldConfigs[fieldToUpdate]
 

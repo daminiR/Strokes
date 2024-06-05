@@ -50,7 +50,7 @@ const UPDATE_USER_PROFILE = gql`
     $add_local_images: [FileUploadInput!]!
     $remove_uploaded_images: [DataInput]
     $original_uploaded_imageSet: [DataInput!]!
-    $sport: SquashNodeInput!
+    $sport: SportNodeInput!
     $neighborhood: LocationInput!
     $age: Int!
     $description: String!
