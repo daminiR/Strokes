@@ -384,9 +384,8 @@ export const AuthenticationStoreModel = types
         console.log("Confirmation successful:", confirmationResult)
 
         // If confirmation is successful, proceed with MongoDB user creation
-        mongoDBStore.createUserInMongoDB()
-        self.configureMongoDBAfterSignup()
-
+        yield mongoDBStore.createUserInMongoDB()
+        yield self.configureMongoDBAfterSignup()
         return
       } catch (error) {
         console.error(
