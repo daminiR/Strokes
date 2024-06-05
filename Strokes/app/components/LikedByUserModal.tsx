@@ -43,7 +43,7 @@ export const LikedByUserModal = ({ profile, showSportCard, handleClose }) => {
       <View style={modalStyle}>
         <View style={modalContainerStyle2}>
           <TouchableOpacity onPress={handleClose} style={$closeStyle} activeOpacity={0.7}>
-            <Icon name={"times-circle"} size={56}/>
+            <Icon name={"times-circle"} size={56} />
           </TouchableOpacity>
 
           <SportCard match={profile} />
