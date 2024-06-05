@@ -343,7 +343,6 @@ export const resolvers = {
             neighborhood,
             description,
             imageSet: final_imageSet,
-            // Include other fields as necessary
           },
           { new: true, session }
         );

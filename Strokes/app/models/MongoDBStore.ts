@@ -179,21 +179,17 @@ const MongoDBStore = types
         const hasDifferences = fieldsToUpdate.some(
           (field) => !deepCompare(tempUserStore[field], userStore[field]),
         )
-
         const { addLocalImages, removeUploadedImages } = processImageUpdates(
           tempUserStore.imageSet,
           userStore.imageSet,
         )
         const hasImageUpdates = addLocalImages.length > 0 || removeUploadedImages.length > 0
-
         if (!hasDifferences && !hasImageUpdates) {
           console.log("No changes detected, skipping update.")
           return // Skip mutation if there are no differences
         }
-
         // Prepare images for GraphQL mutation
         const addLocalImagesRN = createReactNativeFile(addLocalImages)
-
         // Proceed with the mutation
         const response = yield client.mutate({
           mutation: graphQL.UPDATE_USER_PROFILE,
@@ -211,7 +207,6 @@ const MongoDBStore = types
             neighborhood: tempUserStore.neighborhood,
           },
         })
-
         // Clean response and update userStore with new data
         const cleanedResponse = cleanGraphQLResponse(response.data.updateProfile)
         userStore.setFromMongoDb({
