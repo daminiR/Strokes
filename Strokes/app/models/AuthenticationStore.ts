@@ -1,33 +1,40 @@
-import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
-import {PermissionsAndroid, Platform } from 'react-native';
-import messaging from '@react-native-firebase/messaging'
+import { PermissionsAndroid, Platform } from "react-native"
+import {
+  types,
+  flow,
+  SnapshotOut,
+  Instance,
+} from "mobx-state-tree"
+import messaging from "@react-native-firebase/messaging"
 import {
   CognitoUser,
   CognitoUserAttribute,
   AuthenticationDetails,
   CognitoUserPool,
 } from "amazon-cognito-identity-js"
-import { resetChatStackToChatList, resetToInitialState } from "./../navigators"
-import { UserStoreModel } from "./UserStore"
-import { getRootStore } from "./helpers/getRootStore"
+import { resetToInitialState } from "./../navigators"
+import { getRootStore} from "./helpers/getRootStore"
+import {withSetPropAction} from "./helpers/withSetPropAction"
 import { removeStore } from "./helpers/removeRootStore"
-import storage from 'app/utils/storage/mmkvStorage';
+import storage from "app/utils/storage/mmkvStorage"
 
 const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
 const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 
 async function requestUserPermission() {
-  const authorizationStatus = await messaging().requestPermission();
-  return authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-         authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  const authorizationStatus = await messaging().requestPermission()
+  return (
+    authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
+  )
 }
 
-if (Platform.OS === 'ios') {
-  requestUserPermission().then(hasPermission => {
+if (Platform.OS === "ios") {
+  requestUserPermission().then((hasPermission) => {
     if (hasPermission) {
       // Continue with getting the token and registering it...
     }
-  });
+  })
 }
 const FileType = types.model("FileType", {
   uri: types.string,
@@ -36,33 +43,31 @@ const FileType = types.model("FileType", {
 })
 // Define a model for User
 const poolData = {
-          UserPoolId: process.env.REACT_APP_USER_POOL_ID3,
-          ClientId: process.env.REACT_APP_APP_CLIENT_ID3,
-};
+  UserPoolId: process.env.REACT_APP_USER_POOL_ID3,
+  ClientId: process.env.REACT_APP_APP_CLIENT_ID3,
+}
 const TokenType = types.model("TokenType", {
   idToken: types.string,
   accessToken: types.string,
   refreshToken: types.string,
-});
-const userPool = new CognitoUserPool(poolData);
- //Define the AuthStore model
-export const AuthenticationStoreModel = types
-  .model("AuthenticationStoreModel", {
+})
+const userPool = new CognitoUserPool(poolData)
+//Define the AuthStore model
+export const AuthenticationStoreModel = types.model("AuthenticationStoreModel")
+.props({
     tokens: types.maybeNull(TokenType),
     isSDKConnected: types.optional(types.boolean, false),
-    user: types.maybeNull(UserStoreModel),
     isLoading: types.maybeNull(types.boolean),
     isAuthenticated: types.optional(types.boolean, false),
     verificationPhoneCode: types.maybeNull(types.string),
     error: types.maybeNull(types.string),
   })
-  .actions((self) => ({
-    setTokens(tokens) {
-      self.tokens = tokens
-    },
-    syncUserPoolStorage: flow(function* (userPool) {
+ .actions(withSetPropAction)
+ .actions((self) => {
+    type SelfType = typeof self;
+    const syncUserPoolStorage =  flow(function* (userPool) {
       return new Promise((resolve, reject) => {
-        userPool.storage.sync((err, result) => {
+        userPool.storage.sync((err: any, result: any) => {
           if (err) {
             reject(err)
           } else if (result === "SUCCESS") {
@@ -72,46 +77,45 @@ export const AuthenticationStoreModel = types
           }
         })
       })
-    }),
-    setUserSession: flow(function* (session) {
-      const userStore = getRoot(self).userStore
+    })
+    const setUserSession = flow(function* (session) {
+      const userStore = getRootStore(self).userStore
       const idToken = session.getIdToken().getJwtToken()
       const accessToken = session.getAccessToken().getJwtToken()
       const refreshToken = session.getRefreshToken().getToken()
       const userSub = session.getIdToken().payload.sub
 
-      self.setTokens({ idToken, accessToken, refreshToken })
+      self.setProp("tokens", { idToken, accessToken, refreshToken })
       userStore.setID(userSub)
-    }),
-    checkUserSession: flow(function* (userPool, userStore) {
-      try {
-        const cognitoUser = yield self.syncUserPoolStorage(userPool)
-        if (cognitoUser == null) {
-          console.log("No current Cognito user")
-          throw new Error("No current Cognito user")
-        }
-
-        const session = yield new Promise((resolve, reject) => {
-          cognitoUser.getSession((err, session) => {
-            if (err || !session.isValid()) {
-              reject(err || new Error("Session is invalid"))
-            } else {
-              resolve(session)
-            }
-          })
-        })
-
-        yield self.setUserSession(session)
-        return session
-      } catch (error) {
-        console.error("Error checking user session:", error)
-        throw error
+    })
+    const checkUserSession = flow(function* checkUserSession(userPool, userStore) {
+      const cognitoUser = yield syncUserPoolStorage(userPool)
+      if (cognitoUser == null) {
+        console.log("No current Cognito user")
+        return null
       }
-    }),
-    handlePostAuthenticationActions: flow(function* () {
-      const userStore = getRoot(self).userStore
-      const mongoDBStore = getRoot(self).mongoDBStore
-      const chatStore = getRoot(self).chatStore
+
+      const session = yield new Promise((resolve, reject) => {
+        cognitoUser.getSession((err: any, session: any) => {
+          if (err || !session.isValid()) {
+            console.log("Session is invalid or could not be retrieved")
+            resolve(null)
+          } else {
+            resolve(session)
+          }
+        })
+      })
+
+      if (session) {
+        yield setUserSession(session)
+      }
+
+      return session
+    })
+    const handlePostAuthenticationActions = flow(function* () {
+      const userStore = getRootStore(self).userStore
+      const mongoDBStore = getRootStore(self).mongoDBStore
+      const chatStore = getRootStore(self).chatStore
 
       try {
         const userSub = userStore._id
@@ -120,39 +124,26 @@ export const AuthenticationStoreModel = types
         yield mongoDBStore.queryPotentialMatches()
         yield chatStore.initializeSDK()
         yield chatStore.connect(userSub, "Damini Rijhwani Android", accessToken)
-        self.setSDKConnected(true)
+        self.setProp("isSDKConnected", true)
         console.log("Chat SDK initialized and connected:", chatStore.sdk)
 
         yield self.registerDeviceToken()
         console.log("Registered for push notifications")
-
-        self.setIsAuthenticated(true)
+        self.setProp("isAuthenticated", true)
       } catch (error) {
         console.error("Error during post-authentication actions:", error)
-        self.setError(error.message || "Error during post-authentication actions")
-        self.signOut()
+        self.setProp("error", error.message || "Error during post-authentication actions")
+        signOut()
         throw error
       }
-    }),
-    setLoading(loading: boolean) {
-      self.isLoading = loading
-    },
-    setError(error: any) {
-      self.error = error
-    },
-    clearUserSession: flow(function* () {
-      self.setIsAuthenticated(false)
+    })
+    const clearUserSession = flow(function* clearUserSession() {
+      self.setProp("isAuthenticated", false)
       yield removeStore()
       yield storage.clearAll()
-    }),
-    setSDKConnected(isConnected: boolean) {
-      self.isSDKConnected = isConnected
-    },
-    setIsAuthenticated(isAuthenticated: boolean) {
-      self.isAuthenticated = isAuthenticated
-    },
-    unregisterPushNotifications: flow(function* () {
-      const chatStore = getRoot(self).chatStore // Ensure you have access to the Sendbird instance
+    })
+    const unregisterPushNotifications = flow(function* () {
+      const chatStore = getRootStore(self).chatStore // Ensure you have access to the Sendbird instance
       try {
         // Ensure we have a current user and a valid connection before attempting to unregister
         if (chatStore.isConnected && chatStore.sdk.currentUser) {
@@ -179,10 +170,9 @@ export const AuthenticationStoreModel = types
         console.error("Error during push token deregistration:", error)
         throw error // Rethrow if needed for additional error handling
       }
-    }),
-
-    registerDeviceToken: flow(function* () {
-      const chatStore = getRoot(self).chatStore // Ensure you have access to the Sendbird instance
+    })
+    const registerDeviceToken = flow(function* () {
+      const chatStore = getRootStore(self).chatStore // Ensure you have access to the Sendbird instance
       //TODO and then logout
       yield chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
 
@@ -225,48 +215,51 @@ export const AuthenticationStoreModel = types
 
         // Handle token refresh
         messaging().onTokenRefresh((newToken) => {
-          registerDeviceToken(newToken) // Call this function recursively to update the token
+          //registerDeviceToken(newToken) // Call this function recursively to update the token
+          registerDeviceToken() // Call this function recursively to update the token
         })
       } catch (error) {
         console.error("Error during push token registration:", error)
         throw error // Optionally, handle this error more gracefully
       }
-    }),
-    checkCognitoUserSession: flow(function* () {
-      self.setLoading(true)
-      self.setSDKConnected(false)
-      const mongoDBStore = getRoot(self).mongoDBStore
-      const chatStore = getRoot(self).chatStore
-      const userStore = getRoot(self).userStore
+    })
+    const checkCognitoUserSession = flow(function* checkCognitoUserSession() {
+      self.setProp("isLoading", true)
+      self.setProp("isSDKConnected", false)
+      const mongoDBStore = getRootStore(self).mongoDBStore
+      const chatStore = getRootStore(self).chatStore
+      const userStore = getRootStore(self).userStore
 
       try {
         const userPool = new CognitoUserPool(poolData)
-         yield self.checkUserSession(userPool, userStore)
+        const session = yield checkUserSession(userPool, userStore)
 
-        console.log("User is signed in")
-        self.setIsAuthenticated(true)
+        if (session) {
+          console.log("User is signed in")
+          self.setProp("isAuthenticated", true)
 
-        yield chatStore.initializeSDK()
-        yield chatStore.connect(userStore._id, "Damini Rijhwani Android", userStore.accessToken)
-        console.log("User connected to SendBird")
+          yield chatStore.initializeSDK()
+          yield chatStore.connect(userStore._id, "Damini Rijhwani Android", userStore.accessToken)
+          console.log("User connected to SendBird")
 
-        // Reset or initialize any necessary state
-        resetToInitialState()
-        mongoDBStore.shouldQuery()
-        self.setSDKConnected(true)
+          // Reset or initialize any necessary state
+          resetToInitialState()
+          mongoDBStore.shouldQuery()
+          self.setProp("isSDKConnected", true)
+        } else {
+          console.log("No valid session found")
+          self.setProp("isAuthenticated", false)
+        }
       } catch (error) {
         console.error(error)
-        self.clearUserSession()
-        self.setIsAuthenticated(false)
+        yield clearUserSession()
+        self.setProp("isAuthenticated", false)
       } finally {
-        self.setLoading(false)
+        self.setProp("isLoading", false)
       }
-    }),
-    setIsAuthenticated(isAuthenticated: Boolean) {
-      self.isAuthenticated = isAuthenticated
-    },
-    signUp: flow(function* () {
-      const userStore = getRoot(self).userStore
+    })
+    const signUp = flow(function* () {
+      const userStore = getRootStore(self).userStore
 
       try {
         const attributeList = [
@@ -297,9 +290,9 @@ export const AuthenticationStoreModel = types
         console.error("Error during the sign-up process:", error)
         throw error
       }
-    }),
-    authenticateUser: flow(function* (username, password) {
-      const userStore = getRoot(self).userStore
+    })
+    const authenticateUser = flow(function* (username, password) {
+      const userStore = getRootStore(self).userStore
       const authenticationData = {
         Username: username,
         Password: password,
@@ -324,7 +317,7 @@ export const AuthenticationStoreModel = types
               const refreshToken = session.getRefreshToken().getToken()
 
               // Optionally, you can save these tokens to your user store or state management
-              //userStore.setTokens({ idToken, accessToken, refreshToken })
+              self.setProp("tokens", { idToken, accessToken, refreshToken })
               const userSub = session.getIdToken().payload.sub
               userStore.setID(userSub)
               resolve(session)
@@ -335,7 +328,6 @@ export const AuthenticationStoreModel = types
             },
           })
         })
-
         // Handle successful authentication
         // Perform any additional actions after authentication here, such as initializing SDKs or connecting to other services
         console.log("Authentication successful, tokens set in user store")
@@ -344,10 +336,10 @@ export const AuthenticationStoreModel = types
         console.error("Authentication failed:", error)
         throw error // Or handle it as needed within your app
       }
-    }),
-    sendConfirmationCode: flow(function* sendConfirmationCode(phoneNumber, password) {
+    })
+    const sendConfirmationCode = flow(function* sendConfirmationCode(phoneNumber, password) {
       // Assuming userPool is already defined and accessible
-      const userStore = getRoot(self).userStore
+      const userStore = getRootStore(self).userStore
       const cognitoUser = new CognitoUser({
         Username: userStore.phoneNumber,
         Pool: userPool,
@@ -359,10 +351,10 @@ export const AuthenticationStoreModel = types
         }
         console.log("call result: " + result)
       })
-    }),
-    confirmRegistration: flow(function* () {
-      const userStore = getRoot(self).userStore
-      const mongoDBStore = getRoot(self).mongoDBStore
+    })
+    const confirmRegistration =  flow(function* () {
+      const userStore = getRootStore(self).userStore
+      const mongoDBStore = getRootStore(self).mongoDBStore
       const cognitoUser = new CognitoUser({
         Username: userStore.phoneNumber,
         Pool: userPool,
@@ -383,7 +375,6 @@ export const AuthenticationStoreModel = types
 
         // Proceed with MongoDB user creation
         yield mongoDBStore.createUserInMongoDB()
-        yield self.configureMongoDBAfterSignup()
 
         // Authenticate the user after confirmation
         yield self.authenticateUser(userStore.phoneNumber, userStore.authPassword)
@@ -396,18 +387,11 @@ export const AuthenticationStoreModel = types
         )
         throw error
       }
-    }),
-    setVerificationPhoneCode(code: number) {
-      self.verificationPhoneCode = code
-    },
-
-    setAuthEmail(value: string) {
-      //self.user?.email = value.replace(/ /g, "")
-    },
-    signIn: flow(function* signIn() {
-      const userStore = getRoot(self).userStore
-      const mongoDBStore = getRoot(self).mongoDBStore
-      const chatStore = getRoot(self).chatStore
+    })
+    const signIn = flow(function* signIn() {
+      const userStore = getRootStore(self).userStore
+      const mongoDBStore = getRootStore(self).mongoDBStore
+      const chatStore = getRootStore(self).chatStore
 
       try {
         const authData = {
@@ -437,20 +421,20 @@ export const AuthenticationStoreModel = types
                 reject(postAuthError)
               }
             },
-            onFailure: (err) => {
-              console.error("Error signing in:", err)
-              self.setError(err.message || "Error signing in")
-              self.signOut()
-              reject(err)
+            onFailure: (error) => {
+              console.error("Error signing in:", error)
+              self.setProp("error", error.message || "Error signing in")
+              signOut()
+              reject(error)
             },
           })
         })
       } catch (error) {
         console.error("Error signing in:", error)
-        self.setError(error.message || "Error signing in")
+        self.setProp("error", error.message || "Error signing in")
       }
-    }),
-    forgotPassword: flow(function* forgotPassword(phoneNumber) {
+    })
+    const forgotPassword = flow(function* forgotPassword(phoneNumber) {
       try {
         const userData = {
           Username: phoneNumber,
@@ -460,61 +444,94 @@ export const AuthenticationStoreModel = types
         yield new Promise((resolve, reject) => {
           cognitoUser.forgotPassword({
             onSuccess: (result) => {
-              self.setError(null)
+              self.setProp("error", null)
               resolve(result)
             },
-            onFailure: (err) => {
+            onFailure: (error: any) => {
               console.error("Error initiating forgot password:", err)
-              self.setError(err.message || "Error initiating forgot password")
-              reject(err)
+              self.setProp("error", error.message || "Error initiating forgot password")
+              reject(error)
             },
           })
         })
       } catch (error) {
         console.error("Error initiating forgot password:", error)
-        self.setError(error.message || "Error initiating forgot password")
+        self.setProp("error", error.message || "Error initiating forgot password")
       }
-    }),
-    signOut: flow(function* signOut() {
-      const cognitoUser = userPool.getCurrentUser()
-      const chatStore = getRoot(self).chatStore // Ensure you
-      if (cognitoUser != null) {
-        try {
-          cognitoUser.signOut()
-          self.setIsAuthenticated(false)
-          // Optional: Clear any user data from your application state
-          // Perform any additional cleanup or redirection as needed
-          // remove push notification if logged out as well
-          yield self.unregisterPushNotifications()
-          yield chatStore.disconnect()
-          yield removeStore()
-          yield storage.clearAll()
-        } catch (error) {
-          console.error("An error occurred during sign out:", error)
-          // Handle the sign-out error (e.g., display a notification to the user)
+    })
+    const cleanupActions = flow(function* cleanupActions() {
+      const chatStore = getRootStore(self).chatStore
+      try {
+        self.unregisterPushNotifications()
+        yield chatStore.disconnect()
+        yield removeStore()
+        yield storage.clearAll()
+
+        //yield new Promise((resolve) => {
+          //storage.clearAll(() => {
+            //resolve()
+          //})
+        //})
+      } catch (error) {
+        console.error("An error occurred during cleanup actions:", error)
+      }
+    })
+    const cognitoUserSignOut = flow(function* cognitoUserSignOut() {
+      return new Promise<void>((resolve, reject) => {
+        const userPool = new CognitoUserPool(poolData)
+        const cognitoUser = userPool.getCurrentUser()
+        if (cognitoUser != null) {
+          cognitoUser.signOut({
+            onSuccess: () => {
+              resolve()
+            },
+            onFailure: (err) => {
+              reject(err)
+            },
+          })
+        } else {
+          resolve()
         }
-      } else {
-        console.log("No user is currently signed in.")
-        self.setIsAuthenticated(false)
-        // Optionally, handle the case when no user is signed in (e.g., redirect to sign-in page)
+      })
+    })
+    const signOut = flow(function* () {
+      self.setProp("isLoading", true)
+      const userPool = new CognitoUserPool(poolData)
+      try {
+        yield self.cognitoUserSignOut()
+        self.setProp("isAuthenticated", false)
+        yield self.cleanupActions()
+      } catch (error) {
+        console.error("An error occurred during sign out:", error)
+        // Handle the sign-out error (e.g., display a notification to the user)
+      } finally {
+        self.setProp("isLoading", false)
       }
-    }),
-
-    setUser(user: SnapshotOut<typeof UserModel> | null) {
-      self.user = user ? { ...user } : null
-    },
-
-    setError(error: string | null) {
-      self.error = error
-    },
-  }))
+    })
+ return {
+   syncUserPoolStorage,
+   setUserSession,
+   checkUserSession,
+   handlePostAuthenticationActions,
+   clearUserSession,
+   unregisterPushNotifications,
+   registerDeviceToken,
+   checkCognitoUserSession,
+   signUp,
+   authenticateUser,
+   sendConfirmationCode,
+   confirmRegistration,
+   signIn,
+   forgotPassword,
+   cleanupActions,
+   cognitoUserSignOut,
+   signOut,
+ }
+ })
   .actions((self) => ({
     afterCreate() {
       self.checkCognitoUserSession()
     },
   }))
 
-export interface UserStoreModel extends Instance<typeof UserStoreModel> {}
-export interface UserStoreSnapshot extends SnapshotOut<typeof UserStoreModel> {}
-export interface AuthenticationStore extends Instance<typeof AuthenticationStoreModel> {}
-export interface AuthenticationStoreSnapshot extends SnapshotOut<typeof AuthenticationStoreModel> {}
+
