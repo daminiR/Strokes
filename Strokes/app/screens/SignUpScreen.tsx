@@ -3,7 +3,18 @@ import { navigate, goBack} from "../navigators"
 import React, {useEffect, useRef, useState, useMemo} from "react"
 import { isRTL, translate, TxKeyPath } from "../i18n"
 import { TextInput, TextStyle, ViewStyle, View } from "react-native"
-import { ImagePickerWall, ImageUploadComponent, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
+import {
+  ImagePickerWall,
+  LoadingActivity,
+  Header,
+  Button,
+  Icon,
+  Screen,
+  Text,
+  TextField,
+  SelectField,
+  Toggle,
+} from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
@@ -14,6 +25,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   const authPasswordInput = useRef<TextInput>(null)
   const [signUpError, setSignUpError] = useState<string | null>(null)
   const { userStore, authenticationStore } = useStores()
+   const [isLoading, setIsLoading] = useState(false); // Add state for loading
   // Safeguard against null userStore in useEffect cleanup
   useEffect(() => {
     return () => userStore?.reset()
@@ -41,18 +53,16 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   const handleImagesUpdate = (images: ImageData[]) => {
     userStore?.setImageSet(images)
   }
-
-  const test = () => {
-    authenticationStore.setIsAuthenticated(true)
-  }
-
   const login = () => {
+    setIsLoading(true)
     authenticationStore
       .signUp()
       .then((result) => {
+        setIsLoading(false)
         navigate("VerificationSignUp")
       })
       .catch((error: any) => {
+        setIsLoading(false)
         if (error && error.code === "UserNotConfirmedException") {
           navigate("VerificationSignUp")
         }
@@ -81,6 +91,11 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       },
     [isAuthPasswordHidden],
   )
+
+   if (isLoading) {
+     return <LoadingActivity />
+   }
+
 
   return (
     <Screen

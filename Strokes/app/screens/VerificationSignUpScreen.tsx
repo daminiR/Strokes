@@ -2,9 +2,8 @@ import { observer } from "mobx-react-lite"
 import Config from 'react-native-config';
 import React, {useEffect, useRef, useState, useMemo} from "react"
 import { navigate, goBack} from "../navigators"
-import { isRTL, translate, TxKeyPath } from "../i18n"
 import { TextInput, TextStyle, ViewStyle, View } from "react-native"
-import { Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
+import { LoadingActivity, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
@@ -15,25 +14,28 @@ export const VerificationSignUpScreen: FC<VerificationSignUpScreenProps> = obser
 
   const { mongoDBStore, userStore, authenticationStore } = useStores()
   const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false); // Add state for loading
   useEffect(() => {
     // Pre-fill logic if necessary
     return () => userStore.reset()
   }, [userStore])
-  function verify() {
+const verify = () => {
+  setIsLoading(true); // Start loading
   authenticationStore
     .confirmRegistration()
     .then(() => {
-      // Handle successful verification, e.g., navigate to the next screen
-      navigate("WelcomeScreen")
+      authenticationStore.setProp("isAuthenticated", true) // Ensure the authenticated state is set
+      setIsLoading(false) // Stop loading after setting authentication
+      navigate("Welcome")
     })
     .catch((error) => {
-      // Now, error contains the message thrown from confirmRegistration
-      console.error("Verification failed:", error.message || error)
+      setIsLoading(false); // Stop loading before handling the error
+      console.error("Verification failed:", error.message || error);
       // Set the error state here to display the error message in your component
-      setError(error.message || "An unknown error occurred")
-    })
-}
-  function sendCode() {
+      setError(error.message || "An unknown error occurred");
+    });
+};
+function sendCode() {
     authenticationStore
       .sendConfirmationCode()
       .then(() => {
@@ -48,6 +50,9 @@ export const VerificationSignUpScreen: FC<VerificationSignUpScreenProps> = obser
       })
   }
 
+   if (isLoading) {
+     return <LoadingActivity />
+   }
   return (
     <Screen
       preset="auto"
