@@ -1,7 +1,16 @@
 import { observer } from "mobx-react-lite"
 import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
 import { TextInput, TextStyle, ViewStyle } from "react-native"
-import { Header, Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
+import {
+  Header,
+  LoadingActivity,
+  Button,
+  Icon,
+  Screen,
+  Text,
+  TextField,
+  TextFieldAccessoryProps,
+} from "../components"
 import { navigate, goBack} from "../navigators"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
@@ -18,26 +27,18 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
   const { userStore, authenticationStore } = useStores()
-  useEffect(() => {
-    // Here is where you could fetch credentials from keychain or storage
-    // and pre-fill the form fields.
-    //setAuthEmail("ignite@infinite.red")
-    //setAuthPassword("ign1teIsAwes0m3")
-
-    // Return a "cleanup" function that React will run when the component unmounts
-    return () => {
-      //setAuthPassword("")
-      //setAuthEmail("")
-    }
-  }, [])
-
+   const [isLoading, setIsLoading] = useState(false); // Add state for loading
   //const error = isSubmitted ? validationError : ""
-  function login() {
-    authenticationStore.signIn()
-  }
-const logCurrentState = async () => {
-  const currentState =  storage.getString(ROOT_STATE_STORAGE_KEY);
-  console.log('Current State:', currentState);
+  const login = async () => {
+    setIsLoading(true); // Start loading
+    try {
+      await authenticationStore.signIn();
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
+  };const logCurrentState = async () => {
+  const currentState = storage.getString(ROOT_STATE_STORAGE_KEY)
+  console.log("Current State:", currentState)
 };
 useEffect(() => {
   const fetchData = async () => {
@@ -63,6 +64,9 @@ useEffect(() => {
       },
     [isAuthPasswordHidden],
   )
+   if (isLoading) {
+     return <LoadingActivity />
+   }
 
   return (
     <Screen

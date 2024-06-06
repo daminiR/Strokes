@@ -5,8 +5,23 @@ import { navigate, goBack} from "../navigators"
 import React, {FC, useEffect, useRef, useState, useMemo} from "react"
 import { isRTL, translate, TxKeyPath } from "../i18n"
 import { useRoute, useNavigation} from '@react-navigation/native';
-import { TextInput, TextStyle, ViewStyle, ScrollView, View} from "react-native"
-import { UpdateProfileCard, ListView, ImagePickerWall, ListItem, ImageUploadComponent, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../components"
+import { TextInput, TextStyle, ViewStyle, ScrollView, View } from "react-native"
+import {
+  LoadingActivity,
+  UpdateProfileCard,
+  ListView,
+  ImagePickerWall,
+  ListItem,
+  ImageUploadComponent,
+  Header,
+  Button,
+  Icon,
+  Screen,
+  Text,
+  TextField,
+  SelectField,
+  Toggle,
+} from "../components"
 import { useStores } from "../models"
 
 import { AppStackScreenProps, ProfileStackScreenProps} from "../navigators"
@@ -25,6 +40,7 @@ export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function Pro
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [isHydrated, setIsHydrated] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<string[]>([])
+   const [isLoading, setIsLoading] = useState(false); // Add state for loading
   const tx = "Genders.gender"
   const i18nText = tx && translate(tx)
   const error = ""
@@ -32,12 +48,14 @@ export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function Pro
   tempUserStore.setImageSet(images) // Assuming your store has a method to update image files
 }
 const updateUserChanges = async () => {
-  await mongoDBStore.updateUserInMongoDB()
-  navigate("ProfileWelcome")
-}
-  const test = () => {
-    authenticationStore.setIsAuthenticated(true)
+  setIsLoading(true) // Start loading
+  try {
+    await mongoDBStore.updateUserInMongoDB()
+    navigate("ProfileWelcome")
+  } finally {
+    setIsLoading(false) // Stop loading
   }
+}
   const login = () => {
   authenticationStore.signUp().then((result) => {
     // If signUp is successful, navigate to the WelcomeScreen
@@ -97,7 +115,10 @@ const updateUserChanges = async () => {
     iconName: "person",
     case: "age",
   }]
-  console.log(tempUserStore.neighborhood.city)
+   if (isLoading) {
+     return <LoadingActivity />
+   }
+
   return (
     <Screen
       preset="auto"
