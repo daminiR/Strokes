@@ -471,7 +471,6 @@ export const AuthenticationStoreModel = types
         yield chatStore.disconnect()
         yield removeStore()
         yield storage.clearAll()
-
         //yield new Promise((resolve) => {
         //storage.clearAll(() => {
         //resolve()

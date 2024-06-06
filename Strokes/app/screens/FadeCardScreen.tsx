@@ -1,7 +1,18 @@
 import { observer } from "mobx-react-lite"
 import React, {useEffect, useRef, useState, useMemo} from "react"
 import { TextInput, Dimensions, TextStyle, ViewStyle, View } from "react-native"
-import { Button, Screen, FilterModal, Text, SBItem, TextField, SelectField, Toggle, SportCard} from "../components"
+import {
+  Button,
+  LoadingActivity,
+  Screen,
+  FilterModal,
+  Text,
+  SBItem,
+  TextField,
+  SelectField,
+  Toggle,
+  SportCard,
+} from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
@@ -19,6 +30,7 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   const swiperRef = useRef(null);
   const [index, setIndex] = useState(0)
   const { mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
+const [isLoading, setIsLoading] = useState(false);
   const { matchPool: cards } = matchStore;
   const [isLastCard, setIsLastCard] = useState(cards.length === 0)
   const [isVisible, setIsVisible] = useState(false)
@@ -34,8 +46,9 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
     }
     return () => userStore.reset()
   }, [userStore])
-  const onApplyFilters = async (age, gameLevel) => {
-  // Check if the user has filter changes left for the day
+
+const onApplyFilters = async (age, gameLevel) => {
+  setIsLoading(true); // Start loading
   try {
     await mongoDBStore.queryAfterFilterChange({
       age: {
@@ -46,13 +59,14 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
         min: gameLevel[0],
         max: gameLevel[1],
       },
-    })
-    // Assuming there's a mechanism to decrement filtersChangedPerDay in your store
-    onClose() // Close the modal if the operation is successful
+    });
+    onClose(); // Close the modal if the operation is successful
   } catch (error) {
-    console.error("Failed to apply filters:", error)
+    console.error("Failed to apply filters:", error);
+  } finally {
+    setIsLoading(false); // Stop loading
   }
-}
+};
 
   const onFilter = () => {
     setIsVisible(true)
@@ -102,6 +116,9 @@ const onSwiped = (cardIndex: number) => {
     setIsLastCard(true)
   }
 }
+   if (isLoading) {
+     return <LoadingActivity />
+   }
   return (
     <Screen preset="auto" style={$screenContentContainer}>
       <FilterModal

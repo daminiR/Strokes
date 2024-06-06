@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import { type ContentStyle } from "@shopify/flash-list"
 import { navigate, goBack} from "../navigators"
 import { translate } from "../i18n"
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import {
   Linking,
   TextStyle,
@@ -25,6 +25,7 @@ import {
   TextField,
   SelectField,
   Toggle,
+  LoadingActivity,
 } from "../components"
 
 
@@ -32,6 +33,7 @@ interface SettingsScreen extends ProfileStackScreenProps<"Settings"> {}
 
 export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScreen(_props) {
   const { userStore, authenticationStore } = useStores()
+const [isLoading, setIsLoading] = useState(false);
   const { navigation } = _props
   const {
     authenticationStore: { logout },
@@ -46,6 +48,15 @@ export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScre
     },
     [goBack],
   )
+
+const handleLogout = async () => {
+  //setIsLoading(true) // Start loading
+  try {
+    await authenticationStore.signOut()
+  } finally {
+    //setIsLoading(false) // Stop loading
+  }
+}
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
   const settingsMethods = [
     {
@@ -61,6 +72,9 @@ export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScre
     // Add more settings items as needed
   ]
 
+   if (isLoading) {
+     return <LoadingActivity />
+   }
 
   return (
     <Screen
@@ -89,7 +103,7 @@ export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScre
         tx="UpdateProfile.logout"
         style={$tapButton}
         preset="reversed"
-        onPress={authenticationStore.signOut}
+        onPress={handleLogout}
       />
     </Screen>
   )
