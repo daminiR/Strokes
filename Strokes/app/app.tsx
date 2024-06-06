@@ -103,7 +103,7 @@ interface AppProps {
         } else if (appState === "active" && nextAppState.match(/inactive|background/)) {
           console.log("App has gone to the background. Disconnecting...")
           chatStore.disconnect()
-          authenticationStore.setSDKConnected(false)
+          authenticationStore.setProp("isSDKConnected", false)
           navigate("FaceCard")
           // Add your disconnect logic here
         }

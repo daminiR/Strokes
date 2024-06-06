@@ -66,13 +66,6 @@ export const TempStoreModel = types
     setNeighborhood(neighborhood: SnapshotOrInstance<typeof NeighborhoodModel>) {
       self.neighborhood = cast(neighborhood);
     },
-    //setNeighborhood(obj: any) {
-      //self.neighborhood = NeighborhoodModel.create({
-        //city: obj.city,
-        //state: obj.state,
-        //country: obj.country,
-      //})
-    //},
     setDescription(description: string) {
       self.description = description
     },
@@ -106,13 +99,6 @@ export const TempStoreModel = types
       applySnapshot(self, newSnapshot)
     },
     reset() {
-      //self._id = ""
-      //self.authPassword = ""
-      //self.firstName = ""
-      //self.lastName = ""
-      //self.gender = ""
-      //self.neighborhood = ""
-      //self.description = ""
     },
     // Add other actions as needed
   }))
