@@ -320,6 +320,14 @@ export const resolvers = {
         );
 
         const excludeUserIds = [...likedUserIds, ...dislikedUserIds];
+        // Fetch the current user's city
+        const currentUser = await User.findById(_id).session(session);
+        if (!currentUser) {
+          await session.abortTransaction();
+          throw new Error("User not found.");
+        }
+
+        const currentCity = currentUser.neighborhood.city;
 
         const matchCriteria = {
           _id: { $nin: excludeUserIds, $ne: _id },
@@ -328,6 +336,7 @@ export const resolvers = {
             $gte: filters.gameLevel.min,
             $lte: filters.gameLevel.max,
           },
+          "neighborhood.city": currentCity,
         };
 
         // Find potential matches based on the new filters
