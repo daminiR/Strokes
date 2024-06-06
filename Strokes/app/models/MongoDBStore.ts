@@ -114,7 +114,7 @@ const MongoDBStore = types
           variables: {
             matchId: matchId,
             userId: userStore._id,
-            reason: reason
+            reason: reason,
           },
         })
         const { success, message } = result.data.removeMatch
@@ -165,6 +165,7 @@ const MongoDBStore = types
       try {
         const tempUserStore = getRootStore(self).tempUserStore
         const userStore = getRootStore(self).userStore
+        const matchStore = getRootStore(self).matchStore
 
         // Check for changes in fields and embedded objects
         const fieldsToUpdate = [
@@ -188,6 +189,8 @@ const MongoDBStore = types
           console.log("No changes detected, skipping update.")
           return // Skip mutation if there are no differences
         }
+        //remeber order here matters, cannot deep check after muation
+         const neighborhoodHasChanged = !deepCompare(tempUserStore.neighborhood, userStore.neighborhood);
         // Prepare images for GraphQL mutation
         const addLocalImagesRN = createReactNativeFile(addLocalImages)
         // Proceed with the mutation
@@ -214,7 +217,11 @@ const MongoDBStore = types
           email: userStore.email,
           phoneNumber: userStore.phoneNumber,
         })
-      } catch (error) {
+        if (neighborhoodHasChanged) {
+          const filterData = yield self.applyNeighborhoodFilter()
+          matchStore.setMatchPool(filterData)
+          console.log("Neighborhood filter applied:", filterData)
+        }} catch (error) {
         console.error("Error updating user:", error)
       }
     }),
@@ -304,6 +311,24 @@ const MongoDBStore = types
       } catch (error) {
         console.error("Error recording like:", error)
         return false
+      }
+    }),
+    applyNeighborhoodFilter: flow(function* applyNeighborhoodFilter() {
+      try {
+        const userStore = getRootStore(self).userStore
+        const response = yield client.mutate({
+          mutation: graphQL.APPLY_NEIGHBORHOOD_FILTER,
+          variables: {
+            _id: userStore._id,
+            neighborhood: userStore.neighborhood,
+          },
+          fetchPolicy: "network-only",
+        })
+        const filterData = response.data.applyNeighborhoodFilter
+        return filterData
+      } catch (error) {
+        console.error("Error applying neighborhood filter:", error)
+        throw error
       }
     }),
     applyFilters: flow(function* applyFilters(newFilters, newFilterHash) {

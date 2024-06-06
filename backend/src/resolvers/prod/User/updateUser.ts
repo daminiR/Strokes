@@ -189,6 +189,93 @@ export const resolvers = {
         }
       }
     },
+    applyNeighborhoodFilter: async (root, unSanitizedData, context) => {
+      const {
+        _id, // User ID
+        neighborhood
+      } = unSanitizedData;
+      const session = await mongoose.startSession();
+      try {
+        await session.startTransaction();
+
+        const currentPool = await PotentialMatchPool.findOne({
+          userId: _id,
+        }).session(session);
+
+        if (!currentPool) {
+          await session.abortTransaction();
+          throw new Error("PotentialMatchPool not found for the user.");
+        }
+
+        if (currentPool.swipesPerDay <= 0) {
+          await session.abortTransaction();
+          throw new Error("User has exhausted the daily swipes limit.");
+        }
+
+        const likes = await Like.find({ likerId: _id }, "likedId").session(
+          session
+        );
+        const likedUserIds = likes.map((like) => like.likedId.toString());
+        const dislikedUserIds = currentPool.dislikes.map((dislike) =>
+          dislike._id.toString()
+        );
+
+        const excludeUserIds = [...likedUserIds, ...dislikedUserIds];
+
+        const matchCriteria = {
+          _id: { $nin: excludeUserIds, $ne: _id },
+          "neighborhood.city": neighborhood.city,
+        };
+
+        const potentialMatches = await User.aggregate([
+          { $match: matchCriteria },
+          { $sample: { size: currentPool.swipesPerDay } },
+        ]).session(session);
+
+        const currentDate = new Date().toISOString();
+
+        const updatedPoolDoc = await PotentialMatchPool.findOneAndUpdate(
+          { userId: _id },
+          {
+            $set: {
+              potentialMatches: potentialMatches.map((match) => ({
+                matchUserId: match._id.toString(),
+                firstName: match.firstName,
+                imageSet: match.imageSet,
+                age: match.age,
+                neighborhood: match.neighborhood,
+                gender: match.gender,
+                sport: match.sport,
+                description: match.description,
+                createdAt: currentDate,
+                updatedAt: currentDate,
+                interacted: false,
+              })),
+            },
+            $inc: { filtersPerDay: -1 },
+          },
+          { new: true, session }
+        );
+
+        if (!updatedPoolDoc) {
+          await session.abortTransaction();
+          throw new Error(
+            "Failed to update the match pool document. It might not exist or the query failed."
+          );
+        }
+
+        await session.commitTransaction();
+        return updatedPoolDoc.potentialMatches;
+      } catch (error) {
+        await session.abortTransaction();
+        console.error("Failed to apply neighborhood filter:", error);
+        throw new Error(
+          "Failed to apply neighborhood filter due to internal server error."
+        );
+      } finally {
+        session.endSession();
+      }
+    },
     applyFilters: async (root, unSanitizedData, context) => {
       const {
         _id, // User ID

@@ -163,6 +163,14 @@ input GameLevelInput {
   message: String
   data: MatchQueueData
 }
+type ApplyNeighborhoodFilterResponse {
+  potentialMatches: [PotentialMatch!]
+}
+input NeighborhoodInput {
+  city: String!
+  state: String
+  country: String
+}
 type MatchQueueData {
   potentialMatches: [PotentialMatch]
 }
@@ -176,6 +184,10 @@ type DislikeRecord {
   }
 
   type Mutation {
+    applyNeighborhoodFilter(
+    _id: String!
+    neighborhood: NeighborhoodInput!
+  ): [PotentialMatch!]
     updateMatchQueueInteracted(currentUserId: String!, matchUserId: String!, isLiked: Boolean!): UpdateMatchQueueResponse!
     updateAllUserSchema(_id: String!): String
     deleteImage(_id: String, img_idx: Int): [Data!]!

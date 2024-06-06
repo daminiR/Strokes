@@ -429,7 +429,7 @@ export const AuthenticationStoreModel = types
             onFailure: (error) => {
               console.error("Error signing in:", error)
               self.setProp("error", error.message || "Error signing in")
-              signOut()
+              self.signOut()
               reject(error)
             },
           })

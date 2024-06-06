@@ -1,5 +1,32 @@
 import { gql } from 'urql';
 
+const APPLY_NEIGHBORHOOD_FILTER = gql`
+  mutation ApplyNeighborhoodFilter($_id: String!, $neighborhood: NeighborhoodInput!) {
+    applyNeighborhoodFilter(_id: $_id, neighborhood: $neighborhood) {
+      matchUserId
+      firstName
+      age
+      gender
+      sport {
+        sportName
+        gameLevel
+      }
+      description
+      imageSet {
+        img_idx
+        imageURL
+      }
+      neighborhood {
+        city
+        state
+        country
+      }
+      interacted
+      createdAt
+      updatedAt
+    }
+  }
+`
 const APPLY_FILTERS = gql`
   mutation ApplyFilters($_id: String!, $filtersHash: String!, $filters: FilterTypeInput!) {
     applyFilters(_id: $_id, filtersHash: $filtersHash, filters: $filters) {
@@ -14,7 +41,6 @@ const APPLY_FILTERS = gql`
         }
       }
       filtersHash
-      lastUpdated
       potentialMatches {
         interacted
         createdAt
@@ -118,4 +144,5 @@ export {
   UPDATE_USER_PROFILE,
   UPDATE_DISLIKES,
   APPLY_FILTERS,
+  APPLY_NEIGHBORHOOD_FILTER
 };
