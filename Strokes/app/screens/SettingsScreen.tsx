@@ -48,16 +48,21 @@ const [isLoading, setIsLoading] = useState(false);
     },
     [goBack],
   )
-
-const handleLogout = async () => {
-  //setIsLoading(true) // Start loading
-  try {
-    await authenticationStore.signOut()
-  } finally {
-    //setIsLoading(false) // Stop loading
-  }
+const handleLogout = () => {
+  setIsLoading(true) // Start loading
+  authenticationStore
+    .signOut()
+    .then(() => {
+      setIsLoading(false) // Stop loading after successful sign out
+      // Handle any additional logic after sign out, if needed
+      //navigate("Hello")
+    })
+    .catch((error: any) => {
+      setIsLoading(false) // Stop loading before handling the error
+      console.error("Logout failed:", error.message || error)
+      // Handle the error state here to display the error message in your component, if needed
+    })
 }
-  const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
   const settingsMethods = [
     {
       label: "Terms And Conditions",
@@ -72,9 +77,6 @@ const handleLogout = async () => {
     // Add more settings items as needed
   ]
 
-   if (isLoading) {
-     return <LoadingActivity />
-   }
 
   return (
     <Screen
@@ -82,6 +84,10 @@ const handleLogout = async () => {
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
+      {isLoading ? (
+        <LoadingActivity />
+      ) : (
+        <>
       <ListView
         contentContainerStyle={$listContentContainer}
         data={settingsMethods}
@@ -105,6 +111,8 @@ const handleLogout = async () => {
         preset="reversed"
         onPress={handleLogout}
       />
+        </>
+      )}
     </Screen>
   )
 })
