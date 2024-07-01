@@ -377,13 +377,10 @@ export const AuthenticationStoreModel = types
         })
 
         console.log("Confirmation successful:", confirmationResult)
-
         // Proceed with MongoDB user creation
         yield mongoDBStore.createUserInMongoDB()
-
         // Authenticate the user after confirmation
         yield self.authenticateUser(userStore.phoneNumber, userStore.authPassword)
-
         return
       } catch (error) {
         console.error(
@@ -482,22 +479,11 @@ export const AuthenticationStoreModel = types
       }
     })
     const cognitoUserSignOut = flow(function* cognitoUserSignOut() {
-      return new Promise<void>((resolve, reject) => {
         const userPool = new CognitoUserPool(poolData)
         const cognitoUser = userPool.getCurrentUser()
         if (cognitoUser != null) {
-          cognitoUser.signOut({
-            onSuccess: () => {
-              resolve()
-            },
-            onFailure: (err) => {
-              reject(err)
-            },
-          })
-        } else {
-          resolve()
+           cognitoUser.signOut()
         }
-      })
     })
     const signOut = flow(function* () {
       self.setProp("isLoading", true)
