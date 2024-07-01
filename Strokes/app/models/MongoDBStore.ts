@@ -476,6 +476,7 @@ const MongoDBStore = types
           email: userStore.email,
           phoneNumber: userStore.phoneNumber,
         })
+        console.log("mongo store", cleanedResponse)
         return cleanedResponse
       } catch (error) {
         console.error("Error querying user:", error)

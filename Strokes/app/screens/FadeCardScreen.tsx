@@ -6,11 +6,9 @@ import {
   LoadingActivity,
   Screen,
   FilterModal,
+  AlertModal,
   Text,
-  SBItem,
-  TextField,
-  SelectField,
-  Toggle,
+  LoadingModal,
   SportCard,
 } from "../components"
 import { useStores } from "../models"
@@ -30,13 +28,18 @@ export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps
   const swiperRef = useRef(null);
   const [index, setIndex] = useState(0)
   const { mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
-const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { matchPool: cards } = matchStore;
   const [isLastCard, setIsLastCard] = useState(cards.length === 0)
   const [isVisible, setIsVisible] = useState(false)
+  const [isMatched, setIsMatched] = useState(false)
+  const [isAlertVisible, setAlertIsVisible] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const [isSwiping, setIsSwiping] = useState(false);
   const width = Dimensions.get("window").width
+  const onCloseAlert = () => {
+    setAlertIsVisible(false)
+  }
   const onClose = () => {
     setIsVisible(false)
   }
@@ -82,7 +85,11 @@ const onApplyFilters = async (age, gameLevel) => {
     // Pre-fill logic if necessary
     return () => userStore.reset()
   }, [userStore])
+  //  const handleSwipeAction = async (actionType) => {
+   // setIsSwiping(false)
+  //}
   const handleSwipeAction = async (actionType) => {
+    var isMatched = false
     if (!isSwiping && swiperRef.current) {
       setIsSwiping(true)
       // Perform the swipe action first for better user experience
@@ -93,15 +100,17 @@ const onApplyFilters = async (age, gameLevel) => {
       }
       try {
         // Await the asynchronous action after the swipe
-        await (actionType === "like"
-          ? matchStore.likeAction(cards[index].matchUserId)
-          : matchStore.dislikeAction(cards[index].matchUserId))
-      } catch (error) {
+if (actionType === "like") {
+      isMatched = await matchStore.likeAction(cards[index].matchUserId, setAlertIsVisible);
+  } else {
+     await matchStore.dislikeAction(cards[index].matchUserId);
+  }      } catch (error) {
         console.error("Failed to update match store:", error)
       } finally {
         // Reset swiping status after the action completes or fails
         setTimeout(() => {
           setIsSwiping(false)
+          setAlertIsVisible(isMatched)
         }, 25) // Adjust based on your swipe animation duration
       }
     }
@@ -126,6 +135,11 @@ const onSwiped = (cardIndex: number) => {
         isVisible={isVisible}
         onClose={onClose}
         filters={matchStore.filters}
+      />
+      <LoadingModal isVisible={isSwiping} message="Please wait..." />
+      <AlertModal
+        isVisible={isAlertVisible}
+        onClose={onCloseAlert}
       />
       {cards.length > 0 ? (
         <>
