@@ -28,12 +28,6 @@ import { delay } from "../utils/delay"
 import { useFocusEffect } from '@react-navigation/native';
 
 const ICON_SIZE = 14
-
-const rnrImage1 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-const rnrImage2 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-const rnrImage3 = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg"
-const rnrImages = [rnrImage1, rnrImage2, rnrImage3]
-
 const MatchesCountDummy = observer(() => {
   const { matchStore } = useStores();
   // Use a dummy effect or variable that uses matchPool just for the sake of dependency
@@ -128,6 +122,9 @@ const getMoreData = async () => {
                 style={$emptyState}
                 headingTx="likedByUsers.noLikedProfiles.heading"
                 contentTx="likedByUsers.noLikedProfiles.content"
+                imageSource={null}
+                button={null}
+                buttonTx={null}
                 imageStyle={$emptyStateImage}
                 ImageProps={{ resizeMode: "contain" }}
               />

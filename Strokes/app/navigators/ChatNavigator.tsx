@@ -36,8 +36,6 @@ export type ChatListStackScreenProps<T extends keyof ChatListStackParamList> = N
 
 const Stack = createNativeStackNavigator<ChatListStackParamList>()
 
-const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
-const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 export function ChatStack() {
   return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"ChatList"}>

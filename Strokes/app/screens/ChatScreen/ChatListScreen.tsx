@@ -52,17 +52,16 @@ const GroupChannelListFragment = createGroupChannelListFragment({
   })
 
 
-const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
-const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
+const accessToken = "a168129d92c66c9657aa6021871abf93fe546c45"
 interface ChatListScreen extends ChatListStackScreenProps<"ChatList"> {}
 
 export const ChatListScreen: FC<ChatListScreen> = observer(function ChatListScreen(_props) {
-  const { matchedStore, authenticationStore, chatStore, matchedProfileStore } = useStores()
+  const { matchedStore, userStore,authenticationStore, chatStore, matchedProfileStore } = useStores()
   const [isInitialized, setIsInitialized] = useState(false)
   const initializeSDK = async () => {
     try {
       await chatStore.initializeSDK()
-      await chatStore.connect(userID, "Damini Rijhwani Android", accessToken)
+      await chatStore.connect(userStore.userID, userStore.firstName, accessToken)
       setIsInitialized(true)
       console.log("Sendbird initializated:")
     } catch (error) {

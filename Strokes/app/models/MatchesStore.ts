@@ -108,8 +108,8 @@ const MatchesStoreModel = types
               yield mongoDBStore.createMatch(likedId)
               // Optionally, update UI or state to reflect the new match
               // remove from likedSet if any
-              Alert.alert("Congratulations! You have a new match.")
               likedUserStore.removeLikedUser(likedId)
+              return true
             }
             // Exit the loop if like is successfully recorded
             break

@@ -97,9 +97,12 @@ const en = {
   chatScreenList: {
     title: "Chats",
   },
+  swipeContent: {
+    alert: "Game on! You've just matched."
+  },
   likedByUsers: {
     title: "We like you",
-    noLikedProfiles: { heading: "No Profiles Liked", content: "No Content" },
+    noLikedProfiles: { heading: "No likes yet ...", content: "but stay tuned!" },
     close: "Close"
   },
   loginScreen: {
