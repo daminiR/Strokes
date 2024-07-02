@@ -18,7 +18,6 @@ import {withSetPropAction} from "./helpers/withSetPropAction"
 import { removeStore } from "./helpers/removeRootStore"
 import storage from "app/utils/storage/mmkvStorage"
 
-const accessToken = "a168129d92c66c9657aa6021871abf93fe546c45"
 
 async function requestUserPermission() {
   const authorizationStatus = await messaging().requestPermission()
@@ -122,7 +121,6 @@ export const AuthenticationStoreModel = types
 
       try {
         const userSub = userStore._id
-        //const accessToken = userStore.accessToken
         yield mongoDBStore.queryUserFromMongoDB(userSub)
         yield mongoDBStore.queryPotentialMatches()
         yield chatStore.initializeSDK()
@@ -178,7 +176,7 @@ export const AuthenticationStoreModel = types
       const chatStore = getRootStore(self).chatStore // Ensure you have access to the Sendbird instance
       const userStore = getRootStore(self).userStore // Ensure you have access to the Sendbird instance
       //TODO and then logout
-      yield chatStore.connect(userStore._id, "Damini", accessToken)
+      yield chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken)
 
       // Request permission for notifications, crucial for iOS
       const requestPermission = flow(function* () {
@@ -243,7 +241,7 @@ export const AuthenticationStoreModel = types
           self.setProp("isAuthenticated", true)
 
           yield chatStore.initializeSDK()
-          yield chatStore.connect(userStore._id, "Damini Rijhwani Android", userStore.accessToken)
+          yield chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken)
           console.log("User connected to SendBird")
 
           // Reset or initialize any necessary state
@@ -394,8 +392,6 @@ export const AuthenticationStoreModel = types
       const userStore = getRootStore(self).userStore
       const mongoDBStore = getRootStore(self).mongoDBStore
       const chatStore = getRootStore(self).chatStore
-
-      console.log("username", userStore.phoneNumber)
       try {
         const authData = {
           Username: userStore.phoneNumber,
