@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, {useEffect, useState, useCallback} from "react"
+import messaging from '@react-native-firebase/messaging';
 import {ActivityIndicator, ViewStyle, TextStyle, ImageStyle, Image, TouchableOpacity, View, StyleSheet, Dimensions} from "react-native"
 import {reaction} from 'mobx';
 import { navigate } from "../../navigators"
@@ -13,6 +14,7 @@ import {
 } from "@sendbird/uikit-react-native-foundation"
 import { Screen, LoadingActivity, Text } from '../../components';
 import dayjs from "dayjs"
+import { useFocusEffect } from '@react-navigation/native';
 import {
   GroupChannel,
   HiddenChannelFilter,
@@ -54,10 +56,6 @@ const $metadata: TextStyle = {
   borderBottomRightRadius: 10,
 };
 
-const $metadataText: TextStyle = {
-  color: '#FFFFFF',
-};
-
 const $screenContentContainer: ViewStyle = {
   flex: 1,
 }
@@ -76,10 +74,6 @@ const $emptyState: ViewStyle = {
   marginTop: 32,
 }
 
-const $emptyStateImage: ImageStyle = {
-  transform: [{ scaleX: false ? -1 : 1 }],
-}
-
 export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { matchedProfileStore, authenticationStore, chatStore } = useStores();
@@ -88,7 +82,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const collection = chatStore.collection;
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const initializeCollection = useCallback(() => {
     if (!isSDKConnected || !sdk) {
       setIsLoading(false);
       return;
@@ -96,18 +90,20 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     const newCollection = sdk.groupChannel.createGroupChannelCollection({
       order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
       limit: 10,
-      hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN_ONLY,
+      hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN,
     });
     console.log("Creating new collection", typeof newCollection);
 
     const updateState = () => {
       setIsLoading(false);
+      setIsRefreshing(false)
     };
 
     newCollection.setGroupChannelCollectionHandler({
       onChannelsAdded: updateState,
       onChannelsUpdated: updateState,
       onChannelsDeleted: updateState,
+      onMessageReceived: updateState,  // Added to refresh on new message received
     });
 
     newCollection.loadMore()
@@ -125,43 +121,26 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     };
   }, [sdk, isSDKConnected, chatStore]);
 
-  const handleRefresh = async () => {
-  if (!sdk) {
-    console.log("SDK not available.");
-    return;
-  }
+  useFocusEffect(
+    useCallback(() => {
+      initializeCollection();
+    }, [initializeCollection])
+  );
+  // Refresh collection when a push notification is received
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('A new FCM message arrived!', remoteMessage);
+      initializeCollection();  // Re-initialize collection on new message
+    });
 
-  setIsRefreshing(true);
+    return () => {
+      unsubscribe();
+    };
+  }, [initializeCollection]);
 
-  try {
-    if (!collection) {
-      const query = sdk.groupChannel.createMyGroupChannelListQuery({
-        order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
-        limit: 10,
-        hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN,
-      });
-
-      const newCollection = sdk.groupChannel.createGroupChannelCollection({
-        query,
-      });
-
-      newCollection.setGroupChannelCollectionHandler({
-        onChannelsAdded: () => setIsRefreshing(false),
-        onChannelsUpdated: () => setIsRefreshing(false),
-        onChannelsDeleted: () => setIsRefreshing(false),
-      });
-
-      await newCollection.loadMore();
-      chatStore.setCollection(newCollection);
-    } else {
-      await collection.loadMore();
-      chatStore.setCollection(collection);
-    }
-  } catch (error) {
-    console.error("Failed to refresh the group channel collection:", error);
-  } finally {
-    setIsRefreshing(false);
-  }
+const handleRefresh = async () => {
+    setIsRefreshing(true);
+    initializeCollection();
 };
 
   useEffect(() => {
