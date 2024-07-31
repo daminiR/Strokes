@@ -1,16 +1,5 @@
 import React from 'react';
-import { MMKVAdapter } from 'app/utils/storage/mmkdvAdapter';
-import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
-import { platformServices } from "../services/api/sendbird"
-import { SendbirdChatProvider } from "@sendbird/uikit-react-native"
-import { createStackNavigator } from '@react-navigation/stack';
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-  NavigatorScreenParams,
-} from "@react-navigation/native"
 import Config from "../config"
 import {ChatTopTabNavigator} from './ChatTopTabNavigator'
 import * as Screens from "app/screens"
@@ -36,8 +25,6 @@ export type ChatListStackScreenProps<T extends keyof ChatListStackParamList> = N
 
 const Stack = createNativeStackNavigator<ChatListStackParamList>()
 
-const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
-const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 export function ChatStack() {
   return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"ChatList"}>

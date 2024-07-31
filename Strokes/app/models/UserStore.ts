@@ -21,7 +21,9 @@ export const UserStoreModel = types
     age: types.maybeNull(types.integer), // Assuming you're providing a unique identifier when creating a user instance
     authPassword: types.maybeNull(types.string),
     phoneNumber: types.maybeNull(types.string),
+    displayPhoneNumber: types.maybeNull(types.string),
     email: types.maybeNull(types.string),
+    accessToken: types.maybeNull(types.string),
     sport: types.maybeNull(GameLevelModel),
     imageSet: types.optional(types.array(types.frozen()), []),
     gender: types.optional(types.enumeration("Gender", ["male", "female", "other"]), "other"),
@@ -34,10 +36,11 @@ export const UserStoreModel = types
     setEmail(email: string) {
       self.email = email
     },
-    setPhoneNumber(phoneNumber: string) {
-      self.phoneNumber = phoneNumber
-    },
-    setAuthPassword(password: string) {
+  setPhoneNumber(phoneNumber: string) {
+    self.displayPhoneNumber = phoneNumber
+      self.phoneNumber = `+1${phoneNumber}`
+  },
+  setAuthPassword(password: string) {
       self.authPassword = password
     },
     setFirstName(firstName: string) {
@@ -71,6 +74,7 @@ export const UserStoreModel = types
       const matchStore = getRootStore(self).matchStore
       //matchStore.setInit(userData)
       self.email = userData.email
+      self.accessToken = userData.accessToken
       self.age = userData.age
       self.phoneNumber = userData.phoneNumber
       self.sport = userData.sport
