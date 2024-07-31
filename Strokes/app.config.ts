@@ -1,4 +1,4 @@
-import { ExpoConfig, ConfigContext } from "@expo/config"
+import {ExpoConfig, ConfigContext} from "@expo/config"
 
 /**
  * Use ts-node here so we can use TypeScript for our Config Plugins
@@ -8,7 +8,7 @@ require("ts-node/register")
 
 /**
  * @param config ExpoConfig coming from the static config app.json if it exists
- * 
+ *
  * You can read more about Expo's Configuration Resolution Rules here:
  * https://docs.expo.dev/workflow/configuration/#configuration-resolution-rules
  */
