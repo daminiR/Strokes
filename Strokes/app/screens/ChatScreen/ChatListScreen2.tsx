@@ -4,8 +4,8 @@ import {ActivityIndicator, ViewStyle, TextStyle, ImageStyle, Image, TouchableOpa
 import {reaction} from 'mobx';
 import { navigate } from "../../navigators"
 import {
-  getGroupChannelLastMessage,
   getGroupChannelTitle,
+  getGroupChannelLastMessage
 } from "@sendbird/uikit-utils"
 import {
   GroupChannelPreview,
@@ -15,7 +15,7 @@ import { Screen, LoadingActivity, Text } from '../../components';
 import dayjs from "dayjs"
 import {
   GroupChannel,
-  GroupChannelCollection,
+  HiddenChannelFilter,
   GroupChannelListOrder,
 } from "@sendbird/chat/groupChannel"
 import {
@@ -93,10 +93,10 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
       setIsLoading(false);
       return;
     }
-
     const newCollection = sdk.groupChannel.createGroupChannelCollection({
       order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
       limit: 10,
+      hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN_ONLY,
     });
     console.log("Creating new collection", typeof newCollection);
 
@@ -126,20 +126,43 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   }, [sdk, isSDKConnected, chatStore]);
 
   const handleRefresh = async () => {
-    if (!collection || !sdk) {
-      console.log("SDK or collection not available.");
-      return;
-    }
-    setIsRefreshing(true);
-    try {
+  if (!sdk) {
+    console.log("SDK not available.");
+    return;
+  }
+
+  setIsRefreshing(true);
+
+  try {
+    if (!collection) {
+      const query = sdk.groupChannel.createMyGroupChannelListQuery({
+        order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
+        limit: 10,
+        hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN,
+      });
+
+      const newCollection = sdk.groupChannel.createGroupChannelCollection({
+        query,
+      });
+
+      newCollection.setGroupChannelCollectionHandler({
+        onChannelsAdded: () => setIsRefreshing(false),
+        onChannelsUpdated: () => setIsRefreshing(false),
+        onChannelsDeleted: () => setIsRefreshing(false),
+      });
+
+      await newCollection.loadMore();
+      chatStore.setCollection(newCollection);
+    } else {
       await collection.loadMore();
       chatStore.setCollection(collection);
-    } catch (error) {
-      console.error("Failed to refresh the group channel collection:", error, collection);
-    } finally {
-      setIsRefreshing(false);
     }
-  };
+  } catch (error) {
+    console.error("Failed to refresh the group channel collection:", error);
+  } finally {
+    setIsRefreshing(false);
+  }
+};
 
   useEffect(() => {
     const refreshData = async () => {
@@ -168,38 +191,46 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
 
   const renderItem = ({ item }: { item: GroupChannel }) => {
     const onPressChannel = (): any => {
-      const matchedUser = matchedProfileStore.findByChannelId(item.url);
-      chatStore.setChatProfile(matchedUser);
-      navigate("ChatTopNavigator");
-    };
+      const matchedUser = matchedProfileStore.findByChannelId(item.url)
+      chatStore.setChatProfile(matchedUser)
+      navigate("ChatTopNavigator")
+    }
 
-    const matchedUser = matchedProfileStore.findByChannelId(item.url);
+    // Fetch the matched user profile based on the channel ID
+    const matchedUser = matchedProfileStore.findByChannelId(item.url)
+
+    // Determine the title to be used in the preview
     const title = matchedUser
       ? matchedUser.firstName || "Unknown User"
-      : getGroupChannelTitle(sdk.currentUser!.userId, item);
+      : getGroupChannelTitle(sdk.currentUser!.userId, item)
+
+    // Determine the cover image URL to be used in the preview
     const coverUrl =
       matchedUser && matchedUser.imageSet && matchedUser.imageSet.length > 0
         ? matchedUser.imageSet[0].imageURL
-        : item.coverUrl || "https://static.sendbird.com/sample/cover/cover_11.jpg";
-    const lastMessage = item.lastMessage ? item.lastMessage.message : "No description available";
+        : item.coverUrl || "https://static.sendbird.com/sample/cover/cover_11.jpg" // Fallback to default cover image
+
+    // Determine the last message and its timestamp
+    const lastMessage = item.lastMessage ? item.lastMessage.message : "No description available"
     const lastMessageTime = item.lastMessage
       ? dayjs(item.lastMessage.createdAt).format("YYYY-MM-DD")
-      : "Unavailable";
+      : "Unavailable"
 
     return (
-      <TouchableOpacity onPress={onPressChannel} style={$item}>
-        <Image
-          source={{ uri: coverUrl }}
-          style={$itemThumbnail}
+      <TouchableOpacity onPress={onPressChannel}>
+        <GroupChannelPreview
+          title={title}
+          badgeCount={item.unreadMessageCount}
+          body={getGroupChannelLastMessage(item)}
+          bodyIcon={item.lastMessage?.isFileMessage() ? "file-document" : undefined}
+          coverUrl={coverUrl}
+          titleCaption={dayjs(item.createdAt).format("YYYY-MM-DD")}
+          frozen={item.isFrozen}
+          notificationOff={item.myPushTriggerOption === "off"}
         />
-        <View style={$metadata}>
-          <Text style={$metadataText} size="sm">
-            {title}
-          </Text>
-        </View>
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
   if (isLoading) {
     return <LoadingActivity />;
@@ -239,7 +270,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
         }
         refreshing={isRefreshing}
         estimatedItemSize={177}
-        numColumns={2}
+        numColumns={1}
         ListEmptyComponent={listEmptyComponent}
         onRefresh={handleRefresh}
         renderItem={renderItem}

@@ -1,4 +1,4 @@
-import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
+import {types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
 
 export const LocationModel = types.model("LocationModel", {
   city: types.maybeNull(types.string),
@@ -65,7 +65,7 @@ export const MatchedProfilesStore = types
     appendMatchedProfiles(newProfiles: any[]) {
       const transformedProfiles = newProfiles.map((profile) => {
         // Create a new object with all properties of the profile except _id
-        const { _id, ...otherProps } = profile
+        const {_id, ...otherProps} = profile
         return {
           ...otherProps,
           matchedUserId: _id, // Assign _id value to matchUserId
@@ -77,7 +77,7 @@ export const MatchedProfilesStore = types
     setProfiles(newProfiles: any[]) {
       const transformedProfiles = newProfiles.map((profile) => {
         // Destructure the profile to separate _id and the rest of the properties
-        const { _id, ...otherProps } = profile
+        const {_id, ...otherProps} = profile
         return {
           ...otherProps,
           matchedUserId: _id, // Assign _id value to matchUserId

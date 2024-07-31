@@ -1,7 +1,7 @@
-import { types, flow } from 'mobx-state-tree';
-import { navigate } from "../navigators"
+import {types, flow} from 'mobx-state-tree';
+import {navigate} from "../navigators"
 import client from '../services/api/apollo-client';
-import { getRootStore } from './helpers/getRootStore';
+import {getRootStore} from './helpers/getRootStore';
 import {ReactNativeFile} from 'apollo-upload-client'
 import * as graphQL from '@graphQL'
 import {SHA256} from 'crypto-js';
@@ -18,7 +18,7 @@ function cleanGraphQLResponse(object) {
   }
   // If the object is an actual object, clean it
   else if (object !== null && typeof object === 'object') {
-    const { __typename, ...cleanedObject } = object; // Destructure to remove __typename
+    const {__typename, ...cleanedObject} = object; // Destructure to remove __typename
     // Apply the function recursively to all values
     Object.keys(cleanedObject).forEach(
       key => (cleanedObject[key] = cleanGraphQLResponse(cleanedObject[key]))
@@ -43,7 +43,7 @@ interface UserData {
 }
 
 function createReactNativeFile(imageFiles) {
-  return imageFiles.map(({ uri, img_idx }) => ({
+  return imageFiles.map(({uri, img_idx}) => ({
     img_idx: img_idx, // Preserve the image index
     ReactNativeFile: new ReactNativeFile({
       uri: uri, // Assuming `uri` is correctly provided in the input object
@@ -77,7 +77,7 @@ function processImageUpdates(mixedImages, originalImageFiles) {
     // as we're focusing on identifying new local images to add and original images to remove.
   });
 
-  return { addLocalImages, removeUploadedImages };
+  return {addLocalImages, removeUploadedImages};
 }
 // Deep comparison function
 function deepCompare(obj1, obj2) {
@@ -117,7 +117,7 @@ const MongoDBStore = types
             reason: reason,
           },
         })
-        const { success, message } = result.data.removeMatch
+        const {success, message} = result.data.removeMatch
         if (success) {
           console.log("Player unmatched successfully:", message)
           matchStore.removeMatchedProfile(matchId)
@@ -126,10 +126,10 @@ const MongoDBStore = types
         } else {
           console.error("Failed to unmatch player:", message)
         }
-        return { success, message }
+        return {success, message}
       } catch (error) {
         console.error("Error unmatching player:", error)
-        return { success: false, message: "Error executing unmatch operation." }
+        return {success: false, message: "Error executing unmatch operation."}
       }
     }),
     createReport: flow(function* createReport(reportData) {
@@ -147,7 +147,7 @@ const MongoDBStore = types
         // Assuming response.data.createReport.success exists based on typical GraphQL responses
         if (response.data.createReport.success) {
           console.log("Report created successfully:", response.data.createReport.message)
-          return { success: true, message: "Report created successfully." }
+          return {success: true, message: "Report created successfully."}
         } else {
           console.log("Failed to create report:", response.data.createReport.message)
           return {
@@ -158,7 +158,7 @@ const MongoDBStore = types
         }
       } catch (error) {
         console.error("Failed to create report:", error)
-        return { success: false, message: "Error creating report." }
+        return {success: false, message: "Error creating report."}
       }
     }),
     updateUserInMongoDB: flow(function* updateUser() {
@@ -180,7 +180,7 @@ const MongoDBStore = types
         const hasDifferences = fieldsToUpdate.some(
           (field) => !deepCompare(tempUserStore[field], userStore[field]),
         )
-        const { addLocalImages, removeUploadedImages } = processImageUpdates(
+        const {addLocalImages, removeUploadedImages} = processImageUpdates(
           tempUserStore.imageSet,
           userStore.imageSet,
         )
@@ -190,7 +190,7 @@ const MongoDBStore = types
           return // Skip mutation if there are no differences
         }
         //remeber order here matters, cannot deep check after muation
-         const neighborhoodHasChanged = !deepCompare(tempUserStore.neighborhood, userStore.neighborhood);
+        const neighborhoodHasChanged = !deepCompare(tempUserStore.neighborhood, userStore.neighborhood);
         // Prepare images for GraphQL mutation
         const addLocalImagesRN = createReactNativeFile(addLocalImages)
         // Proceed with the mutation
@@ -221,7 +221,8 @@ const MongoDBStore = types
           const filterData = yield self.applyNeighborhoodFilter()
           matchStore.setMatchPool(filterData)
           console.log("Neighborhood filter applied:", filterData)
-        }} catch (error) {
+        }
+      } catch (error) {
         console.error("Error updating user:", error)
       }
     }),
@@ -257,10 +258,10 @@ const MongoDBStore = types
       return client
         .mutate({
           mutation: graphQL.CREATE_MATCH_MUTATION,
-          variables: { user1Id, user2Id },
+          variables: {user1Id, user2Id},
         })
         .then((response) => {
-          const { success, match } = response.data.createMatch
+          const {success, match} = response.data.createMatch
           if (success && match) {
             console.log("Match created successfully:", match)
             return match
@@ -279,7 +280,7 @@ const MongoDBStore = types
       return client
         .query({
           query: graphQL.CHECK_FOR_MUTUAL_LIKE_QUERY,
-          variables: { currentUserId, likedId },
+          variables: {currentUserId, likedId},
         })
         .then((response) => {
           return response.data.checkForMutualLike.isMutual
