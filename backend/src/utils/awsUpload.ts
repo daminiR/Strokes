@@ -1,4 +1,5 @@
 import { sanitizeFile } from '../utils/fileNaming'
+import sharp from 'sharp'
 import * as path from 'path';
 import _ from 'lodash'
 import { dest_gcs_images } from '../constants/'
@@ -36,12 +37,19 @@ const uploadStream = ({ Bucket, Key, encoding, mimetype, img_idx}) => {
 const destinationBucket = 'sport-aws-images'; // Your AWS S3 Bucket
 const destinationBasePath = dest_gcs_images
 
+async function compressImage(imageBuffer) {
+  return await sharp(imageBuffer)
+    .resize({ width: 1080, height: 1080, fit: 'inside' }) // Resize to fit within 1080x1080 pixels
+    .jpeg({ quality: 80 }) // Compress with 80% quality
+    .toBuffer();
+}
+
+
 async function createAWSUpload(imageSet, uniqueId) {
   try {
     const uploadResults = await Promise.all(
-      imageSet.map(async ({ReactNativeFile: image, img_idx: img_idx}) => {
+      imageSet.map(async ({ ReactNativeFile: image, img_idx }) => {
         // Destructuring directly from the awaited image.file promise
-
         const { filename, mimetype, encoding, createReadStream } = await image;
 
         const sanitizedFilename = sanitizeFile(filename, uniqueId);
@@ -51,19 +59,35 @@ async function createAWSUpload(imageSet, uniqueId) {
           `${sanitizedFilename}.jpeg`
         );
         console.log("File location:", fileKey);
+
         try {
+          // Read the image into a buffer
+          const imageBuffer = await new Promise((resolve, reject) => {
+            const chunks: Uint8Array[] = [];
+            const readStream = createReadStream();
+            readStream.on('data', (chunk) => chunks.push(chunk));
+            readStream.on('end', () => resolve(Buffer.concat(chunks)));
+            readStream.on('error', reject);
+          });
+
+          // Compress the image
+          const compressedBuffer = await compressImage(imageBuffer);
+
           const { writeStream, promise: uploadPromise } = uploadStream({
             Bucket: destinationBucket,
             Key: fileKey,
-            mimetype,
+            mimetype: 'image/jpeg',
             encoding, // Use the provided encoding
             img_idx: img_idx
           });
 
-          // Pipe the stream from createReadStream to the writeStream for upload
-          createReadStream().pipe(writeStream);
+          // Write the compressed image buffer to the upload stream
+          writeStream.write(compressedBuffer);
+          writeStream.end();
+
           const awsMetaData = await uploadPromise;
           console.log("Upload completed successfully:", fileKey);
+
           return {
             img_idx: img_idx,
             imageURL: awsMetaData.Location,
@@ -93,7 +117,6 @@ async function createAWSUpload(imageSet, uniqueId) {
       console.error("Unknown Error during AWS upload process:");
       throw new Error("Failed to complete AWS uploads");
     }
-
   }
 }
 

@@ -85,6 +85,10 @@ var userSchema = new Schema(
         "Please fill a valid email address",
       ],
     },
+    accessToken: {
+      type: String,
+      required: true,
+    },
     deleted: {
       type: <DeleteT>{},
       required: false,

@@ -50,7 +50,7 @@ export const matchesTypeDefs = gql`
   }
 
   extend type Mutation {
-    createMatch(user1Id: String!, user2Id: String!): RemoveMatchResponse
+    createMatch(user1Id: String!, user2Id: String!): MatchResponse
     removeMatch(
       matchId: ID!
       reason: String!

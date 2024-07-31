@@ -1,16 +1,11 @@
 import User from '../../../models/User';
 import { PotentialMatchPool } from "../../../models/PotentialMatchPool";
-import { Sendbird } from 'sendbird-platform-sdk';
 import {createSendbirdUser} from '../../../utils/sendBirdv2'
 import { resolvers as PotentialMatchPoolResolvers } from "../potentialMatchPools/updatePotentialMatchPool";
 import { SHA256 } from 'crypto-js';
-import { apiToken, userAPI} from './../../../services/sendbirdService';
 import _ from 'lodash'
 import sanitize from 'mongo-sanitize'
-import {
-  createAWSUpload,
-  deleteImagesFromS3
-} from "../../../utils/awsUpload";
+import { createAWSUpload } from "../../../utils/awsUpload";
 
 export const resolvers = {
   Mutation: {
@@ -45,6 +40,19 @@ export const resolvers = {
           "Failed to upload images to AWS: " + uploadError.message
         );
       }
+        let sendbirdAccessToken;
+        try {
+          sendbirdAccessToken = await createSendbirdUser(
+            _id,
+            firstName,
+            data_set[0]?.imageURL
+          );
+        } catch (sendbirdError: any) {
+          console.error("Error creating Sendbird user:", sendbirdError);
+          throw new Error(
+            "Failed to create Sendbird user: " + sendbirdError.message
+          );
+        }
 
       try {
         console.log("User Document Created");
@@ -89,7 +97,7 @@ export const resolvers = {
           swipesPerDay: 30, // Default or calculated value
           filters: filters,
           filtersHash: filtersHash,
-          dislikes: []
+          dislikes: [],
         });
 
         // Attempt to create User document
@@ -106,6 +114,7 @@ export const resolvers = {
           description: description,
           phoneNumber: phonenumber,
           email: email,
+          accessToken: sendbirdAccessToken,
           // Additional fields as required...
         });
         console.log("User Document Created");
@@ -114,23 +123,6 @@ export const resolvers = {
           "Error creating User document or PotentialMatchPool document:",
           error
         );
-         try {
-           await createSendbirdUser(_id, firstName, imageSet[0]?.url);
-           //let body:Sendbird.UserApiCreateUserTokenRequest = {
-             //user_id: _id,
-             //nickname: `${firstName} ${lastName}`,
-             //profile_url: imageSet[0]?.url || "",
-           //}
-           //await userAPI.createUser(body)
-
-           //console.log("Sendbird user created successfully");
-         } catch (sendbirdError: any) {
-           console.error("Error creating Sendbird user:", sendbirdError);
-           throw new Error(
-             "Failed to create Sendbird user: " + sendbirdError.message
-           );
-         }
-
         // Rollback: Attempt to delete the PotentialMatchPool document if User creation fails
         //if (userDoc == null && potentialMatchPoolDoc != null) {
           //try {

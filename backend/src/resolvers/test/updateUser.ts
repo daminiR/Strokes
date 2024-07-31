@@ -1,4 +1,5 @@
 import User from '../../models/User';
+import {createSendbirdUser} from '../../utils/sendBirdv2'
 import Like from '../../models/Likes';
 import Match from '../../models/Match';
 import { PotentialMatchPool } from "../../models/PotentialMatchPool";
@@ -54,7 +55,6 @@ export const resolvers = {
           }
         );
       }
-
       return {
         success: true,
         message:
@@ -338,25 +338,23 @@ export const resolvers = {
             },
           },
         ]);
+
         // Create Sendbird users for the new potential matches
         for (const match of newPotentialMatches) {
-          const sendbirdUserData: Sendbird.UserApiCreateUserRequest = {
-            userId: match._id.toString(),
-            nickname: match.firstName,
-            profileUrl: match.imageSet[0]?.url || "",
-          };
-
           try {
-            await userAPI.createUser(apiToken, sendbirdUserData);
+            const sendbirdAccessToken = await createSendbirdUser(
+              match._id.toString(),
+              match.firstName,
+              match.imageSet[0]?.url || ""
+            );
             console.log(`Sendbird user created for ${match.firstName}`);
-          } catch (sendbirdError) {
+          } catch (sendbirdError: any) {
             console.error(
               `Error creating Sendbird user for ${match.firstName}:`,
-              sendbirdError
+              sendbirdError.message
             );
           }
-        }
-        // Update the PotentialMatchPool document with new matches
+        } // Update the PotentialMatchPool document with new matches
         await PotentialMatchPool.updateOne(
           { userId: currentUserId },
           {
@@ -447,20 +445,23 @@ export const resolvers = {
             likerId: randomUser._id,
             likedId: currentUserId,
           });
-          // Create Sendbird user
-          const sendbirdUserData: Sendbird.UserApiCreateUserRequest = {
-            userId: randomUser._id.toString(),
-            nickname: randomUser.firstName,
-            profileUrl: randomUser.imageSet[0]?.imageURL || "",
-          };
 
+          // Create Sendbird user
+          let sendbirdAccessToken;
           try {
-            await userAPI.createUser(apiToken, sendbirdUserData);
+            sendbirdAccessToken = await createSendbirdUser(
+              randomUser._id.toString(),
+              randomUser.firstName,
+              randomUser.imageSet[0]?.imageURL || ""
+            );
             console.log(`Sendbird user created for ${randomUser.firstName}`);
-          } catch (sendbirdError) {
+          } catch (sendbirdError: any) {
             console.error(
               `Error creating Sendbird user for ${randomUser.firstName}:`,
-              sendbirdError
+              sendbirdError.message
+            );
+            throw new Error(
+              "Failed to create Sendbird user: " + sendbirdError.message
             );
           }
 
@@ -473,17 +474,33 @@ export const resolvers = {
 
         return likeActionsResults;
       } catch (error) {
-        console.error("Error simulating random likes from users:", error);
-        throw new Error("Failed to simulate random likes from users.");
+        if (error instanceof Error) {
+          console.error(
+            "Error simulating random likes from users:",
+            error.message
+          );
+          throw new Error(
+            "Failed to simulate random likes from users: " + error.message
+          );
+        } else {
+          console.error(
+            "Error simulating random likes from users: An unknown error occurred."
+          );
+          throw new Error(
+            "Failed to simulate random likes from users due to an unknown error."
+          );
+        }
       }
     },
     simulateRandomLikesTest: async (_, { currentUserId, randomize = true }) => {
       try {
+        // Fetch the current user
         const currentUser = await User.findById(currentUserId);
         if (!currentUser) {
           throw new Error("User not found");
         }
 
+        // Fetch the user's potential match pool
         const potentialMatchPool = await PotentialMatchPool.findOne({
           userId: currentUserId,
         });
@@ -493,6 +510,7 @@ export const resolvers = {
           );
         }
 
+        // Get potential matches
         const potentialMatches = potentialMatchPool.potentialMatches;
         if (!potentialMatches || potentialMatches.length === 0) {
           throw new Error("No potential matches found for the current user");
@@ -509,33 +527,48 @@ export const resolvers = {
             : i;
           const randomMatch = potentialMatches[index];
 
-          // Simulate a like from this potential match to the current user
-          const likeActionResult = await Like.create({
-            likerId: randomMatch.matchUserId,
-            likedId: currentUserId,
-          });
-          // Create Sendbird user
-          const sendbirdUserData: Sendbird.UserApiCreateUserRequest = {
-            userId: randomMatch.matchUserId.toString(),
-            nickname: randomMatch.firstName,
-            profileUrl: randomMatch.imageSet[0]?.imageURL || "",
-          };
-
           try {
-            await userAPI.createUser(apiToken, sendbirdUserData);
-            console.log(`Sendbird user created for ${randomMatch.firstName}`);
-          } catch (sendbirdError) {
-            console.error(
-              `Error creating Sendbird user for ${randomMatch.firstName}:`,
-              sendbirdError
-            );
-          }
+            // Simulate a like from this potential match to the current user
+            const likeActionResult = await Like.create({
+              likerId: randomMatch.matchUserId,
+              likedId: currentUserId,
+            });
 
-          likeActionsResults.push({
-            likerId: randomMatch.matchUserId,
-            likedId: currentUserId,
-            success: !!likeActionResult,
-          });
+            // Create Sendbird user
+            let sendbirdAccessToken;
+            try {
+              sendbirdAccessToken = await createSendbirdUser(
+                randomMatch.matchUserId,
+                randomMatch.firstName,
+                randomMatch.imageSet[0]?.imageURL
+              );
+              console.log(`Sendbird user created for ${randomMatch.firstName}`);
+            } catch (sendbirdError: any) {
+              console.error(
+                `Error creating Sendbird user for ${randomMatch.firstName}:`,
+                sendbirdError.message
+              );
+              throw new Error(
+                "Failed to create Sendbird user: " + sendbirdError.message
+              );
+            }
+
+            likeActionsResults.push({
+              likerId: randomMatch.matchUserId,
+              likedId: currentUserId,
+              success: !!likeActionResult,
+            });
+          } catch (likeError: any) {
+            console.error(
+              `Error simulating like for user ${randomMatch.matchUserId}:`,
+              likeError.message
+            );
+            likeActionsResults.push({
+              likerId: randomMatch.matchUserId,
+              likedId: currentUserId,
+              success: false,
+            });
+          }
         }
 
         // Update the PotentialMatchPool document with the modified potentialMatches array if randomizing
@@ -548,8 +581,17 @@ export const resolvers = {
 
         return likeActionsResults;
       } catch (error) {
-        console.error("Error simulating random likes:", error);
-        throw new Error("Failed to simulate random likes.");
+        if (error instanceof Error) {
+          console.error("Error simulating random likes:", error.message);
+          throw new Error("Failed to simulate random likes: " + error.message);
+        } else {
+          console.error(
+            "Error simulating random likes: An unknown error occurred."
+          );
+          throw new Error(
+            "Failed to simulate random likes due to an unknown error."
+          );
+        }
       }
     },
     manageUserInteractions: async (_, { currentUserId }) => {
