@@ -85,11 +85,8 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const { matchedProfileStore, authenticationStore, chatStore } = useStores();
   const sdk = chatStore.sdk;
   const isSDKConnected = authenticationStore.isSDKConnected;
-  const [collection, setCollection] = useState<GroupChannelCollection | null>();
+  const collection = chatStore.collection;
   const [isLoading, setIsLoading] = useState(true);
-
-  // Destructure setCollection from chatStore and rename it
-  const { setChatStoreCollection } = chatStore;
 
   useEffect(() => {
     if (!isSDKConnected || !sdk) {
@@ -113,10 +110,11 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
       onChannelsDeleted: updateState,
     });
 
-    setCollection(newCollection);
-
     newCollection.loadMore()
-      .then(updateState)
+      .then(() => {
+        updateState();
+        chatStore.setCollection(newCollection);
+      })
       .catch((error) => {
         console.error("Failed to load more channels:", error);
         setIsLoading(false);
@@ -125,59 +123,23 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     return () => {
       newCollection?.dispose();
     };
-  }, [sdk, isSDKConnected]);
-  useEffect(() => {
-    //setChatStoreCollection(collection)
-  }, [collection]);
+  }, [sdk, isSDKConnected, chatStore]);
+
   const handleRefresh = async () => {
-  if (!sdk) {
-    console.log("SDK not available.");
-    return;
-  }
-
-  if (!collection) {
-    console.log("Collection is null, creating new collection.");
-    const newCollection = sdk.groupChannel.createGroupChannelCollection({
-      order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
-      limit: 10,
-    });
-
-    const updateState = () => {
-      setIsLoading(false);
-    };
-
-    newCollection.setGroupChannelCollectionHandler({
-      onChannelsAdded: updateState,
-      onChannelsUpdated: updateState,
-      onChannelsDeleted: updateState,
-    });
-
-    setCollection(newCollection);
-    setChatStoreCollection(newCollection);
-
+    if (!collection || !sdk) {
+      console.log("SDK or collection not available.");
+      return;
+    }
+    setIsRefreshing(true);
     try {
-      await newCollection.loadMore();
+      await collection.loadMore();
+      chatStore.setCollection(collection);
     } catch (error) {
-      console.error("Failed to load more channels:", error);
+      console.error("Failed to refresh the group channel collection:", error, collection);
     } finally {
       setIsRefreshing(false);
     }
-
-    return;
-  }
-
-  setIsRefreshing(true);
-  try {
-    console.log("Refreshing", collection);
-    await collection.loadMore();
-  } catch (error) {
-    console.error("Failed to refresh the group channel collection:", error, collection);
-  } finally {
-    setIsRefreshing(false);
-  }
-};
-
-
+  };
 
   useEffect(() => {
     const refreshData = async () => {
@@ -185,7 +147,6 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
       setIsRefreshing(true);
       try {
         await handleRefresh();
-        setChatStoreCollection(collection as GroupChannelCollection);
       } catch (error) {
         console.error("Error during refresh:", error);
       } finally {
@@ -271,6 +232,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
                 if (collection?.hasMore) {
                   setIsLoading(true);
                   await collection.loadMore();
+                  chatStore.setCollection(collection);
                   setIsLoading(false);
                 }
               }

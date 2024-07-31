@@ -74,7 +74,7 @@ export const ChatStore = types
     isConnected: types.optional(types.boolean, false),
     sdk: types.maybe(types.frozen()), // Store the SDK instance once initialized
     channelUrl: types.optional(types.frozen(), {}),
-    collection2: types.maybeNull(types.frozen<GroupChannelCollection>()),
+    collection: types.maybeNull(types.frozen<GroupChannelCollection>()),
     currentChatProfile: types.maybe(CurrentChatModel),
     channelType: types.maybeNull(types.string),
     channelStatus: types.maybeNull(types.string),
@@ -89,9 +89,8 @@ export const ChatStore = types
   })
   .actions(withSetPropAction)
   .actions((self) => ({
-    setChatStoreCollection(collection2: any) {
-      console.log("Setting", collection2)
-      self.collection2 = collection2
+    setCollection(collection: any) {
+      self.collection = collection
     },
     setChannel(channel: GroupChannel) {
       self.channelUrl = channel
