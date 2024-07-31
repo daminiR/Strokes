@@ -103,6 +103,7 @@ const MatchesStoreModel = types
           if (success) {
             // Check for mutual like indicating a match
             const isMatch = yield mongoDBStore.checkForMutualLike(likedId)
+            console.log("whats happening in matches", isMatch)
             if (isMatch) {
               // Record the match in the matches collection
               yield mongoDBStore.createMatch(likedId)

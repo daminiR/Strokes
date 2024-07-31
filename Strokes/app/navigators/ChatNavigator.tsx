@@ -1,16 +1,5 @@
 import React from 'react';
-import { MMKVAdapter } from 'app/utils/storage/mmkdvAdapter';
-import { SendbirdUIKitContainer } from '@sendbird/uikit-react-native';
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
-import { platformServices } from "../services/api/sendbird"
-import { SendbirdChatProvider } from "@sendbird/uikit-react-native"
-import { createStackNavigator } from '@react-navigation/stack';
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-  NavigatorScreenParams,
-} from "@react-navigation/native"
 import Config from "../config"
 import {ChatTopTabNavigator} from './ChatTopTabNavigator'
 import * as Screens from "app/screens"
