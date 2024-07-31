@@ -91,8 +91,9 @@ interface AppProps {
     console.log("Current State:", currentState)
   }
   useEffect(() => {
-    const handleAppStateChange = (nextAppState: string) => {
+    console.log("env local", process.env.React_App_UriUploadRemote)
       console.log("photo", tempUserStore.photosAppIsActive, authenticationStore.isAuthenticated)
+    const handleAppStateChange = (nextAppState: string) => {
       if (!tempUserStore.photosAppIsActive && authenticationStore.isAuthenticated) {
         if (appState !== "active" && nextAppState === "active") {
           console.log("App is coming to the foreground. Navigating to the start screen...")
