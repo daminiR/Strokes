@@ -1,33 +1,10 @@
 import Match from "../../../models/Match";
 import {
-  apiToken,
-  userAPI,
-  groupChannelApi,
-} from "./../../../services/sendbirdService";
-import {
-  hideChannel,
-} from "./../../../utils/sendbird";
-import {
+  createChannel,
+  userExists,
   hideSendbirdChannel,
 } from "./../../../utils/sendBirdv2";
 
-
-// Create the userExists function using Sendbird SDK
-async function userExists(userId: string, apiToken: string): Promise<boolean> {
-  try {
-    // Use the Sendbird SDK to get the user by ID
-    const user = await userAPI.viewUserById(apiToken, userId);
-    return !!user; // Return true if user exists
-  } catch (error) {
-    // If the error is a 404, the user does not exist
-    //if (error.response && error.response.status === 404) {
-      //return false;
-    //}
-
-    console.error(`Failed to check user existence: ${error}`);
-    return false;
-  }
-}
 
 export const resolvers = {
   Query: {
@@ -142,7 +119,6 @@ export const resolvers = {
             blockedBy: match.blockedBy,
           },
         }));
-
         return userProfiles;
       } catch (error) {
         if (error instanceof Error) {
@@ -157,28 +133,25 @@ export const resolvers = {
   Mutation: {
     async createMatch(_, { user1Id, user2Id }) {
       try {
-        const user1Exists = await userExists(user1Id, apiToken);
-        const user2Exists = await userExists(user2Id, apiToken);
+        const user1Exists = await userExists(user1Id);
+        const user2Exists = await userExists(user2Id);
 
         if (!user1Exists || !user2Exists) {
           console.error(
             "One or both users do not exist. Channel creation aborted."
           );
-          return;
+          return {
+            success: false,
+            message: "One or both users do not exist.",
+          };
         }
-        // Create a group channel with the two users
-        const createChannelData = {
-          name: `${user1Id}__${user2Id} Chat`,
-          userIds: [user1Id, user2Id],
-          is_distinct: true,
-        };
 
-        const response = await groupChannelApi.gcCreateChannel(
-          apiToken,
-          createChannelData
+        // Create a group channel with the two users
+        const channelUrl = await createChannel(
+          [user1Id, user2Id],
+          `${user1Id}__${user2Id} Chat`
         );
 
-        const channelUrl = response.channelUrl;
         // Now create a match document with the new channel URL
         const newMatch = await Match.create({
           user1Id,
@@ -213,49 +186,56 @@ export const resolvers = {
         };
       }
     },
-  async removeMatch(_, { matchId, reason, userId }: { matchId: string; reason: string; userId: string }) {
-  try {
-    // Connect to your data source and find the match
-    const match = await Match.findById(matchId);
-    if (!match) {
-      return {
-        success: false,
-        message: "Match not found.",
-        channelUrl: null,
-        channelStatus: null,
-      };
-    }
+    async removeMatch(
+      _,
+      {
+        matchId,
+        reason,
+        userId,
+      }: { matchId: string; reason: string; userId: string }
+    ) {
+      try {
+        // Connect to your data source and find the match
+        const match = await Match.findById(matchId);
+        if (!match) {
+          return {
+            success: false,
+            message: "Match not found.",
+            channelUrl: null,
+            channelStatus: null,
+          };
+        }
 
-    // Update match based on the reason provided
-    if (reason === 'reported') {
-      match.channelStatus = "reported"; // Set the channel status to reported
-      match.reportedBy = userId; // Set the reportedBy field to the userId of the reporter
-    } else if (reason === 'unmatched'){
-      match.channelStatus = "archived"; // Default to archiving the match for other reasons
-      match.reportedBy = ""; // Clear the reportedBy field unless it's a report case
-    }
+        // Update match based on the reason provided
+        if (reason === "reported") {
+          match.channelStatus = "reported"; // Set the channel status to reported
+          match.reportedBy = userId; // Set the reportedBy field to the userId of the reporter
+        } else if (reason === "unmatched") {
+          match.channelStatus = "archived"; // Default to archiving the match for other reasons
+          match.reportedBy = ""; // Clear the reportedBy field unless it's a report case
+        }
 
-    await match.save();
+        await match.save();
 
-    // Optionally handle the channel operations
-    // For example, if you have an API to manage channel statuses:
-    await hideSendbirdChannel(match.channelUrl);
+        // Optionally handle the channel operations
+        // For example, if you have an API to manage channel statuses:
+        await hideSendbirdChannel(match.channelUrl);
 
-    return {
-      success: true,
-      message: "Match status updated successfully.",
-      channelUrl: match.channelUrl,
-      channelStatus: match.channelStatus,
-    };
-  } catch (error) {
-    console.error("Error updating match status:", error);
-    return {
-      success: false,
-      message: "Failed to update the match status.",
-      channelUrl: null,
-      channelStatus: null,
-    };
-  }
-},
+        return {
+          success: true,
+          message: "Match status updated successfully.",
+          channelUrl: match.channelUrl,
+          channelStatus: match.channelStatus,
+        };
+      } catch (error) {
+        console.error("Error updating match status:", error);
+        return {
+          success: false,
+          message: "Failed to update the match status.",
+          channelUrl: null,
+          channelStatus: null,
+        };
+      }
+    },
   },
 };

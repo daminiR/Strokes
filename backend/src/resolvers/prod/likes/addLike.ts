@@ -43,12 +43,6 @@ export const resolvers = {
   Query: {
     checkForMutualLike: async (_, { currentUserId, likedId }) => {
       try {
-        // Check if there's a like from the current user to likedId
-        const likeTo = await Like.findOne({
-          likerId: currentUserId,
-          likedId: likedId,
-        });
-
         // Check if there's a like from likedId to the current user
         const likeFrom = await Like.findOne({
           likerId: likedId,
@@ -56,7 +50,7 @@ export const resolvers = {
         });
 
         // A mutual like exists if both likeTo and likeFrom are not null
-        const isMutual = !!likeTo && !!likeFrom;
+        const isMutual = !!likeFrom;
 
         return { isMutual };
       } catch (error) {

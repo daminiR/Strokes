@@ -124,6 +124,7 @@ export const UserType = `
     phoneNumber: String
     email: String
     filtersChangesPerDay: Int!
+    accessToken: String!
   `
 
 export const UserInputType = `
