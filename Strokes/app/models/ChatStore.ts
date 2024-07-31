@@ -1,11 +1,12 @@
-import { types, flow, Instance, cast} from 'mobx-state-tree';
+import {types, flow, Instance, cast} from 'mobx-state-tree';
+import {GroupChannelCollection} from "@sendbird/chat/groupChannel";
 import {CollectionEventSource} from '@sendbird/chat';
-import { GroupChannelHandler, MessageCollectionInitPolicy} from '@sendbird/chat/groupChannel';
+import {MessageCollectionInitPolicy} from '@sendbird/chat/groupChannel';
 import {withSetPropAction} from "./helpers/withSetPropAction"
 import storage from 'app/utils/storage/mmkvStorage';
-import { getRootStore} from "./helpers/getRootStore"
+import {getRootStore} from "./helpers/getRootStore"
 import SendbirdChat from "@sendbird/chat"
-import { GroupChannelModule, MessageCollection, GroupChannel } from "@sendbird/chat/groupChannel"
+import {GroupChannelModule, MessageCollection, GroupChannel} from "@sendbird/chat/groupChannel"
 
 export const LocationModel = types.model("LocationModel", {
   city: types.maybeNull(types.string),
@@ -73,7 +74,7 @@ export const ChatStore = types
     isConnected: types.optional(types.boolean, false),
     sdk: types.maybe(types.frozen()), // Store the SDK instance once initialized
     channelUrl: types.optional(types.frozen(), {}),
-    collection: types.optional(types.frozen(), {}),
+    collection2: types.maybeNull(types.frozen<GroupChannelCollection>()),
     currentChatProfile: types.maybe(CurrentChatModel),
     channelType: types.maybeNull(types.string),
     channelStatus: types.maybeNull(types.string),
@@ -86,8 +87,12 @@ export const ChatStore = types
     reportedBy: types.maybeNull(types.string),
     blockedBy: types.maybeNull(types.string),
   })
- .actions(withSetPropAction)
+  .actions(withSetPropAction)
   .actions((self) => ({
+    setChatStoreCollection(collection2: any) {
+      console.log("Setting", collection2)
+      self.collection2 = collection2
+    },
     setChannel(channel: GroupChannel) {
       self.channelUrl = channel
     },
@@ -129,9 +134,6 @@ export const ChatStore = types
       self.reportedBy = profile.chat.reportedBy || null
       self.blockedBy = profile.chat.blockedBy || null
     },
-    setCollection(collection: MessageCollection) {
-      self.collection = collection
-    },
     resetChannelAndCollection: () => {
       if (self.collection) {
         self.collection.dispose() // Dispose of the collection properly.
@@ -148,7 +150,7 @@ export const ChatStore = types
           collection.setMessageCollectionHandler({
             onChannelDeleted: () => {},
             onChannelUpdated: (_, channel) => {
-              setState((prev) => (prev ? { ...prev, channel } : prev))
+              setState((prev) => (prev ? {...prev, channel} : prev))
             },
             onMessagesUpdated: (context, channel, messages) => {
               // Implement necessary updates or callbacks
@@ -181,7 +183,7 @@ export const ChatStore = types
                 console.log("GroupChannelScreen:", "onCacheResult", messages.length)
                 rerender()
               }
-              setState({ channel, collection })
+              setState({channel, collection})
             })
             .onApiResult((err: any, messages: any) => {
               if (messages?.length && messages.length > 0) {
@@ -189,7 +191,7 @@ export const ChatStore = types
 
                 rerender()
               }
-              setState({ channel, collection })
+              setState({channel, collection})
             })
 
           channel.markAsRead()
@@ -198,25 +200,43 @@ export const ChatStore = types
       //console.log("here", channel)
     }),
     initializeSDK: flow(function* () {
-      //if (!self.sdk) {
-      const sdk = SendbirdChat.init({
-        appId: APP_ID,
-        modules: [new GroupChannelModule()],
-        useMMKVStorageStore: storage,
-        localCacheEnabled: true,
-      })
-      //const sdk = yield sdkPromise
-      self.sdk = sdk
-      //self.setSDK(sdk)
-      console.log("SDK Initialized:", self.sdk)
-      //}
+      try {
+        // Check if SDK is already initialized
+        //if (self.sdk) {
+        //console.log("SDK is already initialized:", self.sdk);
+        //return;
+        //}
+
+        // Ensure that the storage is initialized
+        if (!storage) {
+          console.error("Storage is not initialized.");
+          return;
+        }
+
+        // Initialize the Sendbird SDK
+        const sdk = SendbirdChat.init({
+          appId: APP_ID, // Ensure APP_ID is defined and correct
+          modules: [new GroupChannelModule()],
+          useMMKVStorageStore: storage,
+          localCacheEnabled: true,
+        });
+
+        // Set the SDK instance to self.sdk
+        self.sdk = sdk;
+
+        // Log the initialized SDK instance
+        console.log("SDK Initialized:", self.sdk);
+      } catch (error) {
+        // Log any errors that occur during initialization
+        console.error("Error initializing SDK:", error);
+      }
+
     }),
     setSDK(sdk: any) {
       self.sdk = sdk
     },
     connect: flow(function* (userId: string, nickname: string, accessToken: string) {
       try {
-        console.log("nick", nickname, accessToken)
         const user = yield self.sdk.connect(userId, accessToken)
         self.currentUser = UserModel.create({
           userId: user.userId,

@@ -1,9 +1,7 @@
-import { PermissionsAndroid, Platform } from "react-native"
+import {Platform} from "react-native"
 import {
   types,
   flow,
-  SnapshotOut,
-  Instance,
 } from "mobx-state-tree"
 import messaging from "@react-native-firebase/messaging"
 import {
@@ -12,10 +10,10 @@ import {
   AuthenticationDetails,
   CognitoUserPool,
 } from "amazon-cognito-identity-js"
-import { resetToInitialState } from "./../navigators"
-import { getRootStore} from "./helpers/getRootStore"
+import {resetToInitialState} from "./../navigators"
+import {getRootStore} from "./helpers/getRootStore"
 import {withSetPropAction} from "./helpers/withSetPropAction"
-import { removeStore } from "./helpers/removeRootStore"
+import {removeStore} from "./helpers/removeRootStore"
 import storage from "app/utils/storage/mmkvStorage"
 
 
@@ -87,7 +85,7 @@ export const AuthenticationStoreModel = types
       const refreshToken = session.getRefreshToken().getToken()
       const userSub = session.getIdToken().payload.sub
 
-      self.setProp("tokens", { idToken, accessToken, refreshToken })
+      self.setProp("tokens", {idToken, accessToken, refreshToken})
       userStore.setID(userSub)
     })
     const checkUserSession = flow(function* checkUserSession(userPool, userStore) {
@@ -265,9 +263,9 @@ export const AuthenticationStoreModel = types
 
       try {
         const attributeList = [
-          new CognitoUserAttribute({ Name: "email", Value: userStore.email }),
-          new CognitoUserAttribute({ Name: "phone_number", Value: userStore.phoneNumber }),
-          new CognitoUserAttribute({ Name: "gender", Value: userStore.gender }),
+          new CognitoUserAttribute({Name: "email", Value: userStore.email}),
+          new CognitoUserAttribute({Name: "phone_number", Value: userStore.phoneNumber}),
+          new CognitoUserAttribute({Name: "gender", Value: userStore.gender}),
         ]
 
         yield new Promise((resolve, reject) => {
@@ -287,7 +285,7 @@ export const AuthenticationStoreModel = types
           )
         })
 
-        return { success: true }
+        return {success: true}
       } catch (error) {
         console.error("Error during the sign-up process:", error)
         throw error
@@ -319,7 +317,7 @@ export const AuthenticationStoreModel = types
               const refreshToken = session.getRefreshToken().getToken()
 
               // Optionally, you can save these tokens to your user store or state management
-              self.setProp("tokens", { idToken, accessToken, refreshToken })
+              self.setProp("tokens", {idToken, accessToken, refreshToken})
               const userSub = session.getIdToken().payload.sub
               userStore.setID(userSub)
               resolve(session)
@@ -475,11 +473,11 @@ export const AuthenticationStoreModel = types
       }
     })
     const cognitoUserSignOut = flow(function* cognitoUserSignOut() {
-        const userPool = new CognitoUserPool(poolData)
-        const cognitoUser = userPool.getCurrentUser()
-        if (cognitoUser != null) {
-           cognitoUser.signOut()
-        }
+      const userPool = new CognitoUserPool(poolData)
+      const cognitoUser = userPool.getCurrentUser()
+      if (cognitoUser != null) {
+        cognitoUser.signOut()
+      }
     })
     const signOut = flow(function* () {
       self.setProp("isLoading", true)
