@@ -1,9 +1,7 @@
-import { PermissionsAndroid, Platform } from "react-native"
+import {Platform} from "react-native"
 import {
   types,
   flow,
-  SnapshotOut,
-  Instance,
 } from "mobx-state-tree"
 import messaging from "@react-native-firebase/messaging"
 import {
@@ -12,14 +10,12 @@ import {
   AuthenticationDetails,
   CognitoUserPool,
 } from "amazon-cognito-identity-js"
-import { resetToInitialState } from "./../navigators"
-import { getRootStore} from "./helpers/getRootStore"
+import {resetToInitialState} from "./../navigators"
+import {getRootStore} from "./helpers/getRootStore"
 import {withSetPropAction} from "./helpers/withSetPropAction"
-import { removeStore } from "./helpers/removeRootStore"
+import {removeStore} from "./helpers/removeRootStore"
 import storage from "app/utils/storage/mmkvStorage"
 
-const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
-const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 
 async function requestUserPermission() {
   const authorizationStatus = await messaging().requestPermission()
@@ -89,7 +85,7 @@ export const AuthenticationStoreModel = types
       const refreshToken = session.getRefreshToken().getToken()
       const userSub = session.getIdToken().payload.sub
 
-      self.setProp("tokens", { idToken, accessToken, refreshToken })
+      self.setProp("tokens", {idToken, accessToken, refreshToken})
       userStore.setID(userSub)
     })
     const checkUserSession = flow(function* checkUserSession(userPool, userStore) {
@@ -123,11 +119,10 @@ export const AuthenticationStoreModel = types
 
       try {
         const userSub = userStore._id
-        const accessToken = userStore.accessToken
         yield mongoDBStore.queryUserFromMongoDB(userSub)
         yield mongoDBStore.queryPotentialMatches()
         yield chatStore.initializeSDK()
-        yield chatStore.connect(userSub, "Damini Rijhwani Android", accessToken)
+        yield chatStore.connect(userSub, userStore.firstName, userStore.accessToken)
         self.setProp("isSDKConnected", true)
         console.log("Chat SDK initialized and connected:", chatStore.sdk)
 
@@ -177,8 +172,9 @@ export const AuthenticationStoreModel = types
     })
     const registerDeviceToken = flow(function* () {
       const chatStore = getRootStore(self).chatStore // Ensure you have access to the Sendbird instance
+      const userStore = getRootStore(self).userStore // Ensure you have access to the Sendbird instance
       //TODO and then logout
-      yield chatStore.connect(userID, "Damini Rijhwani Andnroid", accessToken)
+      yield chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken)
 
       // Request permission for notifications, crucial for iOS
       const requestPermission = flow(function* () {
@@ -243,7 +239,7 @@ export const AuthenticationStoreModel = types
           self.setProp("isAuthenticated", true)
 
           yield chatStore.initializeSDK()
-          yield chatStore.connect(userStore._id, "Damini Rijhwani Android", userStore.accessToken)
+          yield chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken)
           console.log("User connected to SendBird")
 
           // Reset or initialize any necessary state
@@ -267,9 +263,9 @@ export const AuthenticationStoreModel = types
 
       try {
         const attributeList = [
-          new CognitoUserAttribute({ Name: "email", Value: userStore.email }),
-          new CognitoUserAttribute({ Name: "phone_number", Value: userStore.phoneNumber }),
-          new CognitoUserAttribute({ Name: "gender", Value: userStore.gender }),
+          new CognitoUserAttribute({Name: "email", Value: userStore.email}),
+          new CognitoUserAttribute({Name: "phone_number", Value: userStore.phoneNumber}),
+          new CognitoUserAttribute({Name: "gender", Value: userStore.gender}),
         ]
 
         yield new Promise((resolve, reject) => {
@@ -289,7 +285,7 @@ export const AuthenticationStoreModel = types
           )
         })
 
-        return { success: true }
+        return {success: true}
       } catch (error) {
         console.error("Error during the sign-up process:", error)
         throw error
@@ -321,7 +317,7 @@ export const AuthenticationStoreModel = types
               const refreshToken = session.getRefreshToken().getToken()
 
               // Optionally, you can save these tokens to your user store or state management
-              self.setProp("tokens", { idToken, accessToken, refreshToken })
+              self.setProp("tokens", {idToken, accessToken, refreshToken})
               const userSub = session.getIdToken().payload.sub
               userStore.setID(userSub)
               resolve(session)
@@ -394,7 +390,6 @@ export const AuthenticationStoreModel = types
       const userStore = getRootStore(self).userStore
       const mongoDBStore = getRootStore(self).mongoDBStore
       const chatStore = getRootStore(self).chatStore
-
       try {
         const authData = {
           Username: userStore.phoneNumber,
@@ -478,11 +473,11 @@ export const AuthenticationStoreModel = types
       }
     })
     const cognitoUserSignOut = flow(function* cognitoUserSignOut() {
-        const userPool = new CognitoUserPool(poolData)
-        const cognitoUser = userPool.getCurrentUser()
-        if (cognitoUser != null) {
-           cognitoUser.signOut()
-        }
+      const userPool = new CognitoUserPool(poolData)
+      const cognitoUser = userPool.getCurrentUser()
+      if (cognitoUser != null) {
+        cognitoUser.signOut()
+      }
     })
     const signOut = flow(function* () {
       self.setProp("isLoading", true)

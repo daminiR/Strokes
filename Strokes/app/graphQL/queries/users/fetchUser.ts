@@ -64,6 +64,7 @@ const READ_SQUASH = gql`
       lastName
       age
       gender
+      accessToken
       deleted {
         isDeleted
         deletedAt

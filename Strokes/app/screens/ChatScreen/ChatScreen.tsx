@@ -21,8 +21,6 @@ import { accelerometer, setUpdateIntervalForType, SensorTypes } from 'react-nati
 import { Animated } from 'react-native';
 // Set the update interval
 setUpdateIntervalForType(SensorTypes.accelerometer, 100); // updates every 100ms
-const userID = "0c951930-a533-4430-a582-5ce7ec6c61bc"
-const accessToken = "6572603456b4d9f1b6adec6c283ef5adc6099418"
 
 const windowDimensions = Dimensions.get('window');
 export const ChatScreen = observer(() => {

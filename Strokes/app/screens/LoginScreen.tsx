@@ -80,8 +80,8 @@ useEffect(() => {
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
       <TextField
-        value={userStore.phoneNumber ?? undefined}
-        onChangeText={userStore.setPhoneNumber}
+        value={userStore.displayPhoneNumber ?? undefined}
+        onChangeText={text => userStore.setPhoneNumber(text)}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="tel-device"
