@@ -17,6 +17,7 @@ export const resolvers = {
         const skip = (page - 1) * limit;
 
         // Fetch matches where the provided userId is either user1Id or user2Id with pagination
+        console.log(userId)
         const matches = await Match.aggregate([
           {
             $match: {
@@ -119,6 +120,7 @@ export const resolvers = {
             blockedBy: match.blockedBy,
           },
         }));
+        console.log(userProfiles)
         return userProfiles;
       } catch (error) {
         if (error instanceof Error) {
