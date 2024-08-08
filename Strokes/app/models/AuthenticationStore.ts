@@ -214,50 +214,56 @@ export const AuthenticationStoreModel = types
         }
 
         // Handle token refresh
-        messaging().onTokenRefresh((newToken) => {
+        messaging().onTokenRefresh(async (newToken) => {
           //registerDeviceToken(newToken) // Call this function recursively to update the token
-          registerDeviceToken() // Call this function recursively to update the token
+          await registerDeviceToken() // Call this function recursively to update the token
         })
       } catch (error) {
         console.error("Error during push token registration:", error)
         throw error // Optionally, handle this error more gracefully
       }
     })
-    const checkCognitoUserSession = flow(function* checkCognitoUserSession() {
-      self.setProp("isLoading", true)
-      self.setProp("isSDKConnected", false)
-      const mongoDBStore = getRootStore(self).mongoDBStore
-      const chatStore = getRootStore(self).chatStore
-      const userStore = getRootStore(self).userStore
+    const checkCognitoUserSession = flow(function* checkCognitoUserSession(includeMongoDBQueryReset = true) {
+      self.setProp("isLoading", true);
+      self.setProp("isSDKConnected", false);
+      const mongoDBStore = getRootStore(self).mongoDBStore;
+      const chatStore = getRootStore(self).chatStore;
+      const userStore = getRootStore(self).userStore;
 
       try {
-        const userPool = new CognitoUserPool(poolData)
-        const session = yield checkUserSession(userPool, userStore)
+        const userPool = new CognitoUserPool(poolData);
+        const session = yield checkUserSession(userPool, userStore);
 
         if (session) {
-          console.log("User is signed in")
-          self.setProp("isAuthenticated", true)
+          console.log("User is signed in");
+          self.setProp("isAuthenticated", true);
 
-          yield chatStore.initializeSDK()
-          yield chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken)
-          console.log("User connected to SendBird")
+          yield chatStore.initializeSDK();
+          yield chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken);
+          console.log("User connected to SendBird");
 
-          // Reset or initialize any necessary state
-          resetToInitialState()
-          mongoDBStore.shouldQuery()
-          self.setProp("isSDKConnected", true)
+          // Register device token for push notifications
+          yield self.registerDeviceToken();
+
+          // Optionally reset or initialize any necessary MongoDB state
+          if (includeMongoDBQueryReset) {
+            resetToInitialState();
+            mongoDBStore.shouldQuery();
+          }
+
+          self.setProp("isSDKConnected", true);
         } else {
-          console.log("No valid session found")
-          self.setProp("isAuthenticated", false)
+          console.log("No valid session found");
+          self.setProp("isAuthenticated", false);
         }
       } catch (error) {
-        console.error(error)
-        yield clearUserSession()
-        self.setProp("isAuthenticated", false)
+        console.error(error);
+        yield clearUserSession();
+        self.setProp("isAuthenticated", false);
       } finally {
-        self.setProp("isLoading", false)
+        self.setProp("isLoading", false);
       }
-    })
+    });
     const signUp = flow(function* () {
       const userStore = getRootStore(self).userStore
 
@@ -361,7 +367,6 @@ export const AuthenticationStoreModel = types
       })
 
       try {
-        console.log(self.verificationPhoneCode)
         const confirmationResult = yield new Promise((resolve, reject) => {
           cognitoUser.confirmRegistration(self.verificationPhoneCode, true, (err, result) => {
             if (err) {
