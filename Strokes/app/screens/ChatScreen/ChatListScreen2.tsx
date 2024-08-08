@@ -87,23 +87,23 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
       setIsLoading(false);
       return;
     }
+
     const newCollection = sdk.groupChannel.createGroupChannelCollection({
       order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
       limit: 10,
       hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN,
     });
-    console.log("Creating new collection", typeof newCollection);
 
     const updateState = () => {
       setIsLoading(false);
-      setIsRefreshing(false)
+      setIsRefreshing(false);
     };
 
     newCollection.setGroupChannelCollectionHandler({
       onChannelsAdded: updateState,
       onChannelsUpdated: updateState,
       onChannelsDeleted: updateState,
-      onMessageReceived: updateState,  // Added to refresh on new message received
+      onMessageReceived: updateState,
     });
 
     newCollection.loadMore()
@@ -121,31 +121,33 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     };
   }, [sdk, isSDKConnected, chatStore]);
 
-  useFocusEffect(
-    useCallback(() => {
-      initializeCollection();
-    }, [initializeCollection])
-  );
-  // Refresh collection when a push notification is received
   useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('A new FCM message arrived!', remoteMessage);
-      initializeCollection();  // Re-initialize collection on new message
-    });
-
+    const disposer = initializeCollection();
     return () => {
-      unsubscribe();
+      disposer?.(); // Dispose the collection when component unmounts
     };
   }, [initializeCollection]);
 
-const handleRefresh = async () => {
+  const handleRefresh = async () => {
     setIsRefreshing(true);
     initializeCollection();
-};
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const checkAndInitialize = async () => {
+        if (!isSDKConnected) {
+          await authenticationStore.checkCognitoUserSession(false);
+        }
+        initializeCollection();
+      };
+
+      checkAndInitialize();
+    }, [initializeCollection, isSDKConnected, authenticationStore])
+  );
 
   useEffect(() => {
     const refreshData = async () => {
-      console.log("Number of matched profiles changed, running refresh logic");
       setIsRefreshing(true);
       try {
         await handleRefresh();
@@ -166,34 +168,44 @@ const handleRefresh = async () => {
     };
   }, [matchedProfileStore]);
 
-  const keyExtractor = (item: GroupChannel) => item.url;
+  // Listen for incoming push notifications
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('A new FCM message arrived!', remoteMessage);
+      await handleRefresh();  // Re-initialize collection on new message
+    });
 
-  const renderItem = ({ item }: { item: GroupChannel }) => {
-    const onPressChannel = (): any => {
-      const matchedUser = matchedProfileStore.findByChannelId(item.url)
-      chatStore.setChatProfile(matchedUser)
-      navigate("ChatTopNavigator")
+    return () => {
+      unsubscribe();
+    };
+  }, [handleRefresh]);
+
+  const renderItem = ({ item }: { item: GroupChannel | null }) => {
+    if (!item) {
+      return null; // Render nothing if item is null
     }
 
-    // Fetch the matched user profile based on the channel ID
-    const matchedUser = matchedProfileStore.findByChannelId(item.url)
+    const onPressChannel = (): any => {
+      const matchedUser = matchedProfileStore.findByChannelId(item.url);
+      chatStore.setChatProfile(matchedUser);
+      navigate("ChatTopNavigator");
+    };
 
-    // Determine the title to be used in the preview
+    const matchedUser = matchedProfileStore.findByChannelId(item.url);
+
     const title = matchedUser
       ? matchedUser.firstName || "Unknown User"
-      : getGroupChannelTitle(sdk.currentUser!.userId, item)
+      : getGroupChannelTitle(sdk.currentUser!.userId, item);
 
-    // Determine the cover image URL to be used in the preview
     const coverUrl =
       matchedUser && matchedUser.imageSet && matchedUser.imageSet.length > 0
         ? matchedUser.imageSet[0].imageURL
-        : item.coverUrl || "https://static.sendbird.com/sample/cover/cover_11.jpg" // Fallback to default cover image
+        : item.coverUrl || "https://static.sendbird.com/sample/cover/cover_11.jpg";
 
-    // Determine the last message and its timestamp
-    const lastMessage = item.lastMessage ? item.lastMessage.message : "No description available"
+    const lastMessage = item.lastMessage ? item.lastMessage.message : "No description available";
     const lastMessageTime = item.lastMessage
       ? dayjs(item.lastMessage.createdAt).format("YYYY-MM-DD")
-      : "Unavailable"
+      : "Unavailable";
 
     return (
       <TouchableOpacity onPress={onPressChannel}>
@@ -208,8 +220,8 @@ const handleRefresh = async () => {
           notificationOff={item.myPushTriggerOption === "off"}
         />
       </TouchableOpacity>
-    )
-  }
+    );
+  };
 
   if (isLoading) {
     return <LoadingActivity />;
@@ -241,9 +253,14 @@ const handleRefresh = async () => {
             : async () => {
                 if (collection?.hasMore) {
                   setIsLoading(true);
-                  await collection.loadMore();
-                  chatStore.setCollection(collection);
-                  setIsLoading(false);
+                  try {
+                    await collection.loadMore();
+                    chatStore.setCollection(collection);
+                  } catch (error) {
+                    console.error("Failed to load more channels:", error);
+                  } finally {
+                    setIsLoading(false);
+                  }
                 }
               }
         }
@@ -257,6 +274,7 @@ const handleRefresh = async () => {
     </Screen>
   );
 });
+
 
 const styles = StyleSheet.create({
   container: {
