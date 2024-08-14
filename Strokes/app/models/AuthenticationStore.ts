@@ -124,7 +124,7 @@ export const AuthenticationStoreModel = types
         yield chatStore.initializeSDK()
         yield chatStore.connect(userSub, userStore.firstName, userStore.accessToken)
         self.setProp("isSDKConnected", true)
-        console.log("Chat SDK initialized and connected:", chatStore.sdk)
+        console.log("Chat SDK initialized and connected:")
 
         yield self.registerDeviceToken()
         console.log("Registered for push notifications")

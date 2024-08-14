@@ -224,7 +224,7 @@ export const ChatStore = types
         self.sdk = sdk;
 
         // Log the initialized SDK instance
-        console.log("SDK Initialized:", self.sdk);
+        console.log("SDK Initialized:");
       } catch (error) {
         // Log any errors that occur during initialization
         console.error("Error initializing SDK:", error);
@@ -236,6 +236,7 @@ export const ChatStore = types
     },
     connect: flow(function* (userId: string, nickname: string, accessToken: string) {
       try {
+        console.log("ids, userId, accessToken", userId, accessToken)
         const user = yield self.sdk.connect(userId, accessToken)
         self.currentUser = UserModel.create({
           userId: user.userId,
