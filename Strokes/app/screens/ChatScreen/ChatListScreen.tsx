@@ -45,25 +45,29 @@ const CustomHeaderComponent = () => {
 const CustomHeaderComponent2 = () => {
   return LoadingActivity // This ensures that no header is rendered
 }
-const GroupChannelListFragment = createGroupChannelListFragment({
-    StatusLoading: () => <LoadingActivity message="Loading..."/>,
+  const GroupChannelListFragment = createGroupChannelListFragment({
+    StatusLoading: () => {
+    console.log("GroupChannelListFragment is loading");
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  },
     Header: CustomHeaderComponent,
     //List:  ListCompenent
   })
 
 
-const accessToken = "a168129d92c66c9657aa6021871abf93fe546c45"
+const userID = "566b26cf-443b-41d9-95d9-368ed2a7de57"
+const accessToken = "44719b82cf9fcd373ce12e3865aa2af6d0695822"
 interface ChatListScreen extends ChatListStackScreenProps<"ChatList"> {}
 
 export const ChatListScreen: FC<ChatListScreen> = observer(function ChatListScreen(_props) {
-  const { matchedStore, userStore,authenticationStore, chatStore, matchedProfileStore } = useStores()
+  const { authenticationStore, chatStore, matchedProfileStore } = useStores()
   const [isInitialized, setIsInitialized] = useState(false)
   const initializeSDK = async () => {
     try {
       await chatStore.initializeSDK()
-      await chatStore.connect(userStore.userID, userStore.firstName, accessToken)
+      await chatStore.connect(userID, "Dam", accessToken)
       setIsInitialized(true)
-      console.log("Sendbird initializated:")
+      console.log("do we make it here")
     } catch (error) {
       console.error("Sendbird initialization error:", error)
     }
@@ -81,33 +85,44 @@ export const ChatListScreen: FC<ChatListScreen> = observer(function ChatListScre
       <View style={styles.heading}>
         <Text preset="heading" tx="chatScreenList.title" />
       </View>
-      <GroupChannelListFragment
-        onPressChannel={(channel) => {
-          const matchedUser = matchedProfileStore.findByChannelId(channel.url)
-          chatStore.setChatProfile(matchedUser)
-          navigate("ChatTopNavigator")
-        }}
-        renderGroupChannelPreview={({ channel, onPress }) => {
-          const matchedUser = matchedProfileStore.findByChannelId(channel.url)
-          if (!matchedUser) {
-            // Optionally return null or a placeholder if no user is matched
-            return null
-          }
-          const lastMessage = channel.lastMessage.message
-          const lastMessageTime = formatTimestamp(channel.lastMessage.createdAt)
-          return (
-            <TouchableOpacity onPress={onPress}>
-              <GroupChannelPreview
-                title={matchedUser.firstName || "Unknown User"}
-                titleCaption={lastMessageTime || "Unavailable"}
-                coverUrl={matchedUser.imageSet[0]?.imageURL || "default_profile_image.png"}
-                body={lastMessage || "No description available"}
-                badgeCount={channel.unreadMessageCount}
-              />
-            </TouchableOpacity>
-          )
-        }}
-      />
+      {isInitialized ? (
+      <View style={styles.heading}>
+        <GroupChannelListFragment
+          onPressCreateChannel={()=>{}}
+          onPressChannel={(channel) => {
+            const matchedUser = matchedProfileStore.findByChannelId(channel.url)
+            chatStore.setChatProfile(matchedUser)
+            navigate("ChatTopNavigator")
+          }}
+          renderGroupChannelPreview={({ channel, onPress }) => {
+            console.log("make it")
+            const matchedUser = matchedProfileStore.findByChannelId(channel.url)
+            if (!matchedUser) {
+              // Optionally return null or a placeholder if no user is matched
+              return null
+            }
+            const lastMessage = channel.lastMessage.message
+            const lastMessageTime = formatTimestamp(channel.lastMessage.createdAt)
+            return (
+              <TouchableOpacity onPress={onPress}>
+                <GroupChannelPreview
+                  title={matchedUser.firstName || "Unknown User"}
+                  titleCaption={lastMessageTime || "Unavailable"}
+                  coverUrl={matchedUser.imageSet[0]?.imageURL || "default_profile_image.png"}
+                  body={lastMessage || "No description available"}
+                  badgeCount={channel.unreadMessageCount}
+                />
+              </TouchableOpacity>
+            )
+          }}
+        />
+      </View>
+      ) : (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Loading...</Text>
+        </View>
+      )}
     </Screen>
   )
 })

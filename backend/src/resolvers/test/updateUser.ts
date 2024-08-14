@@ -2,11 +2,11 @@ import User from '../../models/User';
 import {createSendbirdUser} from '../../utils/sendBirdv2'
 import Like from '../../models/Likes';
 import Match from '../../models/Match';
-import { PotentialMatchPool } from "../../models/PotentialMatchPool";
+import {PotentialMatchPool} from "../../models/PotentialMatchPool";
 import _ from 'lodash'
-import { SHA256 } from 'crypto-js';
-import { apiToken, userAPI, groupChannelApi} from './../../services/sendbirdService';
-import { Sendbird } from 'sendbird-platform-sdk';
+import {SHA256} from 'crypto-js';
+import {apiToken, userAPI, groupChannelApi} from './../../services/sendbirdService';
+import {Sendbird} from 'sendbird-platform-sdk';
 
 interface LikeActionResult {
   likerId: string;
@@ -25,7 +25,7 @@ export const resolvers = {
         userDoc != null;
         userDoc = await usersCursor.next()
       ) {
-        const { _id } = userDoc;
+        const {_id} = userDoc;
 
         // Fetch the corresponding PotentialMatchPool document for the user
         const potentialMatchPoolDoc = await PotentialMatchPool.findOne({
@@ -39,7 +39,7 @@ export const resolvers = {
           continue; // Skip to the next user if no corresponding PotentialMatchPool document is found
         }
 
-        const { filters } = potentialMatchPoolDoc;
+        const {filters} = potentialMatchPoolDoc;
 
         // No need to reconstruct filters here, use them directly from the PotentialMatchPool document
         const filtersString = JSON.stringify(filters);
@@ -47,7 +47,7 @@ export const resolvers = {
 
         // Update the PotentialMatchPool document with the new hash
         await PotentialMatchPool.updateOne(
-          { userId: _id },
+          {userId: _id},
           {
             $set: {
               filtersHash: filtersHash, // Update the hash in the PotentialMatchPool document
@@ -61,11 +61,11 @@ export const resolvers = {
           "Completed updating filtersHash in PotentialMatchPool for all users.",
       };
     },
-    removeAllMatchesForUserTest: async (_: any, { userId }) => {
+    removeAllMatchesForUserTest: async (_: any, {userId}) => {
       try {
         // Remove all matches where the user is either user1Id or user2Id
         const removedMatches = await Match.deleteMany({
-          $or: [{ user1Id: userId }, { user2Id: userId }],
+          $or: [{user1Id: userId}, {user2Id: userId}],
         });
 
         // Remove corresponding Sendbird group channels
@@ -118,10 +118,10 @@ export const resolvers = {
           for (const channel of data.channels) {
             try {
               const deleteBody: Sendbird.GroupChannelApiGcDeleteChannelByUrlRequest =
-                {
-                  apiToken: apiToken,
-                  channelUrl: channel.channelUrl,
-                };
+              {
+                apiToken: apiToken,
+                channelUrl: channel.channelUrl,
+              };
               if (channel.channelUrl) {
                 await groupChannelApi.gcDeleteChannelByUrl(
                   apiToken,
@@ -152,28 +152,27 @@ export const resolvers = {
         };
       }
     },
-    removeAllLikesForUserTest: async (_, { userId }) => {
+    removeAllLikesForUserTest: async (_, {userId}) => {
       try {
         // Ensure the user exists
-        const userExists = await User.exists({ _id: userId });
+        const userExists = await User.exists({_id: userId});
         if (!userExists) {
           throw new Error("User not found");
         }
 
         // Remove all likes where the user is the liker
-        const removedAsLiker = await Like.deleteMany({ likerId: userId });
+        const removedAsLiker = await Like.deleteMany({likerId: userId});
 
         // Remove all likes where the user is the liked
-        const removedAsLiked = await Like.deleteMany({ likedId: userId });
+        const removedAsLiked = await Like.deleteMany({likedId: userId});
 
         // Construct a result summary
         const result = {
           removedAsLikerCount: removedAsLiker.deletedCount,
           removedAsLikedCount: removedAsLiked.deletedCount,
           success: true,
-          message: `Removed ${
-            removedAsLiker.deletedCount + removedAsLiked.deletedCount
-          } likes.`,
+          message: `Removed ${removedAsLiker.deletedCount + removedAsLiked.deletedCount
+            } likes.`,
         };
 
         return result;
@@ -187,7 +186,7 @@ export const resolvers = {
         };
       }
     },
-    removeAllLikesByUser: async (_, { userId }) => {
+    removeAllLikesByUser: async (_, {userId}) => {
       try {
         // Check if the user exists
         const userExists = await User.findById(userId);
@@ -196,7 +195,7 @@ export const resolvers = {
         }
 
         // Remove all likes where the user is the liker
-        const deletionResult = await Like.deleteMany({ likerId: userId });
+        const deletionResult = await Like.deleteMany({likerId: userId});
 
         // Check if likes were actually deleted
         if (deletionResult.deletedCount === 0) {
@@ -225,7 +224,7 @@ export const resolvers = {
         }
       }
     },
-    removeAllDislikesTest: async (_, { userId }) => {
+    removeAllDislikesTest: async (_, {userId}) => {
       try {
         // Validate that the user ID is provided
         if (!userId) {
@@ -244,7 +243,7 @@ export const resolvers = {
 
         // Update the PotentialMatchPool document by setting dislikes to an empty array
         const updateResult = await PotentialMatchPool.updateOne(
-          { userId: userId },
+          {userId: userId},
           {
             $set: {
               dislikes: [],
@@ -281,7 +280,7 @@ export const resolvers = {
         }
       }
     },
-    updatePotentialMatchesTest: async (_, { currentUserId }) => {
+    updatePotentialMatchesTest: async (_, {currentUserId}) => {
       try {
         // Fetch the current user
         const currentUser = await User.findById(currentUserId);
@@ -300,7 +299,7 @@ export const resolvers = {
         }
 
         // Fetch user IDs that the current user has already liked
-        const likes = await Like.find({ likerId: currentUserId });
+        const likes = await Like.find({likerId: currentUserId});
         const likedUserIds = likes.map((like) => like.likedId);
 
         // Extract user IDs that the current user has disliked
@@ -309,7 +308,7 @@ export const resolvers = {
         );
 
         // Retrieve filters from the PotentialMatchPool, fall back to default if necessary
-        const { age = { min: 18, max: 100 }, gameLevel = { min: 1, max: 10 } } =
+        const {age = {min: 18, max: 100}, gameLevel = {min: 1, max: 10}} =
           potentialMatchPool.filters || {};
 
         // Define match criteria excluding already liked and disliked users
@@ -318,14 +317,14 @@ export const resolvers = {
             $nin: [...likedUserIds, ...dislikedUserIds],
             $ne: currentUserId,
           },
-          age: { $gte: age.min, $lte: age.max },
-          "sport.gameLevel": { $gte: gameLevel.min, $lte: gameLevel.max },
+          age: {$gte: age.min, $lte: age.max},
+          "sport.gameLevel": {$gte: gameLevel.min, $lte: gameLevel.max},
         };
 
         // Fetch 30 random potential matches that meet the criteria
         const newPotentialMatches = await User.aggregate([
-          { $match: matchCriteria },
-          { $sample: { size: 30 } },
+          {$match: matchCriteria},
+          {$sample: {size: 30}},
           {
             $project: {
               firstName: 1,
@@ -356,7 +355,7 @@ export const resolvers = {
           }
         } // Update the PotentialMatchPool document with new matches
         await PotentialMatchPool.updateOne(
-          { userId: currentUserId },
+          {userId: currentUserId},
           {
             $set: {
               potentialMatches: newPotentialMatches.map((match) => ({
@@ -376,7 +375,7 @@ export const resolvers = {
               swipesPerDay: 30,
             },
           },
-          { upsert: true }
+          {upsert: true}
         );
 
         console.log(
@@ -407,12 +406,52 @@ export const resolvers = {
         }
       }
     },
+    async addSpecificLike(
+      _: any,
+      {currentUserId, likerId}: {currentUserId: string; likerId: string}
+    ): Promise<LikeActionResult> {
+      try {
+        // Fetch the current user
+        const currentUser = await User.findById(currentUserId);
+        if (!currentUser) {
+          throw new Error("Current user not found");
+        }
+
+        // Fetch the liker user
+        const likerUser = await User.findById(likerId);
+        if (!likerUser) {
+          throw new Error("Liker user not found");
+        }
+
+        // Create the like action
+        const likeActionResult = await Like.create({
+          likerId: likerUser._id,
+          likedId: currentUserId,
+        });
+
+        // Return the result
+        return {
+          likerId: likerUser._id.toString(),
+          likedId: currentUserId,
+          success: !!likeActionResult,
+        };
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Error adding specific like:", error.message);
+          throw new Error("Failed to add specific like: " + error.message);
+        } else {
+          console.error("Error adding specific like: An unknown error occurred.");
+          throw new Error("Failed to add specific like due to an unknown error.");
+        }
+      }
+    },
+
     async simulateRandomLikesFromUsersTest(
       _: any,
       {
         currentUserId,
         randomize = true,
-      }: { currentUserId: string; randomize: boolean }
+      }: {currentUserId: string; randomize: boolean}
     ): Promise<LikeActionResult[]> {
       try {
         const currentUser = await User.findById(currentUserId);
@@ -420,7 +459,7 @@ export const resolvers = {
           throw new Error("User not found");
         }
 
-        const allUsers = await User.find({ _id: { $ne: currentUserId } });
+        const allUsers = await User.find({_id: {$ne: currentUserId}});
         if (!allUsers.length) {
           throw new Error("No other users found in the database");
         }
@@ -492,7 +531,7 @@ export const resolvers = {
         }
       }
     },
-    simulateRandomLikesTest: async (_, { currentUserId, randomize = true }) => {
+    simulateRandomLikesTest: async (_, {currentUserId, randomize = true}) => {
       try {
         // Fetch the current user
         const currentUser = await User.findById(currentUserId);
@@ -574,8 +613,8 @@ export const resolvers = {
         // Update the PotentialMatchPool document with the modified potentialMatches array if randomizing
         if (randomize) {
           await PotentialMatchPool.updateOne(
-            { userId: currentUserId },
-            { $set: { potentialMatches: potentialMatches } }
+            {userId: currentUserId},
+            {$set: {potentialMatches: potentialMatches}}
           );
         }
 
@@ -594,7 +633,7 @@ export const resolvers = {
         }
       }
     },
-    manageUserInteractions: async (_, { currentUserId }) => {
+    manageUserInteractions: async (_, {currentUserId}) => {
       try {
         // Step 1: Remove all likes for the current user
         const likesRemovalResult =
@@ -653,9 +692,9 @@ export const resolvers = {
         return {
           success: false,
           message: errorMessage,
-          likesRemovalResult: { success: false, message: errorMessage },
-          matchesRemovalResult: { success: false, message: errorMessage },
-          updateMatchesResult: { success: false, message: errorMessage },
+          likesRemovalResult: {success: false, message: errorMessage},
+          matchesRemovalResult: {success: false, message: errorMessage},
+          updateMatchesResult: {success: false, message: errorMessage},
           randomLikesResult: {
             success: false,
             message: errorMessage,

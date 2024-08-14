@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-lambda";
+import {gql} from "apollo-server-lambda";
 
 export const typeDefsTest = gql`
   type RemoveLikesResult {
@@ -40,5 +40,6 @@ export const typeDefsTest = gql`
     removeAllDislikesTest(userId: String!): RemoveDislikesResponse!
     removeAllLikesForUserTest(userId: String!): RemoveLikesResult!
     removeAllLikesByUser(userId: String!) : RemoveLikesResult!
+    addSpecificLike(currentUserId: String!, likerId: String!): LikeActionResult!
   }
 `;

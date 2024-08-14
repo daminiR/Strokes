@@ -80,6 +80,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const sdk = chatStore.sdk;
   const isSDKConnected = authenticationStore.isSDKConnected;
   const collection = chatStore.collection;
+  const [forceUpdate, setForceUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const initializeCollection = useCallback(() => {
@@ -88,6 +89,8 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
       return;
     }
 
+    setIsLoading(true);
+    setIsRefreshing(true);
     const newCollection = sdk.groupChannel.createGroupChannelCollection({
       order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
       limit: 10,
@@ -95,21 +98,48 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     });
 
     const updateState = () => {
+      console.log("State update triggered", chatStore.currentUser, isLoading, isRefreshing);
       setIsLoading(false);
       setIsRefreshing(false);
+
+      console.log("isLoading:", false);
+      console.log("isRefreshing:", false);
     };
 
     newCollection.setGroupChannelCollectionHandler({
-      onChannelsAdded: updateState,
-      onChannelsUpdated: updateState,
-      onChannelsDeleted: updateState,
-      onMessageReceived: updateState,
+      onChannelsAdded: () => {
+        console.log("Channels added");
+        updateState();
+      },
+      onChannelsUpdated: () => {
+        console.log("Channels updated");
+        updateState();
+      },
+      onChannelsDeleted: () => {
+        console.log("Channels deleted");
+        updateState();
+      },
+      onMessageReceived: () => {
+        console.log("Message received");
+        updateState();
+      },
+      onMessagesAdded: () => {
+        console.log("Message received");
+        updateState();
+      },
+      //onChannelChanged: (channel: any) => {
+      //console.log("Channel changed:", channel);
+      //chatStore.updateChannel(channel);  // Ensure chatStore updates the specific channel
+      //updateState();
+    //},
     });
 
     newCollection.loadMore()
       .then(() => {
         updateState();
         chatStore.setCollection(newCollection);
+        console.log("Collection loaded and set");
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Failed to load more channels:", error);
@@ -121,15 +151,20 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     };
   }, [sdk, isSDKConnected, chatStore]);
 
-  useEffect(() => {
+useFocusEffect(
+  useCallback(() => {
     const disposer = initializeCollection();
+
     return () => {
-      disposer?.(); // Dispose the collection when component unmounts
+      disposer?.();  // Dispose the collection when the screen loses focus
     };
-  }, [initializeCollection]);
+  }, [initializeCollection, isSDKConnected, chatStore])
+);
 
   const handleRefresh = async () => {
+    console.log("Refresh triggered");
     setIsRefreshing(true);
+    console.log("isRefreshing:", true);
     initializeCollection();
   };
 
@@ -137,6 +172,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     useCallback(() => {
       const checkAndInitialize = async () => {
         if (!isSDKConnected) {
+          console.log("SDK not connected, checking session");
           await authenticationStore.checkCognitoUserSession(false);
         }
         initializeCollection();
@@ -148,13 +184,16 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
 
   useEffect(() => {
     const refreshData = async () => {
+      console.log("Matched profiles changed, refreshing data");
       setIsRefreshing(true);
+      console.log("isRefreshing:", true);
       try {
         await handleRefresh();
       } catch (error) {
         console.error("Error during refresh:", error);
       } finally {
         setIsRefreshing(false);
+        console.log("isRefreshing:", false);
       }
     };
 
@@ -169,18 +208,19 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   }, [matchedProfileStore]);
 
   // Listen for incoming push notifications
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('A new FCM message arrived!', remoteMessage);
-      await handleRefresh();  // Re-initialize collection on new message
-    });
+  //useEffect(() => {
+    //const unsubscribe = messaging().onMessage(async remoteMessage => {
+      //console.log('A new FCM message arrived!', remoteMessage);
+      //await handleRefresh();  // Re-initialize collection on new message
+    //});
 
-    return () => {
-      unsubscribe();
-    };
-  }, [handleRefresh]);
+    //return () => {
+      //unsubscribe();
+    //};
+  //}, [handleRefresh]);
 
   const renderItem = ({ item }: { item: GroupChannel | null }) => {
+    console.log("Rendering ChatListScreen2, isLoading:", isLoading, "isRefreshing:", isRefreshing);
     if (!item) {
       return null; // Render nothing if item is null
     }
@@ -248,22 +288,24 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
         extraData={collection?.channels.length}
         onEndReachedThreshold={0.2}
         onEndReached={
-          isLoading
+  isLoading
             ? null
             : async () => {
-                if (collection?.hasMore) {
-                  setIsLoading(true);
-                  try {
-                    await collection.loadMore();
-                    chatStore.setCollection(collection);
-                  } catch (error) {
-                    console.error("Failed to load more channels:", error);
-                  } finally {
-                    setIsLoading(false);
-                  }
-                }
-              }
+              if (collection?.hasMore) {
+          setIsLoading(true);
+          console.log("isLoading:", true);
+          try {
+            await collection.loadMore();
+            chatStore.setCollection(collection);
+          } catch (error) {
+            console.error("Failed to load more channels:", error);
+          } finally {
+            setIsLoading(false);
+            console.log("isLoading:", false);
+          }
         }
+      }
+}
         refreshing={isRefreshing}
         estimatedItemSize={177}
         numColumns={1}
