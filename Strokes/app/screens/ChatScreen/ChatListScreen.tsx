@@ -27,6 +27,9 @@ import { colors } from "../../theme"
 import { ChatListStackScreenProps } from "../navigators"
 import { useStores } from "../../models"
 import { createGroupChannelListFragment } from '@sendbird/uikit-react-native';
+//import { GroupChannelListFragment } from '@sendbird/uikit-react-native';
+import { useGroupChannelList } from '@sendbird/uikit-chat-hooks';
+
 
 function formatTimestamp(timestamp) {
   const date = new Date(timestamp);
@@ -60,6 +63,8 @@ const accessToken = "44719b82cf9fcd373ce12e3865aa2af6d0695822"
 interface ChatListScreen extends ChatListStackScreenProps<"ChatList"> {}
 
 export const ChatListScreen: FC<ChatListScreen> = observer(function ChatListScreen(_props) {
+
+   const { channels, loading, error } = useGroupChannelList();
   const { authenticationStore, chatStore, matchedProfileStore } = useStores()
   const [isInitialized, setIsInitialized] = useState(false)
   const initializeSDK = async () => {

@@ -86,6 +86,8 @@ export const ChatStore = types
     readReceiptsStatus: types.maybeNull(types.boolean),
     reportedBy: types.maybeNull(types.string),
     blockedBy: types.maybeNull(types.string),
+    isLoading: types.optional(types.boolean, false),
+    isRefreshing: types.optional(types.boolean, false),
   })
   .actions(withSetPropAction)
   .actions((self) => ({

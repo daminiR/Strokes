@@ -80,70 +80,67 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const sdk = chatStore.sdk;
   const isSDKConnected = authenticationStore.isSDKConnected;
   const collection = chatStore.collection;
-  const [forceUpdate, setForceUpdate] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const updateState = async (newCollection) => {
+    try {
+      console.log("State update triggered, loading more channels", newCollection);
+      await newCollection.loadMore();  // Load more channels
+      chatStore.setCollection(newCollection);  // Update the chatStore with the new collection
+      setIsLoading(false);
+      setIsRefreshing(false);  // Stop refreshing in case of an error
+      console.log("Collection loaded and set");
+    } catch (error) {
+      console.error("Failed to load more channels:", error);
+      setIsLoading(false);
+      setIsRefreshing(false);  // Stop refreshing in case of an error
+    }
+  };
 
   const initializeCollection = useCallback(() => {
     if (!isSDKConnected || !sdk) {
       setIsLoading(false);
+      setIsRefreshing(false);
       return;
     }
+      setIsLoading(false);
+      setIsRefreshing(false);
 
-    setIsLoading(true);
-    setIsRefreshing(true);
     const newCollection = sdk.groupChannel.createGroupChannelCollection({
       order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
       limit: 10,
       hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN,
+      includeEmptyChannel: true,
     });
-
-    const updateState = () => {
-      console.log("State update triggered", chatStore.currentUser, isLoading, isRefreshing);
-      setIsLoading(false);
-      setIsRefreshing(false);
-
-      console.log("isLoading:", false);
-      console.log("isRefreshing:", false);
-    };
 
     newCollection.setGroupChannelCollectionHandler({
       onChannelsAdded: () => {
         console.log("Channels added");
-        updateState();
+        updateState(newCollection);
       },
       onChannelsUpdated: () => {
-        console.log("Channels updated");
-        updateState();
+        console.log("Channels updated", isRefreshing);
+        updateState(newCollection);
       },
       onChannelsDeleted: () => {
         console.log("Channels deleted");
-        updateState();
+        updateState(newCollection);
       },
-      onMessageReceived: () => {
-        console.log("Message received");
-        updateState();
+      onChannelChanged: (channel: any) => {
+        console.log("Channel changed:", channel);
+        updateState(newCollection);
       },
-      onMessagesAdded: () => {
-        console.log("Message received");
-        updateState();
-      },
-      //onChannelChanged: (channel: any) => {
-      //console.log("Channel changed:", channel);
-      //chatStore.updateChannel(channel);  // Ensure chatStore updates the specific channel
-      //updateState();
-    //},
     });
 
     newCollection.loadMore()
       .then(() => {
-        updateState();
         chatStore.setCollection(newCollection);
         console.log("Collection loaded and set");
-        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Failed to load more channels:", error);
         setIsLoading(false);
+        setIsRefreshing(false); // Stop refreshing in case of an error
       });
 
     return () => {
@@ -151,20 +148,18 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     };
   }, [sdk, isSDKConnected, chatStore]);
 
-useFocusEffect(
-  useCallback(() => {
-    const disposer = initializeCollection();
-
-    return () => {
-      disposer?.();  // Dispose the collection when the screen loses focus
-    };
-  }, [initializeCollection, isSDKConnected, chatStore])
-);
+  useFocusEffect(
+    useCallback(() => {
+      const disposer = initializeCollection();
+      return () => {
+        disposer?.();
+      };
+    }, [initializeCollection])
+  );
 
   const handleRefresh = async () => {
     console.log("Refresh triggered");
     setIsRefreshing(true);
-    console.log("isRefreshing:", true);
     initializeCollection();
   };
 
@@ -186,14 +181,12 @@ useFocusEffect(
     const refreshData = async () => {
       console.log("Matched profiles changed, refreshing data");
       setIsRefreshing(true);
-      console.log("isRefreshing:", true);
       try {
         await handleRefresh();
       } catch (error) {
         console.error("Error during refresh:", error);
       } finally {
         setIsRefreshing(false);
-        console.log("isRefreshing:", false);
       }
     };
 
@@ -205,57 +198,41 @@ useFocusEffect(
     return () => {
       disposer();
     };
-  }, [matchedProfileStore]);
-
-  // Listen for incoming push notifications
-  //useEffect(() => {
-    //const unsubscribe = messaging().onMessage(async remoteMessage => {
-      //console.log('A new FCM message arrived!', remoteMessage);
-      //await handleRefresh();  // Re-initialize collection on new message
-    //});
-
-    //return () => {
-      //unsubscribe();
-    //};
-  //}, [handleRefresh]);
+  }, [matchedProfileStore, handleRefresh]);
 
   const renderItem = ({ item }: { item: GroupChannel | null }) => {
-    console.log("Rendering ChatListScreen2, isLoading:", isLoading, "isRefreshing:", isRefreshing);
     if (!item) {
-      return null; // Render nothing if item is null
+      return null;
     }
 
-    const onPressChannel = (): any => {
+    const onPressChannel = () => {
       const matchedUser = matchedProfileStore.findByChannelId(item.url);
       chatStore.setChatProfile(matchedUser);
       navigate("ChatTopNavigator");
     };
 
     const matchedUser = matchedProfileStore.findByChannelId(item.url);
-
-    const title = matchedUser
-      ? matchedUser.firstName || "Unknown User"
-      : getGroupChannelTitle(sdk.currentUser!.userId, item);
-
-    const coverUrl =
-      matchedUser && matchedUser.imageSet && matchedUser.imageSet.length > 0
-        ? matchedUser.imageSet[0].imageURL
-        : item.coverUrl || "https://static.sendbird.com/sample/cover/cover_11.jpg";
+    const title = matchedUser ? matchedUser.firstName || "Unknown User" : getGroupChannelTitle(sdk.currentUser!.userId, item);
+    const coverUrl = matchedUser && matchedUser.imageSet?.length > 0
+      ? matchedUser.imageSet[0].imageURL
+      : item.coverUrl || "https://static.sendbird.com/sample/cover/cover_11.jpg";
 
     const lastMessage = item.lastMessage ? item.lastMessage.message : "No description available";
-    const lastMessageTime = item.lastMessage
-      ? dayjs(item.lastMessage.createdAt).format("YYYY-MM-DD")
-      : "Unavailable";
+    const lastMessageTime = item.lastMessage ? dayjs(item.lastMessage.createdAt).format("YYYY-MM-DD") : "Unavailable";
+
+    const isFileMessage = item.lastMessage && typeof item.lastMessage.isFileMessage === 'function'
+      ? item.lastMessage.isFileMessage()
+      : false;
 
     return (
       <TouchableOpacity onPress={onPressChannel}>
         <GroupChannelPreview
           title={title}
           badgeCount={item.unreadMessageCount}
-          body={getGroupChannelLastMessage(item)}
-          bodyIcon={item.lastMessage?.isFileMessage() ? "file-document" : undefined}
+          body={lastMessage}
+          bodyIcon={isFileMessage ? "file-document" : undefined}
           coverUrl={coverUrl}
-          titleCaption={dayjs(item.createdAt).format("YYYY-MM-DD")}
+          titleCaption={lastMessageTime}
           frozen={item.isFrozen}
           notificationOff={item.myPushTriggerOption === "off"}
         />
@@ -288,24 +265,22 @@ useFocusEffect(
         extraData={collection?.channels.length}
         onEndReachedThreshold={0.2}
         onEndReached={
-  isLoading
+          isLoading
             ? null
             : async () => {
               if (collection?.hasMore) {
-          setIsLoading(true);
-          console.log("isLoading:", true);
-          try {
-            await collection.loadMore();
-            chatStore.setCollection(collection);
-          } catch (error) {
-            console.error("Failed to load more channels:", error);
-          } finally {
-            setIsLoading(false);
-            console.log("isLoading:", false);
-          }
+                setIsLoading(true);
+                try {
+                  await collection.loadMore();
+                  chatStore.setCollection(collection);
+                } catch (error) {
+                  console.error("Failed to load more channels:", error);
+                } finally {
+                  setIsLoading(false);
+                }
+              }
+            }
         }
-      }
-}
         refreshing={isRefreshing}
         estimatedItemSize={177}
         numColumns={1}
@@ -316,7 +291,6 @@ useFocusEffect(
     </Screen>
   );
 });
-
 
 const styles = StyleSheet.create({
   container: {
