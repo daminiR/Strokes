@@ -29,7 +29,7 @@ export function ChatStack() {
   return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={"ChatList"}>
         <Stack.Screen name="ChatTopNavigator" component={ChatTopTabNavigator} />
-        <Stack.Screen name="ChatList" component={Screens.ChatListScreen} />
+        <Stack.Screen name="ChatList" component={Screens.ChatListScreen2} />
         <Stack.Screen name="ChatSettings" component={Screens.ChatSettingsScreen} />
         <Stack.Screen name="ChatReport" component={Screens.ChatReportScreen} />
         {/* Add more screens as needed */}
