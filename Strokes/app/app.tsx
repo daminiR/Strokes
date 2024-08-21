@@ -71,6 +71,14 @@ const config = {
 interface AppProps {
   hideSplashScreen: () => Promise<boolean>;
 }
+// Background message handler
+messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  console.log("Message handled in the background!", remoteMessage);
+  // Handle the background notification
+  // You can trigger a function here to update the chat list, etc.
+  const { chatStore } = useStores();
+  await chatStore.handleNewMessage(remoteMessage);
+});
 
 /**
  * This is the root component of our app.
@@ -95,18 +103,39 @@ const App: React.FC<AppProps> = observer((props) => {
   };
 
   // Add the listener for push notifications
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      console.log("A new FCM message arrived!", remoteMessage);
-      // Here, you can add logic to update the chat list or show a notification
-      // For example, you might want to call a function to refresh the chat list
-      await chatStore.handleNewMessage(remoteMessage);
-    });
+  //useEffect(() => {
+    //const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      //console.log("A new FCM message arrived!", remoteMessage);
+      //// Here, you can add logic to update the chat list or show a notification
+      //// For example, you might want to call a function to refresh the chat list
+      //await chatStore.handleNewMessage(remoteMessage);
+    //});
 
-    return () => {
-      unsubscribe();
-    };
+    //return () => {
+      //unsubscribe();
+    //};
+  //}, []);
+  useEffect(() => {
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+          console.log("App opened from a quit state by a notification:", remoteMessage);
+
+        if (remoteMessage) {
+          console.log("App opened from a quit state by a notification:", remoteMessage);
+          // Navigate to the relevant screen
+          //const channelId = remoteMessage.data?.channelId; // Assuming channelId is passed in the notification data
+          //if (channelId) {
+            //navigate("ChatScreen", { channelId });
+          //}
+        }
+      })
+      .catch((error) => {
+        console.error("Error handling initial notification:", error);
+      });
   }, []);
+
+
 
   useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
