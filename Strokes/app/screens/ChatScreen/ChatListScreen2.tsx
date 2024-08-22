@@ -109,7 +109,8 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     if (!user) {
       console.log("User is not authenticated. Reconnecting...");
       //await chatStore.initializeSDK(); // Attempt reconnection
-      await chatStore.connect(); // Attempt reconnection
+      //await chatStore.connect(); // Attempt reconnection
+      await authenticationStore.checkCognitoUserSession()
       console.log("SDK successfully reconnected.");
     } else {
       console.log("SDK is already connected.");

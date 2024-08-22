@@ -81,7 +81,7 @@ export const SendInput = ({channel}: {channel: GroupChannel}) => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flexShrink: 1 }}
+      style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"} // 'padding' on iOS, 'height' on Android
       keyboardVerticalOffset={keyboardVerticalOffset}
     >
