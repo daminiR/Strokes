@@ -27,7 +27,7 @@ import { resetChatStackToChatList, navigate, resetToInitialState } from "./navig
 import { SendbirdUIKitContainer } from "@sendbird/uikit-react-native";
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context";
 import * as Linking from "expo-linking";
-import { AppState, AppStateStatus } from "react-native";
+import {Platform, AppState,  AppStateStatus } from "react-native";
 import { useInitialRootStore } from "./models";
 import { AppNavigator, useNavigationPersistence } from "./navigators";
 import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary";
@@ -42,8 +42,7 @@ import client from "./services/api/apollo-client";
 import { Provider } from "urql";
 import { LoadingActivity } from "./components";
 import messaging from "@react-native-firebase/messaging"; // Import messaging module
-//import { Toast } from "react-native-toast-message";
-//import NetInfo from "@react-native-community/netinfo";
+import Notifee, { AndroidImportance, EventType } from '@notifee/react-native';
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE";
 
@@ -68,18 +67,37 @@ const config = {
   },
 };
 
+// Background message handler
+messaging().setBackgroundMessageHandler(async (message) => {
+  const isSendbirdNotification = Boolean(message.data.sendbird);
+  if (!isSendbirdNotification) return;
+
+  const payload = JSON.parse(message.data.sendbird);
+
+  const channelId = await Notifee.createChannel({
+    id: "NOTIFICATION_CHANNEL_ID",
+    name: "NOTIFICATION_CHANNEL_NAME",
+    importance: AndroidImportance.HIGH,
+  });
+
+  await Notifee.displayNotification({
+    id: message.messageId,
+    title: "New message has arrived!",
+    subtitle: `Number of unread messages: ${payload.unread_message_count}`,
+    body: payload.message,
+    data: payload,
+    android: {
+      channelId,
+      smallIcon: "ic_notification",
+      importance: AndroidImportance.HIGH,
+    },
+  });
+});
+
+
 interface AppProps {
   hideSplashScreen: () => Promise<boolean>;
 }
-// Background message handler
-messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  console.log("Message handled in the background!", remoteMessage);
-  // Handle the background notification
-  // You can trigger a function here to update the chat list, etc.
-  const { chatStore } = useStores();
-  await chatStore.handleNewMessage(remoteMessage);
-});
-
 /**
  * This is the root component of our app.
  * @param {AppProps} props - The props for the `App` component.
@@ -95,47 +113,40 @@ const App: React.FC<AppProps> = observer((props) => {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY);
 
   const [areFontsLoaded] = useFonts(customFontsToLoad);
-  const { chatStore, userStore, tempUserStore, authenticationStore } = useStores();
+  const {matchedProfileStore, chatStore, userStore, tempUserStore, authenticationStore } = useStores();
 
   const logCurrentState = async () => {
     const currentState = await storage.getString(ROOT_STATE_STORAGE_KEY);
     console.log("Current State:", currentState);
   };
+  const onNotificationInteraction = async (event) => {
+    let notificationData;
+    if (Platform.OS === "ios") {
+      notificationData = event.detail?.notification?.data;
+    } else {
+      notificationData = event.detail?.notification?.data;
+    }
+    if (Boolean(notificationData?.sendbird)) {
+      const channelUrl = notificationData.sendbird.channel.channel_url;
+      if (channelUrl) {
+        console.log("channel here4", channelUrl)
+        const matchedUser = matchedProfileStore.findByChannelId(channelUrl);
 
-  // Add the listener for push notifications
-  //useEffect(() => {
-    //const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      //console.log("A new FCM message arrived!", remoteMessage);
-      //// Here, you can add logic to update the chat list or show a notification
-      //// For example, you might want to call a function to refresh the chat list
-      //await chatStore.handleNewMessage(remoteMessage);
-    //});
+        chatStore.setChatProfile(matchedUser);
+        navigate("ChatTopNavigator");
+      }
+    }
+  };
 
-    //return () => {
-      //unsubscribe();
-    //};
-  //}, []);
   useEffect(() => {
-    messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-          console.log("App opened from a quit state by a notification:", remoteMessage);
+    const unsubscribeForeground = Notifee.onForegroundEvent(onNotificationInteraction);
+    const unsubscribeBackground = Notifee.onBackgroundEvent(onNotificationInteraction);
 
-        if (remoteMessage) {
-          console.log("App opened from a quit state by a notification:", remoteMessage);
-          // Navigate to the relevant screen
-          //const channelId = remoteMessage.data?.channelId; // Assuming channelId is passed in the notification data
-          //if (channelId) {
-            //navigate("ChatScreen", { channelId });
-          //}
-        }
-      })
-      .catch((error) => {
-        console.error("Error handling initial notification:", error);
-      });
+    return () => {
+      unsubscribeForeground();
+      unsubscribeBackground();
+    };
   }, []);
-
-
 
   useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
@@ -146,7 +157,7 @@ const App: React.FC<AppProps> = observer((props) => {
           resetChatStackToChatList();
           // TODO when signout this navigate logic is different, but not important right now
           authenticationStore.checkCognitoUserSession();
-          navigate("FaceCard");
+          //navigate("FaceCard");
         } else if (appState === "active" && nextAppState.match(/inactive|background/)) {
           console.log("App has gone to the background. Disconnecting...");
           chatStore.disconnect();
@@ -170,22 +181,9 @@ const App: React.FC<AppProps> = observer((props) => {
   }, []);
 
   const { rehydrated } = useInitialRootStore(() => {
-    // This runs after the root store has been initialized and rehydrated.
-
-    // If your initialization scripts run very fast, it's good to show the splash screen for just a bit longer to prevent flicker.
-    // Slightly delaying splash screen hiding for better UX; can be customized or removed as needed,
-    // Note: (vanilla Android) The splash-screen will not appear if you launch your app via the terminal or Android Studio. Kill the app and launch it normally by tapping on the launcher icon. https://stackoverflow.com/a/69831106
-    // Note: (vanilla iOS) You might notice the splash-screen logo change size. This happens in debug/development mode. Try building the app for release.
     setTimeout(hideSplashScreen, 500);
   });
 
-  // Before we show the app, we have to wait for our state to be ready.
-  // In the meantime, don't render anything. This will be the background
-  // color set in native by rootView's background color.
-  // In iOS: application:didFinishLaunchingWithOptions:
-  // In Android: https://stackoverflow.com/a/45838109/204044
-  // You can replace with your own loading component if you wish.
-  // Conditionally render loading screen until everything is ready
   if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded) {
     return <LoadingActivity />;
   }

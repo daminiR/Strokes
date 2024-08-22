@@ -1213,6 +1213,11 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+  - RNNotifee (7.8.2):
+    - React-Core
+    - RNNotifee/NotifeeCore (= 7.8.2)
+  - RNNotifee/NotifeeCore (7.8.2):
+    - React-Core
   - RNPermissions (4.1.5):
     - React-Core
   - RNReanimated (3.6.3):
@@ -1317,6 +1322,7 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1500,6 +1506,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@shopify/flash-list"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNNotifee:
+    :path: "../node_modules/@notifee/react-native"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNReanimated:
@@ -1607,6 +1615,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 652aac21d91b8ddb85a5e25c0f04150ef60b5384
   RNFlashList: fd8e78a8f500bca1ab81d1849b70aea8873d951e
   RNGestureHandler: 28bdf9a766c081e603120f79e925b72817c751c6
+  RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
   RNPermissions: d5d1ec9a86d9a4e396d3cb09ebf1bcef2c51f238
   RNReanimated: 72a18f65f08061d2dcafbf08468811c3c3d22041
   RNScreens: 2b73f5eb2ac5d94fbd61fa4be0bfebd345716825

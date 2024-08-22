@@ -97,16 +97,30 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     }
   };
 
-  const initializeCollection = useCallback(() => {
+  const initializeCollection = useCallback( async() => {
     if (!isSDKConnected || !sdk) {
       setIsLoading(false);
       setIsRefreshing(false);
-      return;
+      return () => {};
     }
-      setIsLoading(false);
-      setIsRefreshing(false);
-
-    const newCollection = sdk.groupChannel.createGroupChannelCollection({
+ try {
+    // Manual check to verify connection
+    const user = await sdk.currentUser;
+    if (!user) {
+      console.log("User is not authenticated. Reconnecting...");
+      //await chatStore.initializeSDK(); // Attempt reconnection
+      await chatStore.connect(); // Attempt reconnection
+      console.log("SDK successfully reconnected.");
+    } else {
+      console.log("SDK is already connected.");
+    }
+  } catch (error) {
+    console.error("Failed to verify connection or reconnect SDK:", error);
+    setIsLoading(false);
+    setIsRefreshing(false);
+    return () => {};
+  }
+      const newCollection = sdk.groupChannel.createGroupChannelCollection({
       order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
       limit: 10,
       hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN,
@@ -146,13 +160,13 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     return () => {
       newCollection?.dispose();
     };
-  }, [sdk, isSDKConnected, chatStore]);
+  }, [sdk, chatStore]);
 
   useFocusEffect(
     useCallback(() => {
       const disposer = initializeCollection();
       return () => {
-        disposer?.();
+        //disposer?.();
       };
     }, [initializeCollection])
   );
@@ -208,7 +222,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     const onPressChannel = () => {
       const matchedUser = matchedProfileStore.findByChannelId(item.url);
       chatStore.setChatProfile(matchedUser);
-      navigate("ChatTopNavigator");
+      navigate("ChatTopNavigator")
     };
 
     const matchedUser = matchedProfileStore.findByChannelId(item.url);
