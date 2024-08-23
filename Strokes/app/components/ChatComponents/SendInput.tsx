@@ -9,16 +9,18 @@ import {
   useUIKitTheme,
 } from "@sendbird/uikit-react-native-foundation"
 import React, {useEffect, useId, useState} from 'react';
-import {Alert, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, KeyboardAvoidingView, StatusBar,Platform , StyleSheet, TouchableOpacity, View} from 'react-native';
 import {setNextLayoutAnimation} from '../../utils/senbird';
 import { useStores } from "../../models"
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+
 
 export const INPUT_MAX_HEIGHT = 80;
 const KEYBOARD_AVOID_BEHAVIOR = Platform.select({ios: 'padding' as const, default: undefined});
 // Constants
-  const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0; // Adjust if you have a different status bar height
-  const NAVIGATION_BAR_HEIGHT = 44; // Typical navigation bar height, adjust if your app differs
-  //const CONNECTION_STATE_HEIGHT = 24; // Example additional component height above the keyboard-avoiding view
+ const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (StatusBar.currentHeight || 44) : 0;
+ const NAVIGATION_BAR_HEIGHT = 44;
+
 
   // Calculate the total offset needed
 export const SendInput = ({channel}: {channel: GroupChannel}) => {
@@ -32,7 +34,7 @@ export const SendInput = ({channel}: {channel: GroupChannel}) => {
   const {bottom} = useSafeAreaInsets();
   //const keyboardVerticalOffset =
     //Platform.OS === "ios" ? STATUS_BAR_HEIGHT + NAVIGATION_BAR_HEIGHT + CONNECTION_STATE_HEIGHT : 0
-   const keyboardVerticalOffset = NAVIGATION_BAR_HEIGHT + STATUS_BAR_HEIGHT;
+   const keyboardVerticalOffset = NAVIGATION_BAR_HEIGHT + STATUS_BAR_HEIGHT + 70;
 
   useEffect(() => {
     const handler = new GroupChannelHandler({
@@ -81,9 +83,9 @@ export const SendInput = ({channel}: {channel: GroupChannel}) => {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      //style={{ flexShrink: 1, justifyContent: 'flex-end' }}
       behavior={Platform.OS === "ios" ? "padding" : "height"} // 'padding' on iOS, 'height' on Android
-      keyboardVerticalOffset={keyboardVerticalOffset}
+      //keyboardVerticalOffset={keyboardVerticalOffset}
     >
       {isTyping && <TypingIndicator channel={channel} />}
       <View style={styles.inputContainer}>
