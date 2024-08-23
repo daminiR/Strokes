@@ -15,10 +15,12 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalization (14.8.4):
     - ExpoModulesCore
-  - ExpoModulesCore (1.11.13):
+  - ExpoModulesCore (1.12.23):
     - glog
+    - hermes-engine
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+    - React-jsinspector
     - React-NativeModulesApple
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
@@ -1533,7 +1535,7 @@ SPEC CHECKSUMS:
   ExpoFileSystem: 74cc0fae916f9f044248433971dcfc8c3befd057
   ExpoKeepAwake: 0f5cad99603a3268e50af9a6eb8b76d0d9ac956c
   ExpoLocalization: f94759e55802e4a4f8b7d7cecb450de11b888721
-  ExpoModulesCore: 370096473359f5f6aade0871400d063333747719
+  ExpoModulesCore: 05711b320ea54d8131dd2c3641be7a44a73299fe
   EXSplashScreen: f78bcfe785ee0516d3a587c20e6371a8eec859c4
   FBLazyVector: 84f6edbe225f38aebd9deaf1540a4160b1f087d7
   FBReactNativeSpec: d0086a479be91c44ce4687a962956a352d2dc697

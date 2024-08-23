@@ -74,6 +74,7 @@
     "expo-font": "~11.10.2",
     "expo-linking": "~6.2.2",
     "expo-localization": "~14.8.3",
+    "expo-modules-core": "^1.12.23",
     "expo-splash-screen": "~0.26.3",
     "expo-status-bar": "~1.11.1",
     "exponential-backoff": "^3.1.1",
