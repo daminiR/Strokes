@@ -1,6 +1,7 @@
 import {GroupChannel, GroupChannelHandler} from '@sendbird/chat/groupChannel';
 import {useHeaderHeight} from '@react-navigation/elements';
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   Icon,
   Text,
@@ -12,7 +13,6 @@ import React, {useEffect, useId, useState} from 'react';
 import {Alert, KeyboardAvoidingView, StatusBar,Platform , StyleSheet, TouchableOpacity, View} from 'react-native';
 import {setNextLayoutAnimation} from '../../utils/senbird';
 import { useStores } from "../../models"
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 
 
 export const INPUT_MAX_HEIGHT = 80;
@@ -22,23 +22,18 @@ const KEYBOARD_AVOID_BEHAVIOR = Platform.select({ios: 'padding' as const, defaul
  const NAVIGATION_BAR_HEIGHT = 44;
 
 
-  // Calculate the total offset needed
-export const SendInput = ({channel}: {channel: GroupChannel}) => {
-  const handlerId = useId()
-  const { chatStore } = useStores()
+export const SendInput = ({ channel }: { channel: GroupChannel }) => {
+  const handlerId = useId();
+  const { chatStore } = useStores();
   const { sdk } = chatStore;
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(channel.isTyping);
 
-  const height = useHeaderHeight();
-  const {bottom} = useSafeAreaInsets();
-  //const keyboardVerticalOffset =
-    //Platform.OS === "ios" ? STATUS_BAR_HEIGHT + NAVIGATION_BAR_HEIGHT + CONNECTION_STATE_HEIGHT : 0
-   const keyboardVerticalOffset = NAVIGATION_BAR_HEIGHT + STATUS_BAR_HEIGHT + 70;
+  const { bottom } = useSafeAreaInsets();
 
   useEffect(() => {
     const handler = new GroupChannelHandler({
-      onTypingStatusUpdated: eventChannel => {
+      onTypingStatusUpdated: (eventChannel) => {
         if (eventChannel.url === channel.url) {
           setNextLayoutAnimation();
           setIsTyping(eventChannel.isTyping);
@@ -67,31 +62,36 @@ export const SendInput = ({channel}: {channel: GroupChannel}) => {
     setText(() => '');
 
     channel
-      .sendUserMessage({message: text})
+      .sendUserMessage({ message: text })
       .onPending(() => {
-        console.log('Sending a message, but this message will be handled by collection handler.');
+        console.log(
+          'Sending a message, but this message will be handled by collection handler.'
+        );
       })
       .onSucceeded(() => {
-        console.log('Message sent successfully, but this message will be handled by collection handler.');
+        console.log(
+          'Message sent successfully, but this message will be handled by collection handler.'
+        );
       })
-      .onFailed(err => {
-        Alert.alert('Failed to send message', `Please try again later (${err.message})`);
-        console.log('Failed to send message, but this message will be handled by collection handler.');
+      .onFailed((err) => {
+        Alert.alert(
+          'Failed to send message',
+          `Please try again later (${err.message})`
+        );
+        console.log(
+          'Failed to send message, but this message will be handled by collection handler.'
+        );
       });
   };
 
-
   return (
-    <KeyboardAvoidingView
-      //style={{ flexShrink: 1, justifyContent: 'flex-end' }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"} // 'padding' on iOS, 'height' on Android
-      //keyboardVerticalOffset={keyboardVerticalOffset}
-    >
+    <View style={{flexShrink: 0,
+      justifyContent: 'flex-end' }}>
       {isTyping && <TypingIndicator channel={channel} />}
       <View style={styles.inputContainer}>
         <TextInput
           multiline
-          placeholder={"Enter message"}
+          placeholder={'Enter message'}
           value={text}
           onChangeText={onChangeText}
           style={styles.input}
@@ -99,8 +99,8 @@ export const SendInput = ({channel}: {channel: GroupChannel}) => {
         <SendButton visible={text.trim().length > 0} onPress={onPressSend} />
       </View>
       <View style={{ height: bottom }} />
-    </KeyboardAvoidingView>
-  )
+    </View>
+  );
 };
 
 const TypingIndicator = ({channel}: {channel: GroupChannel}) => {
@@ -122,7 +122,7 @@ const TypingIndicator = ({channel}: {channel: GroupChannel}) => {
 const AttachmentsButton = ({onPress}: {onPress: () => void}) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.attachmentsButton}>
-      <Icon icon={'add'} size={20} />
+      <Icon icon={'add'} size={25} />
     </TouchableOpacity>
   );
 };
@@ -131,31 +131,34 @@ const SendButton = ({visible, onPress}: {visible: boolean; onPress: () => void})
   if (!visible) return null;
   return (
     <TouchableOpacity style={styles.sendButton} onPress={onPress}>
-      <Icon icon={'send'} size={20} />
+      <Icon icon={'send'} size={30} />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   inputContainer: {
+    flexDirection: 'row', // Set the direction to row
+    alignItems: 'center', // Align items in the center vertically
+    marginBottom: -20,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderTopWidth: 0.5, // Optional: Add a top border for better separation
+    borderColor: '#ccc', // Optional: Set border color
   },
   input: {
+    flex: 1, // Allow the input to take up the remaining space
     borderWidth: 0.5,
-    borderColor: '#000', // You can change this to any color you prefer
-    flex: 1,
+    borderColor: '#000', // Customize this color
     maxHeight: INPUT_MAX_HEIGHT,
     borderRadius: 5,
+    paddingHorizontal: 10, // Add horizontal padding for better text spacing
   },
   attachmentsButton: {
     marginRight: 8,
   },
   sendButton: {
-    marginLeft: 8,
+    marginLeft: 8, // Add some margin between the input and the button
   },
   typingIndicator: {
     height: 20,
@@ -163,5 +166,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
 });
-
 

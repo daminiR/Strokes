@@ -15,12 +15,10 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalization (14.8.4):
     - ExpoModulesCore
-  - ExpoModulesCore (1.12.23):
+  - ExpoModulesCore (1.11.13):
     - glog
-    - hermes-engine
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-    - React-jsinspector
     - React-NativeModulesApple
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
@@ -989,7 +987,9 @@ PODS:
     - React-Core
   - react-native-create-thumbnail (2.0.0):
     - React-Core
-  - react-native-document-picker (9.3.0):
+  - react-native-document-picker (9.3.1):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
     - React-Core
   - react-native-image-picker (7.1.2):
     - glog
@@ -1004,18 +1004,18 @@ PODS:
     - React-Core
   - react-native-netinfo (11.3.2):
     - React-Core
-  - react-native-pager-view (6.3.4):
+  - react-native-pager-view (6.4.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - react-native-safe-area-context (4.10.8):
+  - react-native-safe-area-context (4.10.9):
     - React-Core
-  - react-native-video (6.4.3):
+  - react-native-video (6.4.5):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-    - react-native-video/Video (= 6.4.3)
-  - react-native-video/Video (6.4.3):
+    - react-native-video/Video (= 6.4.5)
+  - react-native-video/Video (6.4.5):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1233,7 +1233,7 @@ PODS:
     - React-Core
   - RNSensors (7.3.6):
     - React-Core
-  - RNSVG (15.5.0):
+  - RNSVG (15.6.0):
     - React-Core
   - RNVectorIcons (10.1.0):
     - glog
@@ -1535,7 +1535,7 @@ SPEC CHECKSUMS:
   ExpoFileSystem: 74cc0fae916f9f044248433971dcfc8c3befd057
   ExpoKeepAwake: 0f5cad99603a3268e50af9a6eb8b76d0d9ac956c
   ExpoLocalization: f94759e55802e4a4f8b7d7cecb450de11b888721
-  ExpoModulesCore: 05711b320ea54d8131dd2c3641be7a44a73299fe
+  ExpoModulesCore: 370096473359f5f6aade0871400d063333747719
   EXSplashScreen: f78bcfe785ee0516d3a587c20e6371a8eec859c4
   FBLazyVector: 84f6edbe225f38aebd9deaf1540a4160b1f087d7
   FBReactNativeSpec: d0086a479be91c44ce4687a962956a352d2dc697
@@ -1579,14 +1579,14 @@ SPEC CHECKSUMS:
   react-native-cameraroll: be7f4a2910860f15b821efecc4c6469d605ac7bc
   react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
   react-native-create-thumbnail: ab55d24aea01723cf386f18b0b542aabb1982f27
-  react-native-document-picker: 5b97e24a7f1a1e4a50a72c540a043f32d29a70a2
+  react-native-document-picker: 4a7664812c7a25b02697f597c3d935360d454a2c
   react-native-image-picker: fefff630cfa3ee6a809f6ac6569981f4a34e0050
   react-native-image-resizer: fd0c333eca55147bd55c5e054cac95dcd0da6814
   react-native-mmkv: 6d738233c99440c39ef88c3a080b0af80265a72a
   react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
-  react-native-pager-view: dcef3c24073c1f63d8a03661c4c328b839c8a628
-  react-native-safe-area-context: b7daa1a8df36095a032dff095a1ea8963cb48371
-  react-native-video: 24faedd9f1dfe56db8cd033545e28accb10b04b7
+  react-native-pager-view: d29c9cf969837f0f3d008711963bd5f394cf8323
+  react-native-safe-area-context: ab8f4a3d8180913bd78ae75dd599c94cce3d5e9a
+  react-native-video: 1c8cc1f6b3526ec84c11b238dfdf423ecf4f2b9b
   React-nativeconfig: ca8b90c736cf3be019cb332ca42d93dd95b32e05
   React-NativeModulesApple: 1fdffcce7772e274baeab33a1900f45feba86cbd
   React-perflogger: 8a1e1af5733004bdd91258dcefbde21e0d1faccd
@@ -1622,7 +1622,7 @@ SPEC CHECKSUMS:
   RNReanimated: 72a18f65f08061d2dcafbf08468811c3c3d22041
   RNScreens: 2b73f5eb2ac5d94fbd61fa4be0bfebd345716825
   RNSensors: 117ba71c7eeeea0407ea0c0bb79e3495d602049b
-  RNSVG: b986585e367f4a49d8aa43065066cc9c290b3d9b
+  RNSVG: 5da7a24f31968ec74f0b091e3440080f347e279b
   RNVectorIcons: 9282eb0aef2f7d4747f621aa6c586ce910de23b1
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 64cd2a583ead952b0315d5135bf39e053ae9be70
