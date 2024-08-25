@@ -1,5 +1,5 @@
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { TextStyle, ViewStyle } from "react-native"
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {StatusBar, KeyboardAvoidingView, Platform, TextStyle, ViewStyle } from "react-native"
 import { colors, spacing, typography } from "../theme"
 import {ChatScreen, ChatPreviewScreen} from "app/screens"
 import { navigate, goBack} from "../navigators"
@@ -17,7 +17,16 @@ export function ChatTopTabNavigator() {
     },
     [],
   )
+ const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (StatusBar.currentHeight || 44) : 0;
+ const NAVIGATION_BAR_HEIGHT = 40;
+const keyboardVerticalOffset = NAVIGATION_BAR_HEIGHT + STATUS_BAR_HEIGHT;
+console.log(keyboardVerticalOffset)
   return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"} // 'padding' on iOS, 'height' on Android
+      keyboardVerticalOffset={keyboardVerticalOffset}
+    >
     <ChatTopTab.Navigator
       screenOptions={{
         tabBarActiveTintColor: colors.text,
@@ -40,6 +49,7 @@ export function ChatTopTabNavigator() {
         options={{ tabBarLabel: "Preview" }}
       />
     </ChatTopTab.Navigator>
+    </KeyboardAvoidingView>
   )
 }
 

@@ -1,5 +1,5 @@
-import { UIKitTheme } from "@sendbird/uikit-react-native-foundation"
-import { palette } from "./colors"
+import {UIKitTheme} from "@sendbird/uikit-react-native-foundation"
+import {palette} from "./colors"
 
 export const customTheme: UIKitTheme = {
   colorScheme: "light",
@@ -47,7 +47,7 @@ export const customTheme: UIKitTheme = {
     secondary: palette.neutral600,
     error: "#FF0000",
     background: palette.neutral100,
-    text: palette.neutral900,
+    text: palette.neutral100,
     onBackground01: palette.neutral800,
     onBackground02: palette.neutral700,
     onBackground03: palette.neutral600,
@@ -169,8 +169,8 @@ export const customTheme: UIKitTheme = {
             textSenderName: palette.neutral900,
             textTime: palette.neutral800,
             textVoicePlaytime: palette.neutral900,
-            background: palette.neutral200,
-            voiceSpinner: palette.neutral300,
+            background: palette.neutral300,
+            voiceSpinner: palette.neutral400,
             voiceProgressTrack: palette.neutral300,
             voiceActionIcon: palette.neutral900,
             voiceActionIconBackground: palette.neutral100,
@@ -181,7 +181,7 @@ export const customTheme: UIKitTheme = {
             textSenderName: palette.neutral900,
             textTime: palette.neutral800,
             textVoicePlaytime: palette.neutral900,
-            background: palette.neutral300,
+            background: palette.neutral800,
             voiceSpinner: palette.neutral300,
             voiceProgressTrack: palette.neutral300,
             voiceActionIcon: palette.neutral900,
@@ -190,12 +190,12 @@ export const customTheme: UIKitTheme = {
         },
         outgoing: {
           enabled: {
-            textMsg: palette.neutral900,
+            textMsg: palette.neutral100,
             textEdited: palette.neutral700,
             textSenderName: palette.neutral900,
             textTime: palette.neutral800,
             textVoicePlaytime: palette.neutral900,
-            background: palette.neutral300,
+            background: palette.primary500,
             voiceSpinner: palette.neutral500,
             voiceProgressTrack: palette.neutral500,
             voiceActionIcon: palette.neutral900,
@@ -330,7 +330,7 @@ export const customTheme: UIKitTheme = {
   typography: {
     h1: {
       fontFamily: "spaceGroteskBold",
-      fontSize: 26,
+      fontSize: 36,
       lineHeight: 30,
       letterSpacing: 0,
       fontWeight: "bold",
@@ -371,8 +371,8 @@ export const customTheme: UIKitTheme = {
       fontWeight: "normal",
     },
     body3: {
-      fontFamily: "spaceGroteskLight",
-      fontSize: 14,
+      fontFamily: "spaceGroteskRegular",
+      fontSize: 17,
       lineHeight: 18,
       letterSpacing: 0,
       fontWeight: "normal",
@@ -392,11 +392,11 @@ export const customTheme: UIKitTheme = {
       fontWeight: "normal",
     },
     caption2: {
-      fontFamily: "spaceGroteskLight",
-      fontSize: 12,
+      fontFamily: "spaceGroteskBold",
+      fontSize: 17,
       lineHeight: 16,
       letterSpacing: 0,
-      fontWeight: "normal",
+      fontWeight: "bold",
     },
     caption3: {
       fontFamily: "spaceGroteskLight",
