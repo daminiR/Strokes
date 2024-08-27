@@ -1,6 +1,12 @@
 import {gql} from "apollo-server-lambda";
 
 export const typeDefsTest = gql`
+type UnhideChannelResult {
+    success: Boolean!
+    message: String!
+    channelUrl: String
+  }
+
   type RemoveLikesResult {
     removedAsLikerCount: Int!
     removedAsLikedCount: Int!
@@ -27,6 +33,7 @@ export const typeDefsTest = gql`
   }
   type Mutation {
     removeAllMatchesForUserTest(userId: String!): RemoveMatchesResult!
+    unhideSendbirdChannel(channelUrl: String!): UnhideChannelResult!
     updateAllSportFieldsTest: User
     updatePlayerPreferencesTest: UpdateUsersResult
     simulateRandomLikesFromUsersTest(

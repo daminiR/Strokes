@@ -129,7 +129,6 @@ const App: React.FC<AppProps> = observer((props) => {
     if (Boolean(notificationData?.sendbird)) {
       const channelUrl = notificationData.sendbird.channel.channel_url;
       if (channelUrl) {
-        console.log("channel here4", channelUrl)
         const matchedUser = matchedProfileStore.findByChannelId(channelUrl);
 
         chatStore.setChatProfile(matchedUser);
@@ -154,7 +153,7 @@ const App: React.FC<AppProps> = observer((props) => {
         if (appState !== "active" && nextAppState === "active") {
           console.log("App is coming to the foreground. Navigating to the start screen...");
           resetToInitialState();
-          resetChatStackToChatList();
+          //resetChatStackToChatList();
           // TODO when signout this navigate logic is different, but not important right now
           authenticationStore.checkCognitoUserSession();
           //navigate("FaceCard");
@@ -162,7 +161,7 @@ const App: React.FC<AppProps> = observer((props) => {
           console.log("App has gone to the background. Disconnecting...");
           chatStore.disconnect();
           authenticationStore.setProp("isSDKConnected", false);
-          navigate("FaceCard");
+          //navigate("FaceCard");
           // Add your disconnect logic here
         }
         setAppState(nextAppState);

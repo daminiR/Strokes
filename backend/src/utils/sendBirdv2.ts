@@ -109,34 +109,64 @@ export const createSendbirdUser = async (
   }
 };
 
+export const unhideSendbirdChannel = async (channelUrl: string) => {
+  const url = `https://api-${appId}.sendbird.com/v3/group_channels/${channelUrl}/hide`;
+  const headers = {
+    "Content-Type": "application/json",
+    "Api-Token": apiToken
+  };
+  const body = JSON.stringify({
+    user_id: {},  // Replace with the user ID if you are unhiding for a specific user
+    should_unhide_all: true  // Set to true to unhide the channel for all members
+  });
 
-export const hideSendbirdChannel = async (channelUrl) => {
-    const url = `https://api-${appId}.sendbird.com/v3/group_channels/${channelUrl}/hide`;
-    const headers = {
-        "Content-Type": "application/json",
-        "Api-Token": apiToken
-    };
-    const body = JSON.stringify({
-        user_id: {},  // Necessary if the API requires identifying the user making the change
-        should_hide_all: true  // Set to true to hide the channel for all members
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',  // Use DELETE method for unhiding
+      headers: headers,
+      body: body
     });
 
-    try {
-        const response = await fetch(url, {
-            method: 'PUT',
-            headers: headers,
-            body: body
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        console.log("Channel hidden successfully.");
-        const responseData = await response.json();  // Assuming the API returns JSON
-        console.log(responseData);
-    } catch (error) {
-        console.error("Failed to hide the channel:", error);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    console.log("Channel unhidden successfully.");
+    const responseData = await response.json();  // Assuming the API returns JSON
+    console.log(responseData);
+  } catch (error) {
+    console.error("Failed to unhide the channel:", error);
+  }
+}
+
+
+export const hideSendbirdChannel = async (channelUrl) => {
+  const url = `https://api-${appId}.sendbird.com/v3/group_channels/${channelUrl}/hide`;
+  const headers = {
+    "Content-Type": "application/json",
+    "Api-Token": apiToken
+  };
+  const body = JSON.stringify({
+    user_id: {},  // Necessary if the API requires identifying the user making the change
+    should_hide_all: true  // Set to true to hide the channel for all members
+  });
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: headers,
+      body: body
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    console.log("Channel hidden successfully.");
+    const responseData = await response.json();  // Assuming the API returns JSON
+    console.log(responseData);
+  } catch (error) {
+    console.error("Failed to hide the channel:", error);
+  }
 }
 
