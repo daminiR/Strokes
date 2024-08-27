@@ -6,6 +6,9 @@ import {PotentialMatchPool} from "../../models/PotentialMatchPool";
 import _ from 'lodash'
 import {SHA256} from 'crypto-js';
 import {apiToken, userAPI, groupChannelApi} from './../../services/sendbirdService';
+import {
+  unhideSendbirdChannel,
+} from "./../../utils/sendBirdv2";
 import {Sendbird} from 'sendbird-platform-sdk';
 
 interface LikeActionResult {
@@ -16,6 +19,29 @@ interface LikeActionResult {
 
 export const resolvers = {
   Mutation: {
+    async unhideSendbirdChannel(
+      _,
+      {channelUrl}: {channelUrl: string}
+    ) {
+      try {
+        // Unhide the channel on Sendbird
+        await unhideSendbirdChannel(channelUrl);
+
+        return {
+          success: true,
+          message: "Channel unhidden successfully.",
+          channelUrl: channelUrl,
+        };
+      } catch (error) {
+        console.error("Error unhiding channel:", error);
+        return {
+          success: false,
+          message: "Failed to unhide the channel.",
+          channelUrl: null,
+        };
+      }
+    },
+
     updatePlayerPreferencesTest: async () => {
       // Fetch all users. Consider using cursor or pagination if the dataset is large.
       const usersCursor = User.find().cursor();

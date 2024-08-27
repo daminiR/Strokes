@@ -76,7 +76,7 @@ const $emptyState: ViewStyle = {
 
 export const ChatListScreen2 = observer(function ChatListScreen(_props) {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const { matchedProfileStore, authenticationStore, chatStore } = useStores();
+  const { matchedProfileStore, userStore, authenticationStore, chatStore } = useStores();
   const sdk = chatStore.sdk;
   const isSDKConnected = authenticationStore.isSDKConnected;
   const collection = chatStore.collection;
@@ -114,6 +114,9 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
       console.log("SDK successfully reconnected.");
     } else {
       console.log("SDK is already connected.");
+      await chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken); // Attempt reconnection
+      setIsLoading(false);
+      setIsRefreshing(false);
     }
   } catch (error) {
     console.error("Failed to verify connection or reconnect SDK:", error);
@@ -126,6 +129,9 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
       limit: 10,
       hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN,
       includeEmptyChannel: true,
+        //filter: {
+        //customTypes: ["test"], // Assuming you use a custom type to identify test channels
+  //},
     });
 
     newCollection.setGroupChannelCollectionHandler({
@@ -150,7 +156,7 @@ export const ChatListScreen2 = observer(function ChatListScreen(_props) {
     newCollection.loadMore()
       .then(() => {
         chatStore.setCollection(newCollection);
-        console.log("Collection loaded and set");
+        console.log("Collection loaded and set", chatStore.collection, newCollection);
       })
       .catch((error) => {
         console.error("Failed to load more channels:", error);

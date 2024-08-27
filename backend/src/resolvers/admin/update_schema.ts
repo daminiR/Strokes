@@ -4,7 +4,7 @@ export const resolvers = {
   Mutation: {
     updateAllUserSchema: async (root, _id, context) => {
       console.log("started")
-      const filter = { "matches": {$exists: true}}
+      const filter = {"matches": {$exists: true}}
       const filter2 = {}
       const options = {
         $set: {
@@ -47,13 +47,13 @@ export const resolvers = {
       ];
       const options2 = {
         $pull: {
-          "sports": { "sport": {$in: sportsRemoved} },
+          "sports": {"sport": {$in: sportsRemoved}},
         },
       };
       User.updateMany(
         filter2,
         options2,
-        { timestamps: true }
+        {timestamps: true}
       )
         .then(() => {
           console.log("done");

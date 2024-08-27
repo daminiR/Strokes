@@ -1,5 +1,5 @@
-import { types, IType, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
-import { getRootStore } from './helpers/getRootStore';
+import {types, IType, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
+import {getRootStore} from './helpers/getRootStore';
 
 const ImageDataModel = types.model({
   file: types.maybeNull(types.string),
@@ -36,11 +36,11 @@ export const UserStoreModel = types
     setEmail(email: string) {
       self.email = email
     },
-  setPhoneNumber(phoneNumber: string) {
-    self.displayPhoneNumber = phoneNumber
+    setPhoneNumber(phoneNumber: string) {
+      self.displayPhoneNumber = phoneNumber
       self.phoneNumber = `+1${phoneNumber}`
-  },
-  setAuthPassword(password: string) {
+    },
+    setAuthPassword(password: string) {
       self.authPassword = password
     },
     setFirstName(firstName: string) {
@@ -70,7 +70,7 @@ export const UserStoreModel = types
     setID(_id: string) {
       self._id = _id
     },
-    setFromMongoDb(userData){
+    setFromMongoDb(userData) {
       const matchStore = getRootStore(self).matchStore
       //matchStore.setInit(userData)
       self.email = userData.email

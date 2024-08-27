@@ -20,36 +20,45 @@ import { observer } from "mobx-react-lite"
 import { accelerometer, setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';
 import { Animated } from 'react-native';
 // Set the update interval
+import { useFocusEffect } from '@react-navigation/native'; // Added to handle screen focus
+import { useCallback } from 'react';
+
 setUpdateIntervalForType(SensorTypes.accelerometer, 100); // updates every 100ms
 const windowDimensions = Dimensions.get('window');
 
 export const ChatScreen = observer(() => {
   const [backgroundPosition, setBackgroundPosition] = useState(new Animated.ValueXY({ x: 0, y: 0 }));
-  const handlerId = useId();
-  const { chatStore } = useStores();
-  const { sdk } = chatStore;
+  const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const { chatStore, authenticationStore } = useStores();
   const rerender = useForceUpdate();
   const [state, setState] = useState<{ channel: GroupChannel; collection: MessageCollection }>();
 
+  // Function to initialize the message collection
+  const initializeCollection = async (channelUrl: string) => {
+    try {
+      await chatStore.initializeCollection(channelUrl, setState, rerender);
+    } catch (error) {
+      console.error('Failed to initialize collection', error);
+    }
+  };
+
+  // Reinitialize the collection when the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      if (authenticationStore.isSDKConnected) { // Check if SDK is connected
+        initializeCollection(chatStore.channelUrl); // Reinitialize collection when the app comes into the foreground
+      }
+    }, [authenticationStore.isSDKConnected, chatStore.channelUrl]) // Dependencies include SDK connection state and channel URL
+  );
+
   useEffect(() => {
     const subscription = accelerometer.subscribe(({ x, y }) => {
-      // Using Animated for smooth transitions
       Animated.spring(backgroundPosition, {
-        toValue: { x: x * 10, y: y * 10 }, // Multiplied by 10 for noticeable but smooth effect
+        toValue: { x: x * 10, y: y * 10 },
         useNativeDriver: true,
       }).start();
     });
     return () => subscription.unsubscribe();
-  }, []);
-
-  const initializeCollection = async (channelUrl: string) => {
-    try {
-      await chatStore.initializeCollection(channelUrl, setState, rerender);
-    } catch {}
-  };
-
-  useEffect(() => {
-    initializeCollection(chatStore.channelUrl);
   }, []);
 
   useEffect(() => {
@@ -58,7 +67,9 @@ export const ChatScreen = observer(() => {
     };
   }, [state?.collection]);
 
-  if (!state) return <LoadingActivity />;
+  if (!authenticationStore.isSDKConnected || !state) { // Ensure SDK is connected and state is initialized before rendering
+    return <LoadingActivity />;
+  }
 
   const keyExtractor = (item: BaseMessage) =>
     isSendableMessage(item) && item.reqId ? item.reqId : String(item.messageId);
@@ -142,7 +153,6 @@ export const ChatScreen = observer(() => {
     </UIKitThemeProvider>
   );
 });
-
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const styles = StyleSheet.create({
