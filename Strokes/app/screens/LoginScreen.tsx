@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
-import { TextInput, TextStyle, ViewStyle } from "react-native"
+import {TouchableOpacity,  TextInput, TextStyle, ViewStyle, View, Platform} from "react-native"
 import {
   Header,
   LoadingActivity,
@@ -17,18 +17,21 @@ import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
 import storage from "app/utils/storage/mmkvStorage"
 const ROOT_STATE_STORAGE_KEY = "root-v1";
+import {SFSymbol} from 'react-native-sfsymbols'
+
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
-  const authPasswordInput = useRef<TextInput>(null)
-  const [authPassword, setAuthPassword] = useState("")
-  const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [attemptsCount, setAttemptsCount] = useState(0)
-  const { userStore, authenticationStore } = useStores()
-   const [isLoading, setIsLoading] = useState(false); // Add state for loading
-  //const error = isSubmitted ? validationError : ""
+  const authPasswordInput = useRef<TextInput>(null);
+  const [authPassword, setAuthPassword] = useState("");
+  const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [attemptsCount, setAttemptsCount] = useState(0);
+  const { userStore, authenticationStore } = useStores();
+  const [isLoading, setIsLoading] = useState(false); // Add state for loading
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const login = async () => {
     setIsLoading(true); // Start loading
     try {
@@ -36,37 +39,44 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     } finally {
       setIsLoading(false); // Stop loading
     }
-  };const logCurrentState = async () => {
-  const currentState = storage.getString(ROOT_STATE_STORAGE_KEY)
-  console.log("Current State:", currentState)
-};
-useEffect(() => {
-  const fetchData = async () => {
-    await logCurrentState() // Assuming logCurrentState is an async function
-  }
+  };
 
-  fetchData()
-}, [])
+  const logCurrentState = async () => {
+    const currentState = storage.getString(ROOT_STATE_STORAGE_KEY);
+    console.log("Current State:", currentState);
+  };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      await logCurrentState(); // Assuming logCurrentState is an async function
+    };
+
+    fetchData();
+  }, []);
+
+  const handleFaceIDLogin = async () => {
+
+  };
 
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
     () =>
       function PasswordRightAccessory(props: TextFieldAccessoryProps) {
         return (
-          <Icon
-            icon={isAuthPasswordHidden ? "view" : "hidden"}
-            color={colors.palette.neutral800}
-            containerStyle={props.style}
-            size={20}
-            onPress={() => setIsAuthPasswordHidden(!isAuthPasswordHidden)}
-          />
-        )
+            <Icon
+              icon={isAuthPasswordHidden ? "view" : "hidden"}
+              color={colors.palette.neutral800}
+              containerStyle={props.style}
+              size={20}
+              onPress={() => setIsAuthPasswordHidden(!isAuthPasswordHidden)}
+            />
+        );
       },
     [isAuthPasswordHidden],
-  )
-   if (isLoading) {
-     return <LoadingActivity />
-   }
+  );
+
+  if (isLoading) {
+    return <LoadingActivity />;
+  }
 
   return (
     <Screen
@@ -74,40 +84,58 @@ useEffect(() => {
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Header leftIcon= {"back"} onLeftPress={() => goBack()}/>
+      <Header leftIcon={"back"} onLeftPress={() => goBack()} />
       <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
       <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
       {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
 
       <TextField
         value={userStore.displayPhoneNumber ?? undefined}
-        onChangeText={text => userStore.setPhoneNumber(text)}
+        onChangeText={(text) => userStore.setPhoneNumber(text)}
         containerStyle={$textField}
         autoCapitalize="none"
         autoComplete="tel-device"
         autoCorrect={false}
-        keyboardType="number-pad"
         labelTx="signUpScreen.phoneFieldLabel"
         placeholderTx="signUpScreen.phoneFieldLabel"
-        //helper={error}
-        //status={error ? "error" : undefined}
-        //onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
+       <View style={$passwordContainer}>
 
       <TextField
         ref={authPasswordInput}
         value={userStore.authPassword ?? undefined}
         onChangeText={userStore.setAuthPassword}
-        containerStyle={$textField}
+        containerStyle={$textFieldPassword}
         autoCapitalize="none"
         autoComplete="password"
         autoCorrect={false}
         secureTextEntry={isAuthPasswordHidden}
         labelTx="signUpScreen.passwordFieldLabel"
         placeholderTx="signUpScreen.passwordFieldPlaceholder"
-        //onSubmitEditing={authenticationStore.signIn()}
         RightAccessory={PasswordRightAccessory}
       />
+      {Platform.OS === "ios" && (
+          <TouchableOpacity onPress={handleFaceIDLogin} style={$faceIDIcon}>
+            {Platform.OS === 'ios' ? (
+              <View>
+                 <SFSymbol
+      name="faceid"
+      weight="regular"
+      scale="large"
+      color={colors.palette.neutral600}
+      size={30}
+      resizeMode="center"
+      multicolor={false}
+      style={{ width: 32, height: 32 }}
+    />
+              </View>
+            ) : (
+                <MaterialCommunityIcons name="face-recognition" color={colors.tint} size={30} />
+              )}
+
+          </TouchableOpacity>
+        )}
+       </View>
       <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"
@@ -116,9 +144,25 @@ useEffect(() => {
         onPress={login}
       />
     </Screen>
-  )
-})
+  );
+});
+ const $passwordContainer = {
+    flexDirection: "row",
+    alignItems: "center",
+  }
+  const $faceIDIcon = {
+    marginLeft: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  }
 
+const $textFieldPassword: ViewStyle = {
+  flex: 1,
+  marginBottom: spacing.lg,
+}
+const $textField: ViewStyle = {
+  marginBottom: spacing.lg,
+}
 const $screenContentContainer: ViewStyle = {
   paddingVertical: spacing.xxl,
   paddingHorizontal: spacing.lg,
@@ -137,9 +181,6 @@ const $hint: TextStyle = {
   marginBottom: spacing.md,
 }
 
-const $textField: ViewStyle = {
-  marginBottom: spacing.lg,
-}
 
 const $tapButton: ViewStyle = {
   marginTop: spacing.xs,
