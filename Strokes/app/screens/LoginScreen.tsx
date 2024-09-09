@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
 import {TouchableOpacity,  TextInput, TextStyle, ViewStyle, View, Platform} from "react-native"
 import {
   Header,
@@ -18,6 +18,8 @@ import { colors, spacing } from "../theme"
 import storage from "app/utils/storage/mmkvStorage"
 const ROOT_STATE_STORAGE_KEY = "root-v1";
 import {SFSymbol} from 'react-native-sfsymbols'
+import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
+import * as Keychain from 'react-native-keychain';
 
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
@@ -31,6 +33,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const { userStore, authenticationStore } = useStores();
   const [isLoading, setIsLoading] = useState(false); // Add state for loading
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isFaceIDRunning, setIsFaceIDRunning] = useState(false);
+
 
   const login = async () => {
     setIsLoading(true); // Start loading
@@ -53,10 +57,35 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
     fetchData();
   }, []);
+const handleFaceIDLogin = useCallback(async () => {
+  if (isFaceIDRunning) return;
 
-  const handleFaceIDLogin = async () => {
+  setIsFaceIDRunning(true);
 
-  };
+  try {
+    console.log("Running Face ID login through Keychain");
+
+    // Directly access the password via Keychain, which will trigger Face ID automatically
+    const credentials = await Keychain.getGenericPassword({
+      authenticationPrompt: {
+        title: 'Authenticate to retrieve password',
+        cancelButton: 'Cancel',
+      },
+    });
+    if (credentials) {
+      console.log('Password retrieved via Face ID:', credentials.password);
+      userStore.setAuthPassword(credentials.password);
+      userStore.setPhoneNumber(credentials.username);
+    } else {
+      console.error('No credentials stored.');
+    }
+  } catch (error) {
+    console.error('Error during Face ID login via Keychain:', error);
+    setErrorMessage('An unexpected error occurred during Face ID authentication.');
+  } finally {
+    setIsFaceIDRunning(false);
+  }
+}, [isFaceIDRunning, userStore, setErrorMessage]);
 
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
     () =>
