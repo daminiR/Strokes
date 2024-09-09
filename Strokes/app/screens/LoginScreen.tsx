@@ -76,6 +76,7 @@ const handleFaceIDLogin = useCallback(async () => {
       console.log('Password retrieved via Face ID:', credentials.password);
       userStore.setAuthPassword(credentials.password);
       userStore.setPhoneNumber(credentials.username);
+      await login()
     } else {
       console.error('No credentials stored.');
     }
