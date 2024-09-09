@@ -3,6 +3,7 @@ import {
   types,
   flow,
 } from "mobx-state-tree"
+import * as Keychain from 'react-native-keychain'
 import messaging from "@react-native-firebase/messaging"
 import {
   CognitoUser,
@@ -14,8 +15,61 @@ import {resetToInitialState} from "./../navigators"
 import {getRootStore} from "./helpers/getRootStore"
 import {withSetPropAction} from "./helpers/withSetPropAction"
 import {removeStore} from "./helpers/removeRootStore"
+import {Alert} from 'react-native';
 import storage from "app/utils/storage/mmkvStorage"
 
+const storePasswordSecurely = async (username: string, password: string) => {
+  try {
+    // Check if credentials already exist
+    const credentials = await Keychain.getGenericPassword();
+
+    if (credentials) {
+      // Extract stored username and password
+      const storedUsername = credentials.username;
+      const storedPassword = credentials.password;
+
+      // Check if BOTH the stored username and password match the new ones
+      if (storedUsername === username && storedPassword === password) {
+        console.log("The stored credentials match the new ones. No update needed.");
+      } else {
+        // If either the username or password doesn't match, prompt the user to update
+        console.log("doesnt amtch", storedPassword, password, storedUsername, username);
+        Alert.alert(
+          "Update Password",
+          "The stored username or password doesn't match. Do you want to update the stored password?",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Password update cancelled"),
+              style: "cancel",
+            },
+            {
+              text: "Update",
+              onPress: async () => {
+                // Update the password if the user agrees
+                await Keychain.setGenericPassword(username, password, {
+                  accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY, // Use biometric authentication
+                  accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+                });
+                console.log("Password updated successfully");
+              },
+            },
+          ],
+          {cancelable: false}
+        );
+      }
+    } else {
+      // No password stored, store it for the first time
+      await Keychain.setGenericPassword(username, password, {
+        accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY,
+        accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+      });
+      console.log("Password stored successfully for the first time");
+    }
+  } catch (error) {
+    console.error("Error storing or updating password:", error);
+  }
+};
 
 async function requestUserPermission() {
   const authorizationStatus = await messaging().requestPermission()
@@ -416,6 +470,10 @@ export const AuthenticationStoreModel = types
               await self.setUserSession(session)
 
               try {
+
+                // Check and store password securely with Face ID prompt
+                await storePasswordSecurely(userStore.phoneNumber, userStore.authPassword);
+
                 // Handle post-authentication actions
                 await self.handlePostAuthenticationActions()
                 resolve(session)

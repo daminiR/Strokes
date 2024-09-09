@@ -37,8 +37,19 @@ export const UserStoreModel = types
       self.email = email
     },
     setPhoneNumber(phoneNumber: string) {
-      self.displayPhoneNumber = phoneNumber
-      self.phoneNumber = `+1${phoneNumber}`
+      // Remove +1 from the displayPhoneNumber if it exists
+      if (phoneNumber.startsWith("+1")) {
+        self.displayPhoneNumber = phoneNumber.substring(2); // Removes the first 2 characters (+1)
+      } else {
+        self.displayPhoneNumber = phoneNumber; // Keep the phone number as is for display
+      }
+
+      // Set the phoneNumber with +1 prefix if it's not already present
+      if (!phoneNumber.startsWith("+1")) {
+        self.phoneNumber = `+1${phoneNumber}`;
+      } else {
+        self.phoneNumber = phoneNumber; // If it already has '+1', use the number as it is
+      }
     },
     setAuthPassword(password: string) {
       self.authPassword = password
