@@ -6,24 +6,23 @@ import { navigate, goBack } from "../../navigators"
 import { colors, spacing } from "../../theme"
 import { useStores } from "../../models"
 
-interface ForgotPasswordNewPasswordScreenProps {}
+interface ForgotPasswordVerificationScreenProps {}
 
-export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreenProps> = observer(function ForgotPasswordNewPasswordScreen(_props) {
+export const ForgotPasswordVerificationScreen: FC<ForgotPasswordVerificationScreenProps> = observer(function ForgotPasswordVerificationScreen(_props) {
   const { authenticationStore } = useStores()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const resetPassword = () => {
+  const verifyCode = () => {
     setIsLoading(true)
     authenticationStore
-      .resetPassword()
+      .confirmVerificationCode()
       .then(() => {
-        alert("Password successfully reset.")
-        navigate("LoginScreen")
+         navigate("ForgotPasswordNewPassword")
       })
       .catch((error) => {
         setIsLoading(false)
-        setError(error.message || "Error resetting password")
+        setError(error.message || "Verification failed")
       })
   }
 
@@ -34,41 +33,27 @@ export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreen
       safeAreaEdges={["top", "bottom"]}
     >
       <Header leftIcon={"back"} onLeftPress={() => goBack()} />
-      <Text testID="new-password-heading" text="New Password" preset="heading" style={$signIn} />
-      <Text text="Enter your new password" preset="subheading" style={$enterDetails} />
+      <Text testID="verification-heading" text="Verification" preset="heading" style={$signIn} />
+      <Text text="Enter the verification code sent to your phone or email" preset="subheading" style={$enterDetails} />
 
       <TextField
-        value={authenticationStore.newPassword ?? ""}
-        onChangeText={authenticationStore.setNewPassword}
+        value={authenticationStore.verificationPhoneCode ?? undefined}
+        onChangeText={authenticationStore.setVerificationPhoneCode}
         containerStyle={$textField}
         autoCapitalize="none"
         autoCorrect={false}
-        secureTextEntry
-        label="New Password"
-        placeholder="Enter new password"
+        keyboardType="number-pad"
+        label="Verification Code"
+        placeholder="Enter verification code"
         helper={error}
         status={error ? "error" : undefined}
       />
-
-      <TextField
-        value={authenticationStore.confirmPassword ?? ""}
-        onChangeText={authenticationStore.setConfirmPassword}
-        containerStyle={$textField}
-        autoCapitalize="none"
-        autoCorrect={false}
-        secureTextEntry
-        label="Confirm Password"
-        placeholder="Confirm new password"
-        helper={error}
-        status={error ? "error" : undefined}
-      />
-
       <Button
-        testID="reset-password-button"
-        text="Reset Password"
+        testID="verify-code-button"
+        text="Verify Code"
         style={$tapButton}
         preset="reversed"
-        onPress={resetPassword}
+        onPress={verifyCode}
         loading={isLoading}
       />
     </Screen>

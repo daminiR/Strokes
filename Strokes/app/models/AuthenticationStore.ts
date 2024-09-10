@@ -18,22 +18,25 @@ import {removeStore} from "./helpers/removeRootStore"
 import {Alert} from 'react-native';
 import storage from "app/utils/storage/mmkvStorage"
 
-const storePasswordSecurely = async (username: string, password: string) => {
+export const storePasswordSecurely = async (username: string, password: string, authenticationStore: any) => {
   try {
+    // Check if the password was just updated to avoid asking again
+    if (authenticationStore.isPasswordRecentlyUpdated) {
+      console.log("Password was recently updated. Skipping Face ID prompt.");
+      authenticationStore.setProp("isPasswordRecentlyUpdated", false); // Reset the flag
+      return;
+    }
+
     // Check if credentials already exist
     const credentials = await Keychain.getGenericPassword();
 
     if (credentials) {
-      // Extract stored username and password
       const storedUsername = credentials.username;
       const storedPassword = credentials.password;
 
-      // Check if BOTH the stored username and password match the new ones
       if (storedUsername === username && storedPassword === password) {
         console.log("The stored credentials match the new ones. No update needed.");
       } else {
-        // If either the username or password doesn't match, prompt the user to update
-        console.log("doesnt amtch", storedPassword, password, storedUsername, username);
         Alert.alert(
           "Update Password",
           "The stored username or password doesn't match. Do you want to update the stored password?",
@@ -46,9 +49,8 @@ const storePasswordSecurely = async (username: string, password: string) => {
             {
               text: "Update",
               onPress: async () => {
-                // Update the password if the user agrees
                 await Keychain.setGenericPassword(username, password, {
-                  accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY, // Use biometric authentication
+                  accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY,
                   accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
                 });
                 console.log("Password updated successfully");
@@ -59,7 +61,6 @@ const storePasswordSecurely = async (username: string, password: string) => {
         );
       }
     } else {
-      // No password stored, store it for the first time
       await Keychain.setGenericPassword(username, password, {
         accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY,
         accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
@@ -108,6 +109,7 @@ export const AuthenticationStoreModel = types
   .props({
     tokens: types.maybeNull(TokenType),
     isSDKConnected: types.optional(types.boolean, false),
+    isPasswordRecentlyUpdated: types.optional(types.boolean, false),
     isLoading: types.maybeNull(types.boolean),
     isAuthenticated: types.optional(types.boolean, false),
     verificationPhoneCode: types.maybeNull(types.string),
@@ -119,6 +121,64 @@ export const AuthenticationStoreModel = types
     const setVerificationPhoneCode = (code: number) => {
       self.verificationPhoneCode = code
     }
+
+    const resetPassword = flow(function* resetPassword(newPassword: string) {
+      try {
+        const userStore = getRootStore(self).userStore;
+        const userPool = new CognitoUserPool(poolData);
+        const cognitoUser = new CognitoUser({
+          Username: userStore.phoneNumber,
+          Pool: userPool,
+        })
+
+        yield new Promise((resolve, reject) => {
+          cognitoUser.confirmPassword(self.verificationPhoneCode, newPassword, {
+            onSuccess: (result) => {
+              console.log("Password reset successful:", result)
+              userStore.setAuthPassword("")
+              self.setProp("error", null) // Clear any previous error
+              resolve(result)
+            },
+            onFailure: (err) => {
+              console.error("Error resetting password:", err)
+              self.setProp("error", err.message || "Error resetting password")
+              reject(err)
+            },
+          })
+        })
+      } catch (error) {
+        console.error("Error resetting password:", error)
+        self.setProp("error", error.message || "Error resetting password")
+      }
+    })
+    const sendPasswordResetRequest = flow(function* sendPasswordResetRequest(phoneNumberOrEmail: string) {
+      try {
+        const userStore = getRootStore(self).userStore;
+        const userPool = new CognitoUserPool(poolData);
+        const cognitoUser = new CognitoUser({
+          Username: userStore.phoneNumber,
+          Pool: userPool,
+        })
+
+        yield new Promise((resolve, reject) => {
+          cognitoUser.forgotPassword({
+            onSuccess: (result) => {
+              console.log("Password reset request initiated:", result)
+              self.setProp("error", null) // Clear any previous error
+              resolve(result)
+            },
+            onFailure: (err) => {
+              console.error("Error initiating password reset request:", err)
+              self.setProp("error", err.message || "Error initiating password reset request")
+              reject(err)
+            },
+          })
+        })
+      } catch (error) {
+        console.error("Error initiating password reset request:", error)
+        self.setProp("error", error.message || "Error initiating password reset request")
+      }
+    })
     const syncUserPoolStorage = flow(function* (userPool) {
       return new Promise((resolve, reject) => {
         userPool.storage.sync((err: any, result: any) => {
@@ -472,7 +532,7 @@ export const AuthenticationStoreModel = types
               try {
 
                 // Check and store password securely with Face ID prompt
-                await storePasswordSecurely(userStore.phoneNumber, userStore.authPassword);
+                await storePasswordSecurely(userStore.phoneNumber, userStore.authPassword, self);
 
                 // Handle post-authentication actions
                 await self.handlePostAuthenticationActions()
@@ -565,6 +625,8 @@ export const AuthenticationStoreModel = types
       unregisterPushNotifications,
       registerDeviceToken,
       checkCognitoUserSession,
+      sendPasswordResetRequest,
+      resetPassword,
       signUp,
       authenticateUser,
       sendConfirmationCode,

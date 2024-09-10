@@ -18,7 +18,6 @@ import { colors, spacing } from "../theme"
 import storage from "app/utils/storage/mmkvStorage"
 const ROOT_STATE_STORAGE_KEY = "root-v1";
 import {SFSymbol} from 'react-native-sfsymbols'
-import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
 import * as Keychain from 'react-native-keychain';
 
 
@@ -166,7 +165,7 @@ const handleFaceIDLogin = useCallback(async () => {
         )}
        </View>
       <TouchableOpacity
-    onPress={() => Alert.alert("Forgot Password", "Redirect to forgot password flow")}
+      onPress={() => navigate("ForgotPasswordStack")}
     style={$forgotPasswordContainer}
   >
     <Text style={$forgotPasswordText}>Forgot Password?</Text>
