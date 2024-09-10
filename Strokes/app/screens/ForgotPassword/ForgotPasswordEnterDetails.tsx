@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
-import React, { useState } from "react"
+import React, { useState, ComponentType} from "react"
 import { TextStyle, ViewStyle } from "react-native"
-import { Header, Button, Screen, Text, TextField } from "../../components"
+import { Header, Button, Screen, Icon, Text, TextField, TextFieldAccessoryProps} from "../../components"
 import { navigate, goBack } from "../../navigators"
 import { colors, spacing } from "../../theme"
 import { useStores } from "../../models"
@@ -9,7 +9,7 @@ import { useStores } from "../../models"
 interface ForgotPasswordEnterDetailsScreenProps {}
 
 export const ForgotPasswordEnterDetailsScreen: FC<ForgotPasswordEnterDetailsScreenProps> = observer(function ForgotPasswordEnterDetailsScreen(_props) {
-  const { authenticationStore } = useStores()
+  const { authenticationStore, userStore} = useStores()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -18,9 +18,9 @@ export const ForgotPasswordEnterDetailsScreen: FC<ForgotPasswordEnterDetailsScre
     authenticationStore
       .sendPasswordResetRequest()
       .then(() => {
-        navigate("ForgotPasswordVerificationScreen")
+        navigate("ForgotPasswordNewPassword")
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setIsLoading(false)
         setError(error.message || "An unknown error occurred")
       })
@@ -37,8 +37,8 @@ export const ForgotPasswordEnterDetailsScreen: FC<ForgotPasswordEnterDetailsScre
       <Text text="Enter your phone number or email" preset="subheading" style={$enterDetails} />
 
       <TextField
-        value={authenticationStore.userEmail ?? ""}
-        onChangeText={authenticationStore.setUserEmail}
+        value={userStore.displayPhoneNumber ?? undefined}
+        onChangeText={(text) => userStore.setPhoneNumber(text)}
         containerStyle={$textField}
         autoCapitalize="none"
         autoCorrect={false}
