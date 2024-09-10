@@ -20,53 +20,64 @@ import storage from "app/utils/storage/mmkvStorage"
 
 export const storePasswordSecurely = async (username: string, password: string, authenticationStore: any) => {
   try {
-    // Check if the password was just updated to avoid asking again
+    // Check if the password was recently updated
     if (authenticationStore.isPasswordRecentlyUpdated) {
-      console.log("Password was recently updated. Skipping Face ID prompt.");
-      authenticationStore.setProp("isPasswordRecentlyUpdated", false); // Reset the flag
-      return;
-    }
-
-    // Check if credentials already exist
-    const credentials = await Keychain.getGenericPassword();
-
-    if (credentials) {
-      const storedUsername = credentials.username;
-      const storedPassword = credentials.password;
-
-      if (storedUsername === username && storedPassword === password) {
-        console.log("The stored credentials match the new ones. No update needed.");
-      } else {
-        Alert.alert(
-          "Update Password",
-          "The stored username or password doesn't match. Do you want to update the stored password?",
-          [
-            {
-              text: "Cancel",
-              onPress: () => console.log("Password update cancelled"),
-              style: "cancel",
-            },
-            {
-              text: "Update",
-              onPress: async () => {
-                await Keychain.setGenericPassword(username, password, {
-                  accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY,
-                  accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-                });
-                console.log("Password updated successfully");
-              },
-            },
-          ],
-          {cancelable: false}
-        );
-      }
-    } else {
+      console.log("Password was recently updated. Storing directly with Face ID.");
+      // Reset the flag and store the password directly
       await Keychain.setGenericPassword(username, password, {
         accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY,
         accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
       });
-      console.log("Password stored successfully for the first time");
+      authenticationStore.setProp("isPasswordRecentlyUpdated", false); // Reset the flag after storing
+      console.log("Password stored securely with Face ID after recent update.");
+      return;
+    } else {
+      // Check if credentials already exist
+      const credentials = await Keychain.getGenericPassword();
+
+      if (credentials) {
+        const storedUsername = credentials.username;
+        const storedPassword = credentials.password;
+
+        // If both username and password match, no need to update
+        if (storedUsername === username && storedPassword === password) {
+          console.log("The stored credentials match the new ones. No update needed.");
+        } else {
+          // Prompt the user to update the stored credentials
+          Alert.alert(
+            "Update Password",
+            "The stored username or password doesn't match. Do you want to update the stored password?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Password update cancelled"),
+                style: "cancel",
+              },
+              {
+                text: "Update",
+                onPress: async () => {
+                  // Update the password in Keychain
+                  await Keychain.setGenericPassword(username, password, {
+                    accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY,
+                    accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+                  });
+                  console.log("Password updated successfully.");
+                },
+              },
+            ],
+            {cancelable: false}
+          );
+        }
+      } else {
+        // No credentials exist, store the password for the first time
+        await Keychain.setGenericPassword(username, password, {
+          accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY,
+          accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+        });
+        console.log("Password stored successfully for the first time.");
+      }
     }
+
   } catch (error) {
     console.error("Error storing or updating password:", error);
   }
