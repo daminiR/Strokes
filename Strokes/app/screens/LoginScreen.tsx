@@ -35,7 +35,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isFaceIDRunning, setIsFaceIDRunning] = useState(false);
 
-
   const login = async () => {
     setIsLoading(true); // Start loading
     try {
@@ -166,6 +165,15 @@ const handleFaceIDLogin = useCallback(async () => {
           </TouchableOpacity>
         )}
        </View>
+      <TouchableOpacity
+    onPress={() => Alert.alert("Forgot Password", "Redirect to forgot password flow")}
+    style={$forgotPasswordContainer}
+  >
+    <Text style={$forgotPasswordText}>Forgot Password?</Text>
+  </TouchableOpacity>
+
+
+
       <Button
         testID="login-button"
         tx="loginScreen.tapToSignIn"
@@ -205,6 +213,17 @@ const $signIn: TextStyle = {
 const $enterDetails: TextStyle = {
   marginBottom: spacing.lg,
 }
+const $forgotPasswordContainer: ViewStyle = {
+  alignSelf: 'center',
+  marginBottom: spacing.lg,
+};
+
+const $forgotPasswordText: TextStyle = {
+  color: colors.text, // Use primary color for emphasis
+  fontSize: 18,
+  textDecorationLine: 'underline', // Add underline to mimic a clickable link
+};
+
 
 const $hint: TextStyle = {
   color: colors.tint,
