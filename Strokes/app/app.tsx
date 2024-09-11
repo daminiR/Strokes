@@ -27,7 +27,7 @@ import { resetChatStackToChatList, navigate, resetToInitialState } from "./navig
 import { SendbirdUIKitContainer } from "@sendbird/uikit-react-native";
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context";
 import * as Linking from "expo-linking";
-import {Platform, AppState,  AppStateStatus } from "react-native";
+import {Platform, AppState,  AppStateStatus, Text} from "react-native";
 import { useInitialRootStore } from "./models";
 import { AppNavigator, useNavigationPersistence } from "./navigators";
 import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary";
@@ -159,8 +159,9 @@ const App: React.FC<AppProps> = observer((props) => {
           //navigate("FaceCard");
         } else if (appState === "active" && nextAppState.match(/inactive|background/)) {
           console.log("App has gone to the background. Disconnecting...");
-          chatStore.disconnect();
-          authenticationStore.setProp("isSDKConnected", false);
+          //chatStore.disconnect();
+          //authenticationStore.setProp("isSDKConnected", false);
+          //chatStore.setProp("isLoading", true);
           //navigate("FaceCard");
           // Add your disconnect logic here
         }
@@ -199,7 +200,7 @@ const App: React.FC<AppProps> = observer((props) => {
         <Provider value={client}>
           <SendbirdUIKitContainer
             appId={process.env.REACT_APP_SENDBIRD_APP_ID}
-            chatOptions={{ localCacheStorage:MMKVAdapter }}
+            chatOptions={{localCacheStorage:MMKVAdapter }}
             platformServices={platformServices}
             userProfile={{
               onCreateChannel: () => {}, // No-op function

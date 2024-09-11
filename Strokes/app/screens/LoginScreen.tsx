@@ -103,7 +103,7 @@ const handleFaceIDLogin = useCallback(async () => {
   );
 
   if (isLoading) {
-    return <LoadingActivity />;
+    return <LoadingActivity message="Loading Sign In"/>;
   }
 
   return (
