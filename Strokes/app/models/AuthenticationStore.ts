@@ -77,7 +77,6 @@ export const storePasswordSecurely = async (username: string, password: string, 
         console.log("Password stored successfully for the first time.");
       }
     }
-
   } catch (error) {
     console.error("Error storing or updating password:", error);
   }
@@ -364,8 +363,8 @@ export const AuthenticationStoreModel = types
           self.setProp("isAuthenticated", true);
 
           yield chatStore.initializeSDK();
-          yield chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken);
-          console.log("User connected to SendBird");
+          //yield chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken);
+          //console.log("User connected to SendBird");
 
           // Register device token for push notifications
           yield self.registerDeviceToken();

@@ -1,6 +1,5 @@
 export * from "./ChatScreen"
 export * from "./ChatSettingsScreen"
-export * from "./ChatListScreen"
 export * from "./ChatReportScreen"
-export * from "./ChatListScreen2"
+export * from "./ChatListScreen"
 export * from "./ChatPreviewScreen"

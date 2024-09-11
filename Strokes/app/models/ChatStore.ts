@@ -21,7 +21,7 @@ export const ImageModel = types.model("ImageModel", {
   img_idx: types.maybeNull(types.number),
   imageURL: types.maybeNull(types.string),
 });
-const Range = types.model("RangeModel", {
+const Range = types.model("RangeModel", { // VV IMP
   min: types.maybeNull(types.number),
   max: types.maybeNull(types.number),
 });
@@ -238,7 +238,6 @@ export const ChatStore = types
     },
     connect: flow(function* (userId: string, nickname: string, accessToken: string) {
       try {
-        console.log("ids, userId, accessToken", userId, accessToken)
         const user = yield self.sdk.connect(userId, accessToken)
         self.currentUser = UserModel.create({
           userId: user.userId,
@@ -260,6 +259,7 @@ export const ChatStore = types
       }
       try {
         yield self.sdk.disconnect()
+        storage.clearAll() // VV IMP
         console.log("User disconnected")
       } catch (error) {
         console.error("Disconnect failed:", error)

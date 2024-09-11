@@ -1,4 +1,4 @@
-import { AsyncStorageStatic } from '@react-native-async-storage/async-storage'; // This import is just for type referencing
+import {AsyncStorageStatic} from '@react-native-async-storage/async-storage'; // This import is just for type referencing
 import storage from './mmkvStorage';
 
 export const MMKVAdapter: AsyncStorageStatic = {

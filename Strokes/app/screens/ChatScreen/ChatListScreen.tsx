@@ -1,138 +1,290 @@
 import { observer } from "mobx-react-lite"
-import { format, isToday, isYesterday, subDays } from 'date-fns';
-import { navigate, goBack} from "../../navigators"
-import React, { useCallback, ComponentType, FC, useEffect, useState, useMemo } from "react"
+import { AppState, AppStateStatus } from 'react-native';
+import React, {useEffect, useState, useCallback} from "react"
+import messaging from '@react-native-firebase/messaging';
+import {ActivityIndicator, ViewStyle, TextStyle, ImageStyle, Image, TouchableOpacity, View, StyleSheet, Dimensions} from "react-native"
+import {reaction} from 'mobx';
+import { navigate } from "../../navigators"
 import {
-  ActivityIndicator,
-  Image,
-  TouchableOpacity,
-  ImageStyle,
-  TextStyle,
-  StyleSheet,
-  View,
-  ViewStyle,
-  Dimensions,
-} from "react-native"
-import { GroupChannelPreview } from "@sendbird/uikit-react-native-foundation"
+  getGroupChannelTitle,
+  getGroupChannelLastMessage
+} from "@sendbird/uikit-utils"
 import {
-  LoadingActivity,
-  EmptyState,
+  GroupChannelPreview,
+  Placeholder,
+} from "@sendbird/uikit-react-native-foundation"
+import { Screen, LoadingActivity, Text, ChatListItem} from '../../components';
+import dayjs from "dayjs"
+import { useFocusEffect } from '@react-navigation/native';
+import {
+  GroupChannel,
+  HiddenChannelFilter,
+  GroupChannelListOrder,
+} from "@sendbird/chat/groupChannel"
+import {
   ListView,
-  Screen,
-  Text,
-  Button,
-  LikedByUserModal,
 } from "../../components"
-import { colors } from "../../theme"
-import { ChatListStackScreenProps } from "../navigators"
 import { useStores } from "../../models"
-import { createGroupChannelListFragment } from '@sendbird/uikit-react-native';
-//import { GroupChannelListFragment } from '@sendbird/uikit-react-native';
-import { useGroupChannelList } from '@sendbird/uikit-chat-hooks';
+import storage from "app/utils/storage/mmkvStorage"
 
+const screenWidth = Dimensions.get('window').width; // Import Dimensions from 'react-native'
+export const cardMargin = 16;
+export const cardWidth = (screenWidth - (3 * cardMargin)) / 2; // For two columns, considering margin as spacing
 
-function formatTimestamp(timestamp) {
-  const date = new Date(timestamp);
-  if (isToday(date)) {
-    return 'Today';
-  } else if (isYesterday(date)) {
-    return 'Yesterday';
-  } else {
-    return format(date, 'MMM dd');
-  }
+const $item: ViewStyle = {
+  padding: 0,
+  marginBottom: cardMargin,
+  marginHorizontal: cardMargin / 2,
+  height: 200,
+  width: cardWidth,
+  borderRadius: 10,
+};
+
+const $itemThumbnail: ImageStyle = {
+  width: '100%',
+  height: '100%',
+  borderRadius: 10,
+};
+
+const $metadata: TextStyle = {
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  width: '100%',
+  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  paddingHorizontal: 8,
+  paddingVertical: 4,
+  borderBottomLeftRadius: 10,
+  borderBottomRightRadius: 10,
+};
+
+const $screenContentContainer: ViewStyle = {
+  flex: 1,
 }
 
-const CustomHeaderComponent = () => {
-  return null // This ensures that no header is rendered
+const $listContentContainer: ViewStyle = {
+  paddingHorizontal: 16,
+  paddingTop: 32,
+  paddingBottom: 32,
+};
+
+const $heading: ViewStyle = {
+  marginBottom: 16,
 }
-const CustomHeaderComponent2 = () => {
-  return LoadingActivity // This ensures that no header is rendered
+
+const $emptyState: ViewStyle = {
+  marginTop: 32,
 }
-  const GroupChannelListFragment = createGroupChannelListFragment({
-    StatusLoading: () => {
-    console.log("GroupChannelListFragment is loading");
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  },
-    Header: CustomHeaderComponent,
-    //List:  ListCompenent
-  })
 
 
-const userID = "566b26cf-443b-41d9-95d9-368ed2a7de57"
-const accessToken = "44719b82cf9fcd373ce12e3865aa2af6d0695822"
-interface ChatListScreen extends ChatListStackScreenProps<"ChatList"> {}
 
-export const ChatListScreen: FC<ChatListScreen> = observer(function ChatListScreen(_props) {
+export const ChatListScreen = observer(function ChatListScreen(_props) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [appState, setAppState] = useState(AppState.currentState);
+  const { matchedProfileStore, userStore, authenticationStore, chatStore } = useStores();
+  const sdk = chatStore.sdk;
+  const isSDKConnected = authenticationStore.isSDKConnected;
+  const collection = chatStore.collection;
+  const [isLoading, setIsLoading] = useState(true);
 
-   const { channels, loading, error } = useGroupChannelList();
-  const { authenticationStore, chatStore, matchedProfileStore } = useStores()
-  const [isInitialized, setIsInitialized] = useState(false)
-  const initializeSDK = async () => {
-    try {
-      await chatStore.initializeSDK()
-      await chatStore.connect(userID, "Dam", accessToken)
-      setIsInitialized(true)
-      console.log("do we make it here")
-    } catch (error) {
-      console.error("Sendbird initialization error:", error)
-    }
-  }
+  // Debounced loading to prevent multiple triggers
+  let isEndReachedCalledDuringMomentum = false;
+
   useEffect(() => {
-    initializeSDK()
-  }, []) // Empty dependency array, initialization runs only once
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      if (appState.match(/inactive|background/) && nextAppState === 'active') {
+        console.log("App is in the foreground, attempting to reconnect...");
+        setIsLoading(true);
+
+        if (!sdk || sdk.getConnectionState() !== 'OPEN') {
+          try {
+            await chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken);
+            console.log("Reconnection successful");
+            await initializeCollection();
+          } catch (error) {
+            console.error("Failed to reconnect:", error);
+            setIsLoading(false);
+          }
+        } else {
+          console.log("SDK is already connected.");
+        }
+      } else if (nextAppState.match(/inactive|background/)) {
+        console.log("App is in the background, disconnecting...");
+        await chatStore.disconnect();
+        setIsLoading(true);
+      }
+      setAppState(nextAppState);
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, [appState, chatStore, userStore]);
+
+  const updateState = async (newCollection) => {
+    try {
+      await newCollection.loadMore();
+      chatStore.setCollection(newCollection);
+      setIsLoading(false);
+      setIsRefreshing(false);
+      console.log("Collection updated and loaded");
+    } catch (error) {
+      console.error("Failed to update state:", error);
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  const initializeCollection = useCallback(async () => {
+    if (!isSDKConnected || !sdk) {
+      setIsLoading(false);
+      setIsRefreshing(false);
+      return;
+    }
+
+    try {
+      const user = await sdk.currentUser;
+      if (!user) {
+        console.log("User not authenticated, reconnecting...");
+        await authenticationStore.checkCognitoUserSession();
+      }
+      const newCollection = sdk.groupChannel.createGroupChannelCollection({
+        order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
+        limit: 10,
+        hiddenChannelFilter: HiddenChannelFilter.UNHIDDEN,
+        includeEmptyChannel: true,
+      });
+
+      newCollection.setGroupChannelCollectionHandler({
+        onChannelsAdded: () => updateState(newCollection),
+        onChannelsUpdated: () => updateState(newCollection),
+        onChannelsDeleted: () => updateState(newCollection),
+      });
+
+      await newCollection.loadMore();
+      chatStore.setCollection(newCollection);
+      setIsLoading(false);
+      setIsRefreshing(false);
+      console.log("Collection loaded successfully");
+    } catch (error) {
+      console.error("Failed to initialize collection:", error);
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, [sdk, chatStore, userStore, authenticationStore, isSDKConnected]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const disposer = initializeCollection();
+      return () => {
+        //disposer?.();
+      };
+    }, [initializeCollection])
+  );
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    initializeCollection();
+  };
+
+  const renderItem = ({ item }: { item: GroupChannel | null }) => {
+    const onPressChannel = () => {
+      const matchedUser = matchedProfileStore.findByChannelId(item.url);
+      chatStore.setChatProfile(matchedUser);
+      navigate('ChatTopNavigator');
+    };
+
+    return (
+      <ChatListItem
+        item={item}
+        matchedProfileStore={matchedProfileStore}
+        chatStore={chatStore}
+        sdk={sdk}
+        onPress={onPressChannel}
+      />
+    );
+  };
+
+  const onEndReachedHandler = async () => {
+    if (!isEndReachedCalledDuringMomentum && collection?.hasMore && !isLoading) {
+      setIsLoading(true);
+      try {
+        await collection.loadMore();
+        chatStore.setCollection(collection);
+      } catch (error) {
+        console.error("Failed to load more channels:", error);
+      } finally {
+        setIsLoading(false);
+        isEndReachedCalledDuringMomentum = true;
+      }
+    }
+  };
+
+  if (isLoading) {
+    return <LoadingActivity />;
+  }
 
   return (
     <Screen
       preset="fixed"
       safeAreaEdges={["top"]}
-      contentContainerStyle={styles.screenContentContainer}
+      contentContainerStyle={$screenContentContainer}
     >
-      <View style={styles.heading}>
+      <View style={$heading}>
         <Text preset="heading" tx="chatScreenList.title" />
       </View>
-      {isInitialized ? (
-      <View style={styles.heading}>
-        <GroupChannelListFragment
-          onPressCreateChannel={()=>{}}
-          onPressChannel={(channel) => {
-            const matchedUser = matchedProfileStore.findByChannelId(channel.url)
-            chatStore.setChatProfile(matchedUser)
-            navigate("ChatTopNavigator")
-          }}
-          renderGroupChannelPreview={({ channel, onPress }) => {
-            console.log("make it")
-            const matchedUser = matchedProfileStore.findByChannelId(channel.url)
-            if (!matchedUser) {
-              // Optionally return null or a placeholder if no user is matched
-              return null
-            }
-            const lastMessage = channel.lastMessage.message
-            const lastMessageTime = formatTimestamp(channel.lastMessage.createdAt)
-            return (
-              <TouchableOpacity onPress={onPress}>
-                <GroupChannelPreview
-                  title={matchedUser.firstName || "Unknown User"}
-                  titleCaption={lastMessageTime || "Unavailable"}
-                  coverUrl={matchedUser.imageSet[0]?.imageURL || "default_profile_image.png"}
-                  body={lastMessage || "No description available"}
-                  badgeCount={channel.unreadMessageCount}
-                />
-              </TouchableOpacity>
-            )
-          }}
-        />
-      </View>
-      ) : (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
-          <Text>Loading...</Text>
-        </View>
-      )}
+      <ListView<GroupChannel>
+        contentContainerStyle={$listContentContainer}
+        data={collection?.channels || []}
+        extraData={collection?.channels.length}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
+        renderItem={renderItem}
+        onEndReached={onEndReachedHandler}
+        onEndReachedThreshold={0.2}
+        onMomentumScrollBegin={() => {
+          isEndReachedCalledDuringMomentum = false;
+        }}
+        estimatedItemSize={177}
+        numColumns={1}
+        ListEmptyComponent={
+          <View style={$emptyState}>
+            <Placeholder icon={"channels"} message={"No channels"} />
+          </View>
+        }
+      />
     </Screen>
-  )
-})
+  );
+});
+
 
 const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+  },
+  listEmptyComponent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  leaveIcon: {
+    transform: [{rotate: '180deg'}],
+  },
+  headerTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerTitleIcon: {
+    width: 36,
+    height: 36,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   screenContentContainer: {
     flex: 1,
   },
@@ -147,5 +299,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
 

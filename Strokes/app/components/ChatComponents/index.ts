@@ -1,4 +1,5 @@
 export * from "./SendingStatus"
+export * from "./ChatListItem"
 export * from "./AdminMessageView"
 export * from "./FileMessageView"
 export * from "./UserMessageView"
