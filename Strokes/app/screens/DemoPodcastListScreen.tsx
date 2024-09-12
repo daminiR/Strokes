@@ -18,6 +18,7 @@ import {
   Text,
   Button,
   LikedByUserModal,
+  LoadingActivity,
 } from "../components"
 import { isRTL, translate } from "../i18n"
 import { useStores } from "../models"
@@ -110,6 +111,7 @@ const getMoreData = async () => {
           extraData={likedUserStore.likedProfiles.length}
           onEndReachedThreshold={0.2}
           onEndReached={getMoreData}
+          onRefresh={manualRefresh}
           refreshing={refreshing}
           estimatedItemSize={177}
           numColumns={2}
