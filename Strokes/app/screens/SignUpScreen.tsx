@@ -32,10 +32,12 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   }, [userStore])
 
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
 
   // Adjusted to use optional chaining and nullish coalescing
+  const [selectedState, setSelectedState] = useState<string[]>(
+    userStore?.neighborhood?.state ? [userStore.neighborhood.state] : [],
+  )
   const [selectedTeam, setSelectedTeam] = useState<string[]>(
     userStore?.neighborhood?.city ? [userStore.neighborhood.city] : [],
   )
@@ -71,11 +73,9 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         }
       })
   }
-
   const setGender = (gender: string) => {
     userStore?.setGender(gender)
   }
-
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = useMemo(
     () =>
       function PasswordRightAccessory(props: TextFieldAccessoryProps) {
@@ -91,12 +91,9 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       },
     [isAuthPasswordHidden],
   )
-
    if (isLoading) {
      return <LoadingActivity />
    }
-
-
   return (
     <Screen
       preset="auto"
@@ -125,7 +122,6 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         status={error ? "error" : undefined}
         onSubmitEditing={() => authPasswordInput.current?.focus()}
       />
-
       <TextField
         value={userStore?.email ?? undefined}
         onChangeText={userStore.setEmail}
@@ -198,14 +194,25 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         RightAccessory={PasswordRightAccessory}
       />
       <SelectField
+        label="Where do you squash?(State)"
+        placeholder="e.g. Boston"
+        value={selectedState}
+        onSelect={(result) => {
+          setSelectedState(result)
+        }}
+        tx={"neighborhoods.states"}
+        multiple={false}
+        containerStyle={{ marginBottom: spacing.lg }}
+      />
+      <SelectField
         label="Where do you squash?"
         placeholder="e.g. Boston"
         value={selectedTeam}
         onSelect={(result) => {
           setSelectedTeam(result)
-          userStore.setNeighborhood({ city: result[0], state: "MA", country: "US" })
+          userStore.setNeighborhood({ city: result[0], state: selectedState[0], country: "US" })
         }}
-        tx={"neighborhoods.cities"}
+        tx={`neighborhoods.cities.${selectedState}`}
         multiple={false}
         containerStyle={{ marginBottom: spacing.lg }}
       />

@@ -59,7 +59,7 @@ export const SelectField = forwardRef(function SelectField(
     //...TouchableOpacityProps,
     ...TextFieldProps
   } = props;
-
+  console.log("selectfield alues", value)
   const sheet = useRef<BottomSheetModal>(null);
   const { bottom } = useSafeAreaInsets();
 
