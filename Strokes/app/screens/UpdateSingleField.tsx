@@ -80,6 +80,24 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
   const { field: fieldToUpdate, shouldHydrate: shouldHydrate} = route.params
   const { tempUserStore, userStore } = useStores()
   const [selectedTeam, setSelectedTeam] = useState<string[]>([])
+  const [selectedState, setSelectedState] = useState<string[]>(tempUserStore.neighborhood.state ? [tempUserStore.neighborhood.state] : [])
+  const [selectedCity, setSelectedCity] = useState<string[]>(tempUserStore.neighborhood.city ? [tempUserStore.neighborhood.city] : [])
+
+  useEffect(() => {
+    if (tempUserStore.neighborhood.city) {
+      setSelectedCity([tempUserStore.neighborhood.city])
+    }
+  }, [tempUserStore.neighborhood.city])
+
+  const handleStateSelect = (result: string[]) => {
+    setSelectedState(result)
+    //setSelectedCity([]) // Reset city when the state changes
+  }
+
+  const handleCitySelect = (result: string[]) => {
+    setSelectedCity(result)
+    tempUserStore.setNeighborhood({ city: result[0], state: selectedState[0], country: "US" })
+  }
   const [tempGender, setTempGender] = useState(tempUserStore.gender);
   useEffect(() => {
     if (tempUserStore.neighborhood) {
@@ -113,10 +131,9 @@ export const SingleUpdateScreen: FC<SingleUpdateProps> = observer(function Profi
     if (fieldToUpdate === "gender") {
       tempUserStore.setGender(tempGender)
     } else if (fieldToUpdate === "neighborhoods") {
-      const updateMethod = tempUserStore[fieldConfigs[fieldToUpdate].method]
-      updateMethod({
-        city: selectedTeam[0],
-        state: "MA",
+      tempUserStore.setNeighborhood({
+        city: selectedCity[0],
+        state: selectedState[0],
         country: "US",
       })
     } else {
@@ -192,30 +209,39 @@ const resetValue = () => {
     } else if (fieldToUpdate === "neighborhoods") {
       // Neighborhoods field has unique rendering needs
       return (
+        <>
         <SelectField
-          label="Where do you squash?"
+          label="Select your State"
           placeholder="e.g. Boston"
-          value={selectedTeam}
-          onSelect={(result) => {
-            setSelectedTeam(result)
-            tempUserStore.setNeighborhood({ city: result[0], state: "MA", country: "US" })
-          }}
-          tx={"neighborhoods.cities"}
+          value={selectedState}
+          onSelect={handleStateSelect}
+          tx={"neighborhoods.states"}
           multiple={false}
           containerStyle={{ marginBottom: spacing.lg }}
         />
+        <SelectField
+          label="Where do you squash?"
+          placeholder="e.g. Boston"
+          value={selectedCity}
+          onSelect={handleCitySelect}
+          tx={`neighborhoods.cities.${selectedState[0]}`}
+          multiple={false}
+          containerStyle={{ marginBottom: spacing.lg }}
+        />
+        </>
       )
     } else {
       // General case for fields that use TextField component
       return (
         <TextField
-          //value={tempUserStore[config.placeholder] ?? undefined}
-          //onChangeText={tempUserStore[config.method]}
           value={`${textFieldValue}`}
           onChangeText={setTextFieldValue}
           containerStyle={$textField}
           autoCapitalize="none"
           autoComplete={fieldToUpdate}
+          multiline={fieldToUpdate === 'description'}
+          numberOfLines={fieldToUpdate === 'description' ? 4 : 1}
+          maxLength={fieldToUpdate === 'description' ? 500 : undefined}
           autoCorrect={false}
           keyboardType={config.keyboardType}
           placeholder={`${getValueByPath(tempUserStore, config.placeholderTx || config.placeholder) ?? ''}`}
