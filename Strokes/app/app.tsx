@@ -126,7 +126,7 @@ const App: React.FC<AppProps> = observer((props) => {
     } else {
       notificationData = event.detail?.notification?.data;
     }
-    if (Boolean(notificationData?.sendbird)) {
+    if (notificationData?.sendbird) {
       const channelUrl = notificationData.sendbird.channel.channel_url;
       if (channelUrl) {
         const matchedUser = matchedProfileStore.findByChannelId(channelUrl);
