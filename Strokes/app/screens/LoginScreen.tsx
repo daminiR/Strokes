@@ -119,6 +119,7 @@ const handleFaceIDLogin = useCallback(async () => {
 
       <TextField
         value={userStore.displayPhoneNumber ?? undefined}
+        keyboardType="number-pad"
         onChangeText={(text) => userStore.setPhoneNumber(text)}
         containerStyle={$textField}
         autoCapitalize="none"

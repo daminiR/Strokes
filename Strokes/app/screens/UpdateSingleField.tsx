@@ -21,7 +21,7 @@ type RootStackParamList = {
 const fieldConfigs = {
   squash_level: {
     method: "setSport",
-    keyboardType: "default",
+    keyboardType: "numeric",
     labelTx: "UpdateProfile.sportFieldLabel",
     placeholderTx: "UpdateProfile.sportFieldLabel",
     placeholder: "sport.gameLevel",
@@ -63,7 +63,7 @@ const fieldConfigs = {
   },
   age: {
     method: "setAge",
-    keyboardType: "default",
+    keyboardType: "numeric",
     labelTx: "UpdateProfile.ageFieldLabel",
     placeholderTx: "UpdateProfile.ageFieldLabel",
     placeholder: "age",
