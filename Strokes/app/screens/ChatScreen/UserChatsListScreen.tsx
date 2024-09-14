@@ -1,20 +1,11 @@
 import { observer } from "mobx-react-lite"
-import { AppState, AppStateStatus } from 'react-native';
+import { View, AppState, AppStateStatus } from 'react-native';
 import React, {useEffect, useState, useCallback} from "react"
-import messaging from '@react-native-firebase/messaging';
-import {ActivityIndicator, ViewStyle, TextStyle, ImageStyle, Image, TouchableOpacity, View, StyleSheet, Dimensions} from "react-native"
-import {reaction} from 'mobx';
 import { navigate } from "../../navigators"
 import {
-  getGroupChannelTitle,
-  getGroupChannelLastMessage
-} from "@sendbird/uikit-utils"
-import {
-  GroupChannelPreview,
   Placeholder,
 } from "@sendbird/uikit-react-native-foundation"
 import { Screen, LoadingActivity, Text, ChatListItem} from '../../components';
-import dayjs from "dayjs"
 import { useFocusEffect } from '@react-navigation/native';
 import {
   GroupChannel,
@@ -25,57 +16,7 @@ import {
   ListView,
 } from "../../components"
 import { useStores } from "../../models"
-
-const screenWidth = Dimensions.get('window').width; // Import Dimensions from 'react-native'
-const cardMargin = 16;
-const cardWidth = (screenWidth - (3 * cardMargin)) / 2; // For two columns, considering margin as spa
-
-const $item: ViewStyle = {
-  padding: 0,
-  marginBottom: cardMargin,
-  marginHorizontal: cardMargin / 2,
-  height: 200,
-  width: cardWidth,
-  borderRadius: 10,
-};
-
-const $itemThumbnail: ImageStyle = {
-  width: '100%',
-  height: '100%',
-  borderRadius: 10,
-};
-
-const $metadata: TextStyle = {
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  width: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.8)',
-  paddingHorizontal: 8,
-  paddingVertical: 4,
-  borderBottomLeftRadius: 10,
-  borderBottomRightRadius: 10,
-};
-
-const $screenContentContainer: ViewStyle = {
-  flex: 1,
-}
-
-const $listContentContainer: ViewStyle = {
-  paddingHorizontal: 16,
-  paddingTop: 32,
-  paddingBottom: 32,
-};
-
-const $heading: ViewStyle = {
-  marginBottom: 16,
-}
-
-const $emptyState: ViewStyle = {
-  marginTop: 32,
-}
-
-
+import { styles } from "./styles/UserChatsListScreen.styles";
 
 export const ChatListScreen = observer(function ChatListScreen(_props) {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -142,7 +83,6 @@ export const ChatListScreen = observer(function ChatListScreen(_props) {
       setIsRefreshing(false);
       return;
     }
-
     try {
       const user = await sdk.currentUser;
       if (!user) {
@@ -229,13 +169,13 @@ export const ChatListScreen = observer(function ChatListScreen(_props) {
     <Screen
       preset="fixed"
       safeAreaEdges={["top"]}
-      contentContainerStyle={$screenContentContainer}
+      contentContainerStyle={styles.screenContentContainer}
     >
-      <View style={$heading}>
+      <View style={styles.heading}>
         <Text preset="heading" tx="chatScreenList.title" />
       </View>
       <ListView<GroupChannel>
-        contentContainerStyle={$listContentContainer}
+        contentContainerStyle={styles.listContentContainer}
         data={collection?.channels || []}
         extraData={collection?.channels.length}
         refreshing={isRefreshing}
@@ -249,7 +189,7 @@ export const ChatListScreen = observer(function ChatListScreen(_props) {
         estimatedItemSize={177}
         numColumns={1}
         ListEmptyComponent={
-          <View style={$emptyState}>
+          <View style={styles.emptyState}>
             <Placeholder icon={"channels"} message={"No channels"} />
           </View>
         }
@@ -257,45 +197,3 @@ export const ChatListScreen = observer(function ChatListScreen(_props) {
     </Screen>
   );
 });
-
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-  },
-  listEmptyComponent: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  leaveIcon: {
-    transform: [{rotate: '180deg'}],
-  },
-  headerTitleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerTitleIcon: {
-    width: 36,
-    height: 36,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  screenContentContainer: {
-    flex: 1,
-  },
-  heading: {
-    marginBottom: 16,
-    paddingHorizontal: 16,
-    paddingTop: 32,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-
