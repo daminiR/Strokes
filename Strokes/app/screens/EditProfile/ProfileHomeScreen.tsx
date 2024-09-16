@@ -2,13 +2,13 @@ import { observer } from "mobx-react-lite"
 import { navigate} from "../../navigators"
 import React, { FC, useState, useEffect} from "react"
 import { autorun } from 'mobx';
-import { Image, TouchableOpacity, ImageStyle, View, ViewStyle } from "react-native"
+import { Image, TouchableOpacity, View } from "react-native"
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useStores } from "../../models"
 import { ProfileStackScreenProps} from "../../navigators"
-import { colors, spacing } from "../../theme"
+import { colors } from "../../theme"
+import { styles } from "./styles/ProfileHomeScreen.styles";
 import { useHeader } from "../../utils/useHeader"
-import { useSafeAreaInsetsStyle } from "../../utils/useSafeAreaInsetsStyle"
 import {
   Screen,
 } from "../../components"
@@ -50,22 +50,19 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
     [logout],
   )
 
-  const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
-
   return (
     <Screen
       preset="auto"
-      contentContainerStyle={$screenContentContainer}
+      contentContainerStyle={styles.screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <View style={$container}>
-        {/* Profile Image Container */}
-        <View style={$profileImageContainer}>
+      <View style={styles.container}>
+        <View style={styles.profileImageContainer}>
           <Image
             source={{ uri: imageUri }}
-            style={$profileImage}
+            style={styles.profileImage}
           />
-          <TouchableOpacity style={$editIconContainer}>
+          <TouchableOpacity style={styles.editIconContainer}>
             <Icon
               name="edit"
               size={24}
@@ -79,45 +76,8 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
             />
           </TouchableOpacity>
         </View>
-        {/* Other components */}
       </View>
     </Screen>
   )
 })
-
-const $profileImageContainer: ViewStyle = {
-  position: 'relative',
-};
-
-const $profileImage: ImageStyle = {
-  height: 120, // Adjust size as needed
-  width: 120, // Adjust size as needed
-  borderRadius: 60, // Make it circular
-};
-
-const $editIconContainer: ViewStyle = {
-  position: 'absolute',
-  top: -10, // Adjust if necessary to ensure it's positioned correctly at the top
-  right: -10, // Adjust if necessary to move it to the right side
-  backgroundColor: '#FFFFFF', // White background for the icon
-  borderColor: '#000000', // Black border color
-  borderWidth: 2, // Border width
-  borderRadius: 20, // Ensure this is half of the height/width to make it circular
-  padding: 5, // Padding inside the icon background
-  alignItems: 'center', // Center the icon horizontally
-  justifyContent: 'center', // Center the icon vertically
-  width: 40, // Width of the icon container; adjust as needed
-  height: 40, // Height of the icon container; adjust as needed
-};
-
-const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.xxl,
-  paddingHorizontal: spacing.lg,
-}
-const $container: ViewStyle = {
-  flex: 1,
-  justifyContent: 'center', // Center content vertically
-  alignItems: 'center', // Center content horizontally
-  backgroundColor: colors.background,
-};
 

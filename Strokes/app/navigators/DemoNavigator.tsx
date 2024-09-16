@@ -49,6 +49,7 @@ export function DemoNavigator() {
 
   return (
     <Tab.Navigator
+      initialRouteName="FaceCard"
       screenOptions={{
         headerShown: false,
         tabBarHideOnKeyboard: true,
@@ -97,16 +98,6 @@ export function DemoNavigator() {
           tabBarLabel: translate("navigator.likes"),
           tabBarIcon: ({ focused }) => (
             <Icon icon="heart" color={focused ? colors.tint : undefined} size={30} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="DemoDebug"
-        component={DemoDebugScreen}
-        options={{
-          tabBarLabel: translate("navigator.debugTab"),
-          tabBarIcon: ({ focused }) => (
-            <Icon icon="debug" color={focused ? colors.tint : undefined} size={30} />
           ),
         }}
       />

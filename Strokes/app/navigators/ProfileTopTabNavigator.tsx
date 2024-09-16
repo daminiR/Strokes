@@ -1,7 +1,7 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {ProfileUpdateScreen, ProfilePreviewScreen} from "app/screens"
 import { TextStyle, ViewStyle } from "react-native"
-import { navigate, goBack} from "../navigators"
+import { goBack} from "../navigators"
 import { colors, spacing, typography } from "../theme"
 
 const ProfileTopTab = createMaterialTopTabNavigator();
@@ -46,15 +46,10 @@ export function ProfileTopTabNavigator() {
   );
 }
 
-const $tabBar: ViewStyle = {
-  backgroundColor: colors.background,
-  borderTopColor: colors.transparent,
-}
 
 const $tabBarItem: ViewStyle = {
   paddingTop: spacing.md,
 }
-
 const $tabBarLabel: TextStyle = {
   fontSize: 14,
   fontFamily: typography.primary.medium,

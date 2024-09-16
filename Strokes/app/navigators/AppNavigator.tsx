@@ -23,7 +23,7 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
 
 export type AppStackParamList = {
-  Welcome: undefined
+  Demo: undefined
   Login: undefined
   SignUp: undefined
   Hello: undefined
@@ -44,11 +44,10 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={authenticationStore.isAuthenticated ? "Welcome" : "Hello"}
+      initialRouteName={authenticationStore.isAuthenticated ? "Demo" : "Hello"}
     >
       {authenticationStore.isAuthenticated ? (
         <>
-          <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
           <Stack.Screen name="Demo" component={DemoNavigator} />
         </>
       ) : (

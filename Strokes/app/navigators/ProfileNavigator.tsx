@@ -1,12 +1,5 @@
 import React from 'react';
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
-import { createStackNavigator } from '@react-navigation/stack';
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-  NavigatorScreenParams,
-} from "@react-navigation/native"
 import Config from "../config"
 import {ProfileTopTabNavigator} from './ProfileTopTabNavigator'
 import * as Screens from "app/screens"
