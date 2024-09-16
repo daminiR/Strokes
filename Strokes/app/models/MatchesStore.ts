@@ -1,8 +1,8 @@
-import { types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
+import {types, flow} from 'mobx-state-tree';
 import storage from 'app/utils/storage/mmkvStorage';
-import { Alert } from 'react-native';
-import { getRootStore } from './helpers/getRootStore';
-import { makeAutoObservable, runInAction } from 'mobx';
+import {Alert} from 'react-native';
+import {getRootStore} from './helpers/getRootStore';
+import {runInAction} from 'mobx';
 
 export const LocationModel = types.model("LocationModel", {
   city: types.maybeNull(types.string),
@@ -131,7 +131,7 @@ const MatchesStoreModel = types
         Alert.alert(
           "Like Failed",
           "Could not record the like due to an internal server error. Please try again later.",
-          [{ text: "OK" }],
+          [{text: "OK"}],
         )
       }
     }),
@@ -177,5 +177,5 @@ const MatchesStoreModel = types
       }
     }),
   }))
-    // Add other actions as needed
+// Add other actions as needed
 export default MatchesStoreModel

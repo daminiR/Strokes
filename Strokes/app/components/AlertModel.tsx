@@ -99,8 +99,5 @@ const styles = StyleSheet.create({
   applyButton: {
     //backgroundColor: colors.palette.neutral100,
   },
-  closeButton: {
-    //backgroundColor: colors.background,
-  },
 })
 

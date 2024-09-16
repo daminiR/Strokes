@@ -31,10 +31,6 @@ export const PreferencesModel = types.model("PreferencesModel", {
 });
 const APP_ID = process.env.REACT_APP_SENDBIRD_APP_ID
 // Define User Model
-const ChannelModel = types.model({
-  channel: types.frozen(),
-  collection: types.frozen(),
-});
 const UserModel = types.model({
   userId: types.identifier,
   nickname: types.string,

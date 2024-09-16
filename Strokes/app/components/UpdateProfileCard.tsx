@@ -2,17 +2,8 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors, spacing, typography} from '../theme'; // Adjust import path as necessary
 import {
-  ListView,
-  ImagePickerWall,
-  ListItem,
-  Header,
-  Button,
   Icon,
-  Screen,
   Text,
-  TextField,
-  SelectField,
-  Toggle,
 } from "../components"
 
 // Define the props interface if using TypeScript

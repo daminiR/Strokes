@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Modal, StyleSheet, TouchableOpacity } from 'react-native';
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { colors, spacing, typography } from '../theme'; // Import your theme settings
 import { Button, Text} from '../components'; // Assuming you have a custom Button component
 
