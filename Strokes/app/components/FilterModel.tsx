@@ -6,8 +6,14 @@ import { Button } from '../components'; // Assuming you have a custom Button com
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export const FilterModal = ({ isVisible, onClose, onApplyFilters, filters}) => {
-  const [age, setAge] = useState([filters.age.min, filters.age.max]);
-  const [gameLevel, setGameLevel] = useState([filters.gameLevel.min, filters.gameLevel.max]);
+ const [age, setAge] = useState([
+    filters?.age?.min ?? 18,
+    filters?.age?.max ?? 60
+  ]);
+  const [gameLevel, setGameLevel] = useState([
+    filters?.gameLevel?.min ?? 1,
+    filters?.gameLevel?.max ?? 7
+  ]);
 
   return (
     <Modal visible={isVisible} animationType="slide" transparent={true}>

@@ -1,6 +1,6 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { createUploadLink } from 'apollo-upload-client'; // Import createUploadLink
+import {ApolloClient, InMemoryCache} from '@apollo/client';
+import {setContext} from '@apollo/client/link/context';
+import {createUploadLink} from 'apollo-upload-client'; // Import createUploadLink
 
 // Replace HttpLink with createUploadLink for file upload support
 const uploadLink = createUploadLink({
@@ -13,7 +13,7 @@ const getIdToken = async () => {
   return 'your_id_token_here'; // Replace with actual token retrieval logic
 };
 
-const authLink = setContext(async (_, { headers }) => {
+const authLink = setContext(async (_, {headers}) => {
   const token = await getIdToken();
   return {
     headers: {

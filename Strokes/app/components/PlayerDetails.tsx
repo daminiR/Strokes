@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Header, Card, Button, ListItem, AutoImage, Screen, Text } from "../components"
+import { Text } from "../components"
 import { colors, spacing } from "../theme"
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { observer } from 'mobx-react-lite';

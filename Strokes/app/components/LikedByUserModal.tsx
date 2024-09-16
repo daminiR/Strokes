@@ -1,15 +1,11 @@
 import React, { useState } from "react"
-import { Modal, View, ViewStyle, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import { colors, spacing, typography } from "../theme" // Import your theme settings
-import { Button, Text, SportCard } from "../components" // Assuming you have a custom Button component
+import { Modal, View, ViewStyle, TouchableOpacity } from 'react-native';
+import { Button, SportCard } from "../components" // Assuming you have a custom Button component
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useStores } from "../models"
 
-const screenWidth = Dimensions.get('window').width; // Import Dimensions from 'react-native'
- const cardMargin = spacing.md;
- const cardWidth = (screenWidth - (3 * cardMargin)) / 2; // For two columns, considering margin as spacing
 export const LikedByUserModal = ({ profile, showSportCard, handleClose }) => {
-  const { likedUserStore, mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
+  const { matchStore } = useStores()
   const [isSwiping, setIsSwiping] = useState(false)
   const handleSwipeAction = async (actionType) => {
     if (!isSwiping) {
@@ -139,35 +135,4 @@ const $leftFAB: ViewStyle = {
     shadowOffset: { width: 2, height: 2 },
     shadowRadius: 2,
   }
-
-const styles = StyleSheet.create({
-  modalBackground: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
-  },
-  modalContent: {
-    //backgroundColor: colors.background,
-    padding: spacing.lg,
-    borderRadius: spacing.md,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  closeButton: {
-    marginTop: spacing.md,
-    backgroundColor: colors.background,
-    padding: spacing.sm,
-    borderRadius: spacing.sm,
-  },
-  closeButtonText: {
-    color: 'white',
-    fontFamily: typography.primary.normal,
-  }
-});
 

@@ -1,13 +1,12 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { AuthenticationStoreModel } from "./AuthenticationStore"
-import { UserStoreModel } from "./UserStore"
-import { TempStoreModel } from "./TempUserStore"
-import { EpisodeStoreModel } from "./EpisodeStore"
+import {Instance, SnapshotOut, types} from "mobx-state-tree"
+import {AuthenticationStoreModel} from "./AuthenticationStore"
+import {UserStoreModel} from "./UserStore"
+import {TempStoreModel} from "./TempUserStore"
 import MatchesStoreModel from "./MatchesStore"
 import MongoDBStore from "./MongoDBStore"
-import { LikedUserStore } from "./LikedUserStore"
-import { MatchedProfilesStore } from "./MatchedProfilesStore"
-import { ChatStore } from "./ChatStore"
+import {LikedUserStore} from "./LikedUserStore"
+import {MatchedProfilesStore} from "./MatchedProfilesStore"
+import {ChatStore} from "./ChatStore"
 
 /**
  * A RootStore model.
@@ -17,7 +16,6 @@ export const RootStoreModel = types.model("RootStore").props({
   userStore: types.optional(UserStoreModel, {}),
   tempUserStore: types.optional(TempStoreModel, {}),
   mongoDBStore: types.optional(MongoDBStore, {}),
-  episodeStore: types.optional(EpisodeStoreModel, {}),
   matchStore: types.optional(MatchesStoreModel, {}),
   likedUserStore: types.optional(LikedUserStore, {}),
   matchedProfileStore: types.optional(MatchedProfilesStore, {}),

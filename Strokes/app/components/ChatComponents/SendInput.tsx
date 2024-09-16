@@ -1,25 +1,18 @@
 import {GroupChannel, GroupChannelHandler} from '@sendbird/chat/groupChannel';
-import {useHeaderHeight} from '@react-navigation/elements';
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   Icon,
   Text,
   TextInput,
-  useBottomSheet,
   useUIKitTheme,
 } from "@sendbird/uikit-react-native-foundation"
 import React, {useEffect, useId, useState} from 'react';
-import {Alert, KeyboardAvoidingView, StatusBar,Platform , StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {setNextLayoutAnimation} from '../../utils/senbird';
 import { useStores } from "../../models"
 
 
 export const INPUT_MAX_HEIGHT = 80;
-const KEYBOARD_AVOID_BEHAVIOR = Platform.select({ios: 'padding' as const, default: undefined});
-// Constants
- const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (StatusBar.currentHeight || 44) : 0;
- const NAVIGATION_BAR_HEIGHT = 44;
 
 
 export const SendInput = ({ channel }: { channel: GroupChannel }) => {
@@ -119,13 +112,6 @@ const TypingIndicator = ({channel}: {channel: GroupChannel}) => {
   );
 };
 
-const AttachmentsButton = ({onPress}: {onPress: () => void}) => {
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.attachmentsButton}>
-      <Icon icon={'add'} size={25} />
-    </TouchableOpacity>
-  );
-};
 
 const SendButton = ({visible, onPress}: {visible: boolean; onPress: () => void}) => {
   if (!visible) return null;

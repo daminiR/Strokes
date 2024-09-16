@@ -226,13 +226,6 @@ const App: React.FC<AppProps> = observer((props) => {
 
 export default App;
 
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
 const $container: ViewStyle = {
   flex: 1,
 };

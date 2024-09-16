@@ -1,16 +1,12 @@
 // ChatItem.tsx
 import {
   GroupChannel,
-  HiddenChannelFilter,
-  GroupChannelListOrder,
 } from "@sendbird/chat/groupChannel"
 import {
   getGroupChannelTitle,
-  getGroupChannelLastMessage
 } from "@sendbird/uikit-utils"
 import {
   GroupChannelPreview,
-  Placeholder,
 } from "@sendbird/uikit-react-native-foundation"
 import React from 'react';
 import { TouchableOpacity } from 'react-native';

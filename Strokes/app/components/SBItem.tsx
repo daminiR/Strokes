@@ -3,20 +3,10 @@ import type { StyleProp, ImageStyle, ViewStyle, ViewProps, ImageSourcePropType }
 import { LongPressGestureHandler } from "react-native-gesture-handler";
 import type { AnimateProps } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
-
 import Constants from "expo-constants";
 import {
-  CircularPlayerRatingBar,
-  PlayerDetails,
-  Header,
-  Card,
-  Button,
   AutoImage,
-  Text,
 } from '../components';
-
-import { SBImageItem } from "./SBImageItem";
-import { SBTextItem } from "./SBTextItem";
 
 interface Props extends AnimateProps<ViewProps> {
   style?: StyleProp<ViewStyle>

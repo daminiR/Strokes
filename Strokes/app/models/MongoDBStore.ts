@@ -1,5 +1,4 @@
 import {types, flow} from 'mobx-state-tree';
-import {navigate} from "../navigators"
 import client from '../services/api/apollo-client';
 import {getRootStore} from './helpers/getRootStore';
 import {ReactNativeFile} from 'apollo-upload-client'
