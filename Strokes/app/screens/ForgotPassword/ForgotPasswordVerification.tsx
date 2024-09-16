@@ -1,10 +1,9 @@
 import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
-import { TextStyle, ViewStyle } from "react-native"
 import { Header, Button, Screen, Text, TextField } from "../../components"
 import { navigate, goBack } from "../../navigators"
-import { colors, spacing } from "../../theme"
 import { useStores } from "../../models"
+import { styles } from "./styles/ForgotPasswordVerification.styles"
 
 interface ForgotPasswordVerificationScreenProps {}
 
@@ -29,7 +28,7 @@ export const ForgotPasswordVerificationScreen: FC<ForgotPasswordVerificationScre
   return (
     <Screen
       preset="auto"
-      contentContainerStyle={$screenContentContainer}
+      contentContainerStyle={styles.screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
       <Header leftIcon={"back"} onLeftPress={() => goBack()} />
@@ -39,7 +38,7 @@ export const ForgotPasswordVerificationScreen: FC<ForgotPasswordVerificationScre
       <TextField
         value={authenticationStore.verificationPhoneCode ?? undefined}
         onChangeText={authenticationStore.setVerificationPhoneCode}
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoCorrect={false}
         keyboardType="number-pad"
@@ -51,7 +50,7 @@ export const ForgotPasswordVerificationScreen: FC<ForgotPasswordVerificationScre
       <Button
         testID="verify-code-button"
         text="Verify Code"
-        style={$tapButton}
+        style={styles.tapButton}
         preset="reversed"
         onPress={verifyCode}
         loading={isLoading}
@@ -59,25 +58,4 @@ export const ForgotPasswordVerificationScreen: FC<ForgotPasswordVerificationScre
     </Screen>
   )
 })
-
-const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.xxl,
-  paddingHorizontal: spacing.lg,
-}
-
-const $signIn: TextStyle = {
-  marginBottom: spacing.sm,
-}
-
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $textField: ViewStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $tapButton: ViewStyle = {
-  marginTop: spacing.xs,
-}
 

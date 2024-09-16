@@ -1,16 +1,13 @@
 import { observer } from "mobx-react-lite"
-import { type ContentStyle } from "@shopify/flash-list"
-import { navigate, goBack} from "../../navigators"
+import { goBack} from "../../navigators"
 import { translate } from "../../i18n"
 import React, { FC, useState } from "react"
 import {
   Linking,
-  TextStyle,
-  ViewStyle,
 } from "react-native"
 import { useStores } from "../../models"
 import { ProfileStackScreenProps } from "../../navigators"
-import { colors, spacing } from "../../theme"
+import { styles } from "./styles/SettingsScreen.styles"
 import { useHeader } from "../../utils/useHeader"
 import {
   ListItem,
@@ -24,12 +21,8 @@ import {
 interface SettingsScreen extends ProfileStackScreenProps<"Settings"> {}
 
 export const SettingsScreen: FC<SettingsScreen> = observer(function SettingsScreen(_props) {
-  const { userStore, authenticationStore } = useStores()
+  const { authenticationStore } = useStores()
 const [isLoading, setIsLoading] = useState(false);
-  const { navigation } = _props
-  const {
-    authenticationStore: { logout },
-  } = useStores()
   const openURL = (url) => {
     Linking.openURL(url).catch((err) => Alert.alert("Cannot open URL", err.message))
   };
@@ -73,7 +66,7 @@ const handleLogout = () => {
   return (
     <Screen
       preset="auto"
-      contentContainerStyle={$screenContentContainer}
+      contentContainerStyle={styles.screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
       {isLoading ? (
@@ -81,13 +74,13 @@ const handleLogout = () => {
       ) : (
         <>
       <ListView
-        contentContainerStyle={$listContentContainer}
+        contentContainerStyle={styles.listContentContainer}
         data={settingsMethods}
         estimatedItemSize={55}
         renderItem={({ item }) => (
             <ListItem
               text={item.label}
-              style={$listItem}
+              style={styles.listItem}
               topSeparator={true}
               bottomSeparator={true}
               rightIcon={"caretRight"}
@@ -99,7 +92,7 @@ const handleLogout = () => {
       <Button
         testID="login-button"
         tx="UpdateProfile.logout"
-        style={$tapButton}
+        style={styles.tapButton}
         preset="reversed"
         onPress={handleLogout}
       />
@@ -108,27 +101,3 @@ const handleLogout = () => {
     </Screen>
   )
 })
-
-const $listContentContainer: ContentStyle = {
-  paddingHorizontal: spacing.md, // Adjust if necessary to align with the card's horizontal margin
-  paddingTop: spacing.lg + spacing.xl,
-  paddingBottom: spacing.lg,
-}
-
-const $listItem: ViewStyle = {
-  paddingHorizontal: spacing.lg,
-};
-
-const $hint: TextStyle = {
-  color: colors.tint,
-  marginBottom: spacing.md,
-}
-
-const $tapButton: ViewStyle = {
-  marginTop: spacing.xs,
-}
-
-const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.xxl,
-  paddingHorizontal: spacing.lg,
-}

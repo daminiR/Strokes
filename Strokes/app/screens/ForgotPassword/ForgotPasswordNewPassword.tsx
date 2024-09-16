@@ -1,16 +1,17 @@
-import { observer } from "mobx-react-lite"
-import React, { useState, ComponentType} from "react"
-import { TextStyle, ViewStyle, Alert} from "react-native"
-import { Header, Button, Screen, Text, Icon, TextField, TextFieldAccessoryProps} from "../../components"
-import { navigate, goBack } from "../../navigators"
-import { colors, spacing } from "../../theme"
-import { useStores } from "../../models"
-import { storePasswordSecurely } from "../../models/AuthenticationStore"
+import {observer} from "mobx-react-lite"
+import React, {useState, ComponentType} from "react"
+import {Alert} from "react-native"
+import {Header, Button, Screen, Text, Icon, TextField, TextFieldAccessoryProps} from "../../components"
+import {navigate, goBack} from "../../navigators"
+import {colors} from "../../theme"
+import {useStores} from "../../models"
+import {storePasswordSecurely} from "../../models/AuthenticationStore"
+import {styles} from "./styles/ForgotPasswordNewPassword.styles"
 
 interface ForgotPasswordNewPasswordScreenProps {}
 
 export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreenProps> = observer(function ForgotPasswordNewPasswordScreen(_props) {
-  const { userStore, authenticationStore } = useStores()
+  const {userStore, authenticationStore} = useStores()
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -31,16 +32,16 @@ export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreen
 
     setIsLoading(true)
     authenticationStore
-    .resetPassword(newPassword)
-    .then(() => {
-      //alert("Password successfully reset.")
-      authenticationStore.setProp("isPasswordRecentlyUpdated", true);
+      .resetPassword(newPassword)
+      .then(() => {
+        //alert("Password successfully reset.")
+        authenticationStore.setProp("isPasswordRecentlyUpdated", true);
 
-      // Ask the user if they want to store the new password with Face ID
-      Alert.alert(
-        "Password Updated",
-        "Your password has been successfully reset. Do you want to save it using Face ID?",
-        [{
+        // Ask the user if they want to store the new password with Face ID
+        Alert.alert(
+          "Password Updated",
+          "Your password has been successfully reset. Do you want to save it using Face ID?",
+          [{
             text: "No",
             onPress: () => {
               console.log("User opted not to store password with Face ID");
@@ -56,14 +57,15 @@ export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreen
               navigate("Login"); // Go back to login screen
             },
           },
-        ],
-        { cancelable: false }
-      );
-    })
-    .catch((err) => {
-      setIsLoading(false)
-      setError(err.message || "Error resetting password.")
-    })}
+          ],
+          {cancelable: false}
+        );
+      })
+      .catch((err) => {
+        setIsLoading(false)
+        setError(err.message || "Error resetting password.")
+      })
+  }
   const PasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = (props) => (
     <Icon
       icon={isNewPasswordHidden ? "view" : "hidden"}
@@ -73,7 +75,7 @@ export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreen
       onPress={() => setIsNewPasswordHidden(!isNewPasswordHidden)}
     />
   )
-    const ConfirmPasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = (props) => (
+  const ConfirmPasswordRightAccessory: ComponentType<TextFieldAccessoryProps> = (props) => (
     <Icon
       icon={isConfirmPasswordHidden ? "view" : "hidden"}
       color={colors.palette.neutral800}
@@ -86,17 +88,17 @@ export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreen
   return (
     <Screen
       preset="auto"
-      contentContainerStyle={$screenContentContainer}
+      contentContainerStyle={styles.screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
       <Header leftIcon={"back"} onLeftPress={() => goBack()} />
-      <Text testID="new-password-heading" text="Reset Password" preset="heading" style={$signIn} />
-      <Text text="Enter the verification code and your new password" preset="subheading" style={$enterDetails} />
+      <Text testID="new-password-heading" text="Reset Password" preset="heading" style={styles.signIn} />
+      <Text text="Enter the verification code and your new password" preset="subheading" style={styles.enterDetails} />
 
       <TextField
         value={authenticationStore.verificationPhoneCode ?? ""}
         onChangeText={authenticationStore.setVerificationPhoneCode}  // Set verification code
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoCorrect={false}
         keyboardType="number-pad"
@@ -109,7 +111,7 @@ export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreen
       <TextField
         value={newPassword}
         onChangeText={setNewPassword}  // Set new password
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoCorrect={false}
         secureTextEntry={isNewPasswordHidden}
@@ -122,7 +124,7 @@ export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreen
       <TextField
         value={confirmPassword}
         onChangeText={setConfirmPassword}  // Set confirm password
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoCorrect={false}
         secureTextEntry={isConfirmPasswordHidden}
@@ -136,7 +138,7 @@ export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreen
       <Button
         testID="reset-password-button"
         text="Reset Password"
-        style={$tapButton}
+        style={styles.tapButton}
         preset="reversed"
         onPress={resetPassword}
         loading={isLoading}
@@ -144,25 +146,3 @@ export const ForgotPasswordNewPasswordScreen: FC<ForgotPasswordNewPasswordScreen
     </Screen>
   )
 })
-
-const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.xxl,
-  paddingHorizontal: spacing.lg,
-}
-
-const $signIn: TextStyle = {
-  marginBottom: spacing.sm,
-}
-
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $textField: ViewStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $tapButton: ViewStyle = {
-  marginTop: spacing.xs,
-}
-

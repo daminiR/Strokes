@@ -1,18 +1,16 @@
 import { observer } from "mobx-react-lite"
-import Config from 'react-native-config';
-import React, {useEffect, useRef, useState, useMemo} from "react"
+import { styles } from "./styles/VerificationSignUpScreen.styles"
+import React, {useEffect, useState} from "react"
 import { navigate, goBack} from "../../navigators"
-import { TextInput, TextStyle, ViewStyle, View } from "react-native"
-import { LoadingActivity, Header, Button, Icon, Screen, Text, TextField, SelectField, Toggle } from "../../components"
+import { LoadingActivity, Header, Button, Screen, Text, TextField} from "../../components"
 import { useStores } from "../../models"
 import { AppStackScreenProps } from "../../navigators"
-import { colors, spacing } from "../../theme"
 
 interface VerificationSignUpScreenProps extends AppStackScreenProps<"VerificationSignUp"> {}
 
 export const VerificationSignUpScreen: FC<VerificationSignUpScreenProps> = observer(function VerificationSignUpScreen(_props) {
 
-  const { mongoDBStore, userStore, authenticationStore } = useStores()
+  const { userStore, authenticationStore } = useStores()
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false); // Add state for loading
   useEffect(() => {
@@ -56,17 +54,17 @@ function sendCode() {
   return (
     <Screen
       preset="auto"
-      contentContainerStyle={$screenContentContainer}
+      contentContainerStyle={styles.screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
       <Header leftIcon= {"back"} onLeftPress={() => goBack()}/>
-      <Text testID="login-heading" tx="VerificationSignUpScreen.title" preset="heading" style={$signIn} />
-      <Text tx="VerificationSignUpScreen.enterDetails" preset="subheading" style={$enterDetails} />
+      <Text testID="login-heading" tx="VerificationSignUpScreen.title" preset="heading" style={styles.signIn} />
+      <Text tx="VerificationSignUpScreen.enterDetails" preset="subheading" style={styles.enterDetails} />
 
       <TextField
         value={authenticationStore.verificationPhoneCode ?? undefined}
         onChangeText={authenticationStore.setVerificationPhoneCode}
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoComplete="tel-device"
         autoCorrect={false}
@@ -80,14 +78,14 @@ function sendCode() {
       <Button
         testID="login-button"
         tx="VerificationSignUpScreen.tapToResendCode"
-        style={$tapButton}
+        style={styles.tapButton}
         preset="reversed"
         onPress={sendCode}
       />
       <Button
         testID="login-button"
         tx="VerificationSignUpScreen.tapToVerify"
-        style={$tapButton}
+        style={styles.tapButton}
         preset="reversed"
         onPress={verify}
       />
@@ -95,37 +93,3 @@ function sendCode() {
   )
 })
 
-const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.xxl,
-  paddingHorizontal: spacing.lg,
-}
-
-const $signIn: TextStyle = {
-  marginBottom: spacing.sm,
-}
-
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $hint: TextStyle = {
-  color: colors.tint,
-  marginBottom: spacing.md,
-}
-
-const $textField: ViewStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $tapButton: ViewStyle = {
-  marginTop: spacing.xs,
-}
-const $inputWrapperStyle: ViewStyle = {
-  marginBottom: spacing.lg,
-  flexDirection: "row", // Aligns children side by side
-  justifyContent: "space-around", // Distributes children evenly with space around them
-  alignItems: "center", // Centers children vertically in the container
-  flexWrap: "wrap", // Allows items to wrap to the next line if the container is too narrow
-  backgroundColor: colors.palette.neutral200,
-  overflow: "hidden",
-}

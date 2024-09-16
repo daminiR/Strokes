@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite"
 import { navigate, goBack} from "../../navigators"
 import React, {useEffect, useRef, useState, useMemo} from "react"
-import { isRTL, translate, TxKeyPath } from "../../i18n"
-import { TextInput, TextStyle, ViewStyle, View } from "react-native"
+import { translate } from "../../i18n"
+import { TextInput, View } from "react-native"
 import {
   ImagePickerWall,
   LoadingActivity,
@@ -18,6 +18,7 @@ import {
 import { useStores } from "../../models"
 import { AppStackScreenProps } from "../../navigators"
 import { colors, spacing } from "../../theme"
+import { styles } from "./styles/SignUpScreen.styles"
 
 interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
 
@@ -97,21 +98,21 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   return (
     <Screen
       preset="auto"
-      contentContainerStyle={$screenContentContainer}
+      contentContainerStyle={styles.screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
       <Header leftIcon={"back"} onLeftPress={() => goBack()} />
-      <Text testID="login-heading" tx="signUpScreen.signIn" preset="heading" style={$signIn} />
-      <Text tx="signUpScreen.enterDetails" preset="subheading" style={$enterDetails} />
-      {attemptsCount > 2 && <Text tx="signUpScreen.hint" size="sm" weight="light" style={$hint} />}
+      <Text testID="login-heading" tx="signUpScreen.signIn" preset="heading" style={styles.signIn} />
+      <Text tx="signUpScreen.enterDetails" preset="subheading" style={styles.enterDetails} />
+      {attemptsCount > 2 && <Text tx="signUpScreen.hint" size="sm" weight="light" style={styles.hint} />}
 
-      <Text tx="signUpScreen.ImagePickerLabel" preset="formLabel" style={$enterDetails} />
+      <Text tx="signUpScreen.ImagePickerLabel" preset="formLabel" style={styles.enterDetails} />
       <ImagePickerWall onImagesUpdate={handleImagesUpdate} />
 
       <TextField
         value={userStore?.displayPhoneNumber ?? undefined}
         onChangeText={text => userStore.setPhoneNumber(text)}
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoComplete="tel-device"
         autoCorrect={false}
@@ -125,7 +126,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       <TextField
         value={userStore?.email ?? undefined}
         onChangeText={userStore.setEmail}
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoComplete="email"
         keyboardType="default"
@@ -139,7 +140,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       <TextField
         value={userStore?.firstName ?? undefined}
         onChangeText={userStore.setFirstName}
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoComplete="name"
         autoCorrect={false}
@@ -154,7 +155,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       <TextField
         value={userStore?.lastName ?? undefined}
         onChangeText={userStore.setLastName}
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoComplete="name"
         autoCorrect={false}
@@ -168,7 +169,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       <TextField
         value={userStore?.sport?.gameLevel ?? undefined}
         onChangeText={userStore.setSport}
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoComplete="name"
         autoCorrect={false}
@@ -183,7 +184,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         ref={authPasswordInput}
         value={userStore?.authPassword ?? undefined}
         onChangeText={userStore.setAuthPassword}
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoComplete="password"
         autoCorrect={false}
@@ -216,7 +217,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         multiple={false}
         containerStyle={{ marginBottom: spacing.lg }}
       />
-      <View style={$inputWrapperStyle}>
+      <View style={styles.inputWrapperStyle}>
         {i18nText.map(({ key, text }) => (
           <Toggle
             {..._props}
@@ -231,7 +232,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       <TextField
         value={userStore?.description ?? undefined}
         onChangeText={userStore.setDescription}
-        containerStyle={$textField}
+        containerStyle={styles.textField}
         autoCapitalize="none"
         autoComplete="name"
         autoCorrect={false}
@@ -244,7 +245,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       <Button
         testID="login-button"
         tx="signUpScreen.tapToSignIn"
-        style={$tapButton}
+        style={styles.tapButton}
         preset="reversed"
         onPress={login}
       />
@@ -252,37 +253,3 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   )
 })
 
-const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.xxl,
-  paddingHorizontal: spacing.lg,
-}
-
-const $signIn: TextStyle = {
-  marginBottom: spacing.sm,
-}
-
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $hint: TextStyle = {
-  color: colors.tint,
-  marginBottom: spacing.md,
-}
-
-const $textField: ViewStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $tapButton: ViewStyle = {
-  marginTop: spacing.xs,
-}
-const $inputWrapperStyle: ViewStyle = {
-  marginBottom: spacing.lg,
-  flexDirection: "row", // Aligns children side by side
-  justifyContent: "space-around", // Distributes children evenly with space around them
-  alignItems: "center", // Centers children vertically in the container
-  flexWrap: "wrap", // Allows items to wrap to the next line if the container is too narrow
-  backgroundColor: colors.palette.neutral200,
-  overflow: "hidden",
-}

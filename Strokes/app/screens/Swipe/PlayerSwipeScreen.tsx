@@ -1,6 +1,6 @@
-import { observer } from "mobx-react-lite"
-import React, {useEffect, useRef, useState, useMemo} from "react"
-import { TextInput, Dimensions, TextStyle, ViewStyle, View } from "react-native"
+import {observer} from "mobx-react-lite"
+import React, {useEffect, useRef, useState} from "react"
+import { View } from "react-native"
 import {
   Button,
   LoadingActivity,
@@ -13,30 +13,26 @@ import {
 } from "../../components"
 import { useStores } from "../../models"
 import { AppStackScreenProps } from "../../navigators"
-import { colors, spacing } from "../../theme"
+import { colors } from "../../theme"
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Swiper from 'react-native-deck-swiper';
 import { useHeader } from "../../utils/useHeader"
-import { navigate, goBack} from "../../navigators"
+import { goBack} from "../../navigators"
+import { styles } from "./styles/PlayerSwipeScreen.styles"
 
-const PAGE_WIDTH = Dimensions.get('window').width
-const PAGE_HEIGHT = Dimensions.get('window').height
 
 interface FaceCardProps extends AppStackScreenProps<"FaceCardProps"> {}
 
 export const FaceCardScreen: FC<FaceCardProps> = observer(function FaceCardProps(_props) {
   const swiperRef = useRef(null);
   const [index, setIndex] = useState(0)
-  const { mongoDBStore, userStore, authenticationStore, matchStore } = useStores()
+  const { mongoDBStore, userStore, matchStore } = useStores()
   const [isLoading, setIsLoading] = useState(false);
   const { matchPool: cards } = matchStore;
   const [isLastCard, setIsLastCard] = useState(cards.length === 0)
   const [isVisible, setIsVisible] = useState(false)
-  const [isMatched, setIsMatched] = useState(false)
   const [isAlertVisible, setAlertIsVisible] = useState(false)
-  const [activeIndex, setActiveIndex] = useState(0)
   const [isSwiping, setIsSwiping] = useState(false);
-  const width = Dimensions.get("window").width
   const onCloseAlert = () => {
     setAlertIsVisible(false)
   }
@@ -129,7 +125,7 @@ const onSwiped = (cardIndex: number) => {
      return <LoadingActivity />
    }
   return (
-    <Screen preset="auto" style={$screenContentContainer}>
+    <Screen preset="auto" style={styles.screenContentContainer}>
       <FilterModal
         onApplyFilters={onApplyFilters}
         isVisible={isVisible}
@@ -145,9 +141,9 @@ const onSwiped = (cardIndex: number) => {
         <>
           <Swiper
             key={JSON.stringify(cards)}
-            containerStyle={$swiperStyle}
+            containerStyle={styles.swiperStyle}
             ref={swiperRef}
-            cardStyle={$cardStyle}
+            cardStyle={styles.cardStyle}
             cards={cards}
             renderCard={(card) => {
               return <SportCard match={card} />
@@ -166,18 +162,18 @@ const onSwiped = (cardIndex: number) => {
             //disabled={isSwiping || index >= cards.length - 1}
             disabled={isSwiping}
             onPress={handleSwipeRight}
-            style={$rightFAB}
+            style={styles.rightFAB}
           >
-            <View style={$iconStyle}>
+            <View style={styles.iconStyle}>
               <Icon size={34} name={"thumbs-up"} />
             </View>
           </Button>
           <Button
             disabled={isSwiping}
             onPress={handleSwipeLeft}
-            style={$leftFAB}
+            style={styles.leftFAB}
           >
-            <View style={$iconStyle}>
+            <View style={styles.iconStyle}>
               <Icon size={34} name={"thumbs-down"} />
             </View>
           </Button>
@@ -190,78 +186,4 @@ const onSwiped = (cardIndex: number) => {
       )}
     </Screen>
   )
-
 })
-const $rightFAB: ViewStyle = {
-    position: 'absolute',
-    margin: 16,
-    right: 0,
-    bottom: 0,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 8, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 2,
-  }
-const $leftFAB: ViewStyle = {
-    position: 'absolute',
-    margin: 16,
-    left: 0,
-    bottom: 0,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 8, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 2,
-  }
-
-const $cardStyle: ViewStyle = {
-  flex: 1, // Ensure the card expands to fill available space
-  marginTop: -60, // Removes margins
-  marginLeft: -20, // Removes margins
-  padding: 0, // Removes margins
-  width: '100%',
-  height: '100%'
-  //justifyContent: "center", // Centers content vertically
-  //alignItems: "center", // Centers the swiper horizontally
-};
-const $swiperStyle: ViewStyle = {
-  flex: 1, // Use flex to ensure it expands to fill all available space
-  height: '100%', // Ensures it spans the full height
-  paddingHorizontal: 0, // Removes horizontal padding
-  paddingVertical: 0, // Removes vertical padding
-  marginBottom: 0, // Removes margins
-};
-
-const $screenContentContainer: ViewStyle = {
-  flex: 1,
-  paddingVertical: 0,
-  paddingHorizontal: 0,
-  height: '100%',
-  //justifyContent: "center", // Centers the swiper vertically
-  //alignItems: "center", // Centers the swiper horizontally
-}
-  const $iconStyle: ViewStyle = {
-  marginTop: 10, // Adjust this value to lower the icon by the desired amount
-};
-const $contentContainer = {
-  flexGrow: 1, // Allows the content to expand to fill the screen
-  justifyContent: "center", // Centers content vertically
-  alignItems: "center", // Centers content horizontally
-}
-const $carouselContainer = {
-  flex: 1,
-  justifyContent: "center",
-  alignItems: "center",
-}
-

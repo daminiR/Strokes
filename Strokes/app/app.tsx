@@ -23,7 +23,7 @@ import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { platformServices } from "./services/api/sendbird";
 import { MMKVAdapter } from "app/utils/storage/mmkdvAdapter";
-import { resetChatStackToChatList, navigate, resetToInitialState } from "./navigators";
+import { navigate, resetToInitialState } from "./navigators";
 import { SendbirdUIKitContainer } from "@sendbird/uikit-react-native";
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context";
 import * as Linking from "expo-linking";
