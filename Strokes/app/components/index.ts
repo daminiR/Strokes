@@ -1,5 +1,6 @@
 export * from "./AutoImage"
 export * from "./LoadingActivity"
+export * from "./RightAndLeftFAB"
 export * from "./ConfirmationModal"
 export * from "./ChatComponents/"
 export * from "./FilterModel"
