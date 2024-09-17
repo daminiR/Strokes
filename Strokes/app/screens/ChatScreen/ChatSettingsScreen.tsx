@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import { navigate, goBack } from "../../navigators"
-import React, { FC, useState, useCallback } from "react"
+import { Alert } from "react-native"
+import React, { FC, useState } from "react"
 import { useStores } from "../../models"
 import settingsMethods from "../../config/settingsMethods"
 import { useHeader } from "../../utils/useHeader"
@@ -22,16 +23,30 @@ export const ChatSettingsScreen: FC<ChatSettingsScreenProps> = observer(function
     },
     [goBack],
   )
+   const handleUnmatch = () => {
+    mongoDBStore.unmatchPlayer(chatStore.currentChatProfile.matchId, "unmatched")
+    navigate("ChatList")
+  }
 
+ // Function to handle the press action
   const handlePress = (item: any) => {
     if (item.label === "unmatch_player") {
-      mongoDBStore.unmatchPlayer(chatStore.currentChatProfile.matchId, "unmatched")
-      setReportObj({
-        quickMessage: item.quickMessage,
-        title: item.title,
-        label: item.label,
-      })
-      setIsVisible(true)
+      // Show alert dialog with options
+      Alert.alert(
+        "Unmatch Player",
+        "Are you sure you want to unmatch this player?",
+        [
+          {
+            text: "No, Don't",
+            style: "cancel", // This button will just dismiss the alert
+          },
+          {
+            text: "Yes, Unmatch",
+            onPress: handleUnmatch, // Call the unmatch function on confirmation
+          },
+        ],
+        { cancelable: true }
+      )
     } else if (item.hasMoreOptions) {
       navigate("ChatReport")
     }

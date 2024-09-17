@@ -42,18 +42,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     }
   };
 
-  const logCurrentState = async () => {
-    const currentState = storage.getString(ROOT_STATE_STORAGE_KEY);
-    console.log("Current State:", currentState);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await logCurrentState(); // Assuming logCurrentState is an async function
-    };
-
-    fetchData();
-  }, []);
   const handleFaceIDLogin = useCallback(async () => {
     if (isFaceIDRunning) return;
 

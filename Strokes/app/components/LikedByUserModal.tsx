@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Modal, View, ViewStyle, TouchableOpacity } from 'react-native';
-import { Button, SportCard } from "../components" // Assuming you have a custom Button component
+import { SportCard, RightFAB, LeftFAB} from "../components" // Assuming you have a custom Button component
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useStores } from "../models"
 
@@ -39,23 +39,20 @@ export const LikedByUserModal = ({ profile, showSportCard, handleClose }) => {
       <View style={modalStyle}>
         <View style={modalContainerStyle2}>
           <TouchableOpacity onPress={handleClose} style={$closeStyle} activeOpacity={0.7}>
-            <Icon name={"times-circle"} size={56} />
+            <Icon name={"times-circle"} size={66} />
           </TouchableOpacity>
-
           <SportCard match={profile} />
         </View>
+        <RightFAB
+          isSwiping={isSwiping}
+          handleSwipeRight={handleSwipeRight}
+        />
+        <LeftFAB
+          isSwiping={isSwiping}
+          handleSwipeLeft={handleSwipeLeft}
+        />
       </View>
       <View>
-        <Button disabled={isSwiping} onPress={handleSwipeRight} style={$rightFAB}>
-          <View style={$iconStyle}>
-            <Icon size={34} name={"thumbs-up"} />
-          </View>
-        </Button>
-        <Button disabled={isSwiping} onPress={handleSwipeLeft} style={$leftFAB}>
-          <View style={$iconStyle}>
-            <Icon size={34} name={"thumbs-down"} />
-          </View>
-        </Button>
       </View>
     </Modal>
   )
@@ -63,7 +60,7 @@ export const LikedByUserModal = ({ profile, showSportCard, handleClose }) => {
 const modalContainerStyle2: ViewStyle = {
   position: 'relative',
   width: '90%',
-  height: '90%',
+  height: '85%',
   backgroundColor: "white",  // Sets a clean background color
   borderRadius: 20,          // Rounds the corners of the modal
   elevation: 10,             // Adds shadow for Android (optional)
@@ -86,8 +83,8 @@ const $closeStyle = {
   position: "absolute",
   zIndex: 999,
   flex: 1,
-  right: -20,
-  top: -23,
+  right: -18,
+  top: -18,
   borderRadius: 56,
   justifyContent: "center",
   alignItems: "center",
@@ -98,41 +95,4 @@ const $closeStyle = {
   shadowRadius: 2,
   backgroundColor: "white", // Ensure the background is transparent
 }
-const $iconStyle: ViewStyle = {
-  marginTop: 20, // Adjust this value to lower the icon by the desired amount
-};
-const $rightFAB: ViewStyle = {
-    position: 'absolute',
-    marginRight: 10,
-    marginBottom: 10,
-    right: 0,
-    bottom: 0,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 8, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 2,
-  }
-const $leftFAB: ViewStyle = {
-    position: 'absolute',
-    marginLeft: 10,
-    marginBottom: 10,
-    left: 0,
-    bottom: 0,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 8, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 2,
-  }
 

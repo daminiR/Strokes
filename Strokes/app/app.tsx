@@ -115,10 +115,6 @@ const App: React.FC<AppProps> = observer((props) => {
   const [areFontsLoaded] = useFonts(customFontsToLoad);
   const {matchedProfileStore, chatStore, userStore, tempUserStore, authenticationStore } = useStores();
 
-  const logCurrentState = async () => {
-    const currentState = await storage.getString(ROOT_STATE_STORAGE_KEY);
-    console.log("Current State:", currentState);
-  };
   const onNotificationInteraction = async (event) => {
     let notificationData;
     if (Platform.OS === "ios") {
@@ -176,9 +172,6 @@ const App: React.FC<AppProps> = observer((props) => {
     };
   }, [appState]);
 
-  useEffect(() => {
-    logCurrentState();
-  }, []);
 
   const { rehydrated } = useInitialRootStore(() => {
     setTimeout(hideSplashScreen, 500);
