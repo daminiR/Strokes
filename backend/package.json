@@ -12,6 +12,7 @@
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "dotenv": "^8.2.0",
+    "expo-cli": "^6.3.10",
     "express": "^4.17.1",
     "faker": "^6.6.6",
     "fast-csv": "^5.0.1",

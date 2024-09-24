@@ -193,7 +193,7 @@ const App: React.FC<AppProps> = observer((props) => {
         <Provider value={client}>
           <SendbirdUIKitContainer
             appId={process.env.REACT_APP_SENDBIRD_APP_ID}
-            chatOptions={{localCacheStorage:MMKVAdapter }}
+            chatOptions={{localCacheStorage: MMKVAdapter}}
             platformServices={platformServices}
             userProfile={{
               onCreateChannel: () => {}, // No-op function
