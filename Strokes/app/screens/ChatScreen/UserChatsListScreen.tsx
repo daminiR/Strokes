@@ -36,7 +36,7 @@ export const ChatListScreen = observer(function ChatListScreen(_props) {
         console.log("App is in the foreground, attempting to reconnect...");
         setIsLoading(true);
 
-        if (!sdk || sdk.getConnectionState() !== 'OPEN') {
+        if (!sdk || sdk?.getConnectionState() !== 'OPEN') {
           try {
             await chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken);
             console.log("Reconnection successful");

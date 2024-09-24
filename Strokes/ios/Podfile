@@ -61,7 +61,6 @@ target 'Strokes' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false
     )
-
     # This is necessary for Xcode 14, because it signs resource bundles by default
     # when building for devices.
     installer.target_installation_results.pod_target_installation_results
@@ -73,7 +72,6 @@ target 'Strokes' do
       end
     end
   end
-
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)
