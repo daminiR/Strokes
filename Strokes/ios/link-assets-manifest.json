@@ -1,0 +1,433 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/images/app-icon-all.png",
+      "sha1": "4453c53f168b5a61385547199d6ae62a609e8a4b"
+    },
+    {
+      "path": "assets/images/app-icon-android-adaptive-background.png",
+      "sha1": "21e93fb62e4d1e2efade7b4fae236363666c0c48"
+    },
+    {
+      "path": "assets/images/app-icon-android-adaptive-foreground.png",
+      "sha1": "865920160afe0a7bb64664041c2757e779c9a8be"
+    },
+    {
+      "path": "assets/images/app-icon-android-legacy.png",
+      "sha1": "412639556db78fec87ef14c21e28507f962a89c3"
+    },
+    {
+      "path": "assets/images/app-icon-ios.png",
+      "sha1": "4453c53f168b5a61385547199d6ae62a609e8a4b"
+    },
+    {
+      "path": "assets/images/app-icon-web-favicon.png",
+      "sha1": "74b96e4cf39c90cdcb20d23127c06a22a5874d05"
+    },
+    {
+      "path": "assets/images/demo/cr-logo.png",
+      "sha1": "a6527d171aa7604d78aedff341e3440e13bcf84d"
+    },
+    {
+      "path": "assets/images/demo/cr-logo@2x.png",
+      "sha1": "51237032b33aca310f4238d2a5cc872577e227fc"
+    },
+    {
+      "path": "assets/images/demo/cr-logo@3x.png",
+      "sha1": "04cb64f8443fbf7c3a8613c7948fa758d709e589"
+    },
+    {
+      "path": "assets/images/demo/rnl-logo.png",
+      "sha1": "94227a67e38f407bff482f6ed77b1ad13977bc4e"
+    },
+    {
+      "path": "assets/images/demo/rnl-logo@2x.png",
+      "sha1": "3d02d67110b7e405cf8cbc19a312e31e81fdb09e"
+    },
+    {
+      "path": "assets/images/demo/rnl-logo@3x.png",
+      "sha1": "2fc2ec27a37cf5345fb873f81c9282aea943992a"
+    },
+    {
+      "path": "assets/images/demo/rnn-logo.png",
+      "sha1": "fe13805d8508b5c3729122b15dd88631d1ceb2df"
+    },
+    {
+      "path": "assets/images/demo/rnn-logo@2x.png",
+      "sha1": "2abca55e67c2b924cff67f7c0c0422015aeedf0a"
+    },
+    {
+      "path": "assets/images/demo/rnn-logo@3x.png",
+      "sha1": "7539acc1fa7ace6181c0738065e469c6d3cd3da1"
+    },
+    {
+      "path": "assets/images/demo/rnr-image-1.png",
+      "sha1": "6041a2a2144fbc15958ffd8f92e6cda740ae2ba2"
+    },
+    {
+      "path": "assets/images/demo/rnr-image-1@2x.png",
+      "sha1": "25af780414858e757f080f258885127c1a1cba80"
+    },
+    {
+      "path": "assets/images/demo/rnr-image-1@3x.png",
+      "sha1": "109d98eea3e083b1da87d0590956076dd6eb539d"
+    },
+    {
+      "path": "assets/images/demo/rnr-image-2.png",
+      "sha1": "e7b2ba2dd66220c3235a780e7263d752c1856ae8"
+    },
+    {
+      "path": "assets/images/demo/rnr-image-2@2x.png",
+      "sha1": "e586b0a8cee7accf6148e22fd42cc74d81ce2c8a"
+    },
+    {
+      "path": "assets/images/demo/rnr-image-2@3x.png",
+      "sha1": "41f1e64973689772c1edc884bebd14a74509223b"
+    },
+    {
+      "path": "assets/images/demo/rnr-image-3.png",
+      "sha1": "0a878cf72dd85018472bf39a5d2af0c601665772"
+    },
+    {
+      "path": "assets/images/demo/rnr-image-3@2x.png",
+      "sha1": "94ba5fddc35aa8daac488c37df4ba29bffc3bf58"
+    },
+    {
+      "path": "assets/images/demo/rnr-image-3@3x.png",
+      "sha1": "af78e1930792b6500f21cbf9f65fbfe44b07615f"
+    },
+    {
+      "path": "assets/images/demo/rnr-logo.png",
+      "sha1": "2bcb5423726b49bbe0f7a30b1295cf8b257185fd"
+    },
+    {
+      "path": "assets/images/demo/rnr-logo@2x.png",
+      "sha1": "eb3356909814580136cb22307775ff923b8c2014"
+    },
+    {
+      "path": "assets/images/demo/rnr-logo@3x.png",
+      "sha1": "71fd9e2b1def1de6f14d9f3280b90c80bafdbc44"
+    },
+    {
+      "path": "assets/images/logo.png",
+      "sha1": "72fbd348873aa874c1b971f70e2a65132c3aac69"
+    },
+    {
+      "path": "assets/images/logo@2x.png",
+      "sha1": "0f8a7c5aaddf3aad4959b82e6e6c8c4fab55ac76"
+    },
+    {
+      "path": "assets/images/logo@3x.png",
+      "sha1": "cbb82c787d91ac2a3acdb415ea8fbb2d0edf7d9e"
+    },
+    {
+      "path": "assets/images/sad-face.png",
+      "sha1": "b9ea9378431e0d5050eacaa7dc19396900b95ed3"
+    },
+    {
+      "path": "assets/images/sad-face@2x.png",
+      "sha1": "72ddb2717ba1c0958048d87fec76e1202282666e"
+    },
+    {
+      "path": "assets/images/sad-face@3x.png",
+      "sha1": "8d32d3d6aad5045d6bde972ea4503c7883ad8902"
+    },
+    {
+      "path": "assets/images/splash-logo-all.png",
+      "sha1": "2c2fb69102f11eb80ca4177dc4013df7effafa9b"
+    },
+    {
+      "path": "assets/images/splash-logo-android-universal.png",
+      "sha1": "809d804bc425f104231dd844e59c7e661c87e58f"
+    },
+    {
+      "path": "assets/images/splash-logo-ios-mobile.png",
+      "sha1": "0c59c0aa321fe59bc2df31c4cca842cf8c97ecdf"
+    },
+    {
+      "path": "assets/images/splash-logo-ios-tablet.png",
+      "sha1": "28b824945fcd5c579a85aa9c08ff38280fd9b36c"
+    },
+    {
+      "path": "assets/images/splash-logo-web.png",
+      "sha1": "ba74e167e6e31a667c85d50c9650dbc4855a1b6b"
+    },
+    {
+      "path": "assets/images/welcome-face.png",
+      "sha1": "7a2b0ff883bd96550e3d466c8246c4c7080e78d3"
+    },
+    {
+      "path": "assets/images/welcome-face@2x.png",
+      "sha1": "ceaacae412692d8732ccea9ed237de6d1cede1ab"
+    },
+    {
+      "path": "assets/images/welcome-face@3x.png",
+      "sha1": "f6b2b4167d7dd29730fa55c23926f26b24319984"
+    },
+    {
+      "path": "assets/icons/back.png",
+      "sha1": "060b1959948a3f10b1106f1b94430ef720f618e8"
+    },
+    {
+      "path": "assets/icons/back@2x.png",
+      "sha1": "10196f61ffe020e7de725449e49821296ceff745"
+    },
+    {
+      "path": "assets/icons/back@3x.png",
+      "sha1": "d39e456fb09517b58ae36e9e57e2638dee618250"
+    },
+    {
+      "path": "assets/icons/bell.png",
+      "sha1": "31d932d3aa916e041c4a3d83da3aeb96b627be51"
+    },
+    {
+      "path": "assets/icons/bell@2x.png",
+      "sha1": "c982ceae9b9a360aec2266541ea1bc5bd60818be"
+    },
+    {
+      "path": "assets/icons/bell@3x.png",
+      "sha1": "8f68b51d48f085df2a53e203d8f8ac9eaf16b680"
+    },
+    {
+      "path": "assets/icons/caretLeft.png",
+      "sha1": "36656590893aa34705e05a9b865fbcae0d39f6df"
+    },
+    {
+      "path": "assets/icons/caretLeft@2x.png",
+      "sha1": "85bc13e032d876e6775d0576dff9b88c45a953bf"
+    },
+    {
+      "path": "assets/icons/caretLeft@3x.png",
+      "sha1": "a3b723a7448e2de758285689823f20b1a7b457ef"
+    },
+    {
+      "path": "assets/icons/caretRight.png",
+      "sha1": "61c761c948d2b7da736917594a4d62ee44c25ee1"
+    },
+    {
+      "path": "assets/icons/caretRight@2x.png",
+      "sha1": "4df7fb1f28c12e1a077a96416372230c6a387628"
+    },
+    {
+      "path": "assets/icons/caretRight@3x.png",
+      "sha1": "5b3865164bd5da8c2e23cfa0cd95adcb143f0136"
+    },
+    {
+      "path": "assets/icons/check.png",
+      "sha1": "a0f0fb6226af78f5016ca0e43f94dab2ddc6ee73"
+    },
+    {
+      "path": "assets/icons/check@2x.png",
+      "sha1": "8252937131a2b14e6031df54c47662f3274858eb"
+    },
+    {
+      "path": "assets/icons/check@3x.png",
+      "sha1": "d5b6a5e2fc08a7f3f5824049169d5eb1b18bff6a"
+    },
+    {
+      "path": "assets/icons/demo/clap.png",
+      "sha1": "98c29894ccf86fef6492d689339d3c26ba4ce309"
+    },
+    {
+      "path": "assets/icons/demo/clap@2x.png",
+      "sha1": "1629aa08ad3c4e4148a3c5bbefba83ab6a1c248e"
+    },
+    {
+      "path": "assets/icons/demo/clap@3x.png",
+      "sha1": "17b0cfae3110f07f68f907aa08eb608766b845a4"
+    },
+    {
+      "path": "assets/icons/demo/community.png",
+      "sha1": "66a820d60ccbe3b6a4fef4b439b1378f83fc836d"
+    },
+    {
+      "path": "assets/icons/demo/community@2x.png",
+      "sha1": "0525c8bf9aae36fe10cccb080bfa5bfbbbe8e1df"
+    },
+    {
+      "path": "assets/icons/demo/community@3x.png",
+      "sha1": "1721c00248a474d1aebe3ecb93d6ed8066a332c5"
+    },
+    {
+      "path": "assets/icons/demo/components.png",
+      "sha1": "aede3e4d5a9bd72ef2cdda7c3d998754d4d320c2"
+    },
+    {
+      "path": "assets/icons/demo/components@2x.png",
+      "sha1": "68227ba5a72cc4355bfde1c378890c9081276703"
+    },
+    {
+      "path": "assets/icons/demo/components@3x.png",
+      "sha1": "91362354955912d0dd1463fa356cd05312ac1268"
+    },
+    {
+      "path": "assets/icons/demo/debug.png",
+      "sha1": "4141306b3b17475115f19a164f76bdccd5c6fe80"
+    },
+    {
+      "path": "assets/icons/demo/debug@2x.png",
+      "sha1": "1e9f2949b383280c07651084f6c99445e067b51b"
+    },
+    {
+      "path": "assets/icons/demo/debug@3x.png",
+      "sha1": "729bc767c27467127a7dd4dfebe3faf3b40dcc84"
+    },
+    {
+      "path": "assets/icons/demo/github.png",
+      "sha1": "07e0ba2e508e37d000775958e6e45057da00110b"
+    },
+    {
+      "path": "assets/icons/demo/github@2x.png",
+      "sha1": "b51fa24b204d53d48d7f51a44ff69d5669229e62"
+    },
+    {
+      "path": "assets/icons/demo/github@3x.png",
+      "sha1": "e8660413b2fe35ad793c74c73595b1065de65258"
+    },
+    {
+      "path": "assets/icons/demo/heart.png",
+      "sha1": "27172e44364a1e09d39161bd4a352cb92a03c691"
+    },
+    {
+      "path": "assets/icons/demo/heart@2x.png",
+      "sha1": "e0476f324ec1ffc8e14069a0d2b7297f8201145b"
+    },
+    {
+      "path": "assets/icons/demo/heart@3x.png",
+      "sha1": "ca55a0c4a73892643a0e246731f310b438cb84d7"
+    },
+    {
+      "path": "assets/icons/demo/pin.png",
+      "sha1": "aec9df405f58faf89f9e28737d28d535ce2819d5"
+    },
+    {
+      "path": "assets/icons/demo/pin@2x.png",
+      "sha1": "b992f7c709176020e5a6194e29cbd67c320bbc79"
+    },
+    {
+      "path": "assets/icons/demo/pin@3x.png",
+      "sha1": "de5aa24da0eb45be35da2c7baf7ed30eef7b6e6a"
+    },
+    {
+      "path": "assets/icons/demo/podcast.png",
+      "sha1": "410c57c700463272ddc88b3d27c3d149a49c92fa"
+    },
+    {
+      "path": "assets/icons/demo/podcast@2x.png",
+      "sha1": "47d3d531862edc176617d359fa38967010cb2990"
+    },
+    {
+      "path": "assets/icons/demo/podcast@3x.png",
+      "sha1": "cdbb42f3004487237d9546b2faf9591ad5ace8a4"
+    },
+    {
+      "path": "assets/icons/demo/slack.png",
+      "sha1": "db6b81d70d33cd4269c4c90da6fe2528ae402b70"
+    },
+    {
+      "path": "assets/icons/demo/slack@2x.png",
+      "sha1": "0751d35e4d725a06616e09a5894258275513b73d"
+    },
+    {
+      "path": "assets/icons/demo/slack@3x.png",
+      "sha1": "19c3094bebefe49df2e5ce8e76368c7e6d33f020"
+    },
+    {
+      "path": "assets/icons/hidden.png",
+      "sha1": "fcb8d1986f83ad4ff224147c7e3f50d3241b48d1"
+    },
+    {
+      "path": "assets/icons/hidden@2x.png",
+      "sha1": "88bccadcc922f484bd4f0633b25936d4c4e856c0"
+    },
+    {
+      "path": "assets/icons/hidden@3x.png",
+      "sha1": "3f2101622a812d99a5ee8b987547251081d79240"
+    },
+    {
+      "path": "assets/icons/ladybug.png",
+      "sha1": "a2dba4b00d0d12f160472f6945e1f429e2462d0b"
+    },
+    {
+      "path": "assets/icons/ladybug@2x.png",
+      "sha1": "a4307b6f2a1e235b52e3f380dfd5f4450647b652"
+    },
+    {
+      "path": "assets/icons/ladybug@3x.png",
+      "sha1": "861b63c8aa49f7cdb72cf96458476f2182fe45fc"
+    },
+    {
+      "path": "assets/icons/lock.png",
+      "sha1": "7772802b33a2623983415051fc127142775bfc01"
+    },
+    {
+      "path": "assets/icons/lock@2x.png",
+      "sha1": "f0559bc2afd33f3827ff6e69881ab05948ffc6ab"
+    },
+    {
+      "path": "assets/icons/lock@3x.png",
+      "sha1": "89a96610291d254624e2f5e8014d07259823da78"
+    },
+    {
+      "path": "assets/icons/menu.png",
+      "sha1": "6f1ad7094092ed87fb8728cbdce5f96326628df5"
+    },
+    {
+      "path": "assets/icons/menu@2x.png",
+      "sha1": "5965f5f63dfd3d412184f6ca230e5d9e53bdcf48"
+    },
+    {
+      "path": "assets/icons/menu@3x.png",
+      "sha1": "f90fff80a6fb6ecc717c2a0b2844e6fe0bd48147"
+    },
+    {
+      "path": "assets/icons/more.png",
+      "sha1": "9e35ab7efc73c41fd6dcc83279e878aeccdff7e2"
+    },
+    {
+      "path": "assets/icons/more@2x.png",
+      "sha1": "28554c6e4c910623780044832805465b5b53b846"
+    },
+    {
+      "path": "assets/icons/more@3x.png",
+      "sha1": "00ffe5bcd8278e377362500162ed576d613a1a86"
+    },
+    {
+      "path": "assets/icons/settings.png",
+      "sha1": "0c55eb7ad9764e4a66667cefcd396d6273dfe995"
+    },
+    {
+      "path": "assets/icons/settings@2x.png",
+      "sha1": "94a3e94bea7fabbac2dcd16a59b24d91227839d3"
+    },
+    {
+      "path": "assets/icons/settings@3x.png",
+      "sha1": "9d29b4570bb756e256f3ebf56f3dcc8827c8159e"
+    },
+    {
+      "path": "assets/icons/view.png",
+      "sha1": "8a14694e2466b0f842ba27bcb6e01db94866c209"
+    },
+    {
+      "path": "assets/icons/view@2x.png",
+      "sha1": "9684fa0ec3fe19adbd8a50aff6981a8ef6bad17c"
+    },
+    {
+      "path": "assets/icons/view@3x.png",
+      "sha1": "f044ba06422bb991864a9fc4228267820b7a0c11"
+    },
+    {
+      "path": "assets/icons/x.png",
+      "sha1": "45b49a76f7f69bf27575ff14f0e8db7688ca0935"
+    },
+    {
+      "path": "assets/icons/x@2x.png",
+      "sha1": "833fef4c249187c48804825793c4e428d515638c"
+    },
+    {
+      "path": "assets/icons/x@3x.png",
+      "sha1": "60b4781202a3995cd8a375f6bcc6665d0c1070a5"
+    }
+  ]
+}

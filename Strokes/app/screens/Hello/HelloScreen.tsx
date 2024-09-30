@@ -25,7 +25,7 @@ export const HelloScreen: FC<HelloScreenProps> = observer(function HelloScreen(_
       contentContainerStyle={styles.screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Header leftIcon= {"back"} onLeftPress={() => goBack()}/>
+      <Header leftText="so why no icon" leftIcon= {"back"} onLeftPress={() => goBack()}/>
       <Text testID="login-heading" tx="Hello.title" preset="heading" style={styles.signIn} />
       <Text tx="Hello.enterDetails" preset="subheading" style={styles.enterDetails} />
 

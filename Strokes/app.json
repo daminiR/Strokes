@@ -1,8 +1,7 @@
 {
-  "name": "Strokes",
-  "displayName": "Strokes",
   "expo": {
     "name": "Strokes",
+    "displayName": "Strokes",
     "slug": "Strokes",
     "scheme": "strokes",
     "version": "1.0.0",
@@ -17,9 +16,7 @@
       "fallbackToCacheTimeout": 0
     },
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.strokes",
@@ -77,3 +74,4 @@
     "version": "9.6.1"
   }
 }
+
