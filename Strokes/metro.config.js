@@ -1,5 +1,4 @@
-// Learn more https://docs.expo.io/guides/customizing-metro
-const { getDefaultConfig } = require('expo/metro-config');
+const {getDefaultConfig} = require('expo/metro-config');
 
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(__dirname);
@@ -11,4 +10,8 @@ config.transformer.getTransformOptions = async () => ({
   },
 });
 
+// Ensure Metro is handling asset files correctly
+config.resolver.assetExts = [...config.resolver.assetExts, 'png', 'jpg', 'jpeg', 'gif', 'svg'];
+
 module.exports = config;
+

@@ -139,7 +139,7 @@ const App: React.FC<AppProps> = observer((props) => {
 
     return () => {
       unsubscribeForeground();
-      unsubscribeBackground();
+      //unsubscribeBackground();
     };
   }, []);
 
@@ -177,8 +177,11 @@ const App: React.FC<AppProps> = observer((props) => {
     setTimeout(hideSplashScreen, 500);
   });
 
-  if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded) {
-    return <LoadingActivity />;
+  console.log(rehydrated ,isNavigationStateRestored ,areFontsLoaded)
+
+  //if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded) {
+  if (!rehydrated || !isNavigationStateRestored) {
+    return <LoadingActivity message="Loading App"/>;
   }
 
   const linking = {

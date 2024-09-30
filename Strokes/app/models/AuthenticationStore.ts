@@ -1,4 +1,5 @@
 import {Platform} from "react-native"
+//import {messaging} from "../services/api";
 import {
   types,
   flow,
@@ -374,7 +375,6 @@ export const AuthenticationStoreModel = types
             resetToInitialState();
             mongoDBStore.shouldQuery();
           }
-
           self.setProp("isSDKConnected", true);
         } else {
           console.log("No valid session found");
