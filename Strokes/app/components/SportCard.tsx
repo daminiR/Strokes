@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, ScrollView, ImageStyle, TextStyle, ViewStyle } from "react-native"
 import { PlayerDetails, Text, Card, AutoImage } from "../components"
-import { observer } from 'mobx-react-lite';
-import { colors, spacing, typography } from '../theme';
+import {observer} from 'mobx-react-lite';
+import {colors, spacing} from '../theme';
 import { ErrorDetails } from 'app/screens/ErrorScreen/ErrorDetails'
 
 interface Match {
