@@ -24,22 +24,6 @@
 	<string>1.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>strokes</string>
-				<string>com.strokes</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>exp+strokes</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -52,15 +36,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>This app requires camera access to take photos.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>YES</string>
+	<string>We use FaceID to securely authenticate users.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>This app requires location access to provide location-based services.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
+	<string>This app requires microphone access to record audio.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>This app requires access to your photo library to upload images.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
@@ -91,5 +75,34 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<!-- Add custom fonts -->
+	<key>UIAppFonts</key>
+	<array>
+	  <!-- Add your custom fonts here -->
+	  <string>SpaceGrotesk-Regular.ttf</string>
+	  <string>SpaceGrotesk-Bold.ttf</string>
+	  <!-- Example fonts from icon libraries -->
+	  <string>AntDesign.ttf</string>
+	  <string>Entypo.ttf</string>
+	  <string>EvilIcons.ttf</string>
+	  <string>Feather.ttf</string>
+	  <string>FontAwesome.ttf</string>
+	  <string>FontAwesome5_Brands.ttf</string>
+	  <string>FontAwesome5_Regular.ttf</string>
+	  <string>FontAwesome5_Solid.ttf</string>
+	  <string>FontAwesome6_Brands.ttf</string>
+	  <string>FontAwesome6_Regular.ttf</string>
+	  <string>FontAwesome6_Solid.ttf</string>
+	  <string>Foundation.ttf</string>
+	  <string>Ionicons.ttf</string>
+	  <string>MaterialIcons.ttf</string>
+	  <string>MaterialCommunityIcons.ttf</string>
+	  <string>SimpleLineIcons.ttf</string>
+	  <string>Octicons.ttf</string>
+	  <string>Zocial.ttf</string>
+	  <string>Fontisto.ttf</string>
+	</array>
 </dict>
 </plist>
+

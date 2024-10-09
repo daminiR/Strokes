@@ -177,7 +177,7 @@ const App: React.FC<AppProps> = observer((props) => {
     setTimeout(hideSplashScreen, 500);
   });
 
-  console.log(rehydrated ,isNavigationStateRestored ,areFontsLoaded)
+  //console.log(rehydrated ,isNavigationStateRestored ,areFontsLoaded)
 
   //if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded) {
   if (!rehydrated || !isNavigationStateRestored) {
