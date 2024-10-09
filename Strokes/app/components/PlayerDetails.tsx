@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text } from "../components"
 import { colors, spacing } from "../theme"
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import Icon from 'react-native-vector-icons/FontAwesome6'
 import { observer } from 'mobx-react-lite';
 
 interface PlayerDetails {
@@ -35,13 +35,13 @@ export const PlayerDetails: FC<PlayerDetailsProps & { isEditing: boolean, player
         <View style={styles.divider} />
         {/* Neighborhood  */}
         <View style={styles.iconContainer}>
-          <Icon size={24} name={"map-marker-alt"} />
+          <Icon size={24} name={"location-dot"} />
           <Text style={$iconTileLabel}>{playerDetails.neighborhood.city}</Text>
         </View>
         <View style={styles.divider} />
         {/* Age */}
         <View style={styles.iconContainer}>
-          <Icon size={24} name={"birthday-cake"} />
+          <Icon size={24} name={"cake-candles"} />
           <Text style={$iconTileLabel}>{playerDetails.age}</Text>
         </View>
       </View>

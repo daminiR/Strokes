@@ -14,10 +14,8 @@ const firebaseConfig = {
 // Initialize Firebase only once
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
+} else {
+  firebase.app(); // if already initialized, use that one
 }
 
-const messaging = firebase.messaging();
-
-export {messaging};
 export default firebase;
-
