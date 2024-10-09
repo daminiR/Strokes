@@ -1,6 +1,4 @@
 import { observer } from "mobx-react-lite"
-import Icon from 'react-native-vector-icons/MaterialIcons';
-//import Icon from 'react-native-vector-icons/FontAwesome';
 import React, {useEffect} from "react"
 import { navigate, goBack} from "../../navigators"
 import { Header, Button, Screen, Text } from "../../components"
@@ -26,8 +24,7 @@ export const HelloScreen: FC<HelloScreenProps> = observer(function HelloScreen(_
       contentContainerStyle={styles.screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Header leftText="so why no icon" leftIcon= {"back"} onLeftPress={() => goBack()}/>
-      <Icon name="close" size={350}/>
+      <Header/>
       <Text testID="login-heading" tx="Hello.title" preset="heading" style={styles.signIn} />
       <Text tx="Hello.enterDetails" preset="subheading" style={styles.enterDetails} />
       <Button
