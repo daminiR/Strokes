@@ -1,0 +1,595 @@
+00123cbf54507d8fa1f0358c0e86ac2f882a3a60 2021-12-02 - filtering bug with age slider, add localstorage stuff
+0051215a8101bea5f994a29895a63e9ed406821d 2021-12-04 - age filter bug fixed
+00a32a7b79868753682cc11cd2b64a891b67e273 2024-03-05 - major changes
+00b48f70d39ad67022d67800cf34ea1aa23d63a8 2022-07-06 - reset from cancel changed and fixed but hacky
+011afb70fcb368da92a316e9ee18c9411eae0cd0 2021-10-10 - hotfix and optimizationg for backend. one mutation to update profile
+01af8f5601a5cd4b880ce4f3448ac7f82fd2a9b8 2022-06-08 - almost lost today's work
+01faacfe2132d9b03ba89af5dcfecdbdbfa74fbb 2024-02-29 - stufffff
+03acc4defe68a5b83846214d12177ef6f724da73 2022-01-11 - added important error checking, a few more to go
+03f2e849a064f3ba95006059c98633ae77ee92ee 2021-09-30 - new changes
+04c99a3ff8536207dcff0518e9feb4cf2be067ca 2021-12-23 - radio button changes again
+0539b78114fcc379dadca6b621750ea80bdb4761 2021-10-03 - added last deck data, fixed cardItem
+053f73ed72ef5d1704e1ec13f8ecda7927d7fb3a 2021-11-06 - fixed matching
+0589fac3cc481d692f506a48234b741f1ec70459 2021-12-24 - some changes
+058f55820a18c14f5123ac9a231d42400eda03bc 2023-02-27 - last changes before major change
+06ec74d4f514b6bab3e3bb2f49c3ed281850f929 2021-11-14 - ediitng on apple
+07f16465b8a967b52946163af84040f0b12de991 2022-07-08 - fixed image error
+084d72891434ee777fdb2d361467405602a2fe7c 2021-12-21 - new feture notification msg when new match is added -> feels hacky
+09579a62e4983c92c1f9bbb9ebda767a408c186a 2024-09-13 - this is the functioning version, we will now do  some code cleanup and hope not to break anything
+099103b4eaf2d9674766a8e632beef083c3d2656 2024-08-22 - fixing push notification
+09f4b93e8ce292641f424a8793eb29d839d04083 2021-03-31 - :building_construction: made architectural changes to combine firebase and aws submision forms
+0a04f0ed41e7f0162a9b6f0b2bb24b5f2a52a553 2024-06-05 - syntax and structure changes to auth store, will be migrating to this struct for all stores
+0b2d7d9689ba57d6447bd69e97917c0fca174fa2 2024-02-27 - extended auth and backend
+0b354d8c373415f87cb87be199a70b8e3d7ede4b 2024-03-27 - many styliing issues, took wayy to long to debug
+0b5542284975cddda67b9300c4fb0372d1260bce 2024-04-09 - new hcanges
+0b9daced506c63817f2e008b869de1d18594430b 2022-05-19 - testing testflight time
+0c2ac96c619fc4696a03192127290bc0204380cf 2024-04-19 - screen
+0c515c5ee768e8b4e66be9fbc3535775843192a0 2023-02-04 - lost android folder :(
+0c7d9e61ab8d0cba1425a3f622adc2727fd443e6 2021-09-27 - sports chip front end logic bug fix :bug:
+0d01bbf266873a5ea74b1687d01eecea200ea493 2021-12-21 - testing on :apple:
+0edc965bccb2c44c1e57c2f134ad667f2e9c1a11 2024-06-05 - hallelujah
+0ee253b5241c2197324266d70e6ad1410e19a95b 2021-12-30 - small changes to tab abr
+0ee7826149a5a8233ced3ad545f768f78c57ab4a 2021-12-25 - working on adding yup validation
+0f08b2b0ba74dfe365ba1215a3182d2a43ad20ec 2024-04-08 - fixed some bugs
+100e21240b71467761fa49106aaff4e2bcf233f9 2022-07-04 - fixed error when user is disabled by admin and shoudnt be able tos ignin with acess token
+104918a4f12b2167a785f8f007f6c76d93668085 2022-07-11 - critical problems with matches following FAB componenets fixed
+10f11ac059001d02f7a71077c38590b61928233e 2023-02-27 - broken things have been fixed again
+1147fd58dc96f8877dd1464d774f00310a25d37c 2022-04-09 - chat added
+11dfed9e673cedf852bcaec35935f0f578f4e32d 2022-01-07 - fixed issues with sport update in filters, only filter are updated
+1235da90f5dcbfc1a12801da8e20dafccdc2ac0f 2024-10-07 -  reverting
+125cbc0067e653fec9b5542b31c613acc1962668 2024-04-12 - still need to fix some issues here
+12d2cb276a4d19824b817bdc4867879e30527200 2021-08-04 - test changes in iphone
+130e3e317f5dc7f0d1061b5c6d3efd965033e3d0 2023-02-05 - testing adding more testing functionality
+131501784de152cda7d272ee65074c902da6430d 2024-04-05 - i am clearing all data on logout
+13ad2619aa41920495e9f247b289f0c7b71061af 2022-07-06 - lgtm loading
+1423e00fe761114af45bfdbca8e295758733b0a7 2022-07-06 - imagesgit add --all '
+14861b269fbebfdfb15030663c8a4a3589ecef8f 2021-12-17 - cancel and done got components made easy
+150dbbae43b21f2dbda8624dd381176f2ea51fa7 2024-04-05 - some backend bug
+1569984b9effd622886a4127144a57af7920f6a6 2024-04-08 - fixing preferences in create new data
+15ad9e98b83523d0367323c09943aedd9cfb2714 2021-01-26 - need to cleanup code
+17686449c369648dd4d1cc921ece8aea4df524cd 2024-04-08 - super bassssssssssss
+177dd7d61c8585e83ecbcfbb2fb60c1b9181f3ca 2024-04-09 - you coded too much, but now you have two new collections that have made the user doc simpler and more efficient
+17ba88a7ebdcb74203721ff7184e9bde2b281e83 2022-04-16 - fix edge case
+18717fdb869b898964509d10aedf6ecc3a6664f5 2023-02-25 - significant changes but testing new sendbird for changes
+18c8aa7d2aea92aedf1c5b45eedc31c72503001f 2024-09-16 - changes to structure
+18ffc0b7e3a003f43370442526a041d6da20ef8a 2021-01-26 - need to cleanup code
+1901a625ee3794a00b829ac2c0c436dc3835d6f7 2024-04-19 - likes lgtm
+192ea84ecbae8c2afe1dcaa7ce9589024cb73332 2021-12-13 - auth change email and ui updates
+1937c98e107ebc43ab136c7cd6a2e361dbc313f5 2021-12-01 - filtering with formik instead
+193ef111bba82eb8eb3e337852e9a178093fe465 2023-03-02 - need bgig changes on the senbird side as admin
+19a25fc5acec487128b3ce6aab5788f19d2f2600 2021-09-30 - addded asset folder
+19bc955ee8ced00650b3e45618476d66f5f7891c 2024-06-01 - rebooting system
+1a006c4c896588bfc56616fb223a15b0f40924b4 2024-05-29 - experinecing some chat refresh potentiall async storage issues
+1a15da263e2d593e7ee848d26da77624bcffa4d9 2021-12-05 -  issue with formik
+1a17c8f461f70e2282026976ad3515b1cba198cc 2022-07-03 - first release changes to test
+1a39d5402cb48b0d75d87b0e63cd73a08a01b9de 2024-02-25 - Update README.md
+1aa41ff2d76a173f66f367be1a646d3bb2c77513 2021-09-27 - Merge branch 'ios' into main
+1ace5895b822567526dd2a23a0b3aab6af15328b 2024-05-22 - we have a lot of jeys to revole
+1b462597e1fce2cf1bae6519ca7ccf36a6b01f38 2024-02-26 - cleaner frontend signup, more mobx logic in stores
+1b9ccf50ad7e32dbc4b4e81a9bf6c7f2a34f3e5d 2024-05-30 - changing yet again sendbird,
+1bf6e44324235503be3001c254dfca2fec1f26a1 2021-12-23 - bug fixes with input
+1c6048fe658734f40db467528fdfcc854ee270e9 2022-04-09 - messaging
+1c666a76920b308b5141af9d34d8bcf9880bc676 2023-03-05 - removed some auth stuff not being used
+1cdcd0d044485289ea6093ba7390da0f57e32989 2024-02-25 - major updates to signup flow and frontend design. Ignite is the new boiler plate. I am rewriting the entire frontend from scratch
+1d74b909e768c6386713347e4720d199cc05764e 2024-04-08 - fixing preferences in create new data
+1da5ee5f258f3517b2443a77b086d049e8e907bd 2021-10-04 - :sparkles: new settings view to encolse profile edits
+1e4d17d6cbde7827e2ba8c6b048af09d2020bf63 2021-12-22 - minor bug fixes
+1e7e544accce13ed5045631486219f357004c54b 2021-12-30 - backen image issue fixed
+1ed0e0898530265542962eefe7ffb49f1c21ff03 2021-12-30 - do not update rn from current version, causes NOENT error => fix later
+20be29e61d1e23b3fd264a2ec3a0950f3befc89f 2021-10-03 - changes
+20e2d3f3f354aa3d14432c162167bdf0a0661d31 2023-02-12 - need to now update mutation for amtches with archived chat set to true
+21002f53b7ab8bca0c37999ebc225615372c362c 2024-04-17 - seems to be workign with dislikes, need more testing and need to change likes perday
+211f46008b19a04f5513ca505b98e8ff79e88cd4 2021-11-16 -  chat feature done
+21551c02798e93f0a9b4b6b2a4c6a7186f98fc90 2024-03-19 - easier way to edit in profile
+2178df5b0d95da217a90925a2d1a44beed2b1e65 2021-10-11 -  need to add done button with mutatioin update
+2197833bb9d587dddfbecba5f8f8e979f1a6a80c 2022-06-25 - not sure
+220c3ef135a2b85dab9ceb13d8c3377c1bc58fd4 2021-12-06 -  edge cases for null patron lsit needs to be sorts, fixed filter integrated ui to list
+226a7c1a772a319fcfc8494c0576e28e973b65fc 2021-10-07 - lean and clean signup page
+231ad2bdb23503ffd15b74bc6d8bc7adff781d56 2024-10-07 - index on main: ff98cf6e things seems to be working
+236bf8f44a3ef91cd77e998aa6c5307667f7b3ca 2022-04-01 - lambda backend working on running on aws
+23f5dd9c111d80bb77867e6557a8039ace2b8bf6 2024-07-31 - fixed bug and now only mobx store is used for chat sb collection, removed local states
+24198044b38a73e75c38629b2d8c35839a4f2d31 2023-02-12 - schema updates
+2436b363d40fe219a6677c5f972f89a6b7e46d55 2022-01-02 - changes
+24d763517d861a6dad46ebc75d5895fda46d70f1 2021-09-28 -  on ios
+2500cec32efdd510b18f97c0ceb2ee157b7cfaf7 2024-04-24 - dealing with this tomorrow
+26626f82de31c6ef0dbe29e3b8028f2c292037bf 2021-09-30 -  changes from last night new front end screends, fix to backend
+272c19c5d7b4b0b4a9667b74e1426760c83da36b 2024-03-05 - likes screen changed
+2855b3d6bd1d66c600a49eb8667a651045fcbd86 2021-10-03 - :sparkles: new feature, added description to user prodile (frontend and backend done)
+28b490a43cd9ba3b12bc25ab97d6eb54d2324f62 2021-09-28 - assets
+28d595a21fd55169d44700d0dc2f917dc75765e8 2021-12-28 -  some ios changes to remote connection
+28e152527fee0dd8ff46047b3e80b06d30478baa 2021-04-12 -  swapped screens, need to figure out S# for profile image storage
+291d4e77d9861dd9905a83ac3eb221b41dbbb4dc 2022-05-22 - changed resolver to hande individual auth, 2/3 querries without auth needed
+29a5554263803e8b32488303524ffc59b8a86d98 2024-05-30 - changed chat
+29cca003da081c954343f380d063a248b75f9d87 2021-04-10 -  too many name changes, and nav changes -> lots of bugs to fix
+2a088917e087cad3a6bd422f71de1dc2a1e2f733 2021-12-21 - testing on :apple:
+2a0f670f82f89a7ad11bd78969760dda97f54e5e 2024-04-12 - this looks really good
+2a7e3352cd651be1cbf84e6f5a819c56b665b658 2022-07-04 - refresh working for signin, signout, not tested signup yet
+2b1c718fc185b3010baca92d9dbc7cc1dcbb1768 2021-10-07 - lean and clean signup page
+2b701d5f63082a3efbcb85ed2f8f95386e61184d 2022-06-08 - authless test
+2c67e13e4f26cea39c43ab96bca2a6e7763e40cb 2022-10-16 - more sports and logos
+2d7815da511a46cf1c08f85c45b4b84d14df8dbf 2021-10-18 - hotfix scrollview, hotfix, pictureswall, need fixing -> name, gender age with formik
+2e2278f8c220fdb96865bee948c3612fdbb609d9 2022-10-12 - more sports added
+2e3d7b76fa43753b83d7e48a2d650f78a549184d 2021-09-25 - fixed the replacement in backend for image querry
+2f1f7f40f4fc28ed65f6432a8465e13589910fcf 2021-10-09 -  fixed container layout issues with picture wall
+30c2c77f6a17209ab63148815599ea055c69d143 2024-09-23 - broken changes
+30f2850596df04ca9125f1885252aa8004150dbc 2021-12-17 - converted game level to string, 0 is null in js
+313c5575bdfd9f28e1bd4052b3b686103cba7ff4 2023-03-10 - push works and matches is cleaned up a bit
+3308b305778e90bc879ed26f7fec7fe63c036be7 2021-10-06 - new changes to signupw
+331279ee3ff336fa00b05d94d6341329062cbb8b 2021-11-05 - ediditng on apple
+331774458df0ce841b9585e791e311a25d1ebe16 2021-10-08 - changed signup form
+33495cba03953e770903c8a31abc23f981cc54d2 2021-08-29 - ne updates
+338029e46ef74d7947c7c37717ebc11ac84d9032 2024-08-21 -  push notification added, need to check getInitialNotification in app,tsx
+350ae257e5f7c03ca4f601ff7598714816ed4649 2021-12-05 - filter overlay fixed
+3561c198524a1578526f7fc3cd7705d896787e59 2022-01-03 - added new data with update fields
+3582cf6ddacd0dc3987001982355be2bb6fd9176 2021-12-30 - pacjages removed
+35b201c6ae683ee6d189a1a7eae9c1bf074931eb 2023-02-20 - less sports, only massachusetts and wurrying only through states, fixed soft deleted and account restore when loggedin after delete, updated sports for existing users
+35e6e2c96090224c1787a0551de3bb40f6e1a25d 2021-12-26 - validation doen for signup, signin
+364a54f1a196f235e8be079a171689d19c2368ce 2021-01-16 - :construction: User Profile collection in progress
+36a06cc052161320b191ad6c8c17db622acdaf66 2024-04-05 - :broom: :broom: :broom: :broom:
+36c471c35c113ca9cbf788c165519f6f50fbbcfe 2024-04-22 - fixed some stuff
+36dc06a042ab4a5b5d4db39ce7f61c77c9b7a9db 2022-07-04 - stuff
+36de4100af2909e43b77f1c752e12058b4e2af33 2022-07-06 - try images with mutliple qs local
+3719cbde7826ed0f39d32152bd628ae434c8ebd7 2021-12-27 -  creating alias imports, and cleaning up code
+3800ccfe3249a3ab89dc971a75f37bdabdb58da7 2021-09-28 - what
+381983fead885c2cbf8fc26429df333e77605f52 2022-07-02 - working on ios, todo fix mongodb add to db
+389ad40034687bb6a7489484e88bbc843161363b 2024-06-02 - i cannot deel with senbird abstraction layers form github. We are keeping the platform api clean with node fetch
+3974fd1fd9a417f90f4980589811b8c177ecd9c6 2024-03-12 -  the design question to answer: should you use a mobc store to save temporary  inputs or create a model within userStore to store temporary inputs -> will your inputs get complex over time?
+398f7e0b38fbd418f81c519de14693c87eb59ae2 2024-04-03 - field names changed
+39d72ef024823af99d42d4cd4fb87d5267a3a240 2024-10-07 - WIP on main: ff98cf6e things seems to be working
+39eff42783fcc4559b7f67bcf299a0fbd17ed77c 2022-04-23 - chanign to aws storage, vpc issues with google cloud
+3a257138ad1bc30e3e3b9e44541bf3da0fc5b8f2 2021-08-10 - ios changes
+3a531aaeefe26afa2d5d6b5c29f532b519fc6310 2024-03-04 - signup flow looks decent
+3aa07cae7766a9d7e7e4e8e8a473f6dc85993e48 2021-12-30 - remove viewpager
+3ad3606c00f3490d7ed154d931e9dc375886d818 2021-09-26 - changes
+3b498b45542f2691c46336270b14306776c6fa05 2021-08-24 - fixed backend image upload
+3b8a05ab3a8cd09bb1b7241d4ebcc72b051474c3 2024-04-12 - things are looking good
+3bc095dd55d59042b7543850c39dd450f1ab5a2d 2021-08-29 - ne updates
+3bef570d7c33304f9a0dc8010c35a91bc7f46ca3 2024-04-23 - fix chat variables
+3c0fa1af9bb6c077be073dabf6484c8eae65a48b 2021-10-09 -  semi function signup
+3c464976fa3eac23c735a9a89076e82ac2c66224 2022-01-08 - testing matches and likes column with lots of data
+3c724b068b5a27b275ee7034e5b6fc97d31fc182 2022-10-10 - simple fixes added
+3cddcd706688495dc253cb890bee27957ff71c3a 2024-02-25 - removing and updating sensitive keys
+3e20bd4b386f48a6797bf74d1242e48fa046a72c 2021-05-03 - image upload fixed
+3e2df1f2726418e4e75776e728ff4ead225bdde3 2021-12-22 - new changes to what the total matches are and bug to fix in notification msg
+3e4404705ca07666bb38c10f1e21f6366d3e0120 2021-08-31 - some changes to android
+3ee2a2899ef728d17ec7c2bdeb3bec6671719867 2024-04-17 - we are going to have a nightmare changing image_Set -> imageSet in frontend and backend
+3ee9136e90f2ec4c17bf7e6622747626859efc5a 2021-09-21 - backend update and delete image added
+3ef5f3808e917c096d198a49d3b86229abf2846f 2022-10-16 - new fixed to icons
+3f1b4a62d1b5d9408b8fdb99187065a83dd4d907 2022-01-09 - looks good to me
+3f44a42fac1628cd742fe9d077040d734d8f5cec 2021-10-04 - :sparkles: new settings view to encolse profile edits
+3fa028d5606a9b8c03aac64f33afbfba8dae87c5 2021-12-26 - restructed to remove cycle dependencies
+4025a777258d5e12eadd5cf763e83aaf9fab2a28 2021-12-24 - bug in images need to be fixed and cleaned
+41aaa37dcc48fd5611068448d4dd50dc62ba3571 2021-10-18 - hot fixed scrolling issue, fixed radio button usage, fixed list item connection to backend again
+428291931e25997ce3e96f9553135ddd767cb67f 2021-05-03 - image upload fixed
+428a86906f178d3b3d1ae9050b00c278e3c50476 2021-12-07 - "fixed city location display in matches"
+42f44ca0ed0170532bb8d90671085247ac800410 2024-09-11 - fianlly debugged the chat api, local cache needed to be refreshed everytime you disconnect
+43299451dd6f0ed60c36c5f36b9f32caa10bb7cb 2022-07-04 - cleaning and modifiying upload aws s3
+442eae8f1e6cc054e272b35e254bf6eca4d0cff4 2021-12-22 - more bug fixes
+445e1df3952a4966f0544271930553602a5a987b 2021-12-17 - new feature -> added gamelevel choice
+44d3e019bdb23701a5f164dc9c6592110fa625f4 2024-04-19 - i hate designing stuff, bottleneck
+45024fa50815b381f37c2c1e78b871af222fed4e 2022-01-04 - last few chnages before large performance testing and e2e testing
+47461b8aa39d72b997835f3d65343361721944c9 2021-10-02 - :sparkles: profile view connect to backend
+47679c91640d3d03cdbe4afc19896c91e4014025 2024-04-07 - bug part solved
+47d3fde811516ffb1d578c885c92251b5ba03973 2021-12-23 - locatioin fixed for profile view
+47fffa9bd0d69c8c7be3e8d1eb7ff864e6aed965 2024-04-03 -  sport is no longer an array in the backend
+489fd4ee37faec2a66526766ad0c9a0707d59e26 2021-09-21 - backend update and delete image added
+4a28707b14bc9e52ff46dfe35b2d99ca40c66a13 2024-05-30 - migrated to mmkv, but unabel to resolve chat sync error
+4a305515aa2ce76aefea2d78286fa41c6c728b94 2021-10-07 - formik input
+4c9750fe08162b67d274551c6d16ab3193723c10 2021-09-25 - fixed the replacement in backend for image querry
+4d5be47dc22732db83894ac5a2fc364d128c215a 2024-07-31 - need to make chat reactive with push notifications
+4e0d1bdf4cc23ad19708aa5552e9c20755b84b7e 2024-04-07 - we are trying new logic
+4e106b4170452eebf59fe03d385f241386466297 2024-03-04 - backend changes
+4e2de7774b96e993990a38ddda6a53dd2e759e22 2024-04-11 - you getting lost
+4e9537be726030a2a54803323263e0bfaca84aed 2024-06-05 - fixed rectron storage issues
+4ea13a549f6f695aa5ea836066f4826a3abc1b91 2021-09-27 - New featurelsbackend and front end of sports chip working -> need hotfixes for edge cases. Need to write unit tests! -> good for mvp
+4f404781169957cedaf4755e21cbfc5963033cb4 2021-10-09 -  fixed container layout issues with picture wall
+4f694a20c4b728a6298cfcec4211ac2640ce1aef 2021-11-06 - fixed matching
+5056ce78a6f69586441ace835df798f1e819dfe1 2024-08-14 -  we are changin the chat yet again
+506174ea79f1d951c6585381b8500471311fa756 2021-12-18 - changes
+5131977e3cb36822fcf6a86173969cea922fb5fe 2024-04-21 - sensitive data but we have parts fixed for chat
+513aa495592bdf8db28e0b44e7d8ee2b755cf387 2024-05-16 - we are lost with chat api server configs
+5146667e8ce415f03b618ed340e2cda40fab3d60 2021-09-19 - upload and squash mongoose data mutation added
+51a0fb6a73b85bb13ad8a15b3f397fa78fe41115 2021-09-30 -  changes from last night new front end screends, fix to backend
+51b96515a7c5a7c07ac09c42416620002caf40a6 2024-04-08 - we will unleash the power of fake data
+5215f5ad08a568616807dfd32b85fba65fbe5dc9 2021-10-02 - :sparkles: profile view connect to backend
+521b21e3f5f5e4552d3aa7f6af681512b37e3812 2024-04-13 - testing likes with fake data
+533868dbfe81146c142e3d6e61621d6c835b2a43 2023-02-27 - tets on ios mainly
+5383cea1c4582d0294fd4ee55d973de4840487e4 2021-10-11 - hot fix completed, sprots and images ficed, formikkkkkkk :ok_hand:
+53f7df758c9f4d55151ce1e49450267f5d47ec6b 2021-09-26 - sports front end connected to backend
+545ff507c82df12734844eb4a3fb361582616ca5 2024-04-09 - likes and matches work like a charm
+546535b2d2a03d4279efa18cadfff4d707c89bc6 2024-08-26 - debuged several errors
+546c5cb7a5913ea4688cce2b0e14a85b770fbb04 2021-10-19 - patron list created
+5485d005f61ef8935234a5834f6d322b3e136413 2021-01-21 -  form context added
+548c0663c5d530cde52da30143ab7dee2ea298d0 2022-01-15 - working on blur radius
+55132e648bbb4a191053f529ad9ad9edb019e732 2024-04-04 - serious auth bug fixed
+552ff75295b516f725058850f8a206fc96cb5da1 2021-09-30 - new changes
+555ee905c1040c1f518103b5e9eed2e85fcbba6b 2021-12-30 - chat bug fixes
+5564cc3ab246d1da9efe1ee33fd790a3035bb179 2021-12-13 - chnages
+56948a8d149788e43be755a8784eb2854c5ee9bd 2021-12-28 - too many circular dependencies -> but urgernt fix is not required
+57782bf6e97e7d1820987080429ee2a13f6e5eea 2022-10-03 - added policies, and added face ID
+579312392be63de208180c7d9971608b26c71fbb 2021-12-05 - yup validation
+57f29d7df5891c03357e83eb7b4739755bdcceb4 2024-06-02 - this was an intense 16 hours of coding, wtf....
+582fb3508f1f8158dfb67af155b593a7c7f0a923 2022-04-23 - have an asyn issue but works for now
+588be01431f1da98f21abdfd0a70854cf338ab62 2021-12-04 -  cleaner componenet
+590ef842522d75ea83bb9c9b77463c6c6b396d7f 2024-02-26 - some changes needed in the auth Store , User Store
+596abddd58cae6d9b7f398b4c601adf243118c78 2021-12-01 - editing on apple
+59b96322d462a217e958d99e5924d39eaddf14ea 2021-10-06 - merging
+5b2a1ec16a99a2401244eb3a3723dd7f37e266e6 2023-02-04 - significant updates
+5b64ef55e7d66e3ea91ab99a532ac80f78a3aa94 2021-09-30 - new changes
+5b8c4cdfe2ba2a6ab555a225e728c29516b0db35 2021-12-04 -  local storage connected to all filter components
+5b95bcb1db4faa6001930cbd52da311bdbb19ba0 2022-04-02 -  modular resolvers
+5bb2c6d480079c002a17d694e80ed8df2f952262 2024-04-11 - done for today
+5bb7184f6049e227558b29a4708609320c3bb948 2021-10-23 - new data createion for load and stress tetsing using jmeter
+5bca441aa1e6aec79e70aefb0ab56c8b59bb2b8d 2024-03-05 - likes page need to be written again
+5cb81d010aadb2fcd0cd40a4412a684cc3f86af3 2021-07-25 - added everything for dev, revoke all credentials after getting it running on iphone
+5d008951afd656b882de01de6231a1386760ffe8 2024-05-21 - should revoke all tokens when in prod
+5d9f548fe0a1bf539323c488ac0928a80d8b4ede 2021-12-04 - local storage filters
+5ddc3ff655eff1b413aefe269bac7ac1c582dc8f 2021-01-22 - :sparkles: introduced multistep form submit feature
+5e4d33ecf206b97d2b3a9e899a82ae18ce3598c7 2021-08-31 - some changes to android
+5e630d3df602c316bf5125f0255381bc5535ec92 2022-07-06 - screw it, one major bug with images, adresses in release
+5e8679552ce02beec833276be515ff342f1e4536 2021-12-23 - it works no ios but not android
+5f79d2bf0e1d7c803f5a3239035bfbcb647c598d 2022-07-03 - some breaking changes
+5fae363608409f7e3b43311b8c7be130f6362fe7 2022-05-25 - refreshes client after token recieved in signin
+5fe933a3c1ec99b63f52d6026b57a2e1bb0ec0ce 2024-06-05 - more cleaning
+6052f23f79596827dc349efa55c15b1b0fa0fdd6 2024-05-31 - we will figure it out later
+608f09c6e15dbcb25200e710f2533bbe4e93dd98 2021-11-10 - run mutliple instances to test
+6136b5a2b99082fd52f034c4450e9354fda3ccc1 2022-01-15 - added like feature for likes page
+618fb67b24eae4961334a31b23c49384f7291e65 2024-04-12 - simplifying rating
+62ac039f8a12be7ea04d912baa46d92391905816 2022-05-18 - basic backend sanitization
+63242e5d2220198969766d03508598cce8f91874 2021-12-31 - bar chnages
+6396aca70755dce1691592623fee65fd814a2984 2022-05-21 - verification of jwt working, needs testing
+63bcb86ce8f237d84910e37212cb5ec1eb6db7b7 2021-12-29 - bug fix for input
+6419499bd0ded0896a8f49b7e1163dc26bdb573b 2024-03-12 - its a bit of a mess
+64cb317d4612ec540560fd1ec74697901b0e3814 2021-10-03 - added last deck data, fixed cardItem
+64d57e68b4ba0258f22b2fc3d3eabc04c20af534 2024-03-20 - fixing express error
+64e10fd8b8b5b1cfa5b41ce17ea9d60bd718c7b2 2022-01-15 - added pagination
+64fe3070c77d2eba6545cb97f6e7f1d1826a950f 2021-01-16 - :lock: too many sensitive files in history, security fixes -> new project from old project
+650748d0a5c09775db8ccc2e1252cc498bfc4186 2022-01-08 - changes to refresh and re query when sport or city changes
+6540621d59b6f6a03b421c017ec64bbe2fdad2a0 2022-07-12 - fixed, profile update bug, update imeditely now, to test loading for profile on IOS
+65b91d27a67fafa6970ecdd727c081e964015654 2021-08-24 - hotfix image debugging
+6649924472b096352343d9ede011c205df866176 2021-12-27 - check
+667e236aec2e547ba598928375ad9acd970ca5dc 2024-04-03 - making some heavy backend changes
+66d6e8be3fa3139bbe66c2adca211db384bd555a 2024-09-09 -  faceid auto login
+672c07197020e93f231f1fdc3650ece36e703435 2022-01-14 - some us changes and more sipes per day fixes
+6754b52f50687e75b1d3b3e8aeea51a394a9c1dd 2021-12-29 - changes to tab navigation top
+6840b7327715aca4dc5518cc75e900a08e28a46d 2021-10-03 - :sparkles: new feature, added description to user prodile (frontend and backend done)
+68ab09dabdd085d856897bd34028c488f3b38fca 2021-12-06 - formik more changes :(
+692c83ca183f293d39af46c0c7995c763b5599a0 2021-10-09 - editing on :apple:
+697f2efb87c8db082bcf8e9187a72d6d13f1d533 2021-12-24 - image bug fixed, more images were added even when some loval were remvoed
+69c50e193ffe1cd96d9f462cd8e92f38450b15bb 2023-02-09 - changes form yesterday night
+6b6254181b32febab52055d1c82860c10ce3dce0 2024-04-08 - fixed
+6b987390f173026e66fc72b69c7a8221d79c840e 2024-02-23 - let's get this thing on the road again :car:
+6bf421b6e9f6b5b824e026918ef040ee4987c95c 2024-04-09 - we are yet again changing the structure
+6c72e2996cd87869ed3a00a2e23c76ce416bd302 2024-04-08 - bruh
+6d2c85d7142e4fed9df3add35beb963a76d2729d 2021-10-10 - new backend optimization update, only one mutation to push new profile changes
+6de0000a37ea66c0ea010c966aced6ddd6a70806 2022-01-02 - refetch query for soft delete
+6f0a5dff17882e41b7dbb1d098da15fe69e2d7c8 2021-09-28 - assets
+6f2038986dc0efbf42d9dbdf9953ffda3c0644a7 2023-02-11 - big backend changes to simplefy structure
+6f87b0d25bdfbb3f469e910706215ecdff510098 2024-03-19 - image pickers works with mixed structure
+70710e16188d9b78c90bcf80d230b11764cc161d 2022-01-14 - chat pagination
+70b112009bb6e89f062eb8cba25f90259ddfdd79 2021-04-09 - :ambulance::ambulance: fix for auth navigation. Design profile and implement simple tab nav,
+70ce88365da5c24d6f9ee6547832ff9c0a12e74e 2024-10-09 - omg, its the darn new expo version, note: do not update expo for all your icons to show up
+713b9814723369bfa1ec94e3f46a132cf41eff45 2021-10-06 - editing on mac :apple:
+7274c8ebd371999dcbb1653a075eef11fc332a17 2024-08-15 - we have fixe chat
+727a658a8294c76b63e6152408d9baf911295775 2021-12-31 - tab bar changes:
+73986f07ed28936a7c57c907d05998d64860b7cb 2023-05-01 - changes to see in android
+74c354d13a235d4601ac85d67eb969a48e7e8407 2022-04-10 - time to test, and fix big bugs
+75bfa1299804d0c3aaa790a0e9a1b359f7ade7cd 2021-10-05 - new feature apollo error msg overlay when network error, but signin needs to be simplified
+7659c3641dcd17f37285f29a5932caf518745646 2021-12-18 - changes
+766a90af6e81d8c0c277c9a9edf7bd5fc96d9a23 2021-10-09 -  debugging on linux
+76a8cd2158a4b6f41ef1aced72755d0a38637ef6 2021-12-25 - formik validation for sports input
+76bfb6516a172da71ed9439116d0e105bc8891ac 2024-04-06 - some serious matching changes
+77b71babe4020dbaa90bc92f9d21780cb5135a6d 2021-08-29 - yass! front view for profile is done, time to integrate backend
+77c2cf0a926baad71b99a1dc8956d1786abcdb88 2022-10-15 - more sports and logos
+7826022b04f01fd47d0cdea11f5b90367c38542e 2021-10-17 - fixed backend issues with image uploads
+795b39122a89864e4a0e1699a548a7388f583102 2024-04-08 - lgtmeeeeeeeeeeeeeeeeeeeeeeeee
+7993182e058430618cf18698cc603801ce70bb57 2021-12-20 - fixed chat messages order and design changes
+79a2eaa497561bdba675c32252153a0f7b51d21b 2023-03-05 - added push notification, need testing
+79ebe9fe396db50937bc306042e613ec3cf86ee5 2021-10-03 - changes
+79f60a43bc45274dd9df82b0fda9a22279241222 2021-01-19 - :bug: RN debugger bug set App init GLOBAL.Blob = null temp fix
+7a007c2ca3c969b55691de6b30f4b10327a2e5e3 2022-01-14 - swipes added backend, stuff left to fix
+7a4470e4280b72a5de86e500669852e973a2feaf 2022-06-26 - size reduced
+7a569c290a33c1d4819dbb854d46343074bc0a0f 2023-03-07 - push notificatioin working out well
+7a632ba571abad9b6d6cca3edf373f8468bb401c 2021-08-10 - signup changes
+7a867589e2bef277c5a7576d93f41463fcb9397a 2022-04-23 - have an asyn issue but works for now
+7b4e691445ae7f89ec855063bca1518ff0fcc285 2021-12-16 - env setup
+7bc4128d8ee9ce1c653c6acc7252e057c812311e 2022-06-12 - need quick fix for sign up
+7c8459078b1fef77736a7095b80b07af25ca2723 2021-12-28 - different gitignore
+7da648410c55ecdf14a0dad4e0bfd61e271e73b6 2021-09-30 - new changes
+7ddbad644ff5e5317d1ecc5dff10d39e505cc0eb 2022-07-03 - lgtm
+7eaaea61e502b6c3a03948ae21affbf36c564734 2021-12-17 - new feature -> added gamelevel choice
+7ee71158d2b5f4806bab8db003e55c299e306471 2024-09-13 - clean up is hard
+7f466b6ab28fdcf5f77d76cbc2d7ce7ced73fa43 2021-08-24 - fixed backend image upload
+805dbefeec128a8fc8a7108c1ec8063db3748f3b 2021-10-10 - hotfix and optimizationg for backend. one mutation to update profile
+80a8018017c57efcd7ebfb7f7a2bd429421a64f4 2024-03-20 - Merging SignUpFeature backend into main
+8130ab6392119921429d61a74c77ce40061c2d4d 2024-03-04 - major changes, code cleaning needed
+815ff1c3298491a034c4ce340341e3db901c862e 2023-02-19 - made changes to remove any matches longer than 14 days
+8188f949674d680a36be7dd9c34eccda1ac2197a 2024-04-01 - fake data generated
+82df9d0e72e855248da364632419419d6c62e2e3 2024-02-27 - image picker added
+83d81be0a037a492c27d50f834f4326f2d3700d8 2022-04-16 - message changes
+8555ee94c9a9cd42460b43789a53608f7802fc1b 2021-01-19 - :bug: RN debugger bug set App init GLOBAL.Blob = null temp fix
+859b9b9ba6afe57544868bff5a9e4381c3ab9643 2021-12-26 - loading feature
+8627c5f4805fe7065300a1f3b9066522b5ed263e 2024-04-08 - changes
+870dbb247a9eaf444cbc97a0759a69fea447d499 2022-06-13 - need to fixe auth for signup
+87c40f86fdc08c573a649fb61604b311dbddf4fa 2021-10-06 - merging
+882982d1c81c43285df5001510dae2948b7cf176 2021-12-17 - ediitng on linux
+895b5b6d49ec8dca0151a4e8877983dc9118d35b 2022-07-11 - loading uploaaded when location or sports shows an infintie load, not critical
+8a3c7fe2077178b15b1d0a9c99957318f444ae10 2024-04-03 - bug
+8a8173e806b2c8477a473ea6ce7ec13584323692 2021-01-16 - :lock: too many sensitive files in history, security fixes -> new project from old project
+8afe4532e673d8ccbf439bdc318bc29c9294bce5 2024-04-07 - we will figure the rest tomorrow
+8b248b25a75a21a3c7add035794655d03c7a66e1 2021-12-19 - tetsing on mac
+8bcc86f4621e410d0211e624af6702c9ab3907ce 2024-05-22 - you have non sense for styles, fix the uikit for sendbird when you have time
+8bf183fc1ad0fd3899c52fc5271d6a20b5af7b25 2021-11-10 - modifying chat backend
+8c8b13a4535cd6b6cf2310133938a5c90f431bb4 2024-09-10 - code testing needed
+8ccd4f03d751ca3c86281b52db7462a54aa514e0 2024-06-05 - hallelujah x2
+8e2ac537902f67cba086af4362a5b00db02c2e96 2024-08-25 - fixing colors
+8eb65d2050fb0fa5ce68e67e41d8fbaac1750e70 2024-06-05 -  from here agina
+8f1fde435c7d903893be5e667d8b1c02f17e1b43 2022-04-16 - changed lobby stucture and now disconnect sb works
+8f80be97d253a92426503af7e02828937c8a7382 2024-04-04 - dont know how to remvoe from storage just yet
+8fb9e0d97d261d2738f19f74fdad2ae548a51504 2022-07-03 - added README
+90ed462fffadb7513ee6e47b85ec6299ca6befb6 2024-10-09 - font loading
+912c736fd7d1348f356739ad25953525b26620f9 2021-09-27 - Merge branch 'ios' into main
+91bf476b3bcdc50adfb6fe0ad2748c42833b3fad 2024-04-17 - thing are falling into place
+91d538c9e835f683b61bdce12b2ab48ba9cb37a9 2022-10-16 - need component ratios to be fixed later
+91e56421cd58f4af9cdd6ca04952af4919421fe9 2021-09-30 - addded asset folder
+91e76c11a30da76ecca64ce399378738d43612da 2024-04-19 - gifted
+91fbfc555de3bae43a97e435998b8efc3046801d 2024-03-21 - deeling demoralized :(
+928ca41c51b394aca77d02b3942c354ade07f0c2 2024-04-08 - fixing preferences in create new data
+92d25a12aeeff37b1c963d1e8adb12ff95dd76e8 2022-04-23 - have an asyn issue but works for now
+92ee5d1550359e5ceedde8300689aa73816f885c 2022-10-16 -  formatted
+93675844073cb2c03b04bc85b83dac7bad45818a 2021-08-03 - fixed query for mongo reading squash object at start
+941870be8cd23ba7c2e20f05c0a39d750ff6d8ae 2021-12-26 - new chnages to yarn berry(v2)
+943d9f9801a0f4163312edbcab72e5eb78804f7d 2021-10-17 - fixed backend issues with image uploads
+94b2db46f22fbf10517da70d356c3a107b220137 2022-06-26 - made backend updates to recuing lambda unzipped size
+9546036406794738949dc233ce106a7052a27461 2021-12-16 - env setup
+975a9c802fee8bd9e302792f395239e4b5d319e3 2021-10-13 - fixed backend and frontend for local and uplaoded image combinations
+983b909ae4f175c2916392644eecc85ab128f9de 2022-01-17 - fixed massive bug in image set
+9943a026aa2dbee1cd8fbc16f2bfaa655136a3c4 2024-03-09 - working on adding profile update stack
+9974f5e3a3e2e13bf36dbd0dcf96e6f48f26b920 2021-12-17 - ediitng on linux
+9ae78e457577ebfae7b8e008a3335d80dd052764 2024-03-01 -  we're moving from apollo-client-upload to urql -> no more uplaod issues and dependancy problems
+9b18de07278676a1f74c991164f5532df4c5b76c 2021-12-29 - bug fixes for changes in components
+9b97096c60621c0b27b5492036037c1cb4db5af3 2023-03-08 - reduce complexity of liked users
+9bca6db37c55595492d367faa43461c54e6b54a6 2021-11-18 - google places is working now
+9c64f1a4addf3779df7e92b2f11a51a7f21e1764 2021-08-04 - test changes in iphone
+9c8825abda4b5c676d2ced501caa08b91399d4e6 2024-07-01 - frontend changes
+9d0204dca43de51c630bea6fbc4de61206e2c62e 2021-10-05 - new feature apollo error msg overlay when network error, but signin needs to be simplified
+9d1a449dff85e6982a8241f3c502851b8b483514 2022-01-13 - package updates and filed refresh on signup with loading animation
+9d36078b0ca89de4d5a9e216e69b299d04f80962 2021-12-10 - additional ui changes
+9d660e5f1197c65d64034231c3a164dd4a16b028 2021-11-08 - changes
+9d8b45539173f5b1542c395bdcc1a87d54a0970a 2021-01-21 - :bug: temp fix for debugger
+9dc8100b589c4d223b106dbca540faefecafd9c8 2022-07-03 - lgtm
+9ea79c5fce74a26506af22cf99cb0d74b68d48c1 2021-12-16 - env setup
+9f4ec825efbce7e2a98db122719b76ad6bd0314b 2022-05-20 - secureing api
+9f6f6419ec721ab4b0507fbdea8f9bd151f336a2 2022-04-08 - login/ lobby works
+9fb5c6443e3a1f9647b4e7c452047bbd3b94162e 2024-04-02 - wowm the progress has been slow
+a0fae4f8c63039bb2c95b284353c2866afdc8bab 2021-12-21 - testing
+a195fb1cc497ef0a7a40ff6e2f8706694bf83302 2024-04-22 - re purposing some screen for chat
+a1ae6598079b18287aaddf983efa9e3df00413da 2021-12-24 - image bug fixed, more images were added even when some loval were remvoed
+a2273c0015573b18afafee9473e667568d7c01a6 2022-07-06 - more hacky fixes for now
+a3c703c8036ec5a23d323168f1dc452643c5263d 2024-04-12 - remove packages once you decide you don't want too much over head with rating circular
+a529ec6060e0535c2ff62ef25b08c17cd3a00223 2021-12-21 - testing on :apple:
+a55680939b8a205a1d928fb16163ada6537ae655 2024-06-04 - bug fix roll, fixed 2
+a5d5b0b902738bf8d835289c2abff121400bcede 2021-10-11 -  need to add done button with mutatioin update
+a683daefa3c5fea239fbeb71aacadb978cc1844b 2021-01-22 - :construction: work in progress for mutation interface
+a7757265dc68f1c19fd04ae81707c4bdcaa84510 2024-03-19 - we're trying something new, new flow for ediitng thats easier, its getting wayyy to complex that needed
+a7a9b37fe5d9efc441ff5708b41cd48562e409db 2022-10-25 - changes needed
+a845139bed047d56cc22f5ec4eaa458692ff5428 2021-08-10 - signup changes
+a88a339a9da89e91d349fce6c9cae33d03c86ecf 2024-08-23 - I am going to go enjoy life today, I will touch bases tomorrow :)
+a98c5d1739837b7672ee110bc48e07174f777b10 2022-01-17 - backend changes, working
+a99d3b0eef0a4a789abf586249f0625d551c2d23 2021-01-16 - :construction: User Profile collection in progress
+a9ad6e64aa1cb541a1deb75d8a0bc73da6fbfa30 2023-02-08 - not a working push, but need to finish updating to new sendbird
+a9d5651f2b3915787b4a51fdfe953d912a8e9c25 2021-04-12 -  swapped screens, need to figure out S# for profile image storage
+aa3d567dfae9769808262db13e5a4e1e399312a1 2024-04-08 - new feature added, filters
+aa70cad4f3eee2b40fea1e1b0a004621a7078da6 2021-12-31 - visual changes and new delete chat user comonent, testing needed
+aa8b8ccd8f15fbb02a983592a2351f54762df850 2022-01-02 -  added ohoen number and email to mongodb for record keeping after delete
+aa9f2b71127bc18224afe03b97c7c2ad9c889984 2022-06-08 - old changes
+aacdd8fa6551bea22589b9a497f64e4c419e3709 2024-09-16 - cleanup
+aafcfbf493a6ac807edeeb18ca8fce78eb2b3fb1 2022-05-22 - no more websocket and secured api
+ab03a11b9da1ac65bfc442c2867a833e352cf483 2024-07-02 - frontend changes
+ac5493a7566c2faf18db6b11a4480e907789056c 2022-06-10 - all set to send to aws
+ac72e96cce8feedfa9f471b07726ebdbdfbc28db 2024-07-31 - fixed backend
+ac8a0b5f5fd1f2574dc79c4b8053792ff69a4d5a 2022-01-04 - new logic for likes, dislikes
+ac934a8ab896a8119b86259bd9b184a455c16665 2021-01-21 - :bug: temp fix for debugger
+aca441ec2f8b1211faf5aa13da3d113dba908c1b 2024-05-21 - tomorrow you can add the small functions for updateing read recipts, last messaeg etc
+ad01663976bfcc2b7caa24177776ac9ff6aa3af6 2022-01-02 - frontend soft delete
+ad0827a75f3c7a0a7287f78e9dbfe30886dc857b 2024-03-29 - swipe error handling
+adb204fb26f62455b717a8ab401e8f6466aa77ec 2022-10-11 - changed signin process to b emore intuitive and easier
+ae444af73c504de60846ff68970dfbbd1fbf2e06 2024-04-05 - ADHD code clean up
+ae4ee33cb62fce14d31b3be80d8e77a8fe3ac539 2022-04-02 - added stuff
+aed5b1f7bbb60fdb26e5d6b09841c28687c0115d 2021-10-11 - hot fix completed, sprots and images ficed, formikkkkkkk :ok_hand:
+aeecec44c114854f7dd89c67a3a0b23c03a899b1 2021-12-19 - changes
+af32efc85141793a5ea0be85b5ef4c8f7c6f8db2 2024-04-12 - dislieks looks goodd to me
+b08093319267fd68586490b574ae94f9608b6ab8 2021-10-06 - new changes to signupw
+b0dee0dfa233b18f314e27cf662bb01d605aecf4 2022-04-23 - have an asyn issue but works for now
+b0e0052af3798586a81855a8f9cb259aa84420af 2021-10-10 - sign up and signin both function -> need to test more
+b0ea68e670397a70607314810555a975f74203e6 2024-03-20 - changes
+b1e3c88c038959944bf4a8b6ad7625edcea93efb 2024-09-13 - i guess imporved?
+b26b767b9ff7ffb61fa9ee6b3ced2416089cc185 2021-12-16 - env setup
+b27ac9749d5f7c6f1235c161a90f25c002cef47b 2021-04-09 - :ambulance::ambulance: fix for auth navigation. Design profile and implement simple tab nav,
+b2b785fb85d44e2996b848667b7f35a79ef6ac93 2022-06-12 - will worry about delete function after first round
+b2c1cf752fe5a29f680b3b5803a7a70b5570afd7 2021-12-30 - backend bug with image_Set t ype fixed
+b3abfe7e83630844bede82186e778a2de13e3766 2021-11-21 - filter by sport added front end
+b421761dd3bbc6e6990e3ff5f26e7cec7faab36b 2021-12-22 - bug with matching states during offline and online status fixed
+b4638da1c444e0aac24bd8dbed02ef02ab9fe65a 2024-07-31 - backend changes
+b46f00a6360d55ecdfed3e9eb25ae9ed50638e17 2021-11-20 -  filtering by cities
+b49d18a0855713059b825121bee9d5f2ecb7886c 2023-03-08 - changes
+b52d1f3e66f87b83219c858caa2d4ffe0e0e084e 2024-04-08 - fake data chema changes
+b5371cdda7600a0e981bf532a24f8dca4bdec407 2021-10-09 -  debugging on linux
+b56e50706a89c419ac9d269bc25a2f8af5ae8965 2021-12-31 - add delete chat button
+b5bcb4cb12061c971867d67fae48c3f1c961957a 2024-06-02 - woah, worked without errors frist time
+b763c3b862208d6b6bf5cc3b7063c94a405532b3 2021-12-07 - all filter fixed
+b7d406a2062a394835a409a18d78baaf0664d8c1 2024-03-20 - Merging SignUpFeature into main
+b84fee47d85ed026dea565070eea39d04a059f93 2024-07-30 - foudn the chat API bug! Not fixed thought, some system design changes needed! -> chatStore intialization with collection is tough
+b8571287fd71fcb5c5545f9239cbd3163b77f738 2024-07-31 - fixed chat, major upgrades
+b8bab8eec4219723113a91235f06eaf83da7ce85 2021-01-25 - AC3 reactive variables took long to execute
+b8d42f5172033515b067bfe39c336529d0bbbbba 2024-04-11 - yet againg chema changes
+b8f3cdd48ccc3f220c9e35207c97fba23f701a9f 2021-08-24 - hotfix image debugging
+b99927d45a6eaa6a697c92110fd70192d4322ebb 2024-04-11 - get rid of dislikes again, you don't need that in front end
+b9e244d56a4593de314bd780c686a3bfcb21f234 2024-09-13 - changed screen names and changed screen locations
+ba93e149e6a732d8fd192187de02e3a6fccf1b2d 2024-08-27 - taking a break for interview prep
+ba95ac958c6192243eedbf2bcd4250169df9964c 2021-08-10 - ios changes
+bbf9026eb90d3dd96317ed6f82542a377d4851b8 2021-12-07 - edditing on mac
+bd18a4b5b1f1acfc357a16a377002da151e38af5 2024-08-08 - just keeping it as it is
+bd27b494e822c796ce076f4fc9835c5e2191122b 2022-01-05 - tetsing perfomrance for scaling
+bda7968090403a5f619a0a1164718909e356bacf 2021-11-13 - ediitng on apple
+bdd1af609b95b5cc807ec6cbea78fc4dc1528916 2024-04-08 - fixed
+beca2ef435344618b2e01991020792d60d5a3eae 2024-06-04 - some auth signup issue
+c0c229b3fe7342eb59cd363761e0786657d2cb05 2024-05-16 - we are even more lost
+c108aab22bc6901bc9ce70a93205f216713f905b 2024-04-05 - frontend changes accoridng to graphql
+c13dc3f6144c5dbc1193d74dd687bed370dfd1c4 2024-06-20 -  response bug in the backend
+c1f716432e33d3ca60700fcdf820ba7b26827e3f 2024-04-01 - adding testing data to start the matching process
+c220b8d6415b479a3e55b480058f43ba78c7df12 2021-09-19 - upload and squash mongoose data mutation added
+c24a5e97e8c1fba7e9ae70f3014449105c23eadf 2024-06-01 - why do you always have to make it super fancy, finished reporting, blocking fetaures, but its an overkill
+c2c1541a725c29f41333468b1045f549f8d0ebd7 2022-10-08 - forgot password
+c388fe0e284b0650d51dee2d549a738efafaa73d 2021-09-28 -  on ios
+c3c94bd516948ee3ff3da89a941b02fe76d5482b 2021-08-08 - all settings changes for ios to workW
+c3db136d9e4e35f5e8688459518a273f9a9474dd 2022-06-14 - testing sns limit
+c40ac7f84dbf04f7778d21f61c7f4abdc415bff8 2021-12-27 -  checking gcm
+c455cf0b0c8ce11c95e9cfcbf74d6139199d8ad7 2021-01-22 - :sparkles: introduced multistep form submit feature
+c4e1f21eefffbe4a895629e957c280be50206165 2024-04-10 - the matchqueue update has slowed down matching
+c50e26b79409444013bd7ab388b82a1e96fb8e14 2022-01-02 - soft delete added
+c5ea8c6ee42e896984ac720b8d17df8eddb01ac4 2022-10-11 - many more sports addedgit add --all  time to design  cutom icons-> fun part
+c6b0e8578200221a527861969696aee79b3a85f6 2021-10-09 -  semi function signup
+c6c05649842fac23b72440b19b767774850418fd 2024-04-10 - added performance indexes
+c7e1a85ca0cca967884c1868e0039c48a2793d84 2022-06-08 - removed literals
+c9000363a60c6586637d074e0f32627d1dea7227 2024-04-09 - likes collections created
+c93d2e57e1dceb48054206318a9b864c3ec80cef 2023-02-15 - updated front end, still to need to test a bit more
+c9669560cfe8f77a7103dad8dd7973606039ad0b 2021-10-02 - fixed profile screen tab refresh issues
+c9a2727ced51dd8bb95b440f1c80b695168dae96 2021-08-08 - all settings changes for ios to workW
+c9f085b9597a3451167b37244948d93c6779411e 2021-09-27 - New featurelsbackend and front end of sports chip working -> need hotfixes for edge cases. Need to write unit tests! -> good for mvp
+ca5d0f89ecb361ee09bc05e5f1649f00869a8d60 2024-02-28 - you're tired, go to bed
+cafceeca9847e9f83caf4c40754c05dcd75c03ad 2021-11-17 - fixed google placesapi
+cb270c94f233b8209f12ce1a1b08a90744165127 2021-08-03 - fixed query for mongo reading squash object at start
+cc460fa0c240cbe9e9f0eef898bd061a88e4656a 2021-11-05 - ediditng on apple
+cc5321f9fc6216cc89813c2cd197f9e3b61d9841 2022-01-04 - query changes to optimize results, max swipes 30 for now
+cc89c1de7ecebdfe30cecbcc90b47fb3ea123585 2021-08-08 - add mroe setup details
+ccbd6077cf2f712e6df2f082b4a411e04c4fc9f3 2021-12-23 - you solve googles places flatlist problem, only to solve it again! Note: if locations/google places it not working, change keyboardshouldpersist=always
+cd05cb1dd333d7a298f0f6d3eaea75bc31606699 2021-12-17 - cancel and done got components made easy
+cd167778f21a6a7b96ce3fd815a96f9754780e4c 2021-10-09 - editing on :apple:
+cd4e895cd871485dc238054880dd44db6b510aaa 2022-10-08 - changed forgot password
+cd80fe1e9144c82ad151531c0d0b76338fda2fdc 2022-04-16 - fix edge case
+cdb18bee81ab2a5c8bd70869270e6a6f7322a8db 2022-11-10 - try
+ce855a0a9323588b77c8ced4075eca7d77e1e9f9 2024-04-15 - changes
+ce9715d794f974bd6b5706eb3db758580b6732db 2022-07-12 - Merge pull request #1 from daminiR/tryProfileEdit
+cf6e67af8c2afbf7afe5ec85f9dcf65b1ba569a4 2024-04-07 - matched data
+cf70aa5d3cf679d48e3f33de1a863b137e35cba0 2021-11-14 - apollo subscriptions only work with client at 3.4.0-beta.3 on android otherwise hermes need to be disabled,s nothing breaks atm
+cf9dea6a036e2beac92cc307d828c23ff1e300b7 2021-01-25 - AC3 reactive variables took long to execute
+cfbc86f4a0e7e56c9a2cc04110f1e914108766a0 2022-01-17 - new changes to simplify input edits
+cfd781a3f43f7662be3e4371283210306fce8334 2022-05-02 - fixed image issue, needed jpeg ext
+cfdf0b7a358d52e65e7cd64bd71d9336d4fa7a27 2022-07-11 - oops commented something important
+d0be14b19626eddcf34a524a5e52383f26a61abd 2021-11-18 - added only cities as location search
+d0c1b56c747c1d3405b9c722b73847efadfbec40 2023-02-04 - fixed testing database and connected to app again
+d0cd6f3557e2bfc1fb9904ebe945164b8ea0a1f5 2021-12-10 - UI theme altered
+d0d38d601060fb00c78603c3eec48c78dc4c261d 2021-09-26 - sports front end connected to backend
+d1111b5ed9f4a5005b1d98405fa19b8fde1045c7 2024-07-01 - merge
+d148efb883ce12bc163567721ddff5ed657ec38e 2024-04-08 -  some margin issues to fix
+d171abed31823134f5430ef3a4c21b9ff78a273d 2021-10-18 - hot fixed scrolling issue, fixed radio button usage, fixed list item connection to backend again
+d1a5ae9a64a637e397b47928d7208acd222231cc 2024-04-09 - we have an id bug
+d29af792c72ab3294323a9de046610391ebb436b 2024-09-11 - clean up time
+d33e40b6f0d4e173331b605aa1acc2a208c0794f 2024-05-22 - you have some keybaord issue with message input
+d35f76339d02e48a0963045e32427d81faa2c1e1 2022-04-02 - removed some stuff
+d3e873f882b5b4214f15a2de605c0ebdf4a9c760 2024-04-19 - fixed a major bug in likes
+d459729ed4d933851d72f63be30f440da2cd5b19 2022-10-16 - backend needs update
+d459d911bb682d28ac438bb5bf4d28af63ef9849 2021-11-06 - matching alg fixes
+d46f4dce5fc0c43355ba13290596d13e645fb5dc 2024-04-03 -  cleaning up
+d4c096a0b528e4d776f77c96e3abb45e8a1bb86e 2022-01-09 - changes in matches and Chat structure
+d598b68bac408af414bb4640b9a6b30b9eff395b 2021-01-21 -  form context added
+d5d71ce5ff34ff21767cf42fbc2d5a71fafe0f57 2024-03-21 - term and conditions and privacy policy added
+d6a517cc17fc8935ec9e4421c963cc8c85cda643 2021-10-18 - hotfix scrollview, hotfix, pictureswall, need fixing -> name, gender age with formik
+d6e8ce220aca89672efb0f72479f58f01084c136 2021-08-29 - yass! front view for profile is done, time to integrate backend
+d7276f56492e18e5da3b130a2b314d44d6b04dd8 2021-12-25 - big fixes to yup validatioin
+d75adbe9417490f2eab0a1c851e4668e6987d69d 2022-01-10 - fixed some auth bugs
+d8dc3aaf7f3bc3ac826a273314083e0d7b6a7a27 2021-12-29 - changes to top tab in profile
+d949ad3e659a967be540c13bcead8056ac121415 2024-04-12 - still need to fix some issues here
+d97c3bf8dd2c66845ccda5101365af03b8ec2fb3 2024-03-21 - refresh changes
+d9ff18ac61428cb45268bd26bada615f60c51238 2021-12-13 - chnages
+da19fc03a25bc5e9f4e07791fad8041d0610d728 2024-06-01 - resetting routes nested too deep
+da6ed3b0926fb2cec6b2422e15fe93fb7e9296f0 2021-04-10 -  too many name changes, and nav changes -> lots of bugs to fix
+dad419ff9ade5391e8e0fe160721c72379c6a883 2023-03-11 - fixed update to chat refresh
+db976f0dd79cd99f3b66c2408d6dee51479c9fc0 2021-09-27 - sports chip front end logic bug fix :bug:
+dbf16fb5c8311c987e1e227a8ab8c6c8f624c018 2024-06-05 - lgtm
+dc040e8464ff24db269ec519a4665ab0c4e52571 2024-05-23 - some logout changes, cleared push notifications, and discconnected senbird
+dc05ec86423c969f38a875f83a3de03cf6d0a214 2024-04-14 - Still figuring out the liesk struct
+dc1ab90b8930458ab7d93feabf642b92ac25446e 2024-03-18 - update profile functioining is smooth. Need to add sport input to signUp, needto add images to tempStore
+dcf686092646027c49b0ba09ac567545095fc446 2021-12-21 - testing on :apple:
+dd33380d1aa30d063d549ba3b6ce2e29490eebcd 2024-07-31 - some changes
+dd4d132daad1cbfdae453b61a42fd4958fc8c6ed 2024-09-16 - small change
+de660e8a240d35cb240daeb3af6f29fa0ad21389 2022-01-03 - backend pagination changes- still working
+dee3932799fc3a7dd5ccb4e7a0059f44db810a85 2024-03-20 - fixing express error
+df279ad484147f8110c2ce753c0c2e73e1d5dfbc 2021-01-22 - :construction: work in progress for mutation interface
+df4e512c591726bd19f11b33a0724d6e88d7afdb 2024-02-27 - image picker --> cleaner implementation
+e03c2ae220db3545facf526c10ca6b150bcd9295 2022-05-13 - dont rmeber anyc hanges
+e0727634c180b26009be5b27296dd0a002e91d75 2022-01-14 - fixed liked, dislike button to wait for match, like dislike to complete async sequence
+e08f34c8ba35409ced43ba31745c865fa0e35443 2021-12-23 - testing location in apple
+e243cce63eb52f8e6fffa3a26b9eb14a0c58d6c5 2024-04-24 - we dealth with it today
+e266f294b34d37d316a6b532e40dec358c9e7b37 2021-08-08 - add mroe setup details
+e2e0b101f7a3c504042f2cd55029bf4e2a47c02f 2024-05-22 - I was scheming today ... color scheming
+e37718f2361065951252411ca8a8ead0f201d159 2024-04-07 - major changes, matches will now be more streamlines
+e38cd51dfad1692a72b8c5371e0b40a8715b00b8 2024-04-09 - new hcanges
+e3b9c19e93dfa0517cdc1b8031b4f613fda07393 2022-05-20 - fixed scrolling ios problem
+e4042373397c01b8573127831b5d752ebb311270 2024-06-05 - fixed bug
+e41f99f5cf9a53b9eab26b14586079b9cd3e5ddc 2023-02-15 - updated backend api to archive chats longer than 2 days/ can change to 14 days
+e4339bd0712ce52f2fdd79307deff6c9cc319301 2024-05-29 - changes
+e43c13e95c9ef4c683c00184b7e5ca3232abe09c 2024-06-05 - bug: async function for signup runnign without awiat/yield
+e47280398a8bf2702c8d47d91b0798243dd602b0 2024-09-10 - forgot password feature
+e487bc71b0809ab435123260c164b3d28ef8fdfd 2021-11-06 - Merge branch 'dev_match_alg' into main
+e49ac8eb73c3aa943775bdd0ff6c73b78323f6c6 2024-09-10 - password reset almsot working, need a quick check with faceid alert and savign the password in faceid
+e5bc7fc8fcc8b410c34d9747a7d9af148201bdc4 2022-04-17 - important commit: removed location with google api temp change
+e5f0fc17bd4469c3433014be869a75c0a6a29ada 2024-03-20 - I'm on a rollllllll
+e68be5ae122d3e77e29efc1d4383027232d18cc6 2021-10-02 - fixed profile screen tab refresh issues
+e6a108669483e03ff46f393fdb0f69049960644d 2021-09-28 - what
+e7069d3468f38b7c41a7cf43b87538d6843781a4 2022-07-12 - loading upload still not working but push notification for ios added again
+e73056d58a3f7de5a21b7ebf46632691a8cc8a42 2021-07-25 - added everything for dev, revoke all credentials after getting it running on iphone
+e75ef6d2556117abc4a082933916834b1bd728ac 2024-04-11 -  some serious restructuring
+e81f115482fa4cbe4c674bc8ad192ab38eadba71 2024-04-05 -  cleaning up backend, and more clean up today
+e8b5ecf7f0586bf4bef5aa904ef92d4bc0321993 2021-10-06 - editing on mac :apple:
+e9b211a745aee10803fd87f2ef7db8410081d38a 2021-11-18 -  filter by location done
+e9c9e3c72ff8cf29915d9a22adaeb00526f01858 2021-12-21 - fixed refresh bug with match screen states
+ea5d42c56ffabe7b4dcc0bf41fb97813d1f5a669 2022-10-24 - issues with enum validation
+ea737c40104c712c60257d9f86bbf49dd7b2f5bb 2021-11-09 - likes logic configured backend and frontent
+eb5f3af92bbb6a05a3d6d2bba46c0ba596a3e2f5 2024-03-19 - image picekr changes but need to update image in useEffect to hydrate from edit
+ebe84005f5b469ad1caa2c01172f5a8696ec1c20 2021-10-10 - new backend optimization update, only one mutation to push new profile changes
+eca3439f38156196b36d6ee69915fc283f8ae095 2024-06-01 - minor changes to background, foreground app state code
+ecdf641f2c5ad401213ca2899e0f54507028043b 2021-12-05 - editing on apple
+ecf8ad13140919370eecf9900960a052ced9a1f5 2022-01-09 - chat changes
+ed5503caea5c996744cc4849f4342c7cadee7cba 2021-12-21 - added msg notification
+eddd31b977cc62d22e945a3c8966543ca3e27ecd 2021-12-25 - yup validation plus some fixes to slider
+eeeaf1864b2656fead227e3a9d686a34a99d7e24 2024-04-07 - we fixed some bugs, and i remvoed my fake nails, faster to code :)
+ef1c654599e79c570025b057830599376852dfa8 2022-04-16 - fix edge case
+ef956c9ccc9cf070862b14e62371e8c349cdc86f 2024-04-05 - missed import
+efe4d6df1d3ed5db33fa6bbb3ab47f8283aeb630 2021-12-23 - changed backend to match game_level type
+f04af4fea6e8979b0a304d6ee947aa859c08df5d 2021-10-07 - formik input
+f0df2e6785384abc061e61026587f8c88ffe401d 2021-10-18 - changes
+f118bbebe0c8c8e68b0ee92e63cd5d875a74e8a7 2024-04-17 - likes page done, its look beautiful:grin::grin:git add --allgit add --all
+f168922c31f81a03b3f21a0b402f4a42c3081ff0 2022-01-18 - added only limited changes per day
+f2265d8cba8d9edc2dba2e4553be57050371e135 2024-10-09 - sports card used for user view as well
+f25c7c763c04dc3c58fb4fa807819513068c4ba4 2022-01-17 - backend changes, working
+f2a3e20f6dd6f095f68289014b3a5ae0e701cf3f 2024-04-13 - workign on likes
+f2f7042981a442b74dcbfee460d7c2dd92e02a75 2021-12-19 - chat changes
+f37879e181ea99dd584fe0b971b3ebd4985ffe92 2021-12-31 - bad padding for 3 dots
+f3a182d2f59c08522eae2d70fa85a6e52c3c562e 2024-09-09 - faceid feature done
+f456b2e069287e4bf287cb032f7bde8106fb8b3c 2024-08-21 - nasty bug in chat api-> working on it, push notifcation feature complete!
+f4ad78558677067b38d361cabd3caddd87335012 2024-04-11 - changes fixed
+f4bfbe016283c2078f5e55e9f3a18f538d6ae37c 2021-10-19 - patron list created
+f5225ba093918eefe54fde3eaf7bc9c8083bf18d 2021-10-10 - sign up and signin both function -> need to test more
+f58ff0d22dd5a78e57c550c78f0651aef319ef81 2022-06-10 - several changes made to remove individaual token verification in backend and frontend, using lambda authorizer with congito works better for now, removed weird phone checking exposure
+f5cc6108ab176b4d4291f5382f2c03368767d286 2024-06-05 - fixed bug
+f70625192459722ee2789a0d66e82f1e7a917280 2021-09-26 - changes
+f79c60548c500bd0f7d16bd898c064abb7f916fe 2021-12-30 - patch for gifted chat keyboard listener
+f7fd3cab937722160b2863e9881e9e1e7e6f575e 2021-10-23 - new data createion for load and stress tetsing using jmeter
+f850b958b8b27cb18355546ef00120f481016b13 2022-04-03 - stuff
+fa536f1929377f3942b17d2914195fe434c4a0e4 2021-03-31 - :building_construction: made architectural changes to combine firebase and aws submision forms
+fbf732fa19d40c0a9402d323c4bbcdac35bfbec5 2021-10-13 - fixed backend and frontend for local and uplaoded image combinations
+fc8b81e4df34f28e117639f0844d96ef974f87ae 2021-12-13 - more UI changes, previous and next buttons
+fdc6206aa58e352a428b81031ef5261939980cb5 2021-12-23 - testing location in apple
+fdd1eed62968e93368030bc884cd4b8549456bb5 2021-10-08 - changed signup form
+fe07bf67a011a63f7ab08510f54d3f96891e3b5a 2021-12-17 - converted game level to string, 0 is null in js
+fe2847cf0fb88c04f11ec777caa25f5d90542e75 2021-12-18 - Merge branch 'main' of github.com:daminiR/activityBook into main
+fe31cf4ba0cac5294fad45c167a3a59d731908c7 2022-10-16 - ios changes for smoother keyboard input flow
+fec9197cbc0f273315747afec459f811c2921df9 2022-06-07 - aws fully migrated
+ff399380a91c71369d984aafe4b69040250784ed 2022-04-10 - chat stuff
+ff9253ecef76efa22b01352a3d357ea3969e35be 2022-01-01 - delete feature implements
+ff98cf6ee06ae0c93cc041834ef9bf615dddbf53 2024-09-30 - things seems to be working
+ffb2835631f56d32b7e173f104d92a47e7475c3b 2024-04-11 - we are done with liking and matching, well sort of
+ffe10df27393f36cdd9d98f53e7f7c55936a0917 2024-06-01 -  bug fix: double reinitilziation in chat screen
+fff3f625baec0d41c9c655c63d09e7df9ee64926 2021-12-09 - code cleanup

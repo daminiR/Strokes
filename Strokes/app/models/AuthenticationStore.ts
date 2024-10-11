@@ -546,6 +546,7 @@ export const AuthenticationStoreModel = types
 
                 // Handle post-authentication actions
                 await self.handlePostAuthenticationActions()
+                await mongoDBStore.shouldQuery();
                 resolve(session)
               } catch (postAuthError) {
                 reject(postAuthError)

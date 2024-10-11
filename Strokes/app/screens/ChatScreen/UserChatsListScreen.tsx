@@ -22,47 +22,13 @@ export const ChatListScreen = observer(function ChatListScreen(_props) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [appState, setAppState] = useState(AppState.currentState);
   const { matchedProfileStore, userStore, authenticationStore, chatStore } = useStores();
+  console.log("why emtpy amtchedProfielStore?", matchedProfileStore)
   const sdk = chatStore.sdk;
   const isSDKConnected = authenticationStore.isSDKConnected;
   const collection = chatStore.collection;
   const [isLoading, setIsLoading] = useState(true);
 
-  // Debounced loading to prevent multiple triggers
   let isEndReachedCalledDuringMomentum = false;
-
-  useEffect(() => {
-    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-      if (appState.match(/inactive|background/) && nextAppState === 'active') {
-        console.log("App is in the foreground, attempting to reconnect...");
-        setIsLoading(true);
-
-        if (!sdk || sdk?.getConnectionState() !== 'OPEN') {
-          try {
-            await chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken);
-            console.log("Reconnection successful");
-            await initializeCollection();
-          } catch (error) {
-            console.error("Failed to reconnect:", error);
-            setIsLoading(false);
-          }
-        } else {
-          console.log("SDK is already connected.");
-        }
-      } else if (nextAppState.match(/inactive|background/)) {
-        console.log("App is in the background, disconnecting...");
-        await chatStore.disconnect();
-        setIsLoading(true);
-      }
-      setAppState(nextAppState);
-    };
-
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
-
-    return () => {
-      subscription.remove();
-    };
-  }, [appState, chatStore, userStore]);
-
   const updateState = async (newCollection) => {
     try {
       await newCollection.loadMore();

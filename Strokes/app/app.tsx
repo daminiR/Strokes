@@ -21,6 +21,7 @@ import "./utils/ignoreWarnings";
 import { useFonts } from "expo-font";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
+import { useAppStateHandler } from "./hooks/useAppStateHandler";
 import { platformServices } from "./services/api/sendbird";
 import { MMKVAdapter } from "app/utils/storage/mmkdvAdapter";
 import { navigate, resetToInitialState } from "./navigators";
@@ -43,6 +44,10 @@ import { Provider } from "urql";
 import { LoadingActivity } from "./components";
 import messaging from "@react-native-firebase/messaging"; // Import messaging module
 import Notifee, { AndroidImportance, EventType } from '@notifee/react-native';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs(); // Ignore all log notifications, including warnings
+
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE";
 
@@ -113,64 +118,67 @@ const App: React.FC<AppProps> = observer((props) => {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY);
 
   const [areFontsLoaded] = useFonts(customFontsToLoad);
+  const { isLoading } = useAppStateHandler();
   const {matchedProfileStore, chatStore, userStore, tempUserStore, authenticationStore } = useStores();
 
   const onNotificationInteraction = async (event) => {
-    let notificationData;
-    if (Platform.OS === "ios") {
-      notificationData = event.detail?.notification?.data;
-    } else {
-      notificationData = event.detail?.notification?.data;
+  let notificationData;
+
+  // Get the notification data based on the platform
+  if (Platform.OS === "ios") {
+    notificationData = event.detail?.notification?.data;
+  } else {
+    notificationData = event.detail?.notification?.data;
+  }
+
+  // Check if it's a Sendbird notification
+  if (notificationData?.sendbird) {
+    const channelUrl = notificationData.sendbird.channel.channel_url;
+
+    if (channelUrl) {
+      const matchedUser = matchedProfileStore.findByChannelId(channelUrl);
+
+      // Set the chat profile and navigate
+      chatStore.setChatProfile(matchedUser);
+      navigate("ChatTopNavigator");
+
+      // Reset the badge count after the notification is handled
+      await notifee.setBadgeCount(0);
+      console.log('Badge count reset after notification interaction');
     }
-    if (notificationData?.sendbird) {
-      const channelUrl = notificationData.sendbird.channel.channel_url;
-      if (channelUrl) {
-        const matchedUser = matchedProfileStore.findByChannelId(channelUrl);
+  }
+};
 
-        chatStore.setChatProfile(matchedUser);
-        navigate("ChatTopNavigator");
-      }
-    }
-  };
+  //useEffect(() => {
+    //const unsubscribeForeground = Notifee.onForegroundEvent(onNotificationInteraction);
+    //const unsubscribeBackground = Notifee.onBackgroundEvent(onNotificationInteraction);
 
-  useEffect(() => {
-    const unsubscribeForeground = Notifee.onForegroundEvent(onNotificationInteraction);
-    const unsubscribeBackground = Notifee.onBackgroundEvent(onNotificationInteraction);
+    //return () => {
+      //unsubscribeForeground();
+      ////unsubscribeBackground();
+    //};
+  //}, []);
 
-    return () => {
-      unsubscribeForeground();
-      //unsubscribeBackground();
-    };
-  }, []);
+  //useEffect(() => {
+    //const handleAppStateChange = (nextAppState: string) => {
+      //if (!tempUserStore.photosAppIsActive && authenticationStore.isAuthenticated) {
+        //if (appState !== "active" && nextAppState === "active") {
+          //console.log("App is coming to the foreground. Navigating to the start screen...");
+          //resetToInitialState();
+          //authenticationStore.checkCognitoUserSession();
+        //} else if (appState === "active" && nextAppState.match(/inactive|background/)) {
+          //console.log("App has gone to the background. Disconnecting...");
+        //}
+        //setAppState(nextAppState);
+      //}
+    //};
 
-  useEffect(() => {
-    const handleAppStateChange = (nextAppState: string) => {
-      if (!tempUserStore.photosAppIsActive && authenticationStore.isAuthenticated) {
-        if (appState !== "active" && nextAppState === "active") {
-          console.log("App is coming to the foreground. Navigating to the start screen...");
-          resetToInitialState();
-          //resetChatStackToChatList();
-          // TODO when signout this navigate logic is different, but not important right now
-          authenticationStore.checkCognitoUserSession();
-          //navigate("FaceCard");
-        } else if (appState === "active" && nextAppState.match(/inactive|background/)) {
-          console.log("App has gone to the background. Disconnecting...");
-          //chatStore.disconnect();
-          //authenticationStore.setProp("isSDKConnected", false);
-          //chatStore.setProp("isLoading", true);
-          //navigate("FaceCard");
-          // Add your disconnect logic here
-        }
-        setAppState(nextAppState);
-      }
-    };
+    //const subscription = AppState.addEventListener("change", handleAppStateChange);
 
-    const subscription = AppState.addEventListener("change", handleAppStateChange);
-
-    return () => {
-      subscription.remove();
-    };
-  }, [appState]);
+    //return () => {
+      //subscription.remove();
+    //};
+  //}, [appState]);
 
 
   const { rehydrated } = useInitialRootStore(() => {
@@ -178,7 +186,7 @@ const App: React.FC<AppProps> = observer((props) => {
   });
 
 
-  if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded) {
+  if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded || isLoading) {
     return <LoadingActivity message="Loading App"/>;
   }
 
