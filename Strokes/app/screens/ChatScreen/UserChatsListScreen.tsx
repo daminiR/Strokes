@@ -22,13 +22,11 @@ export const ChatListScreen = observer(function ChatListScreen(_props) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [appState, setAppState] = useState(AppState.currentState);
   const { matchedProfileStore, userStore, authenticationStore, chatStore } = useStores();
-  console.log("why emtpy amtchedProfielStore?", matchedProfileStore)
   const sdk = chatStore.sdk;
   const isSDKConnected = authenticationStore.isSDKConnected;
   const collection = chatStore.collection;
   const [isLoading, setIsLoading] = useState(true);
 
-  let isEndReachedCalledDuringMomentum = false;
   const updateState = async (newCollection) => {
     try {
       await newCollection.loadMore();

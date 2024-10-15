@@ -1,5 +1,5 @@
-import { applySnapshot, types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
-import { getRootStore } from './helpers/getRootStore';
+import {applySnapshot, types, flow, cast, SnapshotOrInstance, SnapshotOut, Instance, getRoot} from 'mobx-state-tree';
+import {getRootStore} from './helpers/getRootStore';
 
 const ImageDataModel = types.model({
   file: types.maybeNull(types.string),

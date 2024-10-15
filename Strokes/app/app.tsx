@@ -28,7 +28,7 @@ import { navigate, resetToInitialState } from "./navigators";
 import { SendbirdUIKitContainer } from "@sendbird/uikit-react-native";
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context";
 import * as Linking from "expo-linking";
-import {Platform, AppState,  AppStateStatus, Text} from "react-native";
+import { Platform, AppState, AppStateStatus, Text, LogBox } from "react-native";
 import { useInitialRootStore } from "./models";
 import { AppNavigator, useNavigationPersistence } from "./navigators";
 import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary";
@@ -44,10 +44,8 @@ import { Provider } from "urql";
 import { LoadingActivity } from "./components";
 import messaging from "@react-native-firebase/messaging"; // Import messaging module
 import Notifee, { AndroidImportance, EventType } from '@notifee/react-native';
-import { LogBox } from 'react-native';
 
 LogBox.ignoreAllLogs(); // Ignore all log notifications, including warnings
-
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE";
 
@@ -99,7 +97,6 @@ messaging().setBackgroundMessageHandler(async (message) => {
   });
 });
 
-
 interface AppProps {
   hideSplashScreen: () => Promise<boolean>;
 }
@@ -109,7 +106,6 @@ interface AppProps {
  * @returns {JSX.Element} The rendered `App` component.
  */
 const App: React.FC<AppProps> = observer((props) => {
-  const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
   const { hideSplashScreen } = props;
   const {
     initialNavigationState,
@@ -118,76 +114,53 @@ const App: React.FC<AppProps> = observer((props) => {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY);
 
   const [areFontsLoaded] = useFonts(customFontsToLoad);
-  const { isLoading } = useAppStateHandler();
-  const {matchedProfileStore, chatStore, userStore, tempUserStore, authenticationStore } = useStores();
+  const { isLoading } = useAppStateHandler(); // Using your custom hook
+  const { matchedProfileStore, chatStore, tempUserStore, authenticationStore } = useStores();
 
   const onNotificationInteraction = async (event) => {
-  let notificationData;
+    let notificationData;
 
-  // Get the notification data based on the platform
-  if (Platform.OS === "ios") {
-    notificationData = event.detail?.notification?.data;
-  } else {
-    notificationData = event.detail?.notification?.data;
-  }
-
-  // Check if it's a Sendbird notification
-  if (notificationData?.sendbird) {
-    const channelUrl = notificationData.sendbird.channel.channel_url;
-
-    if (channelUrl) {
-      const matchedUser = matchedProfileStore.findByChannelId(channelUrl);
-
-      // Set the chat profile and navigate
-      chatStore.setChatProfile(matchedUser);
-      navigate("ChatTopNavigator");
-
-      // Reset the badge count after the notification is handled
-      await notifee.setBadgeCount(0);
-      console.log('Badge count reset after notification interaction');
+    // Get the notification data based on the platform
+    if (Platform.OS === "ios") {
+      notificationData = event.detail?.notification?.data;
+    } else {
+      notificationData = event.detail?.notification?.data;
     }
-  }
-};
 
-  //useEffect(() => {
-    //const unsubscribeForeground = Notifee.onForegroundEvent(onNotificationInteraction);
-    //const unsubscribeBackground = Notifee.onBackgroundEvent(onNotificationInteraction);
+    // Check if it's a Sendbird notification
+    if (notificationData?.sendbird) {
+      const channelUrl = notificationData.sendbird.channel.channel_url;
 
-    //return () => {
-      //unsubscribeForeground();
-      ////unsubscribeBackground();
-    //};
-  //}, []);
+      if (channelUrl) {
+        const matchedUser = matchedProfileStore.findByChannelId(channelUrl);
 
-  //useEffect(() => {
-    //const handleAppStateChange = (nextAppState: string) => {
-      //if (!tempUserStore.photosAppIsActive && authenticationStore.isAuthenticated) {
-        //if (appState !== "active" && nextAppState === "active") {
-          //console.log("App is coming to the foreground. Navigating to the start screen...");
-          //resetToInitialState();
-          //authenticationStore.checkCognitoUserSession();
-        //} else if (appState === "active" && nextAppState.match(/inactive|background/)) {
-          //console.log("App has gone to the background. Disconnecting...");
-        //}
-        //setAppState(nextAppState);
-      //}
-    //};
+        // Set the chat profile and navigate
+        chatStore.setChatProfile(matchedUser);
+        navigate("ChatTopNavigator");
 
-    //const subscription = AppState.addEventListener("change", handleAppStateChange);
+        // Reset the badge count after the notification is handled
+        await Notifee.setBadgeCount(0);
+        console.log('Badge count reset after notification interaction');
+      }
+    }
+  };
 
-    //return () => {
-      //subscription.remove();
-    //};
-  //}, [appState]);
+  useEffect(() => {
+    const unsubscribeForeground = Notifee.onForegroundEvent(onNotificationInteraction);
+    const unsubscribeBackground = Notifee.onBackgroundEvent(onNotificationInteraction);
 
+    return () => {
+      unsubscribeForeground();
+      //unsubscribeBackground();
+    };
+  }, []);
 
   const { rehydrated } = useInitialRootStore(() => {
     setTimeout(hideSplashScreen, 500);
   });
 
-
   if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded || isLoading) {
-    return <LoadingActivity message="Loading App"/>;
+    return <LoadingActivity message="Loading App" />;
   }
 
   const linking = {
@@ -202,7 +175,7 @@ const App: React.FC<AppProps> = observer((props) => {
         <Provider value={client}>
           <SendbirdUIKitContainer
             appId={process.env.REACT_APP_SENDBIRD_APP_ID}
-            chatOptions={{localCacheStorage: MMKVAdapter}}
+            chatOptions={{ localCacheStorage: MMKVAdapter }}
             platformServices={platformServices}
             userProfile={{
               onCreateChannel: () => {}, // No-op function
@@ -231,4 +204,3 @@ export default App;
 const $container: ViewStyle = {
   flex: 1,
 };
-

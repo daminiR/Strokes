@@ -25,9 +25,7 @@ export const ChatListItem: React.FC<ChatItemProps> = ({ item, matchedProfileStor
     return null;
   }
 
-
   const matchedUser = matchedProfileStore.findByChannelId(item.url);
-  console.log("do we screw up amtched durign signin", matchedUser, item.url, matchedProfileStore)
   const title = matchedUser ? matchedUser.firstName || 'Unknown User' : getGroupChannelTitle(sdk.currentUser!.userId, item);
   const coverUrl = matchedUser && matchedUser.imageSet?.length > 0
     ? matchedUser.imageSet[0].imageURL

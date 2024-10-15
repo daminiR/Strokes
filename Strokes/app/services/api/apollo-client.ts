@@ -5,7 +5,7 @@ import {createUploadLink} from 'apollo-upload-client'; // Import createUploadLin
 
 // Replace HttpLink with createUploadLink for file upload support
 const uploadLink = createUploadLink({
-  uri: process.env.React_App_UriUploadRemote, // Your GraphQL endpoint
+  uri: process.env.React_App_UriUploadRemote_1, // Your GraphQL endpoint
 });
 
 // Simulate retrieving the idToken from storage or state management

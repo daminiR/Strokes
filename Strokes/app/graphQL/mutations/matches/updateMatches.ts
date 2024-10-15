@@ -1,4 +1,4 @@
-import { gql } from 'urql';
+import {gql} from 'urql';
 
 
 export const UPDATE_MATCH_QUEUE_INTERACTED_MUTATION = gql`
