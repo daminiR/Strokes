@@ -1,4 +1,4 @@
-import { gql } from 'urql';
+import {gql} from '@apollo/client';
 
 export const REMOVE_LIKE_MUTATION = gql`
   mutation RemoveLike($likerId: String!, $likedId: String!) {

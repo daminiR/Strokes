@@ -366,7 +366,6 @@ export const AuthenticationStoreModel = types
           self.setProp("isAuthenticated", true);
 
           yield chatStore.initializeSDK();
-          //yield chatStore.connect(userStore._id, userStore.firstName, userStore.accessToken);
           //console.log("User connected to SendBird");
 
           // Register device token for push notifications

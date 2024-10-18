@@ -1,4 +1,4 @@
-import { gql } from 'urql';
+import {gql} from '@apollo/client';
 
 const ADD_PROFILE2 = gql`
   mutation RegisterNewPlayer(

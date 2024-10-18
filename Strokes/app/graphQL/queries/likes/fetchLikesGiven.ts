@@ -1,4 +1,4 @@
-import { gql } from 'urql';
+import {gql} from '@apollo/client';
 
 export const FETCH_LIKES_RECEIVED_QUERY = gql`
   query FetchLikesReceived($userId: String!) {

@@ -196,7 +196,7 @@ export const ChatStore = types
         .catch((err: any) => console.log(err))
       //console.log("here", channel)
     }),
-    initializeSDK: flow(function* () {
+    initializeSDK() {
       try {
         // Check if SDK is already initialized
         //if (self.sdk) {
@@ -227,8 +227,7 @@ export const ChatStore = types
         // Log any errors that occur during initialization
         console.error("Error initializing SDK:", error);
       }
-
-    }),
+    },
     setSDK(sdk: any) {
       self.sdk = sdk
     },

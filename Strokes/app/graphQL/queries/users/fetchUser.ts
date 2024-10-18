@@ -1,4 +1,4 @@
-import { gql, useMutation } from 'urql';
+import {gql} from '@apollo/client';
 
 const READ_SQUASHES = gql`
   query FetchAllProfiles($limit: Int){

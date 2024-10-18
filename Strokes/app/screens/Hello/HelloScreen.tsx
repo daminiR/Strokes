@@ -12,7 +12,7 @@ interface HelloScreenProps extends AppStackScreenProps<"Hello"> {}
 export const HelloScreen: FC<HelloScreenProps> = observer(function HelloScreen(_props) {
   const { userStore } = useStores()
   useEffect(() => {
-    return () => userStore.reset()
+    //return () => userStore.reset()
   }, [userStore])
     function login() {
     console.log("logged")

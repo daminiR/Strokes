@@ -1,4 +1,4 @@
-import { gql } from 'urql';
+import {gql} from '@apollo/client';
 
 const SOFT_DELETE_PROFILE = gql`
   mutation softDeletePlayer($_id: String!) {

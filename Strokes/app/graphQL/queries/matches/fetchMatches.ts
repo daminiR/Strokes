@@ -1,4 +1,4 @@
-import { gql } from 'urql';
+import {gql} from '@apollo/client';
 
 export const FETCH_MATCHES_FOR_USER_QUERY = gql`
   query FetchMatchesForUser($userId: String!, $page: Int!, $limit: Int!) {

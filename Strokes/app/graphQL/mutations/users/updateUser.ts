@@ -1,4 +1,4 @@
-import { gql } from 'urql';
+import {gql} from '@apollo/client';
 
 const APPLY_NEIGHBORHOOD_FILTER = gql`
   mutation ApplyNeighborhoodFilter($_id: String!, $neighborhood: NeighborhoodInput!) {
