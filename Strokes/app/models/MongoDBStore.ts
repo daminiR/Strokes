@@ -103,24 +103,34 @@ const MongoDBStore = types
   .model("MongoDBStore", {
     // Define any state properties you may need
   })
+  .props({
+  })
+  .volatile(self => ({
+    userStore: null, // Initialize as null and set in afterCreate
+    authenticationStore: null,
+    matchStore: null,
+  }))
   .actions((self) => ({
+    afterAttach() {
+      self.userStore = getRootStore(self).userStore;
+      self.authenticationStore = getRootStore(self).authenticationStore;
+      self.matchStore = getRootStore(self).matchStore
+    },
     unmatchPlayer: flow(function* (matchId, reason) {
-      const matchStore = getRootStore(self).matchedProfileStore
-      const userStore = getRootStore(self).userStore
+      const privateClient = self.authenticationStore.apolloClient
       try {
-        const result = yield client.mutate({
+        const result = yield privateClient.mutate({
           mutation: graphQL.REMOVE_MATCH_MUTATION,
           variables: {
             matchId: matchId,
-            userId: userStore._id,
+            userId: self.userStore._id,
             reason: reason,
           },
         })
         const {success, message} = result.data.removeMatch
         if (success) {
           console.log("Player unmatched successfully:", message)
-          matchStore.removeMatchedProfile(matchId)
-          //navigate("ChatList")
+          self.matchStore.removeMatchedProfile(matchId)
           // Handle any additional state updates if necessary
         } else {
           console.error("Failed to unmatch player:", message)
@@ -132,8 +142,9 @@ const MongoDBStore = types
       }
     }),
     createReport: flow(function* createReport(reportData) {
+      const privateClient = self.authenticationStore.apolloClient
       try {
-        const response = yield client.mutate({
+        const response = yield privateClient.mutate({
           mutation: graphQL.CREATE_REPORT_MUTATION,
           variables: {
             reporterId: reportData.reporterId,
@@ -193,7 +204,8 @@ const MongoDBStore = types
         // Prepare images for GraphQL mutation
         const addLocalImagesRN = createReactNativeFile(addLocalImages)
         // Proceed with the mutation
-        const response = yield client.mutate({
+        const privateClient = self.authenticationStore.apolloClient
+        const response = yield privateClient.mutate({
           mutation: graphQL.UPDATE_USER_PROFILE,
           variables: {
             _id: userStore._id,
@@ -351,7 +363,6 @@ const MongoDBStore = types
       }
     }),
     queryAfterFilterChange: flow(function* (filters) {
-      const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
       const newFiltersHash = hashObject(filters) // Ensure hashObject function is correctly implemented
 
@@ -402,8 +413,9 @@ const MongoDBStore = types
     }),
     queryMatchedUserProfiles: flow(function* updateMatchedUserProfiles(page, limit) {
       const userId = getRootStore(self).userStore._id // Assuming this is how you access userStore
+      const privateClient = self.authenticationStore.apolloClient
       try {
-        const response = yield client.query({
+        const response = yield privateClient.query({
           query: graphQL.FETCH_MATCHES_FOR_USER_QUERY,
           variables: {
             userId: userId,
@@ -421,9 +433,9 @@ const MongoDBStore = types
     }),
     queryLikedUserProfiles: flow(function* updateMatchQueueInteracted(page, limit) {
       const userId = getRootStore(self).userStore._id // Assuming this is how you access userStore
-      const likedUserStore = getRootStore(self).likedUserStore // Assuming there's a store for liked profiles
+      const privateClient = self.authenticationStore.apolloClient
       try {
-        const response = yield client.query({
+        const response = yield privateClient.query({
           query: graphQL.GET_LIKED_USER_PROFILES,
           variables: {
             userId: userId,
@@ -442,8 +454,9 @@ const MongoDBStore = types
     queryPotentialMatches: flow(function* () {
       const userStore = getRootStore(self).userStore
       const matchStore = getRootStore(self).matchStore
+      const privateClient = self.authenticationStore.apolloClient
       try {
-        const response = yield client.query({
+        const response = yield privateClient.query({
           query: graphQL.GET_POTENTIAL_MATCHES,
           variables: {
             _id: userStore._id,
@@ -459,8 +472,9 @@ const MongoDBStore = types
       }
     }),
     queryUserFromMongoDB: flow(function* queryUser(id) {
+      const privateClient = self.authenticationStore.apolloClient
       try {
-        const response = yield client.query({
+        const response = yield privateClient.query({
           query: graphQL.READ_SQUASH,
           variables: {
             id: id,
@@ -476,7 +490,6 @@ const MongoDBStore = types
           email: userStore.email,
           phoneNumber: userStore.phoneNumber,
         })
-        console.log("mongo store", cleanedResponse)
         return cleanedResponse
       } catch (error) {
         console.error("Error querying user:", error)

@@ -20,7 +20,7 @@ import { colors } from "../../theme"
 const ROOT_STATE_STORAGE_KEY = "root-v1";
 import {SFSymbol} from 'react-native-sfsymbols'
 import * as Keychain from 'react-native-keychain';
-
+import { useApolloClient } from '@apollo/client';
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -32,11 +32,12 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [isLoading, setIsLoading] = useState(false); // Add state for loading
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isFaceIDRunning, setIsFaceIDRunning] = useState(false);
+  const publicApolloClient = useApolloClient();
 
   const login = async () => {
     setIsLoading(true); // Start loading
     try {
-      await authenticationStore.signIn();
+      await authenticationStore.signIn(publicApolloClient);
     } finally {
       setIsLoading(false); // Stop loading
     }

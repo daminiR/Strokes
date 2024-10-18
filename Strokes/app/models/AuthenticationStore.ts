@@ -1,23 +1,22 @@
-import {Platform} from "react-native"
-//import {messaging} from "../services/api";
-import {
-  types,
-  flow,
-} from "mobx-state-tree"
-import * as Keychain from 'react-native-keychain'
-import messaging from "@react-native-firebase/messaging"
+import {Alert, Platform} from 'react-native';
+import {ApolloClient, InMemoryCache} from "@apollo/client";
 import {
   CognitoUser,
   CognitoUserAttribute,
   AuthenticationDetails,
   CognitoUserPool,
 } from "amazon-cognito-identity-js"
-import {resetToInitialState} from "./../navigators"
-import {getRootStore} from "./helpers/getRootStore"
-import {withSetPropAction} from "./helpers/withSetPropAction"
-import {removeStore} from "./helpers/removeRootStore"
-import {Alert} from 'react-native';
+import {flow, process, types} from 'mobx-state-tree';
+//import {setContext} from '@apollo/client/link/context';
+import * as Keychain from 'react-native-keychain'
+import messaging from "@react-native-firebase/messaging"
+
 import storage from "app/utils/storage/mmkvStorage"
+import {createAuthenticatedClient} from 'app/services/api/apollo-client';
+import {getRootStore} from "./helpers/getRootStore"
+import {removeStore} from "./helpers/removeRootStore"
+import {resetToInitialState} from "./../navigators"
+import {withSetPropAction} from "./helpers/withSetPropAction"
 
 export const storePasswordSecurely = async (username: string, password: string, authenticationStore: any) => {
   try {
@@ -119,6 +118,7 @@ export const AuthenticationStoreModel = types
   .model("AuthenticationStoreModel")
   .props({
     tokens: types.maybeNull(TokenType),
+    apolloClient: types.frozen<ApolloClient<InMemoryCache> | null>(null),
     isSDKConnected: types.optional(types.boolean, false),
     isPasswordRecentlyUpdated: types.optional(types.boolean, false),
     isLoading: types.maybeNull(types.boolean),
@@ -132,7 +132,9 @@ export const AuthenticationStoreModel = types
     const setVerificationPhoneCode = (code: number) => {
       self.verificationPhoneCode = code
     }
-
+    const setApolloClient = (client: ApolloClient<any>) => {
+      self.apolloClient = client; // This is a regular MST action
+    }
     const resetPassword = flow(function* resetPassword(newPassword: string) {
       try {
         const userStore = getRootStore(self).userStore;
@@ -373,7 +375,7 @@ export const AuthenticationStoreModel = types
           // Optionally reset or initialize any necessary MongoDB state
           if (includeMongoDBQueryReset) {
             resetToInitialState();
-            mongoDBStore.shouldQuery();
+            yield mongoDBStore.shouldQuery();
           }
           self.setProp("isSDKConnected", true);
         } else {
@@ -515,54 +517,61 @@ export const AuthenticationStoreModel = types
         throw error
       }
     })
-    const signIn = flow(function* signIn() {
-      const userStore = getRootStore(self).userStore
-      const mongoDBStore = getRootStore(self).mongoDBStore
-      const chatStore = getRootStore(self).chatStore
+    const signIn = flow(function* signIn(apolloClient) {
+      const userStore = getRootStore(self).userStore;
+      const mongoDBStore = getRootStore(self).mongoDBStore;
+
       try {
         const authData = {
           Username: userStore.phoneNumber,
           Password: userStore.authPassword,
-        }
-        const authDetails = new AuthenticationDetails(authData)
+        };
+        const authDetails = new AuthenticationDetails(authData);
         const userData = {
           Username: userStore.phoneNumber,
           Pool: userPool,
-        }
-        const cognitoUser = new CognitoUser(userData)
+        };
+        const cognitoUser = new CognitoUser(userData);
 
         yield new Promise((resolve, reject) => {
           cognitoUser.authenticateUser(authDetails, {
             onSuccess: async (session) => {
-              console.log("Authentication successful:", session)
+              console.log("Authentication successful:", session);
+
+              // Extract the idToken from the session
+              const idToken = session.getIdToken().getJwtToken();
 
               // Set user session
-              await self.setUserSession(session)
+              await self.setUserSession(session);
+              // Update Apollo Client with the authenticated token
+              self.setApolloClient(createAuthenticatedClient(idToken));
 
               try {
-
                 // Check and store password securely with Face ID prompt
                 await storePasswordSecurely(userStore.phoneNumber, userStore.authPassword, self);
 
                 // Handle post-authentication actions
-                await self.handlePostAuthenticationActions()
+                await self.handlePostAuthenticationActions();
+
+                // Ensure MongoDB queries use the token for authentication
                 await mongoDBStore.shouldQuery();
-                resolve(session)
+
+                resolve(session);
               } catch (postAuthError) {
-                reject(postAuthError)
+                reject(postAuthError);
               }
             },
             onFailure: (error) => {
-              console.error("Error signing in:", error)
-              self.setProp("error", error.message || "Error signing in")
-              self.signOut()
-              reject(error)
+              console.error("Error signing in:", error);
+              self.setProp("error", error.message || "Error signing in");
+              self.signOut();
+              reject(error);
             },
-          })
-        })
+          });
+        });
       } catch (error) {
-        console.error("Error signing in:", error)
-        self.setProp("error", error.message || "Error signing in")
+        console.error("Error signing in:", error);
+        self.setProp("error", error.message || "Error signing in");
       }
     })
     const forgotPassword = flow(function* forgotPassword(phoneNumber) {
@@ -647,6 +656,7 @@ export const AuthenticationStoreModel = types
       cleanupActions,
       cognitoUserSignOut,
       setVerificationPhoneCode,
+      setApolloClient,
       signOut,
     }
   })
@@ -655,5 +665,4 @@ export const AuthenticationStoreModel = types
       self.checkCognitoUserSession()
     },
   }))
-
 

@@ -37,10 +37,10 @@ import { customFontsToLoad } from "./theme";
 import Config from "./config";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { useStores } from "./models";
-import { ViewStyle, StyleSheet } from "react-native";
-import client from "./services/api/apollo-client";
-import { Provider } from "urql";
+import {useStores} from "./models";
+import {ViewStyle, StyleSheet} from "react-native";
+import {publicClient} from "./services/api/apollo-client";
+import { ApolloProvider } from '@apollo/client';
 import { LoadingActivity } from "./components";
 import messaging from "@react-native-firebase/messaging"; // Import messaging module
 import Notifee, { AndroidImportance, EventType } from '@notifee/react-native';
@@ -115,8 +115,7 @@ const App: React.FC<AppProps> = observer((props) => {
 
   const [areFontsLoaded] = useFonts(customFontsToLoad);
   const { isLoading } = useAppStateHandler(); // Using your custom hook
-  const { matchedProfileStore, chatStore, tempUserStore, authenticationStore } = useStores();
-
+  const { mongoDBStore, matchedProfileStore, chatStore, tempUserStore, authenticationStore } = useStores();
   const onNotificationInteraction = async (event) => {
     let notificationData;
 
@@ -172,7 +171,7 @@ const App: React.FC<AppProps> = observer((props) => {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <Provider value={client}>
+        <ApolloProvider client={publicClient}>
           <SendbirdUIKitContainer
             appId={process.env.REACT_APP_SENDBIRD_APP_ID}
             chatOptions={{ localCacheStorage: MMKVAdapter }}
@@ -193,7 +192,7 @@ const App: React.FC<AppProps> = observer((props) => {
               </ErrorBoundary>
             </BottomSheetModalProvider>
           </SendbirdUIKitContainer>
-        </Provider>
+        </ApolloProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

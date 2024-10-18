@@ -48,6 +48,7 @@ if (Platform.OS !== "web") {
     networking: {
       ignoreUrls: /symbolicate/,
     },
+
     overlay: false,
   })
 }
