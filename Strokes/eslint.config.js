@@ -10,6 +10,12 @@ module.exports = [
       parser: tsParser,
       ecmaVersion: 'latest', // Latest ECMAScript version
       sourceType: 'module',  // Use ES Modules
+      globals: {
+        console: 'readonly', // Define `console` as a global variable (read-only)
+        window: 'readonly',  // Define `window` as a global variable (for browser)
+        document: 'readonly', // Define `document` as a global variable (for browser)
+        process: 'readonly',  // Define `process` as a global variable (for Node.js)
+      },
     },
     plugins: {
       '@typescript-eslint': tsPlugin, // TypeScript plugin
@@ -17,11 +23,7 @@ module.exports = [
     rules: {
       // Define TypeScript-specific rules
       "no-unused-vars": 'warn',
-      //"no-unused-vars": ["error", {"vars": "all", "args": "none", "ignoreRestSiblings": true}],
-      //"@typescript-eslint/no-unused-vars": ["error", {"vars": "all", "args": "none", "ignoreRestSiblings": true}],
-      //'@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ];
-

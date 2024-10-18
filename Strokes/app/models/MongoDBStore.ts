@@ -109,12 +109,16 @@ const MongoDBStore = types
     userStore: null, // Initialize as null and set in afterCreate
     authenticationStore: null,
     matchStore: null,
+    likedUserStore: null,
+    matchedProfileStore: null,
   }))
   .actions((self) => ({
     afterAttach() {
       self.userStore = getRootStore(self).userStore;
       self.authenticationStore = getRootStore(self).authenticationStore;
       self.matchStore = getRootStore(self).matchStore
+      self.likedUserStore = getRootStore(self).likedUserStore // Assuming there's a store for liked profiles
+      self.matchedProfileStore = getRootStore(self).matchedProfileStore // Assuming there's a store for liked profiles
     },
     unmatchPlayer: flow(function* (matchId, reason) {
       const privateClient = self.authenticationStore.apolloClient
@@ -174,9 +178,6 @@ const MongoDBStore = types
     updateUserInMongoDB: flow(function* updateUser() {
       try {
         const tempUserStore = getRootStore(self).tempUserStore
-        const userStore = getRootStore(self).userStore
-        const matchStore = getRootStore(self).matchStore
-
         // Check for changes in fields and embedded objects
         const fieldsToUpdate = [
           "firstName",
@@ -188,11 +189,11 @@ const MongoDBStore = types
           "neighborhood",
         ]
         const hasDifferences = fieldsToUpdate.some(
-          (field) => !deepCompare(tempUserStore[field], userStore[field]),
+          (field) => !deepCompare(tempUserStore[field], self.userStore[field]),
         )
         const {addLocalImages, removeUploadedImages} = processImageUpdates(
           tempUserStore.imageSet,
-          userStore.imageSet,
+          self.userStore.imageSet,
         )
         const hasImageUpdates = addLocalImages.length > 0 || removeUploadedImages.length > 0
         if (!hasDifferences && !hasImageUpdates) {
@@ -200,7 +201,7 @@ const MongoDBStore = types
           return // Skip mutation if there are no differences
         }
         //remeber order here matters, cannot deep check after muation
-        const neighborhoodHasChanged = !deepCompare(tempUserStore.neighborhood, userStore.neighborhood);
+        const neighborhoodHasChanged = !deepCompare(tempUserStore.neighborhood, self.userStore.neighborhood);
         // Prepare images for GraphQL mutation
         const addLocalImagesRN = createReactNativeFile(addLocalImages)
         // Proceed with the mutation
@@ -208,10 +209,10 @@ const MongoDBStore = types
         const response = yield privateClient.mutate({
           mutation: graphQL.UPDATE_USER_PROFILE,
           variables: {
-            _id: userStore._id,
+            _id: self.userStore._id,
             add_local_images: addLocalImagesRN,
             remove_uploaded_images: removeUploadedImages,
-            original_uploaded_imageSet: userStore.imageSet,
+            original_uploaded_imageSet: self.userStore.imageSet,
             firstName: tempUserStore.firstName,
             lastName: tempUserStore.lastName,
             age: tempUserStore.age,
@@ -223,14 +224,14 @@ const MongoDBStore = types
         })
         // Clean response and update userStore with new data
         const cleanedResponse = cleanGraphQLResponse(response.data.updateProfile)
-        userStore.setFromMongoDb({
+        self.userStore.setFromMongoDb({
           ...cleanedResponse,
-          email: userStore.email,
-          phoneNumber: userStore.phoneNumber,
+          email: self.userStore.email,
+          phoneNumber: self.userStore.phoneNumber,
         })
         if (neighborhoodHasChanged) {
           const filterData = yield self.applyNeighborhoodFilter()
-          matchStore.setMatchPool(filterData)
+          self.matchStore.setMatchPool(filterData)
           console.log("Neighborhood filter applied:", filterData)
         }
       } catch (error) {
@@ -239,22 +240,21 @@ const MongoDBStore = types
     }),
     createUserInMongoDB: flow(function* createUser() {
       try {
-        const userStore = getRootStore(self).userStore
-        const file = userStore.imageSet
+        const file = self.userStore.imageSet
         rnfiles = createReactNativeFile(file)
         const response = yield client.mutate({
           mutation: graphQL.ADD_PROFILE2,
           variables: {
-            phoneNumber: userStore.phoneNumber,
-            email: userStore.email,
-            _id: userStore._id,
+            phoneNumber: self.userStore.phoneNumber,
+            email: self.userStore.email,
+            _id: self.userStore._id,
             imageSet: rnfiles,
-            firstName: userStore.firstName,
-            lastName: userStore.lastName,
+            firstName: self.userStore.firstName,
+            lastName: self.userStore.lastName,
             age: 33,
-            gender: userStore.gender,
-            sport: userStore.sport,
-            description: userStore.description,
+            gender: self.userStore.gender,
+            sport: self.userStore.sport,
+            description: self.userStore.description,
             //neighborhood: userStore.neighborhood,
           },
         })
@@ -264,8 +264,8 @@ const MongoDBStore = types
         // Handle error or set error state
       }
     }),
-    createMatch: flow(function* createMatch(user2Id) {
-      const user1Id = getRootStore(self).userStore._id
+    createMatch(user2Id) {
+      const user1Id = self.userStore._id
       return client
         .mutate({
           mutation: graphQL.CREATE_MATCH_MUTATION,
@@ -285,10 +285,11 @@ const MongoDBStore = types
           console.error("Error creating match:", error)
           return null
         })
-    }),
-    checkForMutualLike: flow(function* checkForMutualLike(likedId) {
-      const currentUserId = getRootStore(self).userStore._id
-      return client
+    },
+    checkForMutualLike(likedId) {
+      const currentUserId = self.userStore._id
+      const privateClient = self.authenticationStore.apolloClient
+      return privateClient
         .query({
           query: graphQL.CHECK_FOR_MUTUAL_LIKE_QUERY,
           variables: {currentUserId, likedId},
@@ -300,11 +301,12 @@ const MongoDBStore = types
           console.error("Failed to check for mutual like:", error)
           return false
         })
-    }),
+    },
     recordLike: flow(function* recordLike(likedId) {
-      const likerId = getRootStore(self).userStore._id
+      const likerId = self.userStore._id
+      const privateClient = self.authenticationStore.apolloClient
       try {
-        const result = yield client.mutate({
+        const result = yield privateClient.mutate({
           mutation: graphQL.ADD_LIKE_MUTATION,
           variables: {
             likerId,
@@ -327,12 +329,12 @@ const MongoDBStore = types
     }),
     applyNeighborhoodFilter: flow(function* applyNeighborhoodFilter() {
       try {
-        const userStore = getRootStore(self).userStore
-        const response = yield client.mutate({
+        const privateClient = self.authenticationStore.apolloClient
+        const response = yield privateClient.mutate({
           mutation: graphQL.APPLY_NEIGHBORHOOD_FILTER,
           variables: {
-            _id: userStore._id,
-            neighborhood: userStore.neighborhood,
+            _id: self.userStore._id,
+            neighborhood: self.userStore.neighborhood,
           },
           fetchPolicy: "network-only",
         })
@@ -345,11 +347,11 @@ const MongoDBStore = types
     }),
     applyFilters: flow(function* applyFilters(newFilters, newFilterHash) {
       try {
-        const userStore = getRootStore(self).userStore
-        const response = yield client.mutate({
+        const privateClient = self.authenticationStore.apolloClient
+        const response = yield privateClient.mutate({
           mutation: graphQL.APPLY_FILTERS,
           variables: {
-            _id: userStore._id,
+            _id: self.userStore._id,
             filters: newFilters,
             filtersHash: newFilterHash,
           },
@@ -363,24 +365,21 @@ const MongoDBStore = types
       }
     }),
     queryAfterFilterChange: flow(function* (filters) {
-      const matchStore = getRootStore(self).matchStore
       const newFiltersHash = hashObject(filters) // Ensure hashObject function is correctly implemented
 
       try {
         const potentialMatchesResponse = yield self.applyFilters(filters, newFiltersHash)
-        matchStore.setInit(potentialMatchesResponse)
+        self.matchStore.setInit(potentialMatchesResponse)
       } catch (error) {
         console.error("Failed to query potential matches:", error)
       }
     }),
     shouldQuery: flow(function* () {
-      const likedUserStore = getRootStore(self).likedUserStore // Assuming there's a store for liked profiles
-      const matchedProfileStore = getRootStore(self).matchedProfileStore // Assuming there's a store for liked profiles
       yield self.queryPotentialMatches()
       const likedProfilesData = yield self.queryLikedUserProfiles(1, 10)
       const matchedUserData = yield self.queryMatchedUserProfiles(1, 16)
-      likedUserStore.setProfiles(likedProfilesData) // Set or update the liked profiles in the store
-      matchedProfileStore.setProfiles(matchedUserData) // Set or update the liked profiles in the store
+      self.likedUserStore.setProfiles(likedProfilesData) // Set or update the liked profiles in the store
+      self.matchedProfileStore.setProfiles(matchedUserData) // Set or update the liked profiles in the store
     }),
     // Function to update the interacted status in matchQueue
     updateMatchQueueInteracted: flow(function* updatedMatchInteracted(
@@ -389,7 +388,8 @@ const MongoDBStore = types
       isLiked,
     ) {
       try {
-        const result = yield client.mutate({
+        const privateClient = self.authenticationStore.apolloClient
+        const result = yield privateClient.mutate({
           mutation: graphQL.UPDATE_MATCH_QUEUE_INTERACTED_MUTATION,
           variables: {
             currentUserId: currentUserId,
@@ -412,7 +412,7 @@ const MongoDBStore = types
       }
     }),
     queryMatchedUserProfiles: flow(function* updateMatchedUserProfiles(page, limit) {
-      const userId = getRootStore(self).userStore._id // Assuming this is how you access userStore
+      const userId = self.userStore._id // Assuming this is how you access userStore
       const privateClient = self.authenticationStore.apolloClient
       try {
         const response = yield privateClient.query({
@@ -432,7 +432,7 @@ const MongoDBStore = types
       }
     }),
     queryLikedUserProfiles: flow(function* updateMatchQueueInteracted(page, limit) {
-      const userId = getRootStore(self).userStore._id // Assuming this is how you access userStore
+      const userId = self.userStore._id // Assuming this is how you access userStore
       const privateClient = self.authenticationStore.apolloClient
       try {
         const response = yield privateClient.query({
@@ -452,19 +452,17 @@ const MongoDBStore = types
       }
     }),
     queryPotentialMatches: flow(function* () {
-      const userStore = getRootStore(self).userStore
-      const matchStore = getRootStore(self).matchStore
       const privateClient = self.authenticationStore.apolloClient
       try {
         const response = yield privateClient.query({
           query: graphQL.GET_POTENTIAL_MATCHES,
           variables: {
-            _id: userStore._id,
+            _id: self.userStore._id,
           },
           fetchPolicy: "network-only",
         })
         const matchesData = cleanGraphQLResponse(response.data.fetchFilteredMatchQueue)
-        matchStore.setInit(matchesData)
+        self.matchStore.setInit(matchesData)
         return matchesData
       } catch (error) {
         console.error("Error querying potential matches:", error)
@@ -481,14 +479,12 @@ const MongoDBStore = types
           },
           fetchPolicy: "network-only", // Use this line to ensure the data is fetched from the network every time and not from cache
         })
-        // Assuming response.data.user contains the user data
-        const userStore = getRootStore(self).userStore
         // Do something with the user data, e.g., update the store or return the data
         const cleanedResponse = cleanGraphQLResponse(response.data.fetchProfileById)
-        userStore.setFromMongoDb({
+        self.userStore.setFromMongoDb({
           ...cleanedResponse,
-          email: userStore.email,
-          phoneNumber: userStore.phoneNumber,
+          email: self.userStore.email,
+          phoneNumber: self.userStore.phoneNumber,
         })
         return cleanedResponse
       } catch (error) {
@@ -497,8 +493,6 @@ const MongoDBStore = types
         throw error // Rethrowing the error for handling by the caller
       }
     }),
-
-    // Add more actions for interacting with MongoDB via GraphQL as needed
   }))
 
 export default MongoDBStore
