@@ -9,8 +9,8 @@
  *
  * @refresh reset
  */
-import { applySnapshot, IDisposer, onSnapshot } from "mobx-state-tree"
-import { RootStore, RootStoreSnapshot } from "../RootStore"
+import {applySnapshot, IDisposer, onSnapshot} from "mobx-state-tree"
+import {RootStore, RootStoreSnapshot} from "../RootStore"
 import * as storage from "../../utils/storage"
 
 /**
@@ -47,5 +47,5 @@ export async function setupRootStore(rootStore: RootStore) {
     _disposer = undefined
   }
 
-  return { rootStore, restoredState, unsubscribe }
+  return {rootStore, restoredState, unsubscribe}
 }

@@ -77,22 +77,22 @@ export const TempStoreModel = types
       const newSnapshot = {
         ...self.toJSON(), // Spread the existing fields of tempStore to maintain non-overridden values
         isHydrated: true, // Mark as hydrated
-        email: userStore.email,
-        age: userStore.age,
-        phoneNumber: userStore.phoneNumber,
+        email: userStore?.email,
+        age: userStore?.age,
+        phoneNumber: userStore?.phoneNumber,
         sport: GameLevelModel.create({
-          sportName: userStore.sport.sportName,
-          gameLevel: userStore.sport.gameLevel,
+          sportName: userStore?.sport?.sportName,
+          gameLevel: userStore?.sport?.gameLevel,
         }),
-        imageSet: userStore.imageSet.map((imageFile: any) => cast(imageFile)), // Use cast for MST types
-        gender: userStore.gender,
-        description: userStore.description,
-        firstName: userStore.firstName,
-        lastName: userStore.lastName,
+        imageSet: userStore?.imageSet.map((imageFile: any) => cast(imageFile)),
+        gender: userStore?.gender,
+        description: userStore?.description,
+        firstName: userStore?.firstName,
+        lastName: userStore?.lastName,
         neighborhood: NeighborhoodModel.create({
-          city: userStore.neighborhood.city,
-          state: userStore.neighborhood.state,
-          country: userStore.neighborhood.country,
+          city: userStore?.neighborhood?.city,
+          state: userStore?.neighborhood?.state,
+          country: userStore?.neighborhood?.country,
         }),
         // Any additional fields you wish to hydrate...
       }

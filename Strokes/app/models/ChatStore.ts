@@ -138,7 +138,7 @@ export const ChatStore = types
       self.collection = {} // Reset the channel and collection to initial state.
       self.channelUrl = {} // Reset the channel and collection to initial state.
     },
-    initializeCollection: flow(function* (channelUrl: string, setState: any, rerender: any) {
+    initializeCollection: (channelUrl: string, setState: any, rerender: any) => {
       //if (!self.sdk) return
       self.sdk.groupChannel
         .getChannel(channelUrl)
@@ -195,21 +195,9 @@ export const ChatStore = types
         })
         .catch((err: any) => console.log(err))
       //console.log("here", channel)
-    }),
-    initializeSDK() {
+    },
+    initializeSDK: flow(function* () {
       try {
-        // Check if SDK is already initialized
-        //if (self.sdk) {
-        //console.log("SDK is already initialized:", self.sdk);
-        //return;
-        //}
-
-        // Ensure that the storage is initialized
-        if (!storage) {
-          console.error("Storage is not initialized.");
-          return;
-        }
-
         // Initialize the Sendbird SDK
         const sdk = SendbirdChat.init({
           appId: APP_ID, // Ensure APP_ID is defined and correct
@@ -217,17 +205,14 @@ export const ChatStore = types
           useMMKVStorageStore: storage,
           localCacheEnabled: true,
         });
-
-        // Set the SDK instance to self.sdk
-        self.sdk = sdk;
-
-        // Log the initialized SDK instance
-        console.log("SDK Initialized:");
+        self.sdk = sdk
+        console.log("SDK Initialized:", sdk);
+        return sdk;
       } catch (error) {
-        // Log any errors that occur during initialization
         console.error("Error initializing SDK:", error);
+        throw error;
       }
-    },
+    }),
     setSDK(sdk: any) {
       self.sdk = sdk
     },

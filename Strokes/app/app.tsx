@@ -114,8 +114,8 @@ const App: React.FC<AppProps> = observer((props) => {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY);
 
   const [areFontsLoaded] = useFonts(customFontsToLoad);
-  const { isLoading } = useAppStateHandler(); // Using your custom hook
-  const { mongoDBStore, matchedProfileStore, chatStore, tempUserStore, authenticationStore } = useStores();
+  //const { isLoading } = useAppStateHandler(); // Using your custom hook
+  const { matchedProfileStore, chatStore, authenticationStore} = useStores();
   const onNotificationInteraction = async (event) => {
     let notificationData;
 
@@ -143,6 +143,23 @@ const App: React.FC<AppProps> = observer((props) => {
       }
     }
   };
+   const [apolloClient, setApolloClient] = useState(publicClient);
+
+  // Effect to switch Apollo Client based on authentication state
+  // Effect to check authentication and switch to the private client when available
+  useEffect(() => {
+    if (authenticationStore.isAuthenticated && authenticationStore.apolloClient) {
+      // Switch to the private (authenticated) Apollo client
+      setApolloClient(authenticationStore.apolloClient);
+    } else {
+      // Use public client when user is not authenticated
+      setApolloClient(publicClient);
+    }
+  }, [authenticationStore.isAuthenticated, authenticationStore.apolloClient]);
+
+  useEffect(() => {
+    //authenticationStore.signOut()
+  }, []);
 
   useEffect(() => {
     const unsubscribeForeground = Notifee.onForegroundEvent(onNotificationInteraction);
@@ -153,13 +170,15 @@ const App: React.FC<AppProps> = observer((props) => {
       //unsubscribeBackground();
     };
   }, []);
-
   const { rehydrated } = useInitialRootStore(() => {
     setTimeout(hideSplashScreen, 500);
   });
 
-  if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded || isLoading) {
+  if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded ) {
     return <LoadingActivity message="Loading App" />;
+  }
+  if (authenticationStore.isRefreshing) {
+    return <LoadingActivity message="Loading Refresh" />;
   }
 
   const linking = {
@@ -171,7 +190,7 @@ const App: React.FC<AppProps> = observer((props) => {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <ApolloProvider client={publicClient}>
+        <ApolloProvider client={apolloClient}>
           <SendbirdUIKitContainer
             appId={process.env.REACT_APP_SENDBIRD_APP_ID}
             chatOptions={{ localCacheStorage: MMKVAdapter }}

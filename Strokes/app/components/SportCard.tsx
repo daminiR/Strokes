@@ -50,7 +50,7 @@ export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
             <AutoImage
               style={$autoImage}
               source={{
-                uri: match.imageSet[0].imageURL,
+                uri: match?.imageSet[0]?.imageURL,
               }}
             />
           </View>
@@ -59,10 +59,10 @@ export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
             heading={"Player Details"}
             isEditing={true}
             playerDetails={{
-              age: String(match.age),
-              gender: match.gender,
-              neighborhood: match.neighborhood,
-              sport: match.sport
+              age: String(match?.age),
+              gender: match?.gender,
+              neighborhood: match?.neighborhood,
+              sport: match?.sport
             }}
             style={$playerDetails}
           />
@@ -70,16 +70,16 @@ export const SportCard: React.FC<SportCardProps> = observer(({ match }) => {
           <AutoImage
             style={$autoImage}
             source={{
-              uri: match.imageSet[1].imageURL,
+              uri: match?.imageSet[1]?.imageURL,
             }}
           />
 
-          <Card heading="Description" content={match.description} style={$cardStyle} />
+          <Card heading="Description" content={match?.description} style={$cardStyle} />
 
           <AutoImage
             style={$autoImage}
             source={{
-              uri: match.imageSet[2].imageURL,
+              uri: match?.imageSet[2]?.imageURL,
             }}
           />
         </View>

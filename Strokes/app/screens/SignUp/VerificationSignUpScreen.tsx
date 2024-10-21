@@ -15,7 +15,7 @@ export const VerificationSignUpScreen: FC<VerificationSignUpScreenProps> = obser
   const [isLoading, setIsLoading] = useState(false); // Add state for loading
   useEffect(() => {
     // Pre-fill logic if necessary
-    return () => userStore.reset()
+    //return () => userStore.reset()
   }, [userStore])
 const verify = () => {
   setIsLoading(true); // Start loading

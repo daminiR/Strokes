@@ -1,6 +1,6 @@
 import {observer} from "mobx-react-lite"
-import {navigate, goBack} from "../../navigators"
-import React, {FC, useState} from "react"
+import {navigate, goBack, resetToInitialState} from "../../navigators"
+import React, {FC, useState, useEffect} from "react"
 import {useRoute} from '@react-navigation/native';
 import {
   LoadingActivity,
@@ -23,6 +23,14 @@ export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function Pro
   const {mongoDBStore, userStore, tempUserStore, authenticationStore} = useStores()
   const [attemptsCount, setAttemptsCount] = useState(0)
   const [isLoading, setIsLoading] = useState(false); // Add state for loading
+  useEffect(() => {
+    // Check if tempUserStore is hydrated, or if data is missing
+    if (!tempUserStore.firstName || !tempUserStore.lastName) {
+      // Redirect to ProfileHomeScreen if the tempUserStore is missing data after refresh
+      goBack()
+    }
+  }, [tempUserStore]);
+
   const handleImagesUpdate = (images: ImageData[]) => {
     tempUserStore.setImageSet(images) // Assuming your store has a method to update image files
   }
@@ -38,7 +46,7 @@ export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function Pro
   const profileDetails = [
     {
       label: "Squash Level",
-      value: tempUserStore.sport.gameLevel,
+      value: tempUserStore?.sport?.gameLevel,
       iconName: "squash_level",
       case: "squash_level",
     },
@@ -62,7 +70,7 @@ export const ProfileUpdateScreen: FC<ProfileUpdateProps> = observer(function Pro
     },
     {
       label: "Neighborhood",
-      value: tempUserStore.neighborhood.city,
+      value: tempUserStore?.neighborhood?.city,
       iconName: "place",
       case: "neighborhoods",
     },

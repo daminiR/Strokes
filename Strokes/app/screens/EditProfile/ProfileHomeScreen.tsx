@@ -27,7 +27,6 @@ export const ProfileWelcomeScreen: FC<ProfileWelcomeScreen> = observer(function 
   useEffect(() => {
     const disposer = autorun(() => {
       const imageFile = userStore.imageSet.find((file) => file.img_idx === 0)
-      console.log("imageFile", imageFile)
       setImageUri(imageFile ? (imageFile.uri ?? imageFile.imageURL) : undefined);
     })
     // Cleanup function to dispose of the autorun when the component unmounts

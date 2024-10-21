@@ -118,15 +118,34 @@ export const AuthenticationStoreModel = types
   .model("AuthenticationStoreModel")
   .props({
     tokens: types.maybeNull(TokenType),
-    apolloClient: types.frozen<ApolloClient<InMemoryCache> | null>(null),
+    apolloClient: types.maybeNull(types.frozen<ApolloClient<any>>()),
     isSDKConnected: types.optional(types.boolean, false),
     isPasswordRecentlyUpdated: types.optional(types.boolean, false),
     isLoading: types.maybeNull(types.boolean),
+    isRefreshing: types.maybeNull(types.boolean),
     isAuthenticated: types.optional(types.boolean, false),
     verificationPhoneCode: types.maybeNull(types.string),
     error: types.maybeNull(types.string),
   })
+  .volatile(self => ({
+    userStore: null, // Initialize as null and set in afterCreate
+    chatStore: null, // Initialize as null and set in afterCreate
+    mongoDBStore: null,
+    matchStore: null,
+    likedUserStore: null,
+    matchedProfileStore: null,
+  }))
   .actions(withSetPropAction)
+  .actions((self) => ({
+    afterAttach() {
+      self.userStore = getRootStore(self).userStore;
+      self.chatStore = getRootStore(self).chatStore;
+      self.mongoDBStore = getRootStore(self).mongoDBStore;
+      self.matchStore = getRootStore(self).matchStore
+      self.likedUserStore = getRootStore(self).likedUserStore // Assuming there's a store for liked profiles
+      self.matchedProfileStore = getRootStore(self).matchedProfileStore // Assuming there's a store for liked profiles
+    },
+  }))
   .actions((self) => {
     type SelfType = typeof self
     const setVerificationPhoneCode = (code: number) => {
@@ -137,18 +156,16 @@ export const AuthenticationStoreModel = types
     }
     const resetPassword = flow(function* resetPassword(newPassword: string) {
       try {
-        const userStore = getRootStore(self).userStore;
         const userPool = new CognitoUserPool(poolData);
         const cognitoUser = new CognitoUser({
-          Username: userStore.phoneNumber,
+          Username: self.userStore.phoneNumber,
           Pool: userPool,
         })
-
         yield new Promise((resolve, reject) => {
           cognitoUser.confirmPassword(self.verificationPhoneCode, newPassword, {
             onSuccess: (result) => {
               console.log("Password reset successful:", result)
-              userStore.setAuthPassword("")
+              self.userStore.setAuthPassword("")
               self.setProp("error", null) // Clear any previous error
               resolve(result)
             },
@@ -166,10 +183,9 @@ export const AuthenticationStoreModel = types
     })
     const sendPasswordResetRequest = flow(function* sendPasswordResetRequest(phoneNumberOrEmail: string) {
       try {
-        const userStore = getRootStore(self).userStore;
         const userPool = new CognitoUserPool(poolData);
         const cognitoUser = new CognitoUser({
-          Username: userStore.phoneNumber,
+          Username: self.userStore.phoneNumber,
           Pool: userPool,
         })
 
@@ -206,22 +222,20 @@ export const AuthenticationStoreModel = types
       })
     })
     const setUserSession = flow(function* (session) {
-      const userStore = getRootStore(self).userStore
       const idToken = session.getIdToken().getJwtToken()
       const accessToken = session.getAccessToken().getJwtToken()
       const refreshToken = session.getRefreshToken().getToken()
       const userSub = session.getIdToken().payload.sub
 
       self.setProp("tokens", {idToken, accessToken, refreshToken})
-      userStore.setID(userSub)
+      self.userStore.setID(userSub)
     })
-    const checkUserSession = flow(function* checkUserSession(userPool, userStore) {
+    const checkUserSession = flow(function* checkUserSession(userPool) {
       const cognitoUser = yield syncUserPoolStorage(userPool)
       if (cognitoUser == null) {
         console.log("No current Cognito user")
         return null
       }
-
       const session = yield new Promise((resolve, reject) => {
         cognitoUser.getSession((err: any, session: any) => {
           if (err || !session.isValid()) {
@@ -239,21 +253,33 @@ export const AuthenticationStoreModel = types
 
       return session
     })
-    const handlePostAuthenticationActions = flow(function* () {
-      const userStore = getRootStore(self).userStore
-      const mongoDBStore = getRootStore(self).mongoDBStore
-      const chatStore = getRootStore(self).chatStore
-
+    const setupChat = flow(function* setupChat() {
+      const userSub = self.userStore._id;
       try {
-        const userSub = userStore._id
-        yield mongoDBStore.queryUserFromMongoDB(userSub)
-        yield mongoDBStore.queryPotentialMatches()
-        yield chatStore.initializeSDK()
-        yield chatStore.connect(userSub, userStore.firstName, userStore.accessToken)
-        self.setProp("isSDKConnected", true)
-        console.log("Chat SDK initialized and connected:")
+        // Step 1: Initialize the Sendbird SDK
+        yield self.chatStore.initializeSDK();
 
-        yield self.registerDeviceToken()
+        // Step 2: Connect the user to the Sendbird chat service
+        yield self.chatStore.connect(userSub, self.userStore.firstName, self.userStore.accessToken);
+        self.setProp("isSDKConnected", true);
+        console.log("Chat SDK initialized and connected.");
+
+        // Step 3: Register the device token for push notifications
+        yield self.registerDeviceToken();
+        console.log("Registered for push notifications.");
+
+      } catch (error) {
+        console.error("Error during chat setup:", error);
+        self.setProp("error", error.message || "Error during chat setup.");
+        throw error; // Ensure the error propagates
+      }
+    })
+    const handlePostAuthenticationActions = flow(function* () {
+      try {
+        const userSub = self.userStore._id
+        yield self.mongoDBStore.queryUserFromMongoDB(userSub)
+        yield self.mongoDBStore.queryPotentialMatches()
+        yield self.setupChat()
         console.log("Registered for push notifications")
         self.setProp("isAuthenticated", true)
       } catch (error) {
@@ -261,6 +287,26 @@ export const AuthenticationStoreModel = types
         self.setProp("error", error.message || "Error during post-authentication actions")
         signOut()
         throw error
+      }
+    })
+    const handleSessionExpiration = flow(function* handleSessionExpiration() {
+      try {
+        // Clear any local session data
+        yield clearUserSession();
+
+        // Disconnect from SendBird
+        yield self.chatStore.disconnect();
+
+        // Optionally, reset any MongoDB state if necessary
+        resetToInitialState();
+
+        // Set authentication state to false
+        self.setProp("isAuthenticated", false);
+        self.setProp("isSDKConnected", false);
+
+        console.log("User has been logged out and session cleared.");
+      } catch (error) {
+        console.error("Error handling session expiration:", error);
       }
     })
     const clearUserSession = flow(function* clearUserSession() {
@@ -351,44 +397,51 @@ export const AuthenticationStoreModel = types
       }
     })
     const checkCognitoUserSession = flow(function* checkCognitoUserSession(includeMongoDBQueryReset = true) {
-      self.setProp("isLoading", true);
+      self.setProp("isRefreshing", true);
       self.setProp("isSDKConnected", false);
-      const mongoDBStore = getRootStore(self).mongoDBStore;
-      const chatStore = getRootStore(self).chatStore;
-      const userStore = getRootStore(self).userStore;
 
       try {
+        // Initialize Cognito User Pool and check the session
         const userPool = new CognitoUserPool(poolData);
-        const session = yield checkUserSession(userPool, userStore);
+        const session = yield checkUserSession(userPool);  // This function checks if the session is still valid
 
+        // If session exists and is valid
         if (session) {
-          console.log("User is signed in");
+          const idToken = session.getIdToken().getJwtToken();
+          console.log("Session is valid, user is signed in.");
+
+          // Recreate Apollo Client with the authenticated token if needed
+          self.setApolloClient(createAuthenticatedClient(idToken));
           self.setProp("isAuthenticated", true);
 
-          yield chatStore.initializeSDK();
-          //console.log("User connected to SendBird");
-
-          // Register device token for push notifications
-          yield self.registerDeviceToken();
-
-          // Optionally reset or initialize any necessary MongoDB state
-          if (includeMongoDBQueryReset) {
-            resetToInitialState();
-            yield mongoDBStore.shouldQuery();
+          // Initialize or reconnect SendBird SDK only if necessary
+          if (!self.isSDKConnected) {
+            yield self.chatStore.initializeSDK();
+            console.log("SendBird SDK initialized and connected.");
+            self.setProp("isSDKConnected", true);
           }
-          self.setProp("isSDKConnected", true);
+
+          // Only re-fetch data or reset MongoDB state if required (e.g., after a certain period or if data is stale)
+          if (includeMongoDBQueryReset) {
+            resetToInitialState();  // Optionally reset the state if needed
+            yield self.handlePostAuthenticationActions();  // Handle any post-authentication actions like fetching data
+            yield self.mongoDBStore.fetchMatchInteractionData();  // Fetch interaction data if needed
+          }
+
         } else {
-          console.log("No valid session found");
-          self.setProp("isAuthenticated", false);
+          // Session doesn't exist or is invalid, log out the user
+          console.log("No valid session found, logging out.");
+          yield self.handleSessionExpiration();
         }
+
       } catch (error) {
-        console.error(error);
-        yield clearUserSession();
-        self.setProp("isAuthenticated", false);
+        // Handle session or connection errors, log out if necessary
+        console.error("Error during session check:", error);
+        yield self.handleSessionExpiration();
       } finally {
-        self.setProp("isLoading", false);
+        self.setProp("isRefreshing", false);
       }
-    });
+    })
     const signUp = flow(function* () {
       const userStore = getRootStore(self).userStore
 
@@ -517,17 +570,14 @@ export const AuthenticationStoreModel = types
       }
     })
     const signIn = flow(function* signIn(apolloClient) {
-      const userStore = getRootStore(self).userStore;
-      const mongoDBStore = getRootStore(self).mongoDBStore;
-
       try {
         const authData = {
-          Username: userStore.phoneNumber,
-          Password: userStore.authPassword,
+          Username: self.userStore.phoneNumber,
+          Password: self.userStore.authPassword,
         };
         const authDetails = new AuthenticationDetails(authData);
         const userData = {
-          Username: userStore.phoneNumber,
+          Username: self.userStore.phoneNumber,
           Pool: userPool,
         };
         const cognitoUser = new CognitoUser(userData);
@@ -542,18 +592,19 @@ export const AuthenticationStoreModel = types
 
               // Set user session
               await self.setUserSession(session);
+
               // Update Apollo Client with the authenticated token
               self.setApolloClient(createAuthenticatedClient(idToken));
 
               try {
                 // Check and store password securely with Face ID prompt
-                await storePasswordSecurely(userStore.phoneNumber, userStore.authPassword, self);
+                await storePasswordSecurely(self.userStore.phoneNumber, self.userStore.authPassword, self);
 
                 // Handle post-authentication actions
                 await self.handlePostAuthenticationActions();
 
                 // Ensure MongoDB queries use the token for authentication
-                await mongoDBStore.shouldQuery();
+                await self.mongoDBStore.fetchMatchInteractionData();
 
                 resolve(session);
               } catch (postAuthError) {
@@ -657,6 +708,8 @@ export const AuthenticationStoreModel = types
       setVerificationPhoneCode,
       setApolloClient,
       signOut,
+      handleSessionExpiration,
+      setupChat,
     }
   })
   .actions((self) => ({

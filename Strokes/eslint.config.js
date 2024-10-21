@@ -24,6 +24,7 @@ module.exports = [
       // Define TypeScript-specific rules
       "no-unused-vars": 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
+      "require-yield": "off"
     },
   },
 ];
